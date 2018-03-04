@@ -1,6 +1,10 @@
 <?php 
 /*
  Plugin Name: Ajax Filter Posts
+ Plugin URI: http://asrcoder.com/plugins/ajax-filter-posts
+ Author: mdsvuo
+ Author URI: http://asrcoder.com
+ Description: a simple WordPress plugin that helps you filter your post by category terms with Ajax
  */
 
 //enqueue scripts
