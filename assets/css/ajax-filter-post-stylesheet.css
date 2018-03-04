@@ -1,0 +1,18 @@
+.asr-filter-div .asr_texonomy {
+	display: inline-block;
+    cursor: pointer;
+    background: transparent;
+    padding: 5px 10px;
+    margin: 1px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.asr_texonomy.active,
+.asr_texonomy:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+.asr-ajax-container{
+	position: relative;
+}
+.asr-ajax-container .asr-loader{
+	display: none;
+}
