@@ -3,6 +3,7 @@
  Plugin Name: Ajax Filter Posts
  */
 
+//enqueue scripts
 function asrafp_scripts(){
 
 	wp_enqueue_style('asrafp-styles',plugin_dir_url( __FILE__ ).'assets/css/ajax-filter-post-stylesheet.css');
@@ -20,6 +21,7 @@ function asrafp_scripts(){
 
 add_action( 'wp_enqueue_scripts', 'asrafp_scripts' );
 
+//shortcode function
 function asrafp_shortcode_mapper(){
 	$taxonomy = 'category';
 	$terms = get_terms($taxonomy); // Get all terms of a taxonomy
@@ -46,6 +48,7 @@ add_shortcode( 'asr_ajax', 'asrafp_shortcode_mapper' );
 add_action('wp_ajax_asr_filter_posts', 'asrafp_ajax_functions');
 add_action('wp_ajax_nopriv_asr_filter_posts', 'asrafp_ajax_functions');
 
+//ajax main function
 function asrafp_ajax_functions(){
 	// Verify nonce
   	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
