@@ -2,7 +2,8 @@
     'use strict';
 
     jQuery(document).ready(function() {
-
+    	
+    	//Load all posts
     	asr_ajax_get_postdata(-1);
 
     	$('.asr_texonomy').on('click',function(){
@@ -14,6 +15,7 @@
 
     	});
 
+    	//ajax filter function
     	function asr_ajax_get_postdata(term_ID){
     		$.ajax({
     			type: 'post',

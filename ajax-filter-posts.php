@@ -60,6 +60,7 @@ function asrafp_ajax_functions(){
 	
 	$term_ID = $_POST['term_ID'];
 
+	//post query
 	$query = new WP_Query( array(
 		'post_type' => 'post',
 		'post_per_pages' => -1,
@@ -88,7 +89,5 @@ function asrafp_ajax_functions(){
 		echo __('<h2>No Posts Found</h2>','asr_td');
 	endif;
 	wp_reset_query();
-
-
 	die();
 }
