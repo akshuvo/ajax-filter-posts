@@ -77,7 +77,7 @@ function asrafp_ajax_functions(){
 		while( $query->have_posts()): $query->the_post();
 
 			$results = '<div class="asr-single-post">';
-			$results .= '<h2>'.get_the_title().'</h2>';
+			$results .= '<a href="'.get_the_permalink().'"><h2>'.get_the_title().'</h2></a>';
 			$results .= '<p>'.get_the_excerpt().'</p>';
 			$results .= '</div>';
 

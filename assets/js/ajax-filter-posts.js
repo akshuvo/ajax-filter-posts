@@ -2,6 +2,9 @@
     'use strict';
 
     jQuery(document).ready(function() {
+
+    	asr_ajax_get_postdata(-1);
+
     	$('.asr_texonomy').on('click',function(){
     		var term_id = $(this).attr('data_id');
     		$(this).addClass('active').siblings().removeClass('active');
