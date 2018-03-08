@@ -59,7 +59,7 @@ function asrafp_ajax_functions(){
   	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
     die('Permission denied');
 	
-	$term_ID = $_POST['term_ID'];
+	$term_ID = sanitize_text_field( intval($_POST['term_ID']) );
 
 	//post query
 	$query = new WP_Query( array(
@@ -74,7 +74,7 @@ function asrafp_ajax_functions(){
 		)
 
 	) );
-
+	
 	if( $query->have_posts() ): 
 		while( $query->have_posts()): $query->the_post();
 
