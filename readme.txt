@@ -17,6 +17,11 @@ just use this shortcode anywhere
 
 See the [Live Demo](http://www.asrcoder.com/plugins/ajax-filter-posts)
 
+###Features
+*WordPress Widget Support
+*SiteOrigin Page Builder Support
+*KingComposer Support
+
 == Installation ==
 1. Upload "ajax-filter-posts.zip\" to the "/wp-content/plugins/" directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
