@@ -4,7 +4,7 @@
  Plugin URI: http://asrcoder.com/plugins/ajax-filter-posts
  Author: mdsvuo
  Author URI: http://asrcoder.com
- Version:1.0
+ Version:1.0.1
  Description: a simple WordPress plugin that helps you filter your post by category terms with Ajax
  */
 
@@ -146,25 +146,23 @@ class asrafp_widget extends WP_Widget {
          
 // Widget Backend 
 
-public function form( $instance ) {
-	if ( isset( $instance[ 'title' ] ) ) {
-		$title = $instance[ 'title' ];
-	}
-	else {
-		$title = __( 'Filter Posts', '' );
-	}
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'Filter Posts', '' );
+		}
 
-// Widget admin form
+	// Widget admin form
 
-?>
-<p>
-<label for="<?php
-echo $this->get_field_id('title'); ?>"><?php
-_e('Title:'); ?></label> 
-<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title ; ?>" />
-</p>
-<?php
-}
+	?>
+	<p>
+		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title ; ?>" />
+	</p>
+	<?php
+	}
 
 // Updating widget replacing old instances with new
 
