@@ -1,18 +1,16 @@
-# Post-Grid-with-Ajax-Filter
+# Post Grid with Ajax Filter
 Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
 
-=== Post Grid with Ajax Filter ===
+<pre>
 Contributors: mdshuvo
 Tags: ajax post grid, custom post gridgridgrid displaypost gridpost type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
 Tested up to: 5.3.2
 Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+</pre>
 
-Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
-
-== Description ==
-###Post Grid with Ajax Filter
+## Description
 Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
 
 Just use this shortcode anywhere. Below you can see all available shortcodes.
@@ -21,8 +19,8 @@ Just use this shortcode anywhere. Below you can see all available shortcodes.
 <pre>[am_post_grid]</pre>
 
 * Control for Show or Hide the filter
-Options: yes,no 
-Default: yes
+- Options: yes,no 
+- Default: yes
 <pre>[am_post_grid show_filter="yes"]</pre>
 
 * Control Number of Posts Per Page
@@ -37,7 +35,7 @@ Default: "yes"
 
 
 
-###Features
+## Features
 * Shortcodes for showing anywhere
 * Pre-Build Layout
 * Grid Layout
