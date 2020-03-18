@@ -4,7 +4,7 @@
  * Plugin URI:   http://asrcoder.com
  * Author:       Akhtarujjaman Shuvo
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	  2.0.3
+ * Version: 	  2.0.4
  * Description:  Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -125,7 +125,8 @@ function asrafp_ajax_functions(){
 
 	$data = array(
 		'post_type' => 'post',
-		'paged' => $dataPaged
+		'post_status' => 'publish',
+		'paged' => $dataPaged,
 	);
 
 	if( $jsonData ){
