@@ -60,7 +60,9 @@ add_action( 'wp_enqueue_scripts', 'asrafp_scripts' );
 
 //shortcode function
 function asrafp_shortcode_mapper( $atts, $content = null ) {
-	$pppInit = ( get_option( 'posts_per_page', true ) ) ? get_option( 'posts_per_page', true ) : 9;
+
+	// Posts per pages.
+	$posts_per_page = ( get_option( 'posts_per_page', true ) ) ? get_option( 'posts_per_page', true ) : 9;
 
 	$shortcode_atts = shortcode_atts(
             array(
@@ -69,13 +71,14 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
                 'initial' => "-1",
                 'layout' => '1',
                 'post_type' => 'post',
-                'posts_per_page' => $pppInit,
+                'posts_per_page' => $posts_per_page,
                 'cat' => '',
                 'terms' => '',
                 'paginate' => 'no',
                 'hide_empty' => 'true',
                 'orderby' => 'title',
     			'order'   => 'DESC',
+    			'scroll'   => 'infinite',
             ),
             $atts
         );
@@ -93,7 +96,7 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 
 	$terms = get_terms($args);
 	?>
-	<div class="am_ajax_post_grid_wrap" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
+	<div class="am_ajax_post_grid_wrap" data-scroll="<?php echo esc_attr($scroll); ?>" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
 
 		<?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
 			<div class="asr-filter-div" data-layout="<?php echo $layout; ?>"><ul>
@@ -258,22 +261,10 @@ function asrafp_ajax_functions(){
  */
 function am_ajax_post_grid_plugin_action_links( $links ) {
 	$plugin_links = array(
-		'<a href="'.admin_url( 'admin.php?page=_ajax-post-grid' ).'">' . esc_html__( 'Post Grid', 'am_post_grid' ) . '</a>',
+		'<a href="'.admin_url( 'admin.php?page=ajax-post-grid' ).'">' . esc_html__( 'Options', 'am_post_grid' ) . '</a>',
 	);
 	return array_merge( $plugin_links, $links );
 }
-//add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
 
 
-/**
- *	Plugin activation hook
- *
- */
-function am_ajax_post_grid_activation_redirect( $plugin ) {
-	if( $plugin == plugin_basename( __FILE__ ) ) {
-	    // redirect option page after installed
-	    wp_redirect( admin_url( 'admin.php?page=_ajax-post-grid' ) );
-	    exit;
-	}
-}
-//add_action( 'activated_plugin', 'am_ajax_post_grid_activation_redirect' );
