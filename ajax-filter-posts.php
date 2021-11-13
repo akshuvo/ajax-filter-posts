@@ -4,8 +4,8 @@
  * Plugin URI:   http://asrcoder.com
  * Author:       Akhtarujjaman Shuvo
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	  2.0.4
- * Description:  Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax.
+ * Version: 	  2.2.1
+ * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  am_post_grid
@@ -15,7 +15,7 @@
 /**
 * Including Plugin file for security
 * Include_once
-* 
+*
 * @since 1.0.0
 */
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -28,10 +28,18 @@ function am_post_grid_plugin_loaded_action() {
 	load_plugin_textdomain( 'am_post_grid', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
 }
 
+
+/**
+ *	Admin Page
+ */
+//require_once( dirname( __FILE__ ) . '/inc/admin/admin-page.php' );
+
+
+
 //enqueue scripts
 function asrafp_scripts(){
 	//$ver = current_time( 'timestamp' );
-	$ver = '2.0.2';
+	$ver = '2.2.1';
 
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? : '.min';
 
@@ -51,32 +59,42 @@ function asrafp_scripts(){
 add_action( 'wp_enqueue_scripts', 'asrafp_scripts' );
 
 //shortcode function
-function asrafp_shortcode_mapper( $atts, $content = null ) { 
+function asrafp_shortcode_mapper( $atts, $content = null ) {
 	$pppInit = ( get_option( 'posts_per_page', true ) ) ? get_option( 'posts_per_page', true ) : 9;
 
 	$shortcode_atts = shortcode_atts(
-            array(            	
+            array(
                 'show_filter' => "yes",
                 'btn_all' => "yes",
                 'initial' => "-1",
                 'layout' => '1',
                 'post_type' => 'post',
                 'posts_per_page' => $pppInit,
-                'cat' => 'all',
+                'cat' => '',
+                'terms' => '',
                 'paginate' => 'no',
-            ), 
+                'hide_empty' => 'true',
+                'orderby' => 'title',
+    			'order'   => 'DESC',
+            ),
             $atts
         );
-	
+
     // Params extraction
     extract($shortcode_atts);
 
 	ob_start();
 	$taxonomy = 'category';
-	$terms = get_terms($taxonomy);
+	$args = array(
+		'hide_empty' => $hide_empty,
+	    'taxonomy' => $taxonomy,
+	    'include' => $terms ? $terms : $cat,
+	);
+
+	$terms = get_terms($args);
 	?>
 	<div class="am_ajax_post_grid_wrap" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
-	
+
 		<?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
 			<div class="asr-filter-div" data-layout="<?php echo $layout; ?>"><ul>
 				<?php if($btn_all != "no"): ?>
@@ -87,7 +105,7 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 		        <?php } ?>
 	        </ul></div>
 	    <?php } ?>
-	    
+
 	    <div class="asr-ajax-container">
 		    <div class="asr-loader">
 		    	<div class="lds-dual-ring"></div>
@@ -95,7 +113,7 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 		    <div class="asrafp-filter-result"></div>
 	    </div>
     </div>
-	
+
 	<?php return ob_get_clean();
 }
 add_shortcode('asr_ajax','asrafp_shortcode_mapper');
@@ -110,18 +128,18 @@ function asrafp_ajax_functions(){
 	// Verify nonce
   	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
     die('Permission denied');
-	
+
 	$term_ID = sanitize_text_field( intval($_POST['term_ID']) );
 	$layout = intval($_POST['layout']);
-	
+
 	// Pagination
 	if( $_POST['paged'] ) {
 		$dataPaged = intval($_POST['paged']);
 	} else {
 		$dataPaged = get_query_var('paged') ? get_query_var('paged') : 1;
-	}	
+	}
 
-	$jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );	
+	$jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );
 
 	$data = array(
 		'post_type' => 'post',
@@ -132,6 +150,14 @@ function asrafp_ajax_functions(){
 	if( $jsonData ){
 		if( $jsonData['posts_per_page'] ){
 			$data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
+		}
+
+		if( $jsonData['orderby'] ){
+			$data['orderby'] = sanitize_text_field( $jsonData['orderby'] );
+		}
+
+		if( $jsonData['order'] ){
+			$data['order'] = sanitize_text_field( $jsonData['order'] );
 		}
 	}
 
@@ -149,7 +175,7 @@ function asrafp_ajax_functions(){
 	$query = new WP_Query($data);
 	ob_start();
 
-	if( $query->have_posts() ): 
+	if( $query->have_posts() ):
 		echo "<div class='am_post_grid am__col-3 am_layout_{$layout}'>";
 		while( $query->have_posts()): $query->the_post(); ?>
 
@@ -159,7 +185,7 @@ function asrafp_ajax_functions(){
 					<div class="am_thumb">
 						<?php the_post_thumbnail('full'); ?>
 					</div>
-					<div class="am_cont">		
+					<div class="am_cont">
 						<a href="<?php echo get_the_permalink(); ?>"><h2 class="am__title"><?php echo get_the_title(); ?></h2></a>
 						<div class="am__excerpt">
 							<?php echo wp_trim_words( get_the_excerpt(), 15, null ); ?>
@@ -178,7 +204,7 @@ function asrafp_ajax_functions(){
 		<?php
 			$big = 999999999; // need an unlikely integer
 			$dataNext = $dataPaged+1;
-			
+
 			$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
 
 			$paginate_links = paginate_links( array(
@@ -199,10 +225,10 @@ function asrafp_ajax_functions(){
 			}
 		?>
 		</div>
-		
+
 		<?php
 	else:
-		esc_html_e('<h2>No Posts Found</h2>','am_post_grid');
+		esc_html_e('No Posts Found','am_post_grid');
 	endif;
 	wp_reset_query();
 	echo ob_get_clean();
@@ -212,16 +238,6 @@ function asrafp_ajax_functions(){
 
 
 /**
- *	Admin Page
- */
-require_once( dirname( __FILE__ ) . '/inc/admin-page/admin-page.php' );
-
-/**
- *	Admin Notice
- */
-require_once( dirname( __FILE__ ) . '/inc/class-admin-notice/admin-notices.php' );
-
-/**
  * Add plugin action links.
  *
  * @since 1.0.0
@@ -229,7 +245,7 @@ require_once( dirname( __FILE__ ) . '/inc/class-admin-notice/admin-notices.php' 
  */
 function am_ajax_post_grid_plugin_action_links( $links ) {
 	$plugin_links = array(
-		'<a href="'.admin_url( 'admin.php?page=_woinstant' ).'">' . esc_html__( 'Shortcodes', 'am_post_grid' ) . '</a>',
+		'<a href="'.admin_url( 'admin.php?page=_ajax-post-grid' ).'">' . esc_html__( 'Post Grid', 'am_post_grid' ) . '</a>',
 	);
 	return array_merge( $plugin_links, $links );
 }
@@ -243,7 +259,7 @@ function am_ajax_post_grid_plugin_action_links( $links ) {
 function am_ajax_post_grid_activation_redirect( $plugin ) {
 	if( $plugin == plugin_basename( __FILE__ ) ) {
 	    // redirect option page after installed
-	    wp_redirect( admin_url( 'admin.php?page=_woinstant' ) );
+	    wp_redirect( admin_url( 'admin.php?page=_ajax-post-grid' ) );
 	    exit;
 	}
 }

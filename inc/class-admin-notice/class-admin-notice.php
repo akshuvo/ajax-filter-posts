@@ -38,8 +38,8 @@ class AddonMasterAdminNotice{
 			  padding: 20px;
 			}
 			.am--message-icon {
-			  height: 80px;
-			  width: 80px;
+			  height: 50px;
+			  width: 50px;
 			}
 			.am--message-icon img {
 			  max-width: 100%;
@@ -153,12 +153,12 @@ class AddonMasterAdminNotice{
 			if( $is_dismissable ) {
 				$classes .= " is-dismissible";
 			}
-		    ?>		    	
+		    ?>
 			<div id="<?php esc_attr_e($id);?>" class="notice am--message  <?php esc_attr_e($classes);?>" style="border-color:<?php echo sanitize_hex_color( $arg['border_color'] );?>">
 				<div class="am--message-inner">
 					<?php if( $logo ) : ?>
 						<div class="am--message-icon">
-							<div class="am-logo-wrapper">
+							<div class="e-logo-wrapper">
 								<img src="<?php echo esc_url($logo); ?>" alt="">
 							</div>
 						</div>
@@ -167,27 +167,64 @@ class AddonMasterAdminNotice{
 						<p><?php _e($notice_text) ?></p>
 						<p class="am--message-actions">
 							<?php if( $arg['buttons'] ): ?>
-								<?php foreach( (array)$arg['buttons'] as $btnkey => $btn ): 
+								<?php foreach( (array)$arg['buttons'] as $btnkey => $btn ):
 									$btn_text = ($btn['text']) ? $btn['text'] : "";
 									$btn_link = ($btn['link']) ? $btn['link'] : "";
 									$btn_class = ($btn['class']) ? $btn['class'] : "";
 									$btn_target = ($btn['target']) ? $btn['target'] : "";
 
 									$btn_icon = "amicon ";
-									$btn_icon .= ($btn['icon']) ? $btn['icon'] : "";									
+									$btn_icon .= ($btn['icon']) ? $btn['icon'] : "";
 									?>
 									<a href="<?php echo esc_url($btn_link); ?>" target="<?php esc_attr_e($btn_target); ?>" class="<?php esc_attr_e($btn_class); ?>"><span class="<?php esc_attr_e($btn_icon); ?>"></span> <?php esc_html_e($btn_text); ?></a>
 								<?php endforeach; ?>
 							<?php endif; ?>
 							<?php if( $is_dismissable ) : ?>
 								<a href="#" class="am-notice-dismiss"><span class="amicon dashicons dashicons-dismiss"></span> <?php esc_html_e($dismiss_text); ?></a>
-							<?php endif; ?>								
+							<?php endif; ?>
 						</p>
 					</div>
-				</div>				
+				</div>
 			</div>
 			<?php
 		} // endforeach
 	}
 }
 new AddonMasterAdminNotice;
+
+/**
+ * Example Function for add notice
+ */
+
+/*
+function my_admin_notices($args){
+	$args[] = array(
+		'id' => "samplenotices",
+		'text' => "We hope you're enjoying this plugin! Could you please give a 5-star rating on WordPress to inspire us?",
+		'logo' => "https://ps.w.org/bs-shortcode-ultimate/assets/icon-256x256.png",
+		'border_color' => "#000",
+		'is_dismissable' => "true",
+		'dismiss_text' => "Dismiss",
+		'buttons' => array(
+			array(
+				'text' => "Ok, you deserve it!",
+				'link' => "#link",
+				'target' => "_blank",
+				'icon' => "dashicons dashicons-external",
+				'class' => "button-primary",
+			),
+			array(
+				'text' => "Maybe Later?",
+				'link' => "#link",
+				'icon' => "dashicons dashicons-external",
+				'class' => "button-secondary",
+			),
+		)
+
+	);
+
+	return $args;
+}
+add_filter( 'addonmaster_admin_notice', 'my_admin_notices' );
+*/
+
