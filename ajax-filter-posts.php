@@ -161,7 +161,20 @@ function asrafp_ajax_functions(){
 		}
 	}
 
-	if( $term_ID != -1 ){
+	// Bind to Category Terms
+	if( $term_ID == -1 ){
+		if ( isset( $jsonData['cat'] ) && !empty( $jsonData['cat'] ) ) {
+			$term_ID = explode(',', $jsonData['cat']);
+		} elseif ( isset( $jsonData['terms'] ) && !empty( $jsonData['terms'] ) ) {
+			$term_ID = explode(',', $jsonData['terms']);
+		} else {
+			$term_ID =  null;
+		}
+		
+	}
+
+	// Check if set terms 
+	if( $term_ID ){
 		$data['tax_query'] = array(
 			array(
 				'taxonomy' => 'category',
