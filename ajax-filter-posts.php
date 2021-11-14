@@ -35,7 +35,6 @@ function am_post_grid_plugin_loaded_action() {
 //require_once( dirname( __FILE__ ) . '/inc/admin/admin-page.php' );
 
 
-
 //enqueue scripts
 function asrafp_scripts(){
 	//$ver = current_time( 'timestamp' );
@@ -43,10 +42,10 @@ function asrafp_scripts(){
 
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? : '.min';
 
-	wp_enqueue_style( 'asrafp-styles', plugin_dir_url( __FILE__ ) . 'assets/css/post-grid-styles' . $suffix . '.css', null, $ver );
+	wp_enqueue_style( 'asrafp-styles', plugin_dir_url( __FILE__ ) . 'assets/css/post-grid-styles.css', null, $ver );
 
 	wp_enqueue_script( 'jquery' );
-	wp_register_script( 'asr_ajax_filter_post', plugin_dir_url( __FILE__ ) . 'assets/js/post-grid-scripts' . $suffix . '.js', 'jquery', $ver );
+	wp_register_script( 'asr_ajax_filter_post', plugin_dir_url( __FILE__ ) . 'assets/js/post-grid-scripts.js', 'jquery', $ver );
 	wp_enqueue_script( 'asr_ajax_filter_post' );
 
 	wp_localize_script( 'asr_ajax_filter_post', 'asr_ajax_params', array(
@@ -132,8 +131,9 @@ function asrafp_ajax_functions(){
   	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
     die('Permission denied');
 
-	$term_ID = sanitize_text_field( intval($_POST['term_ID']) );
-	$layout = intval($_POST['layout']);
+	$term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : null;
+	$layout = isset( $_POST['layout'] ) ? intval( sanitize_text_field( $_POST['layout'] ) ) : null;
+	$sctoll_type = isset( $_POST['sctoll_type'] ) ? sanitize_text_field( $_POST['sctoll_type'] ) : null;
 
 	// Pagination
 	if( $_POST['paged'] ) {
@@ -233,12 +233,16 @@ function asrafp_ajax_functions(){
 			) );
 
 			echo "<div id='am_posts_navigation_init'>";
+			if ( $sctoll_type ) {
+				// code...
+			}
 				echo $paginate_links;
 			echo "</div>";
 
-			if( $paginate_links ){
-				//echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}'>Load More</button>";
+			if( $paginate_links && $dataPaged < $query->max_num_pages ){
+				echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='am-post-grid-load-more'>Load More</button>";
 			}
+
 		?>
 		</div>
 
@@ -247,6 +251,7 @@ function asrafp_ajax_functions(){
 		esc_html_e('No Posts Found','am_post_grid');
 	endif;
 	wp_reset_query();
+
 	echo ob_get_clean();
 	die();
 }

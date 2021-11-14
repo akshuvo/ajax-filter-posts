@@ -16,12 +16,18 @@
     	});
 
         // Pagination
-        $( document ).on('click', '#am_posts_navigation_init a', function(e){
+        $( document ).on('click', '#am_posts_navigation_init a.page-numbers, .am-post-grid-load-more', function(e){
             e.preventDefault();
 
             var term_id = "-1";
 
             var paged = $(this).text();
+
+            // Try infinity loading
+            if ( $(this).hasClass('am-post-grid-load-more') ) {
+                paged = $(this).data('next');
+            }
+
             var theSelector = $(this).closest('.am_ajax_post_grid_wrap').find('.asr_texonomy');
             var activeSelector = $(this).closest('.am_ajax_post_grid_wrap').find('.asr_texonomy.active');
 
@@ -31,16 +37,21 @@
                 activeSelector = theSelector;
             }
 
+            // Load Posts
             asr_ajax_get_postdata(term_id, activeSelector, paged, true);
 
             //console.log(pageNow,activeSelector,term_id);
 
         });
 
+        // Set scroll flag
+        var flag = false;
+
     	//ajax filter function
     	function asr_ajax_get_postdata(term_ID, selector, paged, structed){
 
             var getLayout = $(selector).closest('.am_ajax_post_grid_wrap').find(".asr-filter-div").attr("data-layout");
+            var sctollType = $(selector).closest('.am_ajax_post_grid_wrap').attr("data-scroll");
             
             var data = {
                 action: 'asr_filter_posts',
@@ -48,6 +59,7 @@
                 term_ID: term_ID,
                 layout: (getLayout) ? getLayout : "1",
                 jsonData: $(selector).closest('.am_ajax_post_grid_wrap').attr('data-am_ajax_post_grid'),
+                sctoll_type: sctollType,
             }
 
             if( paged ){
@@ -62,6 +74,7 @@
     			data: data,
     			beforeSend: function(data){
     				$(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').show();
+                    flag = true;
     			},
     			complete: function(data){
     				$(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').hide();
@@ -70,6 +83,9 @@
     				$(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
 						//$(this).html(data).fadeIn(300);
 					});
+
+                    flag = false;
+                    $( window ).trigger('scroll')
     			},
     			error: function(data){
     				console.log(data);
@@ -88,6 +104,27 @@
                 }
             });
         });
+
+                            $( window ).on('scroll', function(e){
+                                $('.am-post-grid-load-more').each(function(i,el){
+
+                                    var $this = $(this);
+
+                                    var H = $(window).height(),
+                                        r = el.getBoundingClientRect(),
+                                        t=r.top,
+                                        b=r.bottom;
+
+                                    var tAdj = parseInt(t-(H/2));
+
+                                    if ( flag === false && (H >= tAdj) ) {
+                                        console.log( 'inview' );
+                                        $this.trigger('click');
+                                    } else {
+                                        console.log( 'outview' );
+                                    }
+                                });
+                            });
 
 
     });
