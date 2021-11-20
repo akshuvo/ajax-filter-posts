@@ -22,40 +22,85 @@ Just use this shortcode anywhere. Below you can see all available shortcodes.
 <pre>[am_post_grid]</pre>
 
 * Control for Show or Hide the filter
-Options: yes,no 
+Options: yes,no
 Default: yes
 <pre>[am_post_grid show_filter="no"]</pre>
 
 * Control Number of Posts Per Page
-Options: Integers, -1 for all posts 
+Options: Integers, -1 for all posts
 Default: WordPress Default
 <pre>[am_post_grid posts_per_page="6"]</pre>
 
 * Post pagination
-Options: yes,no 
-Default: "no"
+Options: yes,no
+Default: "yes"
 <pre>[am_post_grid posts_per_page="6" paginate="yes"]</pre>
 
 * Show/Hide "All" Button before filter
-Options: yes,no 
+Options: yes,no
 Default: "yes"
 <pre>[am_post_grid btn_all="yes"]</pre>
+
+* Show/Hide Specific Category Terms
+Options: 1,2,3,4
+Default: ""
+<pre>[am_post_grid cat="100,101,103"]</pre>
+or
+<pre>[am_post_grid terms="100,101,103"]</pre>
+
+* Hide/Show Empty Category Terms
+Options: true, false
+Default: "true"
+<pre>[am_post_grid hide_empty="false"]</pre>
+
+* Post Order
+Options: ASC, DESC
+Default: "DESC"
+<pre>[am_post_grid order="DESC"]</pre>
+
+* Post Orderby
+Default: "title"
+<pre>[am_post_grid orderby="title"]</pre>
+
+Here is the full documentation for post order/orderby: https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
+
+* Pagination Type: Load More button or Paginate Links
+Options: "",load_more
+Default: ""
+<pre>[am_post_grid pagination_type="load_more"]</pre>
+
+
+* Infinite Scroll (Works only for pagination_type="load_more" attributes )
+Options: "",true
+Default: ""
+<pre>[am_post_grid infinite_scroll="true"]</pre>
+
+
+* Animation effect
+Options: "",true
+Default: ""
+<pre>[am_post_grid animation="true"]</pre>
 
 
 
 ## Features
 * Shortcodes for showing anywhere
+* Load More Button
+* Infinite Scroll
+* Animate on Post load
 * Pre-Build Layout
 * Grid Layout
 * Ajax Post Grid
 * Category Filter with ajax
 * Controlling Options
+* Post pagination
+* Show/Hide Specific category terms
 
-== Installation ==
+### Installation
 1. Upload "ajax-filter-posts.zip\" to the "/wp-content/plugins/" directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
 
-== Frequently Asked Questions ==
+### Frequently Asked Questions
 = How to use it? =
 use this shortcode: [am_post_grid]
 
@@ -63,23 +108,57 @@ use this shortcode: [am_post_grid]
 Please post details on support forum.
 
 = I need help with custom feature? =
-email me at info@addonmaster.com
+email me at addonmasterwp@gmail.com
 
 
-== Screenshots ==
-1. Demo
 
-== Changelog ==
+### Changelog
+
+= 3.0.0 =
+* Nov 21, 2021
+Added: Load More Button [See latest Shortcodes]
+Added: Infinite Scroll
+Added: Animation Effect on post load
+Added: Posts restrictions by Terms
+Fixed: Code issues
+
+
+= 2.2.1 =
+* March 8, 2021
+Added: Order Parameter
+Added: Orderby Parameter
+
+= 2.2.0 =
+* Feb 23, 2021
+WordPress 5.6.2 Compatible
+Added: Show/Hide Specific category terms
+Added: Hide/Show Empty Category Terms
+
+
+= 2.1.0 =
+* Feb 3, 2021
+WordPress 5.6 Compatible
+
+= 2.0.4 =
+* March 19, 2020
+Issue Fixed: Draft posts are displayed
+
+= 2.0.2 =
+* March 9, 2020
+Ajax pagination
+CSS Improvement
+Ajax Improvement
+Speed Improvement
+
 = 2.0.0 =
 * Jan 22, 2020
 Multiple grid support
 Ajax Improvement
 Speed Improvement
-Shortcode Extended : 
-	posts_per_page - for controlling number of posts 
+Shortcode Extended :
+	posts_per_page - for controlling number of posts
 	btn_all - Show/Hide "All" Button on filter
 	show_filter - Show/Hide the filter
-More Coming Soon...
 
 = 1.0.4 =
 * Jan 21, 2020

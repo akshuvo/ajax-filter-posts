@@ -13,7 +13,7 @@ Just use this shortcode anywhere. Below you can see all available shortcodes.
 
 ### Post Grid with Ajax Filter by  [AddonMaster.com](https://addonmaster.com)
 
-### Shortcodes
+## Shortcodes
 * Default Shortcode
 <pre>[am_post_grid]</pre>
 
@@ -29,7 +29,7 @@ Default: WordPress Default
 
 * Post pagination
 Options: yes,no
-Default: "no"
+Default: "yes"
 <pre>[am_post_grid posts_per_page="6" paginate="yes"]</pre>
 
 * Show/Hide "All" Button before filter
@@ -60,9 +60,28 @@ Default: "title"
 
 Here is the full documentation for post order/orderby: https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
 
+* Pagination Type: Load More button or Paginate Links
+Options: "",load_more
+Default: ""
+<pre>[am_post_grid pagination_type="load_more"]</pre>
+
+
+* Infinite Scroll (Works only for pagination_type="load_more" attributes )
+Options: "",true
+Default: ""
+<pre>[am_post_grid infinite_scroll="true"]</pre>
+
+
+* Animation effect
+Options: "",true
+Default: ""
+<pre>[am_post_grid animation="true"]</pre>
 
 ###Features
 * Shortcodes for showing anywhere
+* Load More Button
+* Infinite Scroll
+* Animate on Post load
 * Pre-Build Layout
 * Grid Layout
 * Ajax Post Grid
@@ -92,6 +111,15 @@ email me at addonmasterwp@gmail.com
 3. Pagination Preview
 
 == Changelog ==
+
+= 3.0.0 =
+* Nov 21, 2021
+Added: Load More Button [See latest Shortcodes]
+Added: Infinite Scroll
+Added: Animation Effect on post load
+Added: Posts restrictions by Terms
+Fixed: Code issues
+
 
 = 2.2.1 =
 * March 8, 2021
