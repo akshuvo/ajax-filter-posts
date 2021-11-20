@@ -12,7 +12,20 @@ Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you fi
 
 Just use this shortcode anywhere. Below you can see all available shortcodes.
 
-### Post Grid with Ajax Filter by  [AddonMaster.com](https://addonmaster.com)
+### [See the Live demo](http://plugins.addonmaster.com/post-grid-with-ajax-filter/)
+
+###Features
+* Shortcodes for showing anywhere
+* Load More Button
+* Infinite Scroll
+* Animate on Post load
+* Pre-Build Layout
+* Grid Layout
+* Ajax Post Grid
+* Category Filter with ajax
+* Controlling Options
+* Post pagination
+* Show/Hide Specific category terms
 
 ## Shortcodes
 * Default Shortcode
@@ -56,10 +69,10 @@ Default: "DESC"
 <pre>[am_post_grid order="DESC"]</pre>
 
 * Post Orderby
-Default: "title"
+Default: 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
 <pre>[am_post_grid orderby="title"]</pre>
 
-Here is the full documentation for post order/orderby: https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters
+Here is the full documentation for post order/orderby: [Order & Orderby Parameters](https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters)
 
 * Pagination Type: Load More button or Paginate Links
 Options: "",load_more
@@ -78,18 +91,6 @@ Options: "",true
 Default: ""
 <pre>[am_post_grid animation="true"]</pre>
 
-###Features
-* Shortcodes for showing anywhere
-* Load More Button
-* Infinite Scroll
-* Animate on Post load
-* Pre-Build Layout
-* Grid Layout
-* Ajax Post Grid
-* Category Filter with ajax
-* Controlling Options
-* Post pagination
-* Show/Hide Specific category terms
 
 == Installation ==
 1. Upload "ajax-filter-posts.zip\" to the "/wp-content/plugins/" directory.

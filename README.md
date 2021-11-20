@@ -16,7 +16,7 @@ Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you fi
 Just use this shortcode anywhere. Below you can see all available shortcodes.
 
 ### Post Grid with Ajax Filter by  [AddonMaster.com](https://addonmaster.com)
-* [See the Live demo](https://plugin.addonmaster.com/post-grid-with-ajax-filter/)
+* [See the Live demo](http://plugins.addonmaster.com/post-grid-with-ajax-filter/)
 
 * Default Shortcode
 <pre>[am_post_grid]</pre>
