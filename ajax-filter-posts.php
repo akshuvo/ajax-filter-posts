@@ -90,6 +90,8 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
     extract($shortcode_atts);
 
 	ob_start();
+
+	// Texonomy arguments
 	$taxonomy = 'category';
 	$args = array(
 		'hide_empty' => $hide_empty,
@@ -97,8 +99,8 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
 	    'include' => $terms ? $terms : $cat,
 	);
 
-	$terms = get_terms($args);
-	?>
+	// Get category terms
+	$terms = get_terms($args); ?>
 	<div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
 
 		<?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
