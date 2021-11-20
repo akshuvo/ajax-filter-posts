@@ -237,9 +237,11 @@ function asrafp_ajax_functions(){
 			    'total' => $query->max_num_pages
 			) );
 
-
-			if( $pagination_type == 'load_more' && $paginate_links && $dataPaged < $query->max_num_pages ){
-				echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='am-post-grid-load-more'>Load More</button>";
+			// Load more button
+			if( $pagination_type == 'load_more' ){
+				if( $paginate_links && $dataPaged < $query->max_num_pages ){
+					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='am-post-grid-load-more'>".esc_html__( 'Load More', 'am_post_grid' )."</button>";
+				}
 			} else {
 				echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";
 			}

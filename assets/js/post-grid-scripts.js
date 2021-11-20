@@ -76,11 +76,23 @@
     			url: asr_ajax_params.asr_ajax_url,
     			data: data,
     			beforeSend: function(data){
-    				$(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').show();
-                    flag = true;
+    				
+                    if ( loadMore ) {
+                        // Loading Animation Start
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.am-post-grid-load-more').addClass('loading');
+                        flag = true;
+                    } else {
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').show();
+                    }
     			},
     			complete: function(data){
-    				$(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').hide();
+    				
+                    if ( loadMore ) {
+                        // Loading Animation End
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.am-post-grid-load-more').removeClass('loading');
+                    } else {
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').hide();
+                    }
     			},
     			success: function(data){
     				
