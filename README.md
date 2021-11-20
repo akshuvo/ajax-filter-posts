@@ -114,8 +114,7 @@ email me at addonmasterwp@gmail.com
 
 ### Changelog
 
-= 3.0.0 =
-#### Nov 21, 2021 (latest)
+#### 3.0.x : Nov 21, 2021 (latest)
 * Added: Load More Button [See latest Shortcodes]
 * Added: Infinite Scroll
 * Added: Animation Effect on post load
