@@ -116,11 +116,11 @@ email me at addonmasterwp@gmail.com
 
 = 3.0.0 =
 * Nov 21, 2021
->Added: Load More Button [See latest Shortcodes]
->Added: Infinite Scroll
->Added: Animation Effect on post load
->Added: Posts restrictions by Terms
->Fixed: Code issues
+* Added: Load More Button [See latest Shortcodes]
+* Added: Infinite Scroll
+* Added: Animation Effect on post load
+* Added: Posts restrictions by Terms
+* Fixed: Code issues
 
 
 = 2.2.1 =
