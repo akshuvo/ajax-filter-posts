@@ -77,7 +77,8 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
                 'hide_empty' => 'true',
                 'orderby' => 'title',
     			'order'   => 'DESC',
-    			'scroll'   => 'infinite',
+    			'pagination_type'   => 'load_more',
+    			'infinite_scroll'   => 'true',
             ),
             $atts
         );
@@ -95,7 +96,7 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 
 	$terms = get_terms($args);
 	?>
-	<div class="am_ajax_post_grid_wrap" data-scroll="<?php echo esc_attr($scroll); ?>" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
+	<div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo json_encode($shortcode_atts);?>'>
 
 		<?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
 			<div class="asr-filter-div" data-layout="<?php echo $layout; ?>"><ul>
@@ -133,7 +134,8 @@ function asrafp_ajax_functions(){
 
 	$term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : null;
 	$layout = isset( $_POST['layout'] ) ? intval( sanitize_text_field( $_POST['layout'] ) ) : null;
-	$sctoll_type = isset( $_POST['sctoll_type'] ) ? sanitize_text_field( $_POST['sctoll_type'] ) : null;
+	$pagination_type = isset( $_POST['pagination_type'] ) ? sanitize_text_field( $_POST['pagination_type'] ) : null;
+
 
 	// Pagination
 	if( $_POST['paged'] ) {
@@ -191,9 +193,12 @@ function asrafp_ajax_functions(){
 	$query = new WP_Query($data);
 	ob_start();
 
-	if( $query->have_posts() ):
-		echo "<div class='am_post_grid am__col-3 am_layout_{$layout}'>";
-		while( $query->have_posts()): $query->the_post(); ?>
+	// Wrap with a div when infinity load
+	echo ( $pagination_type == 'load_more' ) ? '<div class="am-postgrid-wrapper">' : '';
+
+	if( $query->have_posts() ): ?>
+		<div class="am_post_grid am__col-3 am_layout_<?php echo esc_attr( $layout ); ?>">
+		<?php while( $query->have_posts()): $query->the_post(); ?>
 
 			<?php if($layout == 1){ ?>
 			<div class="am_grid_col">
@@ -232,15 +237,11 @@ function asrafp_ajax_functions(){
 			    'total' => $query->max_num_pages
 			) );
 
-			echo "<div id='am_posts_navigation_init'>";
-			if ( $sctoll_type ) {
-				// code...
-			}
-				echo $paginate_links;
-			echo "</div>";
 
-			if( $paginate_links && $dataPaged < $query->max_num_pages ){
+			if( $pagination_type == 'load_more' && $paginate_links && $dataPaged < $query->max_num_pages ){
 				echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='am-post-grid-load-more'>Load More</button>";
+			} else {
+				echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";
 			}
 
 		?>
@@ -251,6 +252,9 @@ function asrafp_ajax_functions(){
 		esc_html_e('No Posts Found','am_post_grid');
 	endif;
 	wp_reset_query();
+
+	// Wrap close when infinity load
+	echo ( $pagination_type == 'load_more' ) ? '</div>' : '';
 
 	echo ob_get_clean();
 	die();

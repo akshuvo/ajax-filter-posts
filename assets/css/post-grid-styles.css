@@ -178,3 +178,7 @@
 #am_posts_navigation_init .page-numbers:hover {
     background: #f0f0f0;
 }
+
+.am_posts_navigation{
+  text-align: center;
+}

@@ -22,10 +22,12 @@
             var term_id = "-1";
 
             var paged = $(this).text();
+            var loadMore = false;
 
             // Try infinity loading
             if ( $(this).hasClass('am-post-grid-load-more') ) {
                 paged = $(this).data('next');
+                loadMore = true;
             }
 
             var theSelector = $(this).closest('.am_ajax_post_grid_wrap').find('.asr_texonomy');
@@ -38,7 +40,7 @@
             }
 
             // Load Posts
-            asr_ajax_get_postdata(term_id, activeSelector, paged, true);
+            asr_ajax_get_postdata(term_id, activeSelector, paged, loadMore);
 
             //console.log(pageNow,activeSelector,term_id);
 
@@ -48,10 +50,10 @@
         var flag = false;
 
     	//ajax filter function
-    	function asr_ajax_get_postdata(term_ID, selector, paged, structed){
+    	function asr_ajax_get_postdata(term_ID, selector, paged, loadMore){
 
             var getLayout = $(selector).closest('.am_ajax_post_grid_wrap').find(".asr-filter-div").attr("data-layout");
-            var sctollType = $(selector).closest('.am_ajax_post_grid_wrap').attr("data-scroll");
+            var pagination_type = $(selector).closest('.am_ajax_post_grid_wrap').attr("data-pagination_type");
             
             var data = {
                 action: 'asr_filter_posts',
@@ -59,14 +61,15 @@
                 term_ID: term_ID,
                 layout: (getLayout) ? getLayout : "1",
                 jsonData: $(selector).closest('.am_ajax_post_grid_wrap').attr('data-am_ajax_post_grid'),
-                sctoll_type: sctollType,
+                pagination_type: pagination_type,
+                loadMore: loadMore,
             }
 
             if( paged ){
                 data['paged'] = paged;
             }
 
-            //console.log(term_ID,selector,paged,structed);
+            console.log(term_ID,selector,paged,loadMore);
 
     		$.ajax({
     			type: 'post',
@@ -80,9 +83,21 @@
     				$(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').hide();
     			},
     			success: function(data){
-    				$(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
-						//$(this).html(data).fadeIn(300);
-					});
+    				
+                    if ( loadMore ) {
+
+                        var newPosts = $('.am_post_grid', data).html();
+                        var newPagination = $('.am_posts_navigation', data).html();
+                        console.log(newPosts,newPagination);
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
+
+                    } else {
+
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
+                            //$(this).html(data).fadeIn(300);
+                        });
+                    }
 
                     flag = false;
                     $( window ).trigger('scroll')
@@ -119,7 +134,7 @@
 
                                     if ( flag === false && (H >= tAdj) ) {
                                         console.log( 'inview' );
-                                        $this.trigger('click');
+                                        //$this.trigger('click');
                                     } else {
                                         console.log( 'outview' );
                                     }
