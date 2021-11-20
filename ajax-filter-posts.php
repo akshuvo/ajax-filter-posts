@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name:  Post Grid with Ajax Filter
- * Plugin URI:   http://asrcoder.com
+ * Plugin URI:   http://addonmaster.com
  * Author:       Akhtarujjaman Shuvo
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	  2.2.1
- * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax.
+ * Version: 	  3.0.0
+ * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax. Infinite scroll function included.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  am_post_grid
@@ -19,6 +19,8 @@
 * @since 1.0.0
 */
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+define('AM_POST_GRID_VERSION', value)
 
 /**
 * Loading Text Domain
@@ -35,16 +37,11 @@ function am_post_grid_plugin_loaded_action() {
 //require_once( dirname( __FILE__ ) . '/inc/admin/admin-page.php' );
 
 
-//enqueue scripts
+// Enqueue scripts
 function asrafp_scripts(){
-	//$ver = current_time( 'timestamp' );
-	$ver = '2.2.1';
-
-	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? : '.min';
 
 	wp_enqueue_style( 'asrafp-styles', plugin_dir_url( __FILE__ ) . 'assets/css/post-grid-styles.css', null, $ver );
 
-	wp_enqueue_script( 'jquery' );
 	wp_register_script( 'asr_ajax_filter_post', plugin_dir_url( __FILE__ ) . 'assets/js/post-grid-scripts.js', 'jquery', $ver );
 	wp_enqueue_script( 'asr_ajax_filter_post' );
 
@@ -58,7 +55,7 @@ function asrafp_scripts(){
 add_action( 'wp_enqueue_scripts', 'asrafp_scripts' );
 
 //shortcode function
-function asrafp_shortcode_mapper( $atts, $content = null ) {
+function am_post_grid_shortcode_mapper( $atts, $content = null ) {
 
 	// Posts per pages.
 	$posts_per_page = ( get_option( 'posts_per_page', true ) ) ? get_option( 'posts_per_page', true ) : 9;
@@ -120,15 +117,15 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 
 	<?php return ob_get_clean();
 }
-add_shortcode('asr_ajax','asrafp_shortcode_mapper');
-add_shortcode('am_post_grid','asrafp_shortcode_mapper');
+add_shortcode('asr_ajax','am_post_grid_shortcode_mapper');
+add_shortcode('am_post_grid','am_post_grid_shortcode_mapper');
 
-//ajax actions
-add_action('wp_ajax_asr_filter_posts', 'asrafp_ajax_functions');
-add_action('wp_ajax_nopriv_asr_filter_posts', 'asrafp_ajax_functions');
+// Load Posts Ajax actions
+add_action('wp_ajax_asr_filter_posts', 'am_post_grid_load_posts_ajax_functions');
+add_action('wp_ajax_nopriv_asr_filter_posts', 'am_post_grid_load_posts_ajax_functions');
 
-//ajax main function
-function asrafp_ajax_functions(){
+// Load Posts Ajax function
+function am_post_grid_load_posts_ajax_functions(){
 	// Verify nonce
   	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
     die('Permission denied');
@@ -158,6 +155,7 @@ function asrafp_ajax_functions(){
 		'paged' => $dataPaged,
 	);
 
+	// If json data found
 	if( $jsonData ){
 		if( $jsonData['posts_per_page'] ){
 			$data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
@@ -202,8 +200,11 @@ function asrafp_ajax_functions(){
 	// Wrap with a div when infinity load
 	echo ( $pagination_type == 'load_more' ) ? '<div class="am-postgrid-wrapper">' : '';
 
+	// Start posts query
 	if( $query->have_posts() ): ?>
+
 		<div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$layout} {$has_animation_class} " ); ?>">
+		
 		<?php while( $query->have_posts()): $query->the_post(); ?>
 
 			<?php if($layout == 1){ ?>
@@ -249,7 +250,10 @@ function asrafp_ajax_functions(){
 				if( $paginate_links && $dataPaged < $query->max_num_pages ){
 					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$infinite_scroll_class} am-post-grid-load-more'>".esc_html__( 'Load More', 'am_post_grid' )."</button>";
 				}
+
 			} else {
+
+				// Paginate links
 				echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";
 			}
 
@@ -265,6 +269,7 @@ function asrafp_ajax_functions(){
 	// Wrap close when infinity load
 	echo ( $pagination_type == 'load_more' ) ? '</div>' : '';
 
+	// Echo the results
 	echo ob_get_clean();
 	die();
 }
@@ -283,6 +288,6 @@ function am_ajax_post_grid_plugin_action_links( $links ) {
 	);
 	return array_merge( $plugin_links, $links );
 }
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
+//add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
 
 

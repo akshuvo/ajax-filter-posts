@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Grid with Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-08 19:25+0000\n"
+"POT-Creation-Date: 2021-11-20 18:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,10 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.1; wp-5.3.3-alpha-47419"
-
-#: ajax-filter-posts.php:199
-msgid "<h2>No Posts Found</h2>"
-msgstr ""
 
 #. Author of the plugin
 msgid "Akhtarujjaman Shuvo"
@@ -31,20 +27,28 @@ msgstr ""
 msgid "http://asrcoder.com"
 msgstr ""
 
+#: ajax-filter-posts.php:250
+msgid "Load More"
+msgstr ""
+
+#: ajax-filter-posts.php:261
+msgid "No Posts Found"
+msgstr ""
+
+#: ajax-filter-posts.php:282
+msgid "Options"
+msgstr ""
+
 #. Name of the plugin
 msgid "Post Grid with Ajax Filter"
 msgstr ""
 
 #. Description of the plugin
 msgid ""
-"Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps "
-"you filter your post by category terms with Ajax."
+"Post Grid with Ajax Filter helps you filter your posts by category terms "
+"with Ajax."
 msgstr ""
 
-#: ajax-filter-posts.php:162
+#: ajax-filter-posts.php:220
 msgid "Read More"
-msgstr ""
-
-#: ajax-filter-posts.php:226
-msgid "Shortcodes"
 msgstr ""
