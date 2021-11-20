@@ -54,13 +54,16 @@
 
             var getLayout = $(selector).closest('.am_ajax_post_grid_wrap').find(".asr-filter-div").attr("data-layout");
             var pagination_type = $(selector).closest('.am_ajax_post_grid_wrap').attr("data-pagination_type");
+            var jsonData = $(selector).closest('.am_ajax_post_grid_wrap').attr('data-am_ajax_post_grid');
+
+            var $args = JSON.parse(jsonData);
             
             var data = {
                 action: 'asr_filter_posts',
                 asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
                 term_ID: term_ID,
                 layout: (getLayout) ? getLayout : "1",
-                jsonData: $(selector).closest('.am_ajax_post_grid_wrap').attr('data-am_ajax_post_grid'),
+                jsonData: jsonData,
                 pagination_type: pagination_type,
                 loadMore: loadMore,
             }
@@ -68,8 +71,6 @@
             if( paged ){
                 data['paged'] = paged;
             }
-
-            console.log(term_ID,selector,paged,loadMore);
 
     		$.ajax({
     			type: 'post',
@@ -100,7 +101,7 @@
 
                         var newPosts = $('.am_post_grid', data).html();
                         var newPagination = $('.am_posts_navigation', data).html();
-                        console.log(newPosts,newPagination);
+
                         $(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_post_grid').append(newPosts);
                         $(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
 
@@ -112,10 +113,16 @@
                     }
 
                     flag = false;
-                    $( window ).trigger('scroll')
+                    $( window ).trigger('scroll');
+
+                    // Animation
+                    if( $args.animation == "true" ){
+                        $(selector).closest('.am_ajax_post_grid_wrap').find('.am_grid_col').slideDown();
+                    }
+                    
     			},
     			error: function(data){
-    				console.log(data);
+    				alert('Cannot load the Post Grid.');
     			},
 
     		});
@@ -132,26 +139,27 @@
             });
         });
 
-                            $( window ).on('scroll', function(e){
-                                $('.am-post-grid-load-more').each(function(i,el){
+        // Handle Infinite scroll
+        $( window ).on('scroll', function(e){
+            $('.infinite_scroll.am-post-grid-load-more').each(function(i,el){
 
-                                    var $this = $(this);
+                var $this = $(this);
 
-                                    var H = $(window).height(),
-                                        r = el.getBoundingClientRect(),
-                                        t=r.top,
-                                        b=r.bottom;
+                var H = $(window).height(),
+                    r = el.getBoundingClientRect(),
+                    t=r.top,
+                    b=r.bottom;
 
-                                    var tAdj = parseInt(t-(H/2));
+                var tAdj = parseInt(t-(H/2));
 
-                                    if ( flag === false && (H >= tAdj) ) {
-                                        console.log( 'inview' );
-                                        //$this.trigger('click');
-                                    } else {
-                                        console.log( 'outview' );
-                                    }
-                                });
-                            });
+                if ( flag === false && (H >= tAdj) ) {
+                    //console.log( 'inview' );
+                    $this.trigger('click');
+                } else {
+                    //console.log( 'outview' );
+                }
+            });
+        });
 
 
     });

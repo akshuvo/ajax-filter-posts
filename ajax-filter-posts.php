@@ -65,20 +65,21 @@ function asrafp_shortcode_mapper( $atts, $content = null ) {
 
 	$shortcode_atts = shortcode_atts(
             array(
-                'show_filter' => "yes",
-                'btn_all' => "yes",
-                'initial' => "-1",
-                'layout' => '1',
-                'post_type' => 'post',
-                'posts_per_page' => $posts_per_page,
-                'cat' => '',
-                'terms' => '',
-                'paginate' => 'no',
-                'hide_empty' => 'true',
-                'orderby' => 'title',
-    			'order'   => 'DESC',
-    			'pagination_type'   => 'load_more',
-    			'infinite_scroll'   => 'true',
+                'show_filter' 		=> "yes",
+                'btn_all' 			=> "yes",
+                'initial' 			=> "-1",
+                'layout' 			=> '1',
+                'post_type' 		=> 'post',
+                'posts_per_page' 	=> $posts_per_page,
+                'cat' 				=> '',
+                'terms' 			=> '',
+                'paginate' 			=> 'no',
+                'hide_empty' 		=> 'true',
+                'orderby' 			=> 'title',
+    			'order'   			=> 'DESC',
+    			'pagination_type'   => '',
+    			'infinite_scroll'   => '',
+    			'animation'  		=> '',
             ),
             $atts
         );
@@ -136,7 +137,6 @@ function asrafp_ajax_functions(){
 	$layout = isset( $_POST['layout'] ) ? intval( sanitize_text_field( $_POST['layout'] ) ) : null;
 	$pagination_type = isset( $_POST['pagination_type'] ) ? sanitize_text_field( $_POST['pagination_type'] ) : null;
 
-
 	// Pagination
 	if( $_POST['paged'] ) {
 		$dataPaged = intval($_POST['paged']);
@@ -145,6 +145,12 @@ function asrafp_ajax_functions(){
 	}
 
 	$jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );
+
+	// Add infinite_scroll to button
+	$infinite_scroll_class = isset( $jsonData['infinite_scroll'] ) && $jsonData['infinite_scroll'] == "true" ? ' infinite_scroll ' : '';
+
+	// Set animation class
+	$has_animation_class = isset( $jsonData['animation'] ) && $jsonData['animation'] == "true" ? ' am_has_animation ' : '';
 
 	$data = array(
 		'post_type' => 'post',
@@ -197,7 +203,7 @@ function asrafp_ajax_functions(){
 	echo ( $pagination_type == 'load_more' ) ? '<div class="am-postgrid-wrapper">' : '';
 
 	if( $query->have_posts() ): ?>
-		<div class="am_post_grid am__col-3 am_layout_<?php echo esc_attr( $layout ); ?>">
+		<div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$layout} {$has_animation_class} " ); ?>">
 		<?php while( $query->have_posts()): $query->the_post(); ?>
 
 			<?php if($layout == 1){ ?>
@@ -239,8 +245,9 @@ function asrafp_ajax_functions(){
 
 			// Load more button
 			if( $pagination_type == 'load_more' ){
+
 				if( $paginate_links && $dataPaged < $query->max_num_pages ){
-					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='am-post-grid-load-more'>".esc_html__( 'Load More', 'am_post_grid' )."</button>";
+					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$infinite_scroll_class} am-post-grid-load-more'>".esc_html__( 'Load More', 'am_post_grid' )."</button>";
 				}
 			} else {
 				echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";

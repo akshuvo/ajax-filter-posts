@@ -193,7 +193,8 @@
 }
 
 .am_posts_navigation{
-  text-align: center;
+    text-align: center;
+    margin-bottom: 30px;
 }
 /* End Paginaion */
 
@@ -222,3 +223,7 @@
     100% { transform: rotate(360deg); }
 }
 /* Eng Loding Animation */
+
+.am_has_animation .am_grid_col{
+    display: none;
+}
