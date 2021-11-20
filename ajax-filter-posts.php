@@ -45,7 +45,7 @@ function asrafp_scripts(){
 	wp_enqueue_style( 'asrafp-styles', plugin_dir_url( __FILE__ ) . 'assets/css/post-grid-styles.css', null, AM_POST_GRID_VERSION );
 
 	// JS File
-	wp_register_script( 'asr_ajax_filter_post', plugin_dir_url( __FILE__ ) . 'assets/js/post-grid-scripts.js', 'jquery', AM_POST_GRID_VERSION );
+	wp_register_script( 'asr_ajax_filter_post', plugin_dir_url( __FILE__ ) . 'assets/js/post-grid-scripts.js', array('jquery'), AM_POST_GRID_VERSION );
 	wp_enqueue_script( 'asr_ajax_filter_post' );
 
 	// Localization
