@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Grid with Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-20 18:30+0000\n"
+"POT-Creation-Date: 2022-09-06 15:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,29 +13,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.1; wp-5.3.3-alpha-47419"
+"X-Loco-Version: 2.6.2; wp-6.0.1\n"
+"X-Domain: ajax-filter-posts"
 
 #. Author of the plugin
-msgid "Akhtarujjaman Shuvo"
+msgid "AddonMaster"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://addonmaster.com"
 msgstr ""
 
 #. Author URI of the plugin
 msgid "http://addonmaster.com/plugins/post-grid-with-ajax-filter"
 msgstr ""
 
-#. URI of the plugin
-msgid "http://asrcoder.com"
-msgstr ""
-
-#: ajax-filter-posts.php:250
+#: ajax-filter-posts.php:258
 msgid "Load More"
 msgstr ""
 
-#: ajax-filter-posts.php:261
+#: ajax-filter-posts.php:272
 msgid "No Posts Found"
 msgstr ""
 
-#: ajax-filter-posts.php:282
+#: ajax-filter-posts.php:294
 msgid "Options"
 msgstr ""
 
@@ -46,9 +47,9 @@ msgstr ""
 #. Description of the plugin
 msgid ""
 "Post Grid with Ajax Filter helps you filter your posts by category terms "
-"with Ajax."
+"with Ajax. Infinite scroll function included."
 msgstr ""
 
-#: ajax-filter-posts.php:220
+#: ajax-filter-posts.php:228
 msgid "Read More"
 msgstr ""

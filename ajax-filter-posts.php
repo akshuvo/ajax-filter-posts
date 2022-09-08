@@ -2,13 +2,13 @@
 /**
  * Plugin Name:  Post Grid with Ajax Filter
  * Plugin URI:   http://addonmaster.com
- * Author:       Akhtarujjaman Shuvo
+ * Author:       AddonMaster 
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	  3.0.3
+ * Version: 	 3.1.6
  * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax. Infinite scroll function included.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:  am_post_grid
+ * Text Domain:  ajax-filter-posts
  * Domain Path:  /lang
  */
 
@@ -21,14 +21,14 @@
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 // Defines
-define('AM_POST_GRID_VERSION', '3.0.3');
+define('AM_POST_GRID_VERSION', '3.1.6');
 
 /**
 * Loading Text Domain
 */
 add_action('plugins_loaded', 'am_post_grid_plugin_loaded_action', 10, 2);
 function am_post_grid_plugin_loaded_action() {
-	load_plugin_textdomain( 'am_post_grid', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
+	load_plugin_textdomain( 'ajax-filter-posts', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
 }
 
 
@@ -39,7 +39,7 @@ function am_post_grid_plugin_loaded_action() {
 
 
 // Enqueue scripts
-function asrafp_scripts(){
+function am_ajax_filter_posts_scripts(){
 
 	// CSS File
 	wp_enqueue_style( 'asrafp-styles', plugin_dir_url( __FILE__ ) . 'assets/css/post-grid-styles.css', null, AM_POST_GRID_VERSION );
@@ -56,7 +56,7 @@ function asrafp_scripts(){
 	);
 }
 
-add_action( 'wp_enqueue_scripts', 'asrafp_scripts' );
+add_action( 'wp_enqueue_scripts', 'am_ajax_filter_posts_scripts' );
 
 //shortcode function
 function am_post_grid_shortcode_mapper( $atts, $content = null ) {
@@ -106,7 +106,7 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
 		<?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
 			<div class="asr-filter-div" data-layout="<?php echo $layout; ?>"><ul>
 				<?php if($btn_all != "no"): ?>
-					<li class="asr_texonomy" data_id="-1"><?php echo esc_html('All','am_post_grid'); ?></li>
+					<li class="asr_texonomy" data_id="-1"><?php echo esc_html('All','ajax-filter-posts'); ?></li>
 				<?php endif; ?>
 		        <?php foreach( $terms as $term ) { ?>
 		            <li class="asr_texonomy" data_id="<?php echo $term->term_id; ?>"><?php echo $term->name; ?></li>
@@ -118,7 +118,9 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
 		    <div class="asr-loader">
 		    	<div class="lds-dual-ring"></div>
 		    </div>
-		    <div class="asrafp-filter-result"></div>
+		    <div class="asrafp-filter-result">
+		    	<?php echo am_post_grid_output( am_post_grid_get_args_from_shortcode_atts($shortcode_atts) ); ?>
+		    </div>
 	    </div>
     </div>
 
@@ -127,6 +129,53 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
 add_shortcode('asr_ajax','am_post_grid_shortcode_mapper');
 add_shortcode('am_post_grid','am_post_grid_shortcode_mapper');
 
+// Get Args from Json Data
+function am_post_grid_get_args_from_shortcode_atts( $jsonData ){
+
+	if( isset( $jsonData['posts_per_page'] ) ){
+		$data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
+	}
+
+	if( isset( $jsonData['orderby'] ) ){
+		$data['orderby'] = sanitize_text_field( $jsonData['orderby'] );
+	}
+
+	if( isset( $jsonData['order'] ) ){
+		$data['order'] = sanitize_text_field( $jsonData['order'] );
+	}
+
+	if( isset( $jsonData['pagination_type'] ) ){
+		$data['pagination_type'] = sanitize_text_field( $jsonData['pagination_type'] );
+		
+	}
+
+	if( isset( $jsonData['animation'] ) && $jsonData['animation'] == "true" ){
+		$data['animation'] = 'am_has_animation';
+	}
+
+	if( isset( $jsonData['infinite_scroll'] ) && $jsonData['infinite_scroll'] == "true" ){
+		$data['infinite_scroll'] = 'infinite_scroll';
+	}
+
+	// Bind to Category Terms
+	$terms =  '';
+	if ( isset( $jsonData['cat'] ) && !empty( $jsonData['cat'] ) ) {
+		$terms = explode(',', $jsonData['cat']);
+	} elseif ( isset( $jsonData['terms'] ) && !empty( $jsonData['terms'] ) ) {
+		$terms = explode(',', $jsonData['terms']);
+	}
+
+	
+	// Tax Query
+	if ( !empty( $terms ) ) {
+		$data['tax_query'] = [
+			'category' => $terms,
+		];
+	}
+
+	return $data;
+}
+
 // Load Posts Ajax actions
 add_action('wp_ajax_asr_filter_posts', 'am_post_grid_load_posts_ajax_functions');
 add_action('wp_ajax_nopriv_asr_filter_posts', 'am_post_grid_load_posts_ajax_functions');
@@ -134,12 +183,12 @@ add_action('wp_ajax_nopriv_asr_filter_posts', 'am_post_grid_load_posts_ajax_func
 // Load Posts Ajax function
 function am_post_grid_load_posts_ajax_functions(){
 	// Verify nonce
-  	if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
-    die('Permission denied');
+  	// if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
+    // die('Permission denied');
 
-	$term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : null;
-	$layout = isset( $_POST['layout'] ) ? intval( sanitize_text_field( $_POST['layout'] ) ) : null;
-	$pagination_type = isset( $_POST['pagination_type'] ) ? sanitize_text_field( $_POST['pagination_type'] ) : null;
+    $data = [];
+
+	$term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
 
 	// Pagination
 	if( $_POST['paged'] ) {
@@ -149,59 +198,100 @@ function am_post_grid_load_posts_ajax_functions(){
 	}
 
 	$jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );
+	
+	// Merge Json Data
+	$data = array_merge( am_post_grid_get_args_from_shortcode_atts( $jsonData ), $data );
 
-	// Add infinite_scroll to button
-	$infinite_scroll_class = isset( $jsonData['infinite_scroll'] ) && $jsonData['infinite_scroll'] == "true" ? ' infinite_scroll ' : '';
+	// Current Page
+	if ( isset( $_POST['paged'] ) ) {
+		$data['paged'] = sanitize_text_field( $_POST['paged'] );
+	}
 
-	// Set animation class
-	$has_animation_class = isset( $jsonData['animation'] ) && $jsonData['animation'] == "true" ? ' am_has_animation ' : '';
+	// Selected Category
+	if ( !empty( $term_ID ) && $term_ID != -1 ) {
+		$data['tax_query'] = [
+			'category' => [$term_ID],
+		];
+	}
 
-	$data = array(
+	// Output
+	echo am_post_grid_output( $data );
+
+	die();
+}
+
+// Post Grid
+function am_post_grid_output( $args = [] ){
+
+	// Parse Args
+	$args = wp_parse_args( $args, [
 		'post_type' => 'post',
 		'post_status' => 'publish',
-		'paged' => $dataPaged,
+		'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
+		'posts_per_page' => '',
+		'orderby' => '',
+		'order' => '',
+		'layout' => '1',
+		'pagination_type' => '',
+		'animation' => '',
+		'infinite_scroll' => '',
+		'tax_query' => [
+			'category' => []
+		],
+	]);
+
+	// Post Query Args
+	$query_args = array(
+		'post_type' => 'post',
+		'post_status' => 'publish',
+		'paged' => $args['paged'],
 	);
 
+
 	// If json data found
-	if( $jsonData ){
-		if( $jsonData['posts_per_page'] ){
-			$data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
-		}
+	if ( !empty( $args['posts_per_page'] ) ) {
+		$query_args['posts_per_page'] = intval( $args['posts_per_page'] );
+	}
 
-		if( $jsonData['orderby'] ){
-			$data['orderby'] = sanitize_text_field( $jsonData['orderby'] );
-		}
+	if ( !empty( $args['orderby'] ) ) {
+		$query_args['orderby'] = sanitize_text_field( $args['orderby'] );
+	}
 
-		if( $jsonData['order'] ){
-			$data['order'] = sanitize_text_field( $jsonData['order'] );
+	if ( !empty( $args['order'] ) ) {
+		$query_args['order'] = sanitize_text_field( $args['order'] );
+	}
+	
+
+	// Pagination Type
+	$pagination_type = sanitize_text_field( $args['pagination_type'] );
+	$dataPaged = sanitize_text_field( $args['paged'] );
+
+
+	// Tax Query Var
+	$tax_query = [];
+
+	// Check if has terms 
+	if( !empty( $args['tax_query'] ) && is_array( $args['tax_query'] ) ) {
+		foreach ( $args['tax_query'] as $taxonomy => $terms ) {
+			if ( !empty( $terms ) ) {
+				$tax_query[] =[
+					'taxonomy' => $taxonomy,
+					'field' => 'term_id',
+					'terms' => $terms,
+				];
+			}
+			
 		}
 	}
 
-	// Bind to Category Terms
-	if( $term_ID == -1 ){
-		if ( isset( $jsonData['cat'] ) && !empty( $jsonData['cat'] ) ) {
-			$term_ID = explode(',', $jsonData['cat']);
-		} elseif ( isset( $jsonData['terms'] ) && !empty( $jsonData['terms'] ) ) {
-			$term_ID = explode(',', $jsonData['terms']);
-		} else {
-			$term_ID =  null;
-		}
-		
+	// Tax Query
+	if ( !empty( $tax_query ) ) {
+		$query_args['tax_query'] = $tax_query;
 	}
-
-	// Check if set terms 
-	if( $term_ID ){
-		$data['tax_query'] = array(
-			array(
-				'taxonomy' => 'category',
-				'field' => 'term_id',
-				'terms' => $term_ID,
-			)
-		);
-	}
+	
 
 	//post query
-	$query = new WP_Query($data);
+	$query = new WP_Query( $query_args );
 	ob_start();
 
 	// Wrap with a div when infinity load
@@ -210,11 +300,11 @@ function am_post_grid_load_posts_ajax_functions(){
 	// Start posts query
 	if( $query->have_posts() ): ?>
 
-		<div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$layout} {$has_animation_class} " ); ?>">
+		<div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$args['layout']} {$args['animation']} " ); ?>">
 		
 		<?php while( $query->have_posts()): $query->the_post(); ?>
 
-			<?php if($layout == 1){ ?>
+			<?php if($args['layout'] == "1"){ ?>
 			<div class="am_grid_col">
 				<div class="am_single_grid">
 					<div class="am_thumb">
@@ -225,11 +315,11 @@ function am_post_grid_load_posts_ajax_functions(){
 						<div class="am__excerpt">
 							<?php echo wp_trim_words( get_the_excerpt(), 15, null ); ?>
 						</div>
-						<a href="<?php echo get_the_permalink(); ?>" class="am__readmore"><?php echo esc_html__('Read More','am_post_grid');?></a>
+						<a href="<?php echo get_the_permalink(); ?>" class="am__readmore"><?php echo esc_html__('Read More','ajax-filter-posts');?></a>
 					</div>
 				</div>
 			</div>
-			<?php } else if( $layout == 2 ){ ?>
+			<?php } else if( $args['layout'] == 2 ){ ?>
 			<?php } ?>
 
 		<?php endwhile; ?>
@@ -255,7 +345,7 @@ function am_post_grid_load_posts_ajax_functions(){
 			if( $pagination_type == 'load_more' ){
 
 				if( $paginate_links && $dataPaged < $query->max_num_pages ){
-					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$infinite_scroll_class} am-post-grid-load-more'>".esc_html__( 'Load More', 'am_post_grid' )."</button>";
+					echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'ajax-filter-posts' )."</button>";
 				}
 
 			} else {
@@ -269,7 +359,7 @@ function am_post_grid_load_posts_ajax_functions(){
 
 		<?php
 	else:
-		esc_html_e('No Posts Found','am_post_grid');
+		esc_html_e('No Posts Found','ajax-filter-posts');
 	endif;
 	wp_reset_query();
 
@@ -277,10 +367,8 @@ function am_post_grid_load_posts_ajax_functions(){
 	echo ( $pagination_type == 'load_more' ) ? '</div>' : '';
 
 	// Echo the results
-	echo ob_get_clean();
-	die();
+	return ob_get_clean();
 }
-
 
 
 /**
@@ -291,7 +379,7 @@ function am_post_grid_load_posts_ajax_functions(){
  */
 function am_ajax_post_grid_plugin_action_links( $links ) {
 	$plugin_links = array(
-		'<a href="'.admin_url( 'admin.php?page=ajax-post-grid' ).'">' . esc_html__( 'Options', 'am_post_grid' ) . '</a>',
+		'<a href="'.admin_url( 'admin.php?page=ajax-post-grid' ).'">' . esc_html__( 'Options', 'ajax-filter-posts' ) . '</a>',
 	);
 	return array_merge( $plugin_links, $links );
 }
