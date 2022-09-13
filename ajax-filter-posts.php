@@ -4,7 +4,7 @@
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster 
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	 3.1.6
+ * Version: 	 3.2.1
  * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax. Infinite scroll function included.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,7 +21,7 @@
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 // Defines
-define('AM_POST_GRID_VERSION', '3.1.6');
+define('AM_POST_GRID_VERSION', '3.2.1');
 
 /**
 * Loading Text Domain
@@ -82,6 +82,7 @@ function am_post_grid_shortcode_mapper( $atts, $content = null ) {
     			'pagination_type'   => '',
     			'infinite_scroll'   => '',
     			'animation'  		=> '',
+    			'grid_id'  			=> '', // master ID
             ),
             $atts
         );
@@ -384,5 +385,3 @@ function am_ajax_post_grid_plugin_action_links( $links ) {
 	return array_merge( $plugin_links, $links );
 }
 //add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
-
-
