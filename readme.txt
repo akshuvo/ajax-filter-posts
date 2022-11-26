@@ -1,8 +1,8 @@
 === Post Grid with Ajax Filter ===
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.0.2
-Stable tag: 3.2.1
+Tested up to: 6.1.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
