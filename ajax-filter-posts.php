@@ -398,7 +398,7 @@ function appsero_init_tracker_ajax_filter_posts() {
       require_once __DIR__ . '/appsero/src/Client.php';
     }
 
-    $client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'Post Grid with Ajax Filter', __FILE__ );
+	$client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'Post Grid Ajax', __FILE__ );
 
     // Active insights
     $client->insights()->init();
