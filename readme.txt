@@ -126,6 +126,10 @@ email me at addonmasterwp@gmail.com
 
 == Changelog ==
 
+= 3.3.0 =
+* March 1, 2023
+- WordPress 6.1.1 Compatible
+
 = 3.2.1 =
 * Sep 10, 2022
 Added: Static Load on Page Load
