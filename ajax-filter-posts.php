@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:  Post Grid with Ajax Filter
+ * Plugin Name:  Post Grid Ajax
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster 
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
- * Version: 	 3.2.2
+ * Version: 	 3.3.0
  * Description:  Post Grid with Ajax Filter helps you filter your posts by category terms with Ajax. Infinite scroll function included.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,7 +21,7 @@
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 // Defines
-define('AM_POST_GRID_VERSION', '3.2.2');
+define('AM_POST_GRID_VERSION', '3.3.0');
 
 /**
 * Loading Text Domain
@@ -385,3 +385,24 @@ function am_ajax_post_grid_plugin_action_links( $links ) {
 	return array_merge( $plugin_links, $links );
 }
 //add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'am_ajax_post_grid_plugin_action_links' );
+
+
+/**
+ * Initialize the plugin tracker
+ *
+ * @return void
+ */
+function appsero_init_tracker_ajax_filter_posts() {
+
+    if ( ! class_exists( 'Appsero\Client' ) ) {
+      require_once __DIR__ . '/appsero/src/Client.php';
+    }
+
+    $client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'Post Grid with Ajax Filter', __FILE__ );
+
+    // Active insights
+    $client->insights()->init();
+
+}
+
+appsero_init_tracker_ajax_filter_posts();

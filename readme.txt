@@ -1,14 +1,14 @@
-=== Post Grid with Ajax Filter ===
+=== Post Grid Ajax ===
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
 Tested up to: 6.1.1
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
 
 == Description ==
-Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
+Post Grid Ajax plugin is a simple, clean, and easy to use WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
 
 Just use below shortcodes anywhere. Below you can see all available shortcodes.
 
@@ -93,6 +93,16 @@ Options: "",true
 Default: ""
 <pre>[am_post_grid animation="true"]</pre>
 
+
+
+## Privacy Policy 
+Post Grid with Ajax Filter uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users. 
+
+Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
+
+Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Installation ==
 1. Upload "ajax-filter-posts.zip\" to the "/wp-content/plugins/" directory.
