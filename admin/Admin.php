@@ -9,6 +9,7 @@ class Admin {
     function __construct() {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_init', [ $this, 'register_settings' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'scripts' ] );
     }
     
     /**
@@ -30,7 +31,6 @@ class Admin {
      * @return void
      */
     public function admin_menu() {
-       
         add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), 'manage_options', 'gridmaster', [ $this, 'plugin_page' ], 'dashicons-grid-view', 110 );
     }
 
@@ -51,5 +51,17 @@ class Admin {
      */
     public function plugin_page() {
         require_once GRIDMASTER_PATH . '/admin/views/admin.php';
+    }
+
+    // Enqueue scripts and styles.
+    public function scripts() {
+
+        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_localize_script( 'gridmaster-admin-script', 'wp_instance_script', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
+        ) );
+
+        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/admin.css', array(), GRIDMASTER_VERSION );
     }
 }
