@@ -1,0 +1,55 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Grid with Ajax Filter\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-06 15:42+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.2; wp-6.0.1\n"
+"X-Domain: ajax-filter-posts"
+
+#. Author of the plugin
+msgid "AddonMaster"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://addonmaster.com"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://addonmaster.com/plugins/post-grid-with-ajax-filter"
+msgstr ""
+
+#: ajax-filter-posts.php:258
+msgid "Load More"
+msgstr ""
+
+#: ajax-filter-posts.php:272
+msgid "No Posts Found"
+msgstr ""
+
+#: ajax-filter-posts.php:294
+msgid "Options"
+msgstr ""
+
+#. Name of the plugin
+msgid "Post Grid with Ajax Filter"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Post Grid with Ajax Filter helps you filter your posts by category terms "
+"with Ajax. Infinite scroll function included."
+msgstr ""
+
+#: ajax-filter-posts.php:228
+msgid "Read More"
+msgstr ""

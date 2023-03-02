@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:  Gridmaster - Post Grid with Ajax Filter
+ * Plugin Name:  GridMaster - Post Grid with Ajax Filter
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster 
  * Author URI:   http://addonmaster.com/plugins/post-grid-with-ajax-filter
@@ -87,6 +87,9 @@ final class GridMasterPlugin {
      * @return void
      */
     public function init_plugin() {
+
+		// Load Old Version
+		require_once GRIDMASTER_PATH . '/older-version/ajax-filter-posts.php';
 
         // Include the functions.php
         // require_once GRIDMASTER_PATH . '/inc/functions.php';
