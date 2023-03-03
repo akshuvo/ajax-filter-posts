@@ -78,7 +78,7 @@ final class GridMasterPlugin {
 		if ( !class_exists( 'GridMaster\Admin' ) ) {
 			require_once GRIDMASTER_PATH . '/admin/Admin.php';
 		}
-		GridMaster\Admin::init();
+		$gridmaster = GridMaster\Admin::init();
 	}
 
     /**
