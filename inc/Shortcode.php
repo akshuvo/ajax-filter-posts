@@ -32,55 +32,6 @@ class Shortcode {
     }
 
     /**
-     * Get template part (for templates like the loop).
-     *
-     * @access public
-     * @param mixed $slug
-     * @param string $name (default: '')
-     * @param array $args (default: array())
-     * @return void 
-     */
-    function get_template_part( $slug, $name = '', $args = array() ) {
-
-        $templates = array();
-        if( !empty( $name ) ) {
-            $templates[] = "{$name}/{$slug}.php";
-        } else {
-            $templates[] = "{$slug}.php";
-        }
-
-        if ( ! $this->locate_template( $templates, true, false, $args ) ) {
-            return false;
-        }
-    }
-
-    /**
-     * Locate a template and return the path for inclusion.
-     * @access public
-     * @param mixed $template_names
-     * @param bool $load (default: false)
-     * @param bool $require_once (default: true)
-     * @param array $args (default: array())
-     * @return string
-     */
-    function locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
-        $located = '';
-        foreach ( (array) $template_names as $template_name ) {
-            if ( ! $template_name ) {
-                continue;
-            }
-            if ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
-                $located = GRIDMASTER_PATH . '/templates/' . $template_name;
-                break;
-            }
-        }
-        if ( $load && '' != $located ) {
-            load_template( $located, $require_once );
-        }
-        return $located;
-    }
-
-    /**
      * Render the shortcode
      *
      * @param array $atts
@@ -106,19 +57,23 @@ class Shortcode {
             'title_tag' => 'h2',
             'title_length' => 50,
             'excerpt_length' => 100,
-            // OLD ATTRIBUTES
+            // START OLD ATTRIBUTES
             'show_filter' 		=> "yes",
             'btn_all' 			=> "yes",
             'initial' 			=> "-1",
             'layout' 			=> '1',
             'cat' 				=> '',
-            'terms' 			=> '',
             'paginate' 			=> 'no',
             'hide_empty' 		=> 'true',
             'pagination_type'   => '',
             'infinite_scroll'   => '',
             'animation'  		=> '',
+            // END OLD ATTRIBUTES
             'grid_style'  		=> 'default', // master ID
+            'grid_id'  			=> wp_generate_password( 8, false ), // grid ID
+            'taxonomy'  		=> 'product_cat',
+            'terms'  			=> '',
+
         ], $atts, 'gridmaster' );
 
         $id = $atts['id'];
@@ -138,27 +93,32 @@ class Shortcode {
         // Render the grid
         // $this->render_grid( $atts );
 
+        // echo '<pre>'; print_r( $atts ); echo '</pre>';
+
         extract($atts);
+
+        // Grid ID
+        $grid_id = $atts['grid_id'];
 
         ob_start();
 
         // Texonomy arguments
-        $taxonomy = 'category';
-        $args = array(
-            'hide_empty' => $hide_empty,
+        $taxonomy = $atts['taxonomy'];
+        $tax_args = array(
+            'hide_empty' => $atts['hide_empty'],
             'taxonomy' => $taxonomy,
             'include' => $terms ? $terms : $cat,
         );
     
         // Get category terms
-        $terms = get_terms($args); 
+        $tax_terms = get_terms($tax_args); 
 
         $input_name = 'tax_input[' . $taxonomy . '][]';
-        $input_id = $taxonomy . '_all';
+        $input_id = $grid_id . '-' . $taxonomy . '_all';
         ?>
-        <div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
+        <div data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
     
-            <?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
+            <?php if ( $show_filter == "yes" && $tax_terms && !is_wp_error( $tax_terms ) ){ ?>
                 <div class="asr-filter-div" data-layout="<?php echo $layout; ?>">
                     <div class="gm-taxonomy-filter">
 
@@ -170,9 +130,9 @@ class Shortcode {
                         <?php endif; ?>
 
 
-                        <?php foreach( $terms as $term ) { 
+                        <?php foreach( $tax_terms as $term ) { 
                             $taxonomy = $term->taxonomy;
-                            $input_id = $taxonomy . '_' . $term->term_id;
+                            $input_id = $grid_id . '-' . $taxonomy . '_' . $term->term_id;
                             $input_name = 'tax_input[' . $taxonomy . '][]';
                             ?>
                             <div class="gm-taxonomy-item">
@@ -435,5 +395,53 @@ class Shortcode {
         return ob_get_clean();
     }
 
+    /**
+     * Get template part (for templates like the loop).
+     *
+     * @access public
+     * @param mixed $slug
+     * @param string $name (default: '')
+     * @param array $args (default: array())
+     * @return void 
+     */
+    function get_template_part( $slug, $name = '', $args = array() ) {
+
+        $templates = array();
+        if( !empty( $name ) ) {
+            $templates[] = "{$name}/{$slug}.php";
+        } else {
+            $templates[] = "{$slug}.php";
+        }
+
+        if ( ! $this->locate_template( $templates, true, false, $args ) ) {
+            return false;
+        }
+    }
+
+    /**
+     * Locate a template and return the path for inclusion.
+     * @access public
+     * @param mixed $template_names
+     * @param bool $load (default: false)
+     * @param bool $require_once (default: true)
+     * @param array $args (default: array())
+     * @return string
+     */
+    function locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
+        $located = '';
+        foreach ( (array) $template_names as $template_name ) {
+            if ( ! $template_name ) {
+                continue;
+            }
+            if ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
+                $located = GRIDMASTER_PATH . '/templates/' . $template_name;
+                break;
+            }
+        }
+        if ( $load && '' != $located ) {
+            load_template( $located, $require_once );
+        }
+        return $located;
+    }
 
 }
