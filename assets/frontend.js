@@ -1,16 +1,18 @@
 jQuery(document).ready(function($) {
 
 	// Post loading
-	jQuery(document).on('click', '.asr_texonomy', function(){
+	jQuery(document).on('change', '.gm-taxonomy-item input', function(){
         let $this = jQuery(this);
 		var term_id = $this.attr('data_id');   		
  
-		if( !$this.hasClass('active') ) {
-            $this.addClass('active').siblings().removeClass('active');
+		// if( !$this.hasClass('active') ) {
+        //     $this.addClass('active').siblings().removeClass('active');
             
-            // Load Grid
-            asr_ajax_get_postdata(term_id, $this);
-        }
+            
+        // }
+
+        // Load Grid
+        asr_ajax_get_postdata('', $this);
 
 	});
 
@@ -40,7 +42,7 @@ jQuery(document).ready(function($) {
         }
 
         // Load Post Grids
-        asr_ajax_get_postdata(term_id, activeSelector, paged, loadMore);
+        asr_ajax_get_postdata('-1', $this, paged, loadMore);
 
     });
 
@@ -61,7 +63,8 @@ jQuery(document).ready(function($) {
             asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
             term_ID: term_ID,
             layout: (getLayout) ? getLayout : "1",
-            jsonData: jsonData,
+            argsArray: $args,
+            // jsonData: JSON.stringify( $args ),
             pagination_type: pagination_type,
             loadMore: loadMore,
         }
@@ -74,6 +77,7 @@ jQuery(document).ready(function($) {
 			type: 'post',
 			url: asr_ajax_params.asr_ajax_url,
 			data: data,
+            // dataType: 'json',
 			beforeSend: function(data){
 				
                 if ( loadMore ) {

@@ -14,9 +14,27 @@
     margin: 0;
     padding: 0;
 }
-.asr_texonomy.active, .asr_texonomy:hover {
+
+.gm-taxonomy-filter {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.gm-taxonomy-filter input[type="checkbox"],
+.gm-taxonomy-filter input[type="radio"]{
+    display: none;
+}
+
+.asr_texonomy:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.gm-taxonomy-item input:checked + label {
     background: rgba(0, 0, 0, 0.1);
 }
+
+
 .asr-ajax-container {
     position: relative;
 }

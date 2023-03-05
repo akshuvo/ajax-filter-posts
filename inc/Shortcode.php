@@ -91,7 +91,7 @@ class Shortcode {
     public function render_shortcode( $atts, $content = null ) {
         $atts = shortcode_atts( [
             'id' => '',
-            'post_type' => 'post',
+            'post_type' => 'product',
             'posts_per_page' => 10,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
             'order' => 'DESC',
@@ -111,7 +111,6 @@ class Shortcode {
             'btn_all' 			=> "yes",
             'initial' 			=> "-1",
             'layout' 			=> '1',
-            'post_type' 		=> 'post',
             'cat' 				=> '',
             'terms' 			=> '',
             'paginate' 			=> 'no',
@@ -152,26 +151,37 @@ class Shortcode {
         );
     
         // Get category terms
-        $terms = get_terms($args); ?>
-        <div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo json_encode($atts);?>'>
+        $terms = get_terms($args); 
+
+        $input_name = 'tax_input[' . $taxonomy . '][]';
+        $input_id = $taxonomy . '_all';
+        ?>
+        <div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
     
             <?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
                 <div class="asr-filter-div" data-layout="<?php echo $layout; ?>">
                     <div class="gm-taxonomy-filter">
+
                         <?php if($btn_all != "no"): ?>
-                            <div class="asr_texonomy" data_id="-1"><?php echo esc_html('All','ajax-filter-posts'); ?></div>
+                            <div class="gm-taxonomy-item gm-taxonomy-all">
+                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
+                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html('All','gridmaster'); ?></label>
+                            </div>
                         <?php endif; ?>
+
+
                         <?php foreach( $terms as $term ) { 
                             $taxonomy = $term->taxonomy;
                             $input_id = $taxonomy . '_' . $term->term_id;
                             $input_name = 'tax_input[' . $taxonomy . '][]';
                             ?>
-                            <div class="gm-taxonomy-item" data_id="<?php echo $term->term_id; ?>">
+                            <div class="gm-taxonomy-item">
                                 <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
                             </div>
                         <?php } ?>
-                    </ul>
+
+                    </div>
                 </div>
             <?php } ?>
     
@@ -197,7 +207,9 @@ class Shortcode {
      */
     function get_args_from_atts( $jsonData ){
 
-        $data = [];
+        $data = wp_parse_args( $jsonData, [
+            'post_type' => 'post',
+        ] );
 
         if( isset( $jsonData['posts_per_page'] ) ){
             $data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
@@ -247,8 +259,8 @@ class Shortcode {
     // Load Posts Ajax function
     function am_post_grid_load_posts_ajax_functions(){
         // Verify nonce
-        if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
-        die('Permission denied');
+        // if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
+        // die('Permission denied');
 
         $data = [];
 
@@ -261,10 +273,9 @@ class Shortcode {
             $dataPaged = get_query_var('paged') ? get_query_var('paged') : 1;
         }
 
-        $jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );
-        
+        $argsArray = isset( $_POST['argsArray'] ) ? $_POST['argsArray'] : [];
         // Merge Json Data
-        $data = array_merge( $this->get_args_from_atts( $jsonData ), $data );
+        $data = array_merge( $this->get_args_from_atts( $argsArray ), $data );
 
         // Current Page
         if ( isset( $_POST['paged'] ) ) {
@@ -277,7 +288,7 @@ class Shortcode {
                 'category' => [$term_ID],
             ];
         }
-
+        
         // Output
         echo $this->render_grid( $data );
 
@@ -292,7 +303,7 @@ class Shortcode {
      * @return void
      */
     public function render_grid( $args ) {
- 
+
         // Parse Args
         $args = wp_parse_args( $args, [
             'post_type' => 'post',
@@ -312,7 +323,7 @@ class Shortcode {
 
         // Post Query Args
         $query_args = array(
-            'post_type' => 'post',
+            'post_type' => $args['post_type'],
             'post_status' => 'publish',
             'paged' => $args['paged'],
         );
