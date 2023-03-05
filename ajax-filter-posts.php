@@ -29,7 +29,7 @@ final class GridMasterPlugin {
         $this->define_constants();
 
         // Enqueue scripts and styles.
-        // add_action( 'wp_enqueue_scripts', array( $this, 'wp_instance_scripts' ), 99999 );
+        add_action( 'wp_enqueue_scripts', array( $this, 'wp_instance_scripts' ), 99999 );
 
         // register_activation_hook( __FILE__, [ $this, 'activate' ] );
 
@@ -87,9 +87,15 @@ final class GridMasterPlugin {
      * @return void
      */
     public function init_plugin() {
+		// Load Shortcode Class
+		if ( !class_exists( 'GridMaster\Shortcode' ) ) {
+			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
+		}
+		$shortcode = GridMaster\Shortcode::init();
+		
 
 		// Load Old Version
-		require_once GRIDMASTER_PATH . '/older-version/ajax-filter-posts.php';
+		// require_once GRIDMASTER_PATH . '/older-version/ajax-filter-posts.php';
 
         // Include the functions.php
         // require_once GRIDMASTER_PATH . '/inc/functions.php';
@@ -111,13 +117,16 @@ final class GridMasterPlugin {
         // Register Bootstrap from CDN
         // wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css', array(), GRIDMASTER_VERSION );
 
-        wp_enqueue_script( 'wp-instance-script', GRIDMASTER_ASSETS . '/frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
-        wp_localize_script( 'wp-instance-script', 'wp_instance_script', array(
-            'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
-        ) );
+        wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
-        wp_enqueue_style( 'wp-instance-style', GRIDMASTER_ASSETS . '/frontend.css', array(), GRIDMASTER_VERSION );
+		// Localization
+		wp_localize_script( 'gridmaster-frontend', 'asr_ajax_params', array(
+			'asr_ajax_nonce' => wp_create_nonce( 'asr_ajax_nonce' ),
+			'asr_ajax_url' => admin_url( 'admin-ajax.php' ),
+		) );
+
+
+        wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.css', array(), GRIDMASTER_VERSION );
     }
 
 

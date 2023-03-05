@@ -56,12 +56,12 @@ class Admin {
     // Enqueue scripts and styles.
     public function scripts() {
 
-        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
         wp_localize_script( 'gridmaster-admin-script', 'wp_instance_script', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
         ) );
 
-        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/admin.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
     }
 }

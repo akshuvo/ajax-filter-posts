@@ -1,0 +1,428 @@
+<?php
+namespace GridMaster;
+
+class Shortcode {
+
+    /**
+     * Class constructor
+     */
+    function __construct() {
+        // Shortcodes
+        add_shortcode( 'gridmaster', [ $this, 'render_shortcode' ] );
+        add_shortcode( 'am_post_grid', [ $this, 'render_shortcode' ] );
+        add_shortcode( 'asr_ajax', [ $this, 'render_shortcode' ] );
+
+                
+        // Load Posts Ajax actions
+        add_action('wp_ajax_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
+        add_action('wp_ajax_nopriv_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
+    }
+
+    /**
+     * Initializes a singleton instance
+     */
+    public static function init() {
+        static $instance = false;
+
+        if ( ! $instance ) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Get template part (for templates like the loop).
+     *
+     * @access public
+     * @param mixed $slug
+     * @param string $name (default: '')
+     * @param array $args (default: array())
+     * @return void 
+     */
+    function get_template_part( $slug, $name = '', $args = array() ) {
+
+        $templates = array();
+        if( !empty( $name ) ) {
+            $templates[] = "{$name}/{$slug}.php";
+        } else {
+            $templates[] = "{$slug}.php";
+        }
+
+        if ( ! $this->locate_template( $templates, true, false, $args ) ) {
+            return false;
+        }
+    }
+
+    /**
+     * Locate a template and return the path for inclusion.
+     * @access public
+     * @param mixed $template_names
+     * @param bool $load (default: false)
+     * @param bool $require_once (default: true)
+     * @param array $args (default: array())
+     * @return string
+     */
+    function locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
+        $located = '';
+        foreach ( (array) $template_names as $template_name ) {
+            if ( ! $template_name ) {
+                continue;
+            }
+            if ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
+                $located = GRIDMASTER_PATH . '/templates/' . $template_name;
+                break;
+            }
+        }
+        if ( $load && '' != $located ) {
+            load_template( $located, $require_once );
+        }
+        return $located;
+    }
+
+    /**
+     * Render the shortcode
+     *
+     * @param array $atts
+     * @param string $content
+     *
+     * @return void
+     */
+    public function render_shortcode( $atts, $content = null ) {
+        $atts = shortcode_atts( [
+            'id' => '',
+            'post_type' => 'post',
+            'posts_per_page' => 10,
+            'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
+            'order' => 'DESC',
+            'tax_query' => [],
+            'meta_query' => [],
+            'columns' => 3,
+            'column_gap' => 20,
+            'row_gap' => 20,
+            'image_size' => 'large',
+            'image_position' => 'top',
+            'image_height' => 200,
+            'title_tag' => 'h2',
+            'title_length' => 50,
+            'excerpt_length' => 100,
+            // OLD ATTRIBUTES
+            'show_filter' 		=> "yes",
+            'btn_all' 			=> "yes",
+            'initial' 			=> "-1",
+            'layout' 			=> '1',
+            'post_type' 		=> 'post',
+            'cat' 				=> '',
+            'terms' 			=> '',
+            'paginate' 			=> 'no',
+            'hide_empty' 		=> 'true',
+            'pagination_type'   => '',
+            'infinite_scroll'   => '',
+            'animation'  		=> '',
+            'grid_style'  		=> 'default', // master ID
+        ], $atts, 'gridmaster' );
+
+        $id = $atts['id'];
+
+        if ( !empty( $id ) ) {
+            // Get args from the database
+            // $atts = get_post_meta( $id, 'gridmaster_args', true );
+        }
+
+        // $atts['tax_query'] = ! empty( $atts['tax_query'] ) ? json_decode( $atts['tax_query'], true ) : [];
+
+        // If id is set then get args from the database and render the grid
+        // Otherwise render the grid from the shortcode attributes
+
+        // echo '<pre>'; print_r( $atts ); echo '</pre>';
+
+        // Render the grid
+        // $this->render_grid( $atts );
+
+        extract($atts);
+
+        ob_start();
+
+        // Texonomy arguments
+        $taxonomy = 'category';
+        $args = array(
+            'hide_empty' => $hide_empty,
+            'taxonomy' => $taxonomy,
+            'include' => $terms ? $terms : $cat,
+        );
+    
+        // Get category terms
+        $terms = get_terms($args); ?>
+        <div class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo json_encode($atts);?>'>
+    
+            <?php if ( $show_filter == "yes" && $terms && !is_wp_error( $terms ) ){ ?>
+                <div class="asr-filter-div" data-layout="<?php echo $layout; ?>">
+                    <div class="gm-taxonomy-filter">
+                        <?php if($btn_all != "no"): ?>
+                            <div class="asr_texonomy" data_id="-1"><?php echo esc_html('All','ajax-filter-posts'); ?></div>
+                        <?php endif; ?>
+                        <?php foreach( $terms as $term ) { 
+                            $taxonomy = $term->taxonomy;
+                            $input_id = $taxonomy . '_' . $term->term_id;
+                            $input_name = 'tax_input[' . $taxonomy . '][]';
+                            ?>
+                            <div class="gm-taxonomy-item" data_id="<?php echo $term->term_id; ?>">
+                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
+                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
+                            </div>
+                        <?php } ?>
+                    </ul>
+                </div>
+            <?php } ?>
+    
+            <div class="asr-ajax-container">
+                <div class="asr-loader">
+                    <div class="lds-dual-ring"></div>
+                </div>
+                <div class="asrafp-filter-result">
+                    <?php echo $this->render_grid( $this->get_args_from_atts($atts) ); ?>
+                </div>
+            </div>
+        </div>
+    
+        <?php return ob_get_clean();
+    }
+
+    /**
+     * Get args from shortcode attributes
+     *
+     * @param array $atts
+     *
+     * @return array
+     */
+    function get_args_from_atts( $jsonData ){
+
+        $data = [];
+
+        if( isset( $jsonData['posts_per_page'] ) ){
+            $data['posts_per_page'] = intval( $jsonData['posts_per_page'] );
+        }
+    
+        if( isset( $jsonData['orderby'] ) ){
+            $data['orderby'] = sanitize_text_field( $jsonData['orderby'] );
+        }
+    
+        if( isset( $jsonData['order'] ) ){
+            $data['order'] = sanitize_text_field( $jsonData['order'] );
+        }
+    
+        if( isset( $jsonData['pagination_type'] ) ){
+            $data['pagination_type'] = sanitize_text_field( $jsonData['pagination_type'] );
+            
+        }
+    
+        if( isset( $jsonData['animation'] ) && $jsonData['animation'] == "true" ){
+            $data['animation'] = 'am_has_animation';
+        }
+    
+        if( isset( $jsonData['infinite_scroll'] ) && $jsonData['infinite_scroll'] == "true" ){
+            $data['infinite_scroll'] = 'infinite_scroll';
+        }
+    
+        // Bind to Category Terms
+        $terms =  '';
+        if ( isset( $jsonData['cat'] ) && !empty( $jsonData['cat'] ) ) {
+            $terms = explode(',', $jsonData['cat']);
+        } elseif ( isset( $jsonData['terms'] ) && !empty( $jsonData['terms'] ) ) {
+            $terms = explode(',', $jsonData['terms']);
+        }
+    
+        
+        // Tax Query
+        if ( !empty( $terms ) ) {
+            $data['tax_query'] = [
+                'category' => $terms,
+            ];
+        }
+    
+        return $data;
+    }
+
+        
+    // Load Posts Ajax function
+    function am_post_grid_load_posts_ajax_functions(){
+        // Verify nonce
+        if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
+        die('Permission denied');
+
+        $data = [];
+
+        $term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
+
+        // Pagination
+        if ( isset( $_POST['paged'] ) ) {
+            $dataPaged = intval($_POST['paged']);
+        } else {
+            $dataPaged = get_query_var('paged') ? get_query_var('paged') : 1;
+        }
+
+        $jsonData = json_decode( str_replace('\\', '', $_POST['jsonData']), true );
+        
+        // Merge Json Data
+        $data = array_merge( $this->get_args_from_atts( $jsonData ), $data );
+
+        // Current Page
+        if ( isset( $_POST['paged'] ) ) {
+            $data['paged'] = sanitize_text_field( $_POST['paged'] );
+        }
+
+        // Selected Category
+        if ( !empty( $term_ID ) && $term_ID != -1 ) {
+            $data['tax_query'] = [
+                'category' => [$term_ID],
+            ];
+        }
+
+        // Output
+        echo $this->render_grid( $data );
+
+        die();
+    }
+
+    /**
+     * Render the grid
+     *
+     * @param array $args
+     *
+     * @return void
+     */
+    public function render_grid( $args ) {
+ 
+        // Parse Args
+        $args = wp_parse_args( $args, [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
+            'posts_per_page' => '4',
+            'orderby' => '',
+            'order' => '',
+            'layout' => '1',
+            'pagination_type' => '',
+            'animation' => '',
+            'infinite_scroll' => '',
+            'tax_query' => [
+                'category' => []
+            ],
+        ]);
+
+        // Post Query Args
+        $query_args = array(
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'paged' => $args['paged'],
+        );
+
+
+        // If json data found
+        if ( !empty( $args['posts_per_page'] ) ) {
+            $query_args['posts_per_page'] = intval( $args['posts_per_page'] );
+        }
+
+        if ( !empty( $args['orderby'] ) ) {
+            $query_args['orderby'] = sanitize_text_field( $args['orderby'] );
+        }
+
+        if ( !empty( $args['order'] ) ) {
+            $query_args['order'] = sanitize_text_field( $args['order'] );
+        }
+        
+
+        // Pagination Type
+        $pagination_type = sanitize_text_field( $args['pagination_type'] );
+        $dataPaged = sanitize_text_field( $args['paged'] );
+
+
+        // Tax Query Var
+        $tax_query = [];
+
+        // Check if has terms 
+        if( !empty( $args['tax_query'] ) && is_array( $args['tax_query'] ) ) {
+            foreach ( $args['tax_query'] as $taxonomy => $terms ) {
+                if ( !empty( $terms ) ) {
+                    $tax_query[] =[
+                        'taxonomy' => $taxonomy,
+                        'field' => 'term_id',
+                        'terms' => $terms,
+                    ];
+                }
+                
+            }
+        }
+
+        // Tax Query
+        if ( !empty( $tax_query ) ) {
+            $query_args['tax_query'] = $tax_query;
+        }
+        
+
+        //post query
+        $query = new \WP_Query( $query_args );
+        ob_start();
+
+        // Wrap with a div when infinity load
+        echo ( $pagination_type == 'load_more' ) ? '<div class="am-postgrid-wrapper">' : '';
+
+        // Start posts query
+        if( $query->have_posts() ): ?>
+
+            <div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$args['layout']} {$args['animation']} " ); ?>">
+            
+            <?php while( $query->have_posts()): $query->the_post(); ?>
+
+                <?php $this->get_template_part( 'default', 'grid' ); ?>
+
+            <?php endwhile; ?>
+            </div>
+
+            <div class="am_posts_navigation">
+            <?php
+                $big = 999999999; // need an unlikely integer
+                $dataNext = $dataPaged+1;
+
+                $paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+
+                $paginate_links = paginate_links( array(
+                    'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                    'format' => '?paged=%#%',
+                    'current' => max( 1, $dataPaged ),
+                    'prev_next' => true,
+                    'mid_size' => 2,
+                    'total' => $query->max_num_pages
+                ) );
+
+                // Load more button
+                if( $pagination_type == 'load_more' ){
+
+                    if( $paginate_links && $dataPaged < $query->max_num_pages ){
+                        echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'ajax-filter-posts' )."</button>";
+                    }
+
+                } else {
+
+                    // Paginate links
+                    echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";
+                }
+
+            ?>
+            </div>
+
+            <?php
+        else:
+            esc_html_e('No Posts Found','ajax-filter-posts');
+        endif;
+        wp_reset_query();
+
+        // Wrap close when infinity load
+        echo ( $pagination_type == 'load_more' ) ? '</div>' : '';
+
+        // Echo the results
+        return ob_get_clean();
+    }
+
+
+}
