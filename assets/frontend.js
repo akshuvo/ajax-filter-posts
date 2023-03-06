@@ -56,6 +56,7 @@ jQuery(document).ready(function($) {
         let getLayout = $wrapper.find(".asr-filter-div").attr("data-layout");
         let pagination_type = $wrapper.attr("data-pagination_type");
         let jsonData = $wrapper.attr('data-am_ajax_post_grid');
+        let taxInput = $wrapper.find(".gm-taxonomy-item input:checked").serialize();
 
         let $args = JSON.parse(jsonData);
 
@@ -63,6 +64,7 @@ jQuery(document).ready(function($) {
             action: 'asr_filter_posts',
             asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
             term_ID: term_ID,
+            taxInput: taxInput,
             layout: (getLayout) ? getLayout : "1",
             argsArray: $args,
             // jsonData: JSON.stringify( $args ),

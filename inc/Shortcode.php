@@ -16,6 +16,9 @@ class Shortcode {
         // Load Posts Ajax actions
         add_action('wp_ajax_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
         add_action('wp_ajax_nopriv_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
+
+        // Filter Gridmaster Render Grid Args
+        add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
     }
 
     /**
@@ -109,6 +112,9 @@ class Shortcode {
             'taxonomy' => $taxonomy,
             'include' => $terms ? $terms : $cat,
         );
+
+        // parse_str( 'tax_input%5Bproduct_cat%5D%5B%5D=52&tax_input%5Bssproduct_cat%5D%5B%5D=53', $tax_query );
+        // echo '<pre>'; print_r( $tax_query ); echo '</pre>';
     
         // Get category terms
         $tax_terms = get_terms($tax_args); 
@@ -134,6 +140,17 @@ class Shortcode {
                             $taxonomy = $term->taxonomy;
                             $input_id = $grid_id . '-' . $taxonomy . '_' . $term->term_id;
                             $input_name = 'tax_input[' . $taxonomy . '][]';
+                            ?>
+                            <div class="gm-taxonomy-item">
+                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
+                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
+                            </div>
+                        <?php } ?>
+
+                        <?php foreach( $tax_terms as $term ) { 
+                            $taxonomy = $term->taxonomy;
+                            $input_id = $grid_id . '-ss' . $taxonomy . '_' . $term->term_id;
+                            $input_name = 'tax_input[ss' . $taxonomy . '][]';
                             ?>
                             <div class="gm-taxonomy-item">
                                 <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
@@ -226,6 +243,8 @@ class Shortcode {
 
         $term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
 
+
+
         // Pagination
         if ( isset( $_POST['paged'] ) ) {
             $dataPaged = intval($_POST['paged']);
@@ -242,17 +261,56 @@ class Shortcode {
             $data['paged'] = sanitize_text_field( $_POST['paged'] );
         }
 
-        // Selected Category
+        // Selected Category: Older way
         if ( !empty( $term_ID ) && $term_ID != -1 ) {
             $data['tax_query'] = [
                 'category' => [$term_ID],
             ];
         }
         
+        // Tax Input: New way
+        $taxInput = [];
+        if( isset( $_POST['taxInput'] ) ) {
+            parse_str( $_POST['taxInput'], $taxInput );
+        }
+        if ( !empty( $taxInput ) ) {
+            $data = array_merge( $data, $taxInput );
+        }
+        
         // Output
         echo $this->render_grid( $data );
 
         die();
+    }
+
+    /**
+     * Render the grid with args
+     *
+     * @param array $args
+     *
+     * @return void
+     */
+    public function filter_render_grid_args( $args ) {
+            
+        // Tax Query
+        if ( isset( $args['tax_input'] ) && !empty( $args['tax_input'] ) ) {
+            $tax_query = [];
+            foreach( $args['tax_input'] as $taxonomy => $terms ) {
+                $tax_query[] = [
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $terms,
+                ];
+                break;
+            }
+            $args['tax_query'] = $tax_query;
+            $args['has_tax_query'] = true;
+
+            // Unset Tax Input
+            unset( $args['tax_input'] );
+        }
+
+        return $args;
     }
 
     /**
@@ -279,8 +337,13 @@ class Shortcode {
             'tax_query' => [
                 'category' => []
             ],
+            'has_tax_query' => false,
         ]);
 
+        
+        // Apply Filter
+        $args = apply_filters( 'gridmaster_render_grid_args', $args );
+        // echo '<pre>'; print_r($args); echo '</pre>';
         // Post Query Args
         $query_args = array(
             'post_type' => $args['post_type'],
@@ -288,7 +351,7 @@ class Shortcode {
             'paged' => $args['paged'],
         );
 
-
+        
         // If json data found
         if ( !empty( $args['posts_per_page'] ) ) {
             $query_args['posts_per_page'] = intval( $args['posts_per_page'] );
@@ -326,10 +389,13 @@ class Shortcode {
         }
 
         // Tax Query
-        if ( !empty( $tax_query ) ) {
+        if ( $args['has_tax_query'] ) {
+            $query_args['tax_query'] = $args['tax_query'];
+        } elseif ( !empty( $tax_query ) && !$args['has_tax_query'] ) {
             $query_args['tax_query'] = $tax_query;
-        }
+        } 
         
+        // echo '<pre>'; print_r($query_args); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );
