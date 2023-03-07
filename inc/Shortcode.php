@@ -130,7 +130,7 @@ class Shortcode {
 
                         <?php if($btn_all != "no"): ?>
                             <div class="gm-taxonomy-item gm-taxonomy-all">
-                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
+                                <input type="checkbox" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html('All','gridmaster'); ?></label>
                             </div>
                         <?php endif; ?>
@@ -142,21 +142,12 @@ class Shortcode {
                             $input_name = 'tax_input[' . $taxonomy . '][]';
                             ?>
                             <div class="gm-taxonomy-item">
-                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
+                                <input type="checkbox" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
                             </div>
                         <?php } ?>
 
-                        <?php foreach( $tax_terms as $term ) { 
-                            $taxonomy = $term->taxonomy;
-                            $input_id = $grid_id . '-ss' . $taxonomy . '_' . $term->term_id;
-                            $input_name = 'tax_input[ss' . $taxonomy . '][]';
-                            ?>
-                            <div class="gm-taxonomy-item">
-                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
-                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
-                            </div>
-                        <?php } ?>
+                   
 
                     </div>
                 </div>
@@ -296,6 +287,17 @@ class Shortcode {
         if ( isset( $args['tax_input'] ) && !empty( $args['tax_input'] ) ) {
             $tax_query = [];
             foreach( $args['tax_input'] as $taxonomy => $terms ) {
+
+                // Check if array
+                if ( is_array( $terms ) ) {
+                    $terms = isset( $terms[0] ) ? [$terms[0]] : [];
+                }
+
+                // Continue if terms is empty or -1 in array
+                if ( empty( $terms ) || in_array( "-1", $terms ) ) {
+                    continue;
+                }
+
                 $tax_query[] = [
                     'taxonomy' => $taxonomy,
                     'field' => 'term_id',
@@ -309,6 +311,7 @@ class Shortcode {
             // Unset Tax Input
             unset( $args['tax_input'] );
         }
+
 
         return $args;
     }
@@ -371,27 +374,30 @@ class Shortcode {
         $dataPaged = sanitize_text_field( $args['paged'] );
 
 
-        // Tax Query Var
-        $tax_query = [];
 
-        // Check if has terms 
-        if( !empty( $args['tax_query'] ) && is_array( $args['tax_query'] ) ) {
-            foreach ( $args['tax_query'] as $taxonomy => $terms ) {
-                if ( !empty( $terms ) ) {
-                    $tax_query[] =[
-                        'taxonomy' => $taxonomy,
-                        'field' => 'term_id',
-                        'terms' => $terms,
-                    ];
-                }
-                
-            }
-        }
 
         // Tax Query
         if ( $args['has_tax_query'] ) {
             $query_args['tax_query'] = $args['tax_query'];
         } elseif ( !empty( $tax_query ) && !$args['has_tax_query'] ) {
+
+            // Tax Query Var
+            $tax_query = [];
+
+            // Check if has terms 
+            if( !empty( $args['tax_query'] ) && is_array( $args['tax_query'] ) ) {
+                foreach ( $args['tax_query'] as $taxonomy => $terms ) {
+                    if ( !empty( $terms ) ) {
+                        $tax_query[] =[
+                            'taxonomy' => $taxonomy,
+                            'field' => 'term_id',
+                            'terms' => $terms,
+                        ];
+                    }
+                    
+                }
+            }
+
             $query_args['tax_query'] = $tax_query;
         } 
         
