@@ -166,11 +166,11 @@
 }
 /* End Layout 1 Responsive */
 /* Paginaion */
-#am_posts_navigation_init {
+.am_posts_navigation_init {
     margin: 30px 0;
     text-align: center;
 }
-#am_posts_navigation_init .page-numbers {
+.am_posts_navigation_init .page-numbers {
     width: 30px;
     display: inline-block;
     height: 30px;
@@ -180,7 +180,7 @@
     padding: 4px;
     text-decoration: none;
 }
-#am_posts_navigation_init .page-numbers.current, #am_posts_navigation_init .page-numbers:hover {
+.am_posts_navigation_init .page-numbers.current, .am_posts_navigation_init .page-numbers:hover {
     background: #f0f0f0;
 }
 .am_posts_navigation{

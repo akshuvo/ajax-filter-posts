@@ -46,7 +46,7 @@ class Shortcode {
         $atts = shortcode_atts( [
             'id' => '',
             'post_type' => 'product',
-            'posts_per_page' => 10,
+            'posts_per_page' => 2,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
             'order' => 'DESC',
             'tax_query' => [],
@@ -130,7 +130,7 @@ class Shortcode {
 
                         <?php if($btn_all != "no"): ?>
                             <div class="gm-taxonomy-item gm-taxonomy-all">
-                                <input type="checkbox" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
+                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html('All','gridmaster'); ?></label>
                             </div>
                         <?php endif; ?>
@@ -142,7 +142,7 @@ class Shortcode {
                             $input_name = 'tax_input[' . $taxonomy . '][]';
                             ?>
                             <div class="gm-taxonomy-item">
-                                <input type="checkbox" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
+                                <input type="radio" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
                             </div>
                         <?php } ?>
@@ -435,8 +435,13 @@ class Shortcode {
                     'current' => max( 1, $dataPaged ),
                     'prev_next' => true,
                     'mid_size' => 2,
-                    'total' => $query->max_num_pages
+                    'total' => $query->max_num_pages,
+                    'type' => 'plain',
+                    'prev_text' => '«',
+                    'next_text' => '»',
                 ) );
+
+                $paginate_links = print_r( $paginate_links, true );
 
                 // Load more button
                 if( $pagination_type == 'load_more' ){
@@ -448,7 +453,7 @@ class Shortcode {
                 } else {
 
                     // Paginate links
-                    echo "<div id='am_posts_navigation_init'>{$paginate_links}</div>";
+                    echo "<div class='am_posts_navigation_init'>{$paginate_links}</div>";
                 }
 
             ?>

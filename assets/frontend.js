@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
 	});
 
     // Pagination
-    jQuery( document ).on('click', '#am_posts_navigation_init a.page-numbers, .am-post-grid-load-more', function(e){
+    jQuery( document ).on('click', '.am_posts_navigation_init a.page-numbers, .am-post-grid-load-more', function(e){
         e.preventDefault();
 
         var term_id = "-1";
@@ -30,6 +30,14 @@ jQuery(document).ready(function($) {
         if ( $this.hasClass('am-post-grid-load-more') ) {
             paged = $this.data('next');
             loadMore = true;
+        } 
+        else if ( $this.hasClass('next') ) {
+            let currentPage = $this.closest('.am_posts_navigation_init').find('.page-numbers.current').text();
+            paged = parseInt(currentPage) + 1;
+        }
+        else if ( $this.hasClass('prev') ) {
+            let currentPage = $this.closest('.am_posts_navigation_init').find('.page-numbers.current').text();
+            paged = parseInt(currentPage) - 1;
         }
 
         var theSelector = $this.closest('.am_ajax_post_grid_wrap').find('.asr_texonomy');
