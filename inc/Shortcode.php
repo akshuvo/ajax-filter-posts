@@ -46,7 +46,7 @@ class Shortcode {
         $atts = shortcode_atts( [
             'id' => '',
             'post_type' => 'product',
-            'posts_per_page' => 2,
+            'posts_per_page' => 9,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
             'order' => 'DESC',
             'tax_query' => [],
@@ -103,6 +103,9 @@ class Shortcode {
         // Grid ID
         $grid_id = $atts['grid_id'];
 
+        // Pagination
+        $pagination_type = $atts['pagination_type'];
+
         ob_start();
 
         // Texonomy arguments
@@ -113,9 +116,6 @@ class Shortcode {
             'include' => $terms ? $terms : $cat,
         );
 
-        // parse_str( 'tax_input%5Bproduct_cat%5D%5B%5D=52&tax_input%5Bssproduct_cat%5D%5B%5D=53', $tax_query );
-        // echo '<pre>'; print_r( $tax_query ); echo '</pre>';
-    
         // Get category terms
         $tax_terms = get_terms($tax_args); 
 
@@ -135,7 +135,6 @@ class Shortcode {
                             </div>
                         <?php endif; ?>
 
-
                         <?php foreach( $tax_terms as $term ) { 
                             $taxonomy = $term->taxonomy;
                             $input_id = $grid_id . '-' . $taxonomy . '_' . $term->term_id;
@@ -146,8 +145,6 @@ class Shortcode {
                                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
                             </div>
                         <?php } ?>
-
-                   
 
                     </div>
                 </div>

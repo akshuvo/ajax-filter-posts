@@ -171,14 +171,15 @@
     text-align: center;
 }
 .am_posts_navigation_init .page-numbers {
-    width: 30px;
-    display: inline-block;
+    min-width: 30px;
+    display: inline-flex;
     height: 30px;
     text-align: center;
-    line-height: 1.2;
     border: 1px solid #c6c6c6;
-    padding: 4px;
+    padding: 4px 4px;
     text-decoration: none;
+    align-items: center;
+    justify-content: center;
 }
 .am_posts_navigation_init .page-numbers.current, .am_posts_navigation_init .page-numbers:hover {
     background: #f0f0f0;
