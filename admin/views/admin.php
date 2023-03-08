@@ -1,9 +1,74 @@
-<div class="gm-admin-toolbar">
-    <a href="" class="acf-logo">GridMaster</a>
+<?php
+// Direct Access is not allowed.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-    <a class="acf-tab is-active acf-header-tab-acf-field-group" href="edit.php?post_type=acf-field-group"><i class="acf-icon"></i>Field Groups</a><a class="acf-tab acf-header-tab-acf-tools" href="edit.php?post_type=acf-field-group&amp;page=acf-tools"><i class="acf-icon"></i>Tools</a>
-    <a target="_blank" href="https://www.advancedcustomfields.com/pro/?utm_source=ACF+Free&amp;utm_medium=insideplugin&amp;utm_campaign=ACF+upgrade&amp;utm_content=header" class="btn-upgrade acf-admin-toolbar-upgrade-btn">
-        <i class="acf-icon acf-icon-stars"></i>
-        <p>Unlock Extra Features with ACF PRO</p>
-    </a>
+$path = isset( $_GET['path'] ) ? $_GET['path'] : '';
+
+// Left Tabs : Welcome, Build Grid, Settings, Support,
+$left_tabs = [
+    [
+        'title' => __( 'Welcome', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster' ),
+        'icon'  => 'dashicons dashicons-admin-home',
+        'path' => '',
+    ],
+    [
+        'title' => __( 'Grid Builder', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
+        'icon'  => 'dashicons dashicons-schedule',
+        'path' => 'build-grid',
+    ],
+    [
+        'title' => __( 'Settings', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
+        'icon'  => 'dashicons dashicons-admin-generic',
+        'path' => 'settings',
+    ],
+    [
+        'title' => __( 'Support', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=support' ),
+        'icon'  => 'dashicons dashicons-sos',
+        'path' => 'support',
+    ],
+];
+?>
+<div class="gridmaster-wrap">
+    <h1 class="wp-heading-inline"><?php echo esc_html( get_admin_page_title() ); ?></h1>
+    <div class="gm-admin-toolbar">
+        <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
+            <?php foreach( $left_tabs as $tab ) : ?>
+                <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>">
+                    <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
+                    <?php echo esc_html( $tab['title'] ); ?>
+                </a>
+            <?php endforeach; ?>
+        </nav>
+    </div>
+    <div class="gm-admin-content">
+        <?php
+        if ( $path == 'build-grid' ) {
+            $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
+            if( file_exists( $file_path ) ) {
+                require_once $file_path;
+            }
+        } elseif ( $path == 'settings' ) {
+            $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
+            if( file_exists( $file_path ) ) {
+                require_once $file_path;
+            }
+        } elseif ( $path == 'support' ) {
+            $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
+            if( file_exists( $file_path ) ) {
+                require_once $file_path;
+            }
+        } else {
+            $file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
+            if( file_exists( $file_path ) ) {
+                require_once $file_path;
+            }
+        }
+        ?>
+    </div>
 </div>

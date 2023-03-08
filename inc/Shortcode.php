@@ -45,7 +45,7 @@ class Shortcode {
     public function render_shortcode( $atts, $content = null ) {
         $atts = shortcode_atts( [
             'id' => '',
-            'post_type' => 'product',
+            'post_type' => 'post',
             'posts_per_page' => 9,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
             'order' => 'DESC',
@@ -74,7 +74,7 @@ class Shortcode {
             // END OLD ATTRIBUTES
             'grid_style'  		=> 'default', // master ID
             'grid_id'  			=> wp_generate_password( 8, false ), // grid ID
-            'taxonomy'  		=> 'product_cat',
+            'taxonomy'  		=> 'category',
             'terms'  			=> '',
 
         ], $atts, 'gridmaster' );
@@ -91,12 +91,10 @@ class Shortcode {
         // If id is set then get args from the database and render the grid
         // Otherwise render the grid from the shortcode attributes
 
-        // echo '<pre>'; print_r( $atts ); echo '</pre>';
 
         // Render the grid
         // $this->render_grid( $atts );
 
-        // echo '<pre>'; print_r( $atts ); echo '</pre>';
 
         extract($atts);
 
@@ -343,7 +341,6 @@ class Shortcode {
         
         // Apply Filter
         $args = apply_filters( 'gridmaster_render_grid_args', $args );
-        // echo '<pre>'; print_r($args); echo '</pre>';
         // Post Query Args
         $query_args = array(
             'post_type' => $args['post_type'],
@@ -398,7 +395,6 @@ class Shortcode {
             $query_args['tax_query'] = $tax_query;
         } 
         
-        // echo '<pre>'; print_r($query_args); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );
@@ -438,7 +434,6 @@ class Shortcode {
                     'next_text' => '»',
                 ) );
 
-                $paginate_links = print_r( $paginate_links, true );
 
                 // Load more button
                 if( $pagination_type == 'load_more' ){

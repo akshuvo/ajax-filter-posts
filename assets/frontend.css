@@ -2,12 +2,16 @@
     box-sizing: border-box;
 }
 .asr-filter-div .asr_texonomy {
-    display: inline-block;
+    display: inline-flex;
     cursor: pointer;
     background: transparent;
     padding: 5px 10px;
-    margin: 1px;
+    margin: 0 2px 2px 0;
     border: 1px solid rgba(0, 0, 0, 0.1);
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 .asr-filter-div ul {
     list-style: none;
