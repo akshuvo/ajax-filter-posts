@@ -120,10 +120,10 @@ class Shortcode {
         $input_name = 'tax_input[' . $taxonomy . '][]';
         $input_id = $grid_id . '-' . $taxonomy . '_all';
         ?>
-        <div data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
+        <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
     
             <?php if ( $show_filter == "yes" && $tax_terms && !is_wp_error( $tax_terms ) ){ ?>
-                <div class="asr-filter-div" data-layout="<?php echo $layout; ?>">
+                <div class="asr-filter-div">
                     <div class="gm-taxonomy-filter">
 
                         <?php if($btn_all != "no"): ?>
@@ -328,7 +328,7 @@ class Shortcode {
             'posts_per_page' => '4',
             'orderby' => '',
             'order' => '',
-            'layout' => '1',
+            'grid_style' => 'default',
             'pagination_type' => '',
             'animation' => '',
             'infinite_scroll' => '',
@@ -367,8 +367,10 @@ class Shortcode {
         $pagination_type = sanitize_text_field( $args['pagination_type'] );
         $dataPaged = sanitize_text_field( $args['paged'] );
 
+        // echo '<pre>'; print_r( $args ); echo '</pre>';
 
-
+        // Grid Style
+        $grid_style = sanitize_text_field( $args['grid_style'] );
 
         // Tax Query
         if ( $args['has_tax_query'] ) {
@@ -406,11 +408,11 @@ class Shortcode {
         // Start posts query
         if( $query->have_posts() ): ?>
 
-            <div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_{$args['layout']} {$args['animation']} " ); ?>">
+            <div class="<?php echo esc_attr( "am_post_grid am__col-3 am_layout_1 {$args['animation']} " ); ?>">
             
             <?php while( $query->have_posts()): $query->the_post(); ?>
 
-                <?php $this->get_template_part( 'default', 'grid' ); ?>
+                <?php $this->get_template_part( $grid_style, 'grid' ); ?>
 
             <?php endwhile; ?>
             </div>
