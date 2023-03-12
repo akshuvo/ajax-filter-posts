@@ -33,7 +33,26 @@ class Shortcode {
 
         return $instance;
     }
+    
+    /**
+     * Render Dynamic Stylesheets
+     */
+    public function render_styles( $args = [] ){
+        $args = wp_parse_args( $args, [
+            'grid_style' => ''
+        ]);
 
+        // Grid Style
+        $grid_style = $args['grid_style'];
+
+        // Enqueue Styles
+        if( file_exists( GRIDMASTER_PRO_ASSETS_DIR . '/assets/style-1.css' ) ) {
+            wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+        } elseif( file_exists( GRIDMASTER_PATH . '/assets/style-1.css' ) ) {
+            wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+        }
+
+    }
     /**
      * Render the shortcode
      *
@@ -92,8 +111,12 @@ class Shortcode {
         // Otherwise render the grid from the shortcode attributes
 
 
-        // Render the grid
-        // $this->render_grid( $atts );
+        // Render dynamic styles
+        $this->render_styles([
+            'grid_style' => $atts['grid_style']
+        ]);
+
+        
 
 
         extract($atts);

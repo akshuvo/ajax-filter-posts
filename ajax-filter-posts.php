@@ -70,6 +70,12 @@ final class GridMasterPlugin {
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );
         define( 'GRIDMASTER_ASSETS', GRIDMASTER_URL . '/assets' );
+        if ( ! defined( 'GRIDMASTER_PRO_ASSETS_DIR' ) ) {
+            define( 'GRIDMASTER_PRO_ASSETS_DIR', plugin_dir_path( __DIR__ ) . 'gridmaster-pro/assets' );
+        }
+        if ( ! defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ) {
+            define( 'GRIDMASTER_PRO_ASSETS_URL', plugins_url('gridmaster-pro') . '/assets' );
+        }
 
     }
 
@@ -127,6 +133,7 @@ final class GridMasterPlugin {
 
 
         wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.css', array(), GRIDMASTER_VERSION );
+        // wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_ASSETS . '/style-1.css', array(), GRIDMASTER_VERSION );
     }
 
 
