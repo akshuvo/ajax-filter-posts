@@ -6,9 +6,9 @@
         <div class="am_cont">
             <a href="<?php echo get_the_permalink(); ?>"><h2 class="am__title"><?php echo get_the_title(); ?></h2></a>
             <div class="am__excerpt">
-                <?php echo wp_trim_words( get_the_excerpt(), 15, null ); ?>
+                <?php echo wp_trim_words( get_the_excerpt(), 2, null ); ?>
             </div>
-            <!-- <a href="<?php echo get_the_permalink(); ?>" class="am__readmore"><?php echo esc_html__('Read More','ajax-filter-posts');?></a> -->
+            <a href="<?php echo get_the_permalink(); ?>" class="am__readmore"><?php echo esc_html__('Read More','ajax-filter-posts');?></a>
         </div>
     </div>
 </div>
