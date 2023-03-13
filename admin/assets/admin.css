@@ -1,3 +1,29 @@
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.toplevel_page_gridmaster #wpwrap {
+    height: 100%;
+}
+
 .toplevel_page_gridmaster #wpcontent {
     padding: 0;
+    height: 100%;
+    background: #fff;
+}
+
+
+.toplevel_page_gridmaster .notice, 
+.toplevel_page_gridmaster div.error, 
+.toplevel_page_gridmaster div.updated {
+    display: none;
+}
+
+.gridmaster-wrap  .postbox-header,
+.gridmaster-wrap  .postbox-header * {
+    cursor: pointer !important;
+}
+
+.gm-slide-toggle .inside {
+    display: none;
 }
