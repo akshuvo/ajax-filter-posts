@@ -19,6 +19,8 @@ class Shortcode {
 
         // Filter Gridmaster Render Grid Args
         add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
+
+        add_action( 'init', [ $this, 'init_hook' ] );
     }
 
     /**
@@ -536,5 +538,39 @@ class Shortcode {
         }
         return $located;
     }
+
+    // Init Hook
+    public function init_hook() {
+        // gm_shortcode_preview for frontend
+        // url: ?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) );
+        if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
+            // Disable admin bar
+            add_filter( 'show_admin_bar', '__return_false' );
+
+            $shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
+            ?>
+            <!-- Blank HTML Template  -->
+            <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    </style>
+                    <?php wp_head(); ?>
+                </head>
+                <body>
+                    <?php echo do_shortcode( $shortcode ); ?>
+                    <?php wp_footer(); ?>
+                </body>
+            </html>
+            <?php die(); ?>
+        <?php } ?>
+
+    <?php }
 
 }

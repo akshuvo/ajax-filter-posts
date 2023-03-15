@@ -14,7 +14,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     </div>
                 </div>
                 <div class="inside">
-                    <!-- show_filter:radio:yes, no -->
+                    <!-- show_filter -->
                     <?php gridmaster_form_field( gm_field_name('show_filter'),array(
                         'type' => 'radio',
                         'label' => 'Show Filter',
@@ -121,6 +121,39 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     </div>
                 </div>
                 <div class="inside">
+                    <!-- pagination_type -->
+                    <?php gridmaster_form_field( gm_field_name('pagination_type'),array(
+                        'type' => 'radio',
+                        'label' => 'Pagination Type',
+                        'options' => [
+                            '' => 'Default',
+                            'load_more' => 'Load More',
+                        ],
+                        'default' => '',
+                    ) ); ?>
+
+                    <!-- infinite_scroll -->
+                    <?php gridmaster_form_field( gm_field_name('infinite_scroll'),array(
+                        'type' => 'radio',
+                        'label' => 'Infinite Scroll',
+                        'options' => [
+                            'true' => 'Yes',
+                            'false' => 'No',
+                        ],
+                        'default' => 'no',
+                        'description' => 'If pagination type is default, this option will be ignored.',
+                    ) ); ?>
+
+                    <!-- animation -->
+                    <?php gridmaster_form_field( gm_field_name('animation'),array(
+                        'type' => 'radio',
+                        'label' => 'Animation',
+                        'options' => [
+                            'true' => 'Yes',
+                            'false' => 'No',
+                        ],
+                        'default' => 'no',
+                    ) ); ?>
                 </div>
             </div>
             
@@ -128,6 +161,12 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <?php //echo do_shortcode("[gridmaster]"); ?>
+
+            <div id="gm-grid-preview" class="postbox">
+                <div class="gm-iframe-wrap">
+                    <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+                </div>
+            </div>
             
         </main>
     </div>

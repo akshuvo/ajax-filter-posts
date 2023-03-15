@@ -10,8 +10,23 @@
     padding: 0;
     height: 100%;
     background: #fff;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
+.toplevel_page_gridmaster #wpcontent #wpbody {
+    height: calc(100vh - 72px);
+    overflow: hidden;
+}
+
+.toplevel_page_gridmaster #wpcontent #wpbody-content {
+    padding-bottom: 0;
+    height: 100%;
+}
+
+.gridmaster-wrap {
+    height: 100%;
+}
 
 .toplevel_page_gridmaster .notice, 
 .toplevel_page_gridmaster div.error, 
@@ -38,3 +53,32 @@
 .radio.gm-field-label {
     padding-right: 15px;
 }
+
+nav#sidebarMenu {
+    height: calc(100vh - 175px);
+    overflow: auto;
+}
+
+span.description {
+    display: block;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.gm-iframe-wrap {
+    position: relative;
+    padding-bottom: 65.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch; /*<<--- THIS IS THE KEY*/ 
+    border: solid black 1px;
+  }
+  
+  .gm-iframe-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
