@@ -10,6 +10,28 @@ jQuery(document).ready(function($) {
         jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
     });
 
+    // Shortcode Generator
+    jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input', function(e) {
+        let $fields = jQuery("#gm-shortcode-generator").serializeArray()
 
-    
+        let shortCode = '[gridmaster';
+        jQuery.each($fields, function(i, field) {
+            if (field.value) {
+                shortCode += ' ' + field.name + '="' + field.value + '"';
+            }
+        } );
+        
+        shortCode += ']';
+
+        // Update Shortcode
+        jQuery(".gm-copy-inp").val(shortCode);
+    });
+
+    // Copy Shortcode
+    jQuery( document ).on( 'click', '.gm-copy-btn', function(e) {
+        jQuery(".gm-copy-inp").select();
+        document.execCommand("copy");
+    } );
+
+
 });

@@ -83,7 +83,6 @@ class Shortcode {
             'show_filter' 		=> "yes",
             'btn_all' 			=> "yes",
             'initial' 			=> "-1",
-            'layout' 			=> '1',
             'cat' 				=> '',
             'paginate' 			=> 'no',
             'hide_empty' 		=> 'true',

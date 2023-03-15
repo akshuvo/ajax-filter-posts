@@ -25,12 +25,16 @@
 }
 
 .gm-slide-toggle .inside {
-    display: none;
+    display: block;
 }
 
-.gm-field-label {
+.gm-field-label:not(.radio) {
     text-align: left;
     font-weight: 600;
     margin-bottom: 7px;
     display: block;
+}
+
+.radio.gm-field-label {
+    padding-right: 15px;
 }

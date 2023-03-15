@@ -102,6 +102,11 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
                     <input type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> ' . $args['label'] . $required . '</label>';
 
             break;
+        case 'checkbox-yes':
+            $field = '<label class="checkbox ' . implode( ' ', $args['label_class'] ) . '" ' . implode( ' ', $custom_attributes ) . '>
+                    <input type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="yes" ' . checked( $value, 1, false ) . ' /> ' . $args['label'] . $required . '</label>';
+
+            break;
         case 'text':
         case 'password':
         case 'datetime':
@@ -198,5 +203,18 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
 
 // Shortcode Field name
 function gm_field_name( $name ) {
+    return $name;
     return 'gridmaster_shortcode[' . $name . ']';
+}
+
+// Get Post Types
+function gm_get_post_types() {
+    $post_types = get_post_types( array( 'public' => true ), 'objects' );
+    $options    = array();
+
+    foreach ( $post_types as $post_type ) {
+        $options[ $post_type->name ] = $post_type->label;
+    }
+
+    return $options;
 }
