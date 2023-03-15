@@ -27,3 +27,10 @@
 .gm-slide-toggle .inside {
     display: none;
 }
+
+.gm-field-label {
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 7px;
+    display: block;
+}

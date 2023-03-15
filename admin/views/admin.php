@@ -44,6 +44,14 @@ $left_tabs = [
                     <?php echo esc_html( $tab['title'] ); ?>
                 </a>
             <?php endforeach; ?>
+            <?php if( $path == 'build-grid' ) : ?>
+            <div class="bg-white float-end gm-copy-nav nav-tab">
+                <div class="gm-copy-wrap">
+                    <input type="text" id="blogname" value="[gridmaster]" class="regular-text gm-copy-inp" readonly>
+                    <button type="button" class="button gm-copy-btn">Copy Shortcode</button>
+                </div>
+            </div>
+            <?php endif; ?>
         </nav>
     </div>
     <div class="gm-admin-content">

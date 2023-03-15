@@ -9,4 +9,7 @@ jQuery(document).ready(function($) {
     jQuery( document ).on( 'click', '.gm-slide-toggle .postbox-header', function(e) {
         jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
     });
+
+
+    
 });

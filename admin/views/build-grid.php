@@ -1,4 +1,11 @@
-<form class="container-fluid">
+<?php
+// Include the admin functions
+require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
+
+
+
+?>
+<form class="container-fluid ">
     <div class="row">
         <nav id="sidebarMenu" class="metabox-holder pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-2  d-md-block sidebar">
             
@@ -21,6 +28,20 @@
                     </div>
                 </div>
                 <div class="inside">
+
+                    <?php gridmaster_form_field( gm_field_name('grid_style'),array(
+                        'type' => 'select',
+                        'label' => 'Grid Style',
+                        // 'id' => 'grid_style',
+                        'options' => apply_filters( 'gridmaster_grid_styles', [
+                            'default' => 'Default',
+                            'style-1' => 'Style 1',
+                            'style-2' => 'Style 2',
+                            'style-3' => 'Style 3',
+                        ] ),
+                        'default' => 'default',
+                    ) ); ?>
+                    
                 </div>
             </div>
             
@@ -38,6 +59,7 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <?php //echo do_shortcode("[gridmaster]"); ?>
             
         </main>
     </div>
