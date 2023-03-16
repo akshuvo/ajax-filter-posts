@@ -2,7 +2,7 @@
 // Include the admin functions
 require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 ?>
-<form class="container-fluid" id="gm-shortcode-generator" action="" method="post">
+<form class="container-fluid gm-container" id="gm-shortcode-generator" action="" method="post">
     <div class="row">
         <nav id="sidebarMenu" class="metabox-holder pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-2  d-md-block sidebar">
             
@@ -162,7 +162,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
-            <div id="gm-grid-preview" class="postbox">
+            <div id="gm-grid-preview">
                 <div class="gm-iframe-wrap">
                     <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
                 </div>

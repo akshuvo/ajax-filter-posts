@@ -548,6 +548,10 @@ class Shortcode {
             add_filter( 'show_admin_bar', '__return_false' );
 
             $shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
+            // Remove BackSlash
+            $shortcode = wp_unslash( $shortcode );
+
+            // echo '<pre>'; print_r( $shortcode ); echo '</pre>';
             ?>
             <!-- Blank HTML Template  -->
             <html>

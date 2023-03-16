@@ -25,6 +25,10 @@ jQuery(document).ready(function($) {
 
         // Update Shortcode
         jQuery(".gm-copy-inp").val(shortCode);
+
+        // Update Preview
+        //?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) )
+        jQuery("#gm-iframe").attr('src', gridmaster_params.home_url + '?gm_shortcode_preview=1&shortcode=' + encodeURIComponent(shortCode) );
     });
 
     // Copy Shortcode

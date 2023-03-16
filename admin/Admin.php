@@ -57,9 +57,10 @@ class Admin {
     public function scripts() {
 
         wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
-        wp_localize_script( 'gridmaster-admin-script', 'wp_instance_script', array(
+        wp_localize_script( 'gridmaster-admin-script', 'gridmaster_params', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
+            'home_url' => home_url(),
         ) );
 
         wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.css', array(), GRIDMASTER_VERSION );
