@@ -539,3 +539,19 @@ class Shortcode {
     }
 
 }
+
+/*shortcode test*/
+
+// function button_shortcode( $atts, $content = null){     $values = shordcode_atts ( array (
+//          'url' => '#',
+//     ), $atts);
+//     return '<a class="button" href="'.esc_attr(values['url']) . '">' . $content . '</a>';
+//  }
+//  add_shortcode( 'button' , 'button_shortcode');
+
+//  function my_shortcode(){
+//    $massege  = "hello wordpress";
+//      return $massege;
+//  }
+//  //register shortcode [greeting]
+//  add_shortcode('greeting','my_shortcode');
