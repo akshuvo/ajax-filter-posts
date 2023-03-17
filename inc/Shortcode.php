@@ -562,7 +562,7 @@ class Shortcode {
                     <style>
                         body {
                             margin: 0;
-                            padding: 0;
+                            padding: 0 15px;
                         }
                     </style>
                     <?php wp_head(); ?>

@@ -2,9 +2,9 @@
 // Include the admin functions
 require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 ?>
-<form class="container-fluid gm-container" id="gm-shortcode-generator" action="" method="post">
+<form class="container-fluid gm-container metabox-holder pt-0" id="gm-shortcode-generator" action="" method="post">
     <div class="row">
-        <nav id="sidebarMenu" class="metabox-holder pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-2  d-md-block sidebar">
+        <nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
             
             <div id="gm-select-filter" class="postbox gm-slide-toggle closed--">
                 <div class="postbox-header">
@@ -40,6 +40,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 </div>
             </div>
             
+
             <div id="gm-select-grid" class="postbox gm-slide-toggle closed--">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Select Grid Style', 'gridmaster' ); ?></h2>
@@ -159,14 +160,29 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             
         </nav>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="pt-3 gm-right-sidebar col-md-9 ms-sm-auto col-lg-9 ">
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
-            <div id="gm-grid-preview">
-                <div class="gm-iframe-wrap">
-                    <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+            <!-- Grid Preview  -->
+            <div class="postbox gm-slide-toggle closed--">
+                <div class="postbox-header">
+                    <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
+                    <div class="handle-actions pe-2">
+                        <span class="dashicons dashicons-arrow-down">
+                    </div>
+                </div>
+                <div class="inside">
+                    <div id="gm-grid-preview">
+                        <div class="gm-iframe-wrap">
+                            <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!-- End Grid Preview -->
+
+
+            
             
         </main>
     </div>
