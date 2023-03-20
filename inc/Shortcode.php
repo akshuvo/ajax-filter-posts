@@ -48,7 +48,7 @@ class Shortcode {
         $grid_style = $args['grid_style'];
 
         // Enqueue Styles
-        if( file_exists( GRIDMASTER_PRO_ASSETS_DIR . '/assets/style-1.css' ) ) {
+        if( file_exists( GRIDMASTER_PRO_DIR . '/assets/' . $grid_style . '.css' ) ) {
             wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         } elseif( file_exists( GRIDMASTER_PATH . '/assets/style-1.css' ) ) {
             wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
@@ -528,11 +528,16 @@ class Shortcode {
             if ( ! $template_name ) {
                 continue;
             }
-            if ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
+
+            if ( file_exists( GRIDMASTER_PRO_DIR . '/templates/' . $template_name ) ) {
+                $located = GRIDMASTER_PRO_DIR . '/templates/' . $template_name;
+                break;
+            } elseif ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
                 $located = GRIDMASTER_PATH . '/templates/' . $template_name;
                 break;
             }
         }
+                
         if ( $load && '' != $located ) {
             load_template( $located, $require_once );
         }
