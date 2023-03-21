@@ -15,14 +15,16 @@
 }
 .am_single_grid{
     border-radius: 20px 20px 20px 20px;
-    -o-transition: .7s;
-     transition: .7s;
+    -webkit-transition: .5s;
+    -o-transition: .5s;
+    transition: .5s
 }
 .am_single_grid:hover {
     box-shadow: 8px 8px 2px #CCCCCC;
     border-radius: 20px;
-    -webkit-transition: -webkit-transform 0.9s ease-in-out;
-    transition: transform 0.9s ease-in-out;
+    -webkit-transition: .5s;
+    -o-transition: .5s;
+    transition: .5s
 }
 
 .am_single_grid:hover .am_thumb img {
@@ -36,4 +38,5 @@
 .am_thumb img {
     -webkit-transition: -webkit-transform 0.7s ease-in-out;
     transition: transform 0.7s ease-in-out;
+    transition: .7s
 }
