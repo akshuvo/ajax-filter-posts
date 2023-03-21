@@ -1,12 +1,5 @@
-.am_single_grid:hover .am_thumb img {
-    -webkit-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1);
-}
-.am_grid_col{
-    height: 400px; 
-    text-align: center;
-}
+
+
 .am_thumb{
     height: 300px;
     border-radius: 20px 20px 0px 0px;
@@ -18,19 +11,29 @@
     -webkit-flex: 0 0 25%;
     flex: 0 0 25%;
     max-width: 25%;
-    -webkit-transition: -webkit-transform 0.5s ease-in-out;
-    transition: transform 0.5s ease-in-out;
+    
 }
 .am_single_grid{
-    border-radius: 0px 0px 20px 20px;
-    -webkit-transition: -webkit-transform 0.5s ease-in-out;
-    transition: transform 0.5s ease-in-out;
+    border-radius: 20px 20px 20px 20px;
+    -o-transition: .7s;
+     transition: .7s;
 }
 .am_single_grid:hover {
     box-shadow: 8px 8px 2px #CCCCCC;
     border-radius: 20px;
+    -webkit-transition: -webkit-transform 0.9s ease-in-out;
+    transition: transform 0.9s ease-in-out;
+}
+
+.am_single_grid:hover .am_thumb img {
+    -webkit-transform: scale(1.07);
+    -ms-transform: scale(1.07);
+    transform: scale(1.07);
+    -webkit-transition: .7s;
+    -o-transition: .7s;
+    transition: .7s
 }
 .am_thumb img {
-    -webkit-transition: -webkit-transform 0.5s ease-in-out;
-    transition: transform 0.5s ease-in-out;
+    -webkit-transition: -webkit-transform 0.7s ease-in-out;
+    transition: transform 0.7s ease-in-out;
 }
