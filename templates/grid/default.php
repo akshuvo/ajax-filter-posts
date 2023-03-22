@@ -6,7 +6,7 @@
         <div class="am_cont">
             <a href="<?php echo get_the_permalink(); ?>"><h4 class="am__title"><?php echo get_the_title(); ?></h4></a>
             <div class="am__excerpt">
-                <?php echo wp_trim_words( get_the_excerpt(), 15, null ); ?>
+                <?php echo wp_trim_words( get_the_excerpt(), apply_filters('gridmaster_excerpt_length', 15), ''); ?>
             </div>
             <a href="<?php echo get_the_permalink(); ?>" class="am__readmore"><?php echo esc_html__('Read More','ajax-filter-posts');?></a>
         </div>

@@ -80,7 +80,7 @@ class Shortcode {
             'image_height' => 200,
             'title_tag' => 'h2',
             'title_length' => 50,
-            'excerpt_length' => 100,
+            'excerpt_length' => 15,
             // START OLD ATTRIBUTES
             'show_filter' 		=> "yes",
             'btn_all' 			=> "yes",
@@ -117,7 +117,10 @@ class Shortcode {
             'grid_style' => $atts['grid_style']
         ]);
 
-        
+        // Excerpt Length Filter
+        add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $atts ) {
+            return $atts['excerpt_length'];
+        } );
 
 
         extract($atts);

@@ -180,4 +180,5 @@ jQuery(document).ready(function($) {
 window.addEventListener('load', (event) => {
     // jQuery(document).trigger('am_ajax_post_grid_init');
     // console.log('on load triggered')
+    jQuery('.am_grid_col').slideDown();
 });

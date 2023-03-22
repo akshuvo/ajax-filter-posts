@@ -78,6 +78,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 10,
                     ) ); ?>
 
+                    
+
                     <!-- orderby -->
                     <?php gridmaster_form_field( gm_field_name('orderby'),array(
                         'type' => 'select',
@@ -109,6 +111,13 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'ASC' => 'Ascending',
                         ],
                         'default' => 'DESC',
+                    ) ); ?>
+                    
+                    <!-- excerpt_length -->
+                    <?php gridmaster_form_field( gm_field_name('excerpt_length'),array(
+                        'type' => 'number',
+                        'label' => 'Excerpt Length',
+                        'default' => 15,
                     ) ); ?>
                     
                 </div>

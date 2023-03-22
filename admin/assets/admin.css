@@ -47,11 +47,14 @@
     text-align: left;
     font-weight: 600;
     margin-bottom: 7px;
-    display: block;
+    display: inline-block;
+    width: 40%;
+    min-width: 120px;
 }
 
 .radio.gm-field-label {
-    padding-right: 15px;
+    margin-right: 10px;
+    padding-right: 10px;
 }
 
 .gm-left-sidebar, .gm-right-sidebar{
