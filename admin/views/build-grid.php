@@ -141,6 +141,15 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'responsive_field' => true,
                     ) );
 
+                    // Item Per Row
+                    gridmaster_form_field( gm_field_name('grid_item_per_row'),array(
+                        'type' => 'number',
+                        'label' => 'Item Per Row',
+                        'default' => 3,
+                        'is_pro' => true,
+                        'responsive_field' => true,
+                    ) );
+
                     ?>
 
                     <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
