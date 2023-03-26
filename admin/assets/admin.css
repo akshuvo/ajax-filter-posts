@@ -101,18 +101,62 @@ span.gridmaster-responsive-fields {
     align-items: center;
 }
 
-span.gridmaster-responsive-fields-device {
-    display: block;
-}
-
 span.gridmaster-responsive-fields-devices {
     position: absolute;
     left: 0;
     right: 0;
     top: 100%;
     display: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top-width: 0px;
 }
 
 span.gridmaster-responsive-fields-devices-wrap {
     position: relative;
+}
+
+.gridmaster-responsive-fields-devices-wrap.open .gridmaster-responsive-fields-devices {
+    z-index: 1;
+}
+
+.gridmaster-responsive-fields-selected-devices,
+.gridmaster-responsive-fields-device {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.gridmaster-responsive-fields-devices-wrap.open .gridmaster-responsive-fields-selected-devices {
+    border-color: #ddd;
+}
+
+.gridmaster-responsive-fields-selected-devices:hover,
+.gridmaster-responsive-fields-device.selected,
+.gridmaster-responsive-fields-device:hover {
+    background-color: #ddd;
+}
+
+span.gridmaster-responsive-fields-device {
+    position:relative;
+}
+
+span.gridmaster-responsive-fields-device:hover:after{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  background: #444;
+  border-radius: 3px;
+  color: #fff;
+  content: attr(title);
+  font-size: 11px;
+  padding: 4px 10px;
+  position: absolute;
+  white-space: nowrap;
+  bottom: 110%;
 }

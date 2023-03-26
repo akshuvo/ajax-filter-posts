@@ -19,8 +19,10 @@ jQuery(document).ready(function($) {
     jQuery( document ).on( 'click', '.gridmaster-responsive-fields-device', function(e) {
         let $this = jQuery(this);
         let device = $this.attr('data-device');
+        $this.parent().find('.gridmaster-responsive-fields-device').removeClass('selected');
         $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
-        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+        $this.addClass('selected').closest('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').html($this.html()).click();
     });
 
     // Shortcode Generator
