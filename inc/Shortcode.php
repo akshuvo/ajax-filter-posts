@@ -111,6 +111,7 @@ class Shortcode {
         // If id is set then get args from the database and render the grid
         // Otherwise render the grid from the shortcode attributes
 
+        echo '<pre>'; print_r($atts); echo '</pre>';
 
         // Render dynamic styles
         $this->render_styles([

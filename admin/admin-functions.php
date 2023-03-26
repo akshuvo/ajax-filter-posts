@@ -188,7 +188,11 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
 
                 $field_html .= '<span class="gridmaster-responsive-fields-devices">';
                 foreach( gm_get_breakpoints() as $device => $breakpoint ) {
-                    $field_html .= '<span class="gridmaster-responsive-fields-device" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
+                    $classes = '';
+                    if( $breakpoint['default'] ) {
+                        $classes = ' selected ';
+                    } 
+                    $field_html .= '<span class="gridmaster-responsive-fields-device ' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
                         . '<span class="dashicons dashicons-' . esc_attr( $breakpoint['icon'] ) . '"></span>' . 
                     '</span>';
                 }
@@ -203,7 +207,7 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
                     } 
 
                     // $field_html .= '<span class="gridmaster-responsive-fields-content-' . esc_attr( $device ) . '">';
-                    $field_html .= '<input type="' . esc_attr( $args['type'] ) . '" class="responsive-field input-text gridmaster-input-' . esc_attr( $device ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[' . esc_attr( $device ) . ']" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $device ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+                    $field_html .= '<input type="' . esc_attr( $args['type'] ) . '" class="responsive-field input-text gridmaster-input-' . esc_attr( $device ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" data-name="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '[' . esc_attr( $device ) . ']" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $device ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
                     // $field_html .= '</span>';
                 }
             $field_html .= '</span>';

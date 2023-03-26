@@ -28,18 +28,63 @@ jQuery(document).ready(function($) {
     // Shortcode Generator
     jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input', function(e) {
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
+        let responsiveFields = [];
 
         let shortCode = '[gridmaster';
         jQuery.each($fields, function(i, field) {
-            if (field.value) {
-                shortCode += ' ' + field.name + '="' + field.value + '"';
+            let fieldName = field.name;
+            let fieldVal = field.value;
+            let $thisField = jQuery('#gm-shortcode-generator [name="' + fieldName + '"]');
+            
+            // Responsive Fields
+            if ( $thisField.hasClass('responsive-field') ) {
+                let dataName = $thisField.attr('data-name');
+                responsiveFields.push(dataName);
+                return;
+            }
+
+            if ( fieldVal ) {
+                shortCode += ' ' + fieldName + '="' + fieldVal + '"';
             }
         } );
+
+        // Responsive Fields Make Unique
+        responsiveFields = [...new Set(responsiveFields)];
+
+        // Responsive Fields
+        jQuery.each(responsiveFields, function(i, resFieldId) {
+            let $thisField = jQuery('#gm-shortcode-generator [data-name="' + resFieldId + '"]');
+            let fieldValArr = $thisField.serializeArray()
+
+            // Value Object
+            let valObj = {};
+
+            jQuery.each(fieldValArr, function(i, field) {
+                let fieldName = field.name;
+                let fieldVal = field.value;
+                // Get Device
+                let device = fieldName.replace(resFieldId + '[', '').replace(']', '');
+                // Push to Object
+                valObj[device] = fieldVal;
+            } );
+
+
+            // Object to json string
+            let valObjStr = JSON.stringify(valObj);
+
+            if ( valObjStr ) {
+                shortCode += ' ' + resFieldId + '="' + valObjStr + '"';
+            }
+
+       
+        } );
+        
         
         shortCode += ']';
 
         // Update Shortcode
         jQuery(".gm-copy-inp").val(shortCode);
+        console.log(shortCode);
 
         // Update Preview
         //?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) )
