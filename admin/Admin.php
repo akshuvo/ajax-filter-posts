@@ -67,6 +67,11 @@ class Admin {
         wp_enqueue_style( 'bootstrap-utilities', GRIDMASTER_URL . '/admin/assets/bootstrap-utilities.css', array(), GRIDMASTER_VERSION );
         // wp_enqueue_style( 'bootstrap-css', GRIDMASTER_URL . '/admin/assets/bootstrap.min.css', array(), GRIDMASTER_VERSION );
         wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
+
+        if( !defined( 'GRIDMASTER_PRO_VERSION' ) ) {
+            wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.css', array(), GRIDMASTER_VERSION );
+        }
+
     }
 
 

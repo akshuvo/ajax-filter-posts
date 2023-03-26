@@ -49,6 +49,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     </div>
                 </div>
                 <div class="inside">
+                <?php do_action( 'gridmaster_grid_settings_fields_before' ); ?>
 
                     <!-- Select Style -->
                     <?php gridmaster_form_field( gm_field_name('grid_style'),array(
@@ -59,6 +60,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'style-1' => 'Style 1',
                             'style-2' => 'Style 2',
                             'style-3' => 'Style 3',
+                            'style-4' => 'Style 4',
                         ] ),
                         'default' => 'default',
                     ) ); ?>
@@ -119,7 +121,29 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'label' => 'Excerpt Length',
                         'default' => 15,
                     ) ); ?>
-                    
+
+                    <?php
+                    // Column Gap
+                    gridmaster_form_field( gm_field_name('grid_col_gap'),array(
+                        'type' => 'number',
+                        'label' => 'Column Gap',
+                        'default' => 30,
+                        'is_pro' => true,
+                        'responsive_field' => true,
+                    ) );
+
+                    // Row Gap
+                    gridmaster_form_field( gm_field_name('grid_row_gap'),array(
+                        'type' => 'number',
+                        'label' => 'Row Gap',
+                        'default' => 30,
+                        'is_pro' => true,
+                        'responsive_field' => true,
+                    ) );
+
+                    ?>
+
+                    <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
                 </div>
             </div>
             

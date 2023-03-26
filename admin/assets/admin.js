@@ -10,6 +10,19 @@ jQuery(document).ready(function($) {
         jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
     });
 
+    // Device Panel Toggle
+    jQuery( document ).on( 'click', '.gridmaster-responsive-fields-selected-devices', function(e) {
+        jQuery(this).parent().toggleClass('open').find('.gridmaster-responsive-fields-devices').slideToggle('fast');
+    });
+
+    // Select Device
+    jQuery( document ).on( 'click', '.gridmaster-responsive-fields-device', function(e) {
+        let $this = jQuery(this);
+        let device = $this.attr('data-device');
+        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
+        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+    });
+
     // Shortcode Generator
     jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input', function(e) {
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()

@@ -94,3 +94,25 @@ span.description {
 .toplevel_page_gridmaster #wpfooter {
     display: none;
 }
+
+/* Responsive Devices */
+span.gridmaster-responsive-fields {
+    display: inline-flex;
+    align-items: center;
+}
+
+span.gridmaster-responsive-fields-device {
+    display: block;
+}
+
+span.gridmaster-responsive-fields-devices {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    display: none;
+}
+
+span.gridmaster-responsive-fields-devices-wrap {
+    position: relative;
+}

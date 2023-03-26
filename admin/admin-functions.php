@@ -28,6 +28,8 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
         'default'           => '',
         'autofocus'         => '',
         'priority'          => '',
+        'is_pro'            => false,
+        'responsive_field'  => false,
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -42,6 +44,11 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
         $required        = '&nbsp;<abbr class="required" title="' . esc_attr__( 'required', 'gridmaster' ) . '">*</abbr>';
     } else {
         $required = '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'gridmaster' ) . ')</span>';
+    }
+
+    // If is_pro is true, add pro class.
+    if ( $args['is_pro'] ) {
+        $args['class'][] = 'gm-pro-field';
     }
 
     $required = '';
@@ -168,13 +175,51 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
             $field_html .= '<label for="' . esc_attr( $label_id ) . '" class="' . esc_attr( implode( ' ', $args['label_class'] ) ) . '">' . wp_kses_post( $args['label'] ) . $required . '</label>';
         }
 
-        $field_html .= '<span class="gridmaster-input-wrapper">' . $field;
+        $field_html .= '<span class="gridmaster-input-wrapper">';
+            
+        // If responsive_field is true then add xsmall, small, medium, large and xlarge fields
+        if ( $args['responsive_field'] ) {
+            $field_html .= '<span class="gridmaster-responsive-fields">';
+
+            $field_html .= '<span class="gridmaster-responsive-fields-devices-wrap">';
+                $field_html .= '<span class="gridmaster-responsive-fields-selected-devices">
+                    <span class="dashicons dashicons-dashicons dashicons-smartphone"></span>
+                </span>';
+
+                $field_html .= '<span class="gridmaster-responsive-fields-devices">';
+                foreach( gm_get_breakpoints() as $device => $breakpoint ) {
+                    $field_html .= '<span class="gridmaster-responsive-fields-device" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
+                        . '<span class="dashicons dashicons-' . esc_attr( $breakpoint['icon'] ) . '"></span>' . 
+                    '</span>';
+                }
+                $field_html .= '</span>';
+            $field_html .= '</span>';
+
+            $field_html .= '<span class="gridmaster-responsive-fields-content">';
+                foreach( gm_get_breakpoints() as $device => $breakpoint ) {
+
+                    if( !$breakpoint['default'] ) {
+                        $args['input_class'][] = 'hidden';
+                    } 
+
+                    // $field_html .= '<span class="gridmaster-responsive-fields-content-' . esc_attr( $device ) . '">';
+                    $field_html .= '<input type="' . esc_attr( $args['type'] ) . '" class="responsive-field input-text gridmaster-input-' . esc_attr( $device ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[' . esc_attr( $device ) . ']" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $device ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+                    // $field_html .= '</span>';
+                }
+            $field_html .= '</span>';
+
+        } else {
+            $field_html .= $field;
+        }
+
+
+
+        $field_html .= '</span>';
+
 
         if ( $args['description'] ) {
             $field_html .= '<span class="description" id="' . esc_attr( $args['id'] ) . '-description" aria-hidden="true">' . wp_kses_post( $args['description'] ) . '</span>';
         }
-
-        $field_html .= '</span>';
 
         $container_class = esc_attr( implode( ' ', $args['class'] ) );
         $container_id    = esc_attr( $args['id'] ) . '_field';
@@ -217,4 +262,40 @@ function gm_get_post_types() {
     }
 
     return $options;
+}
+
+// Responsive Breakpoints
+function gm_get_breakpoints() {
+    return array(
+        'xsmall' => array(
+            'label' => __( 'Extra Small', 'gridmaster' ),
+            'value' => '480',
+            'default' => true,
+            'icon' => 'dashicons dashicons-smartphone'
+        ),
+        'small'  => array(
+            'label' => __( 'Small', 'gridmaster' ),
+            'value' => '768',
+            'default' => false,
+            'icon' => 'dashicons dashicons-tablet'
+        ),
+        'medium' => array(
+            'label' => __( 'Medium', 'gridmaster' ),
+            'value' => '992',
+            'default' => false,
+            'icon' => 'dashicons dashicons-laptop'
+        ),
+        'large'  => array(
+            'label' => __( 'Large', 'gridmaster' ),
+            'value' => '1200',
+            'default' => false,
+            'icon' => 'dashicons dashicons-desktop'
+        ),
+        'xlarge' => array(
+            'label' => __( 'Extra Large', 'gridmaster' ),
+            'value' => '1600',
+            'default' => false,
+            'icon' => 'dashicons dashicons-desktop'
+        ),
+    );
 }
