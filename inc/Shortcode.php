@@ -49,10 +49,12 @@ class Shortcode {
 
         // Enqueue Styles
         if( file_exists( GRIDMASTER_PRO_DIR . '/assets/' . $grid_style . '.css' ) ) {
-            wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         } elseif( file_exists( GRIDMASTER_PATH . '/assets/style-1.css' ) ) {
-            wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         }
+
+ 
 
     }
     /**
@@ -111,7 +113,7 @@ class Shortcode {
         // If id is set then get args from the database and render the grid
         // Otherwise render the grid from the shortcode attributes
 
-        echo '<pre>'; print_r($atts); echo '</pre>';
+        // echo '<pre>'; print_r($atts); echo '</pre>';
 
         // Render dynamic styles
         $this->render_styles([
@@ -126,11 +128,17 @@ class Shortcode {
 
         extract($atts);
 
+        // Grid ID 
+        $atts['grid_id'] = 'gridmaster-' . $atts['grid_id'];
+
         // Grid ID
         $grid_id = $atts['grid_id'];
 
         // Pagination
         $pagination_type = $atts['pagination_type'];
+
+        // Public Attributes
+        $public_atts = apply_filters( 'gridmaster_shortcode_public_atts', $atts );
 
         ob_start();
 
@@ -148,7 +156,7 @@ class Shortcode {
         $input_name = 'tax_input[' . $taxonomy . '][]';
         $input_id = $grid_id . '-' . $taxonomy . '_all';
         ?>
-        <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap" data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($atts);?>'>
+        <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> " data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
     
             <?php if ( $show_filter == "yes" && $tax_terms && !is_wp_error( $tax_terms ) ){ ?>
                 <div class="asr-filter-div">
@@ -186,7 +194,10 @@ class Shortcode {
             </div>
         </div>
     
-        <?php return ob_get_clean();
+        <?php 
+        $output = ob_get_clean();
+
+        return apply_filters( 'gridmaster_shortcode_output', $output, $atts );
     }
 
     /**

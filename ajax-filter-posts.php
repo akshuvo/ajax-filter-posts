@@ -29,7 +29,7 @@ final class GridMasterPlugin {
         $this->define_constants();
 
         // Enqueue scripts and styles.
-        add_action( 'wp_enqueue_scripts', array( $this, 'wp_instance_scripts' ), 99999 );
+        add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ), 999 );
 
         // register_activation_hook( __FILE__, [ $this, 'activate' ] );
 
@@ -93,6 +93,10 @@ final class GridMasterPlugin {
      * @return void
      */
     public function init_plugin() {
+        
+        // Include the functions.php
+        require_once GRIDMASTER_PATH . '/inc/functions.php';
+        
 		// Load Shortcode Class
 		if ( !class_exists( 'GridMaster\Shortcode' ) ) {
 			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
@@ -103,8 +107,7 @@ final class GridMasterPlugin {
 		// Load Old Version
 		// require_once GRIDMASTER_PATH . '/older-version/ajax-filter-posts.php';
 
-        // Include the functions.php
-        // require_once GRIDMASTER_PATH . '/inc/functions.php';
+        
 
 	}
 
@@ -119,7 +122,7 @@ final class GridMasterPlugin {
     }
 
     // Enqueue scripts and styles.
-    public function wp_instance_scripts() {
+    public function scripts() {
         // Register Bootstrap from CDN
         // wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css', array(), GRIDMASTER_VERSION );
 
@@ -133,7 +136,7 @@ final class GridMasterPlugin {
 
 
         wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.css', array(), GRIDMASTER_VERSION );
-        // wp_enqueue_style( 'gridmaster-frontends', GRIDMASTER_ASSETS . '/style-1.css', array(), GRIDMASTER_VERSION );
+
     }
 
 

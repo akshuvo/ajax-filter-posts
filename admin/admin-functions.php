@@ -267,39 +267,3 @@ function gm_get_post_types() {
 
     return $options;
 }
-
-// Responsive Breakpoints
-function gm_get_breakpoints() {
-    return array(
-        'xsmall' => array(
-            'label' => __( 'Extra Small', 'gridmaster' ),
-            'value' => '480',
-            'default' => true,
-            'icon' => 'dashicons dashicons-smartphone'
-        ),
-        'small'  => array(
-            'label' => __( 'Small', 'gridmaster' ),
-            'value' => '768',
-            'default' => false,
-            'icon' => 'dashicons dashicons-tablet'
-        ),
-        'medium' => array(
-            'label' => __( 'Medium', 'gridmaster' ),
-            'value' => '992',
-            'default' => false,
-            'icon' => 'dashicons dashicons-laptop'
-        ),
-        'large'  => array(
-            'label' => __( 'Large', 'gridmaster' ),
-            'value' => '1200',
-            'default' => false,
-            'icon' => 'dashicons dashicons-desktop'
-        ),
-        'xlarge' => array(
-            'label' => __( 'Extra Large', 'gridmaster' ),
-            'value' => '1600',
-            'default' => false,
-            'icon' => 'dashicons dashicons-desktop'
-        ),
-    );
-}

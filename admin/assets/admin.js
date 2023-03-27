@@ -73,7 +73,8 @@ jQuery(document).ready(function($) {
             let valObjStr = JSON.stringify(valObj);
 
             if ( valObjStr ) {
-                shortCode += ' ' + resFieldId + '="' + valObjStr + '"';
+                // shortCode += ' ' + resFieldId + '="' + valObjStr + '"';
+                shortCode += ' ' + resFieldId + '=\'' + valObjStr + '\'';
             }
 
        
