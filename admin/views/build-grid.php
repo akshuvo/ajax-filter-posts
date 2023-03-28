@@ -206,9 +206,28 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
             <!-- Grid Preview  -->
-            <div class="postbox gm-slide-toggle closed--">
+            <div class="postbox gm-slide-toggle-- closed--">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
+                    <div class="preview-action-buttons">
+                        <div class="gridmaster-responsive-fields-devices">
+                        <?php
+                        foreach( gm_get_breakpoints() as $device => $breakpoint ) {
+                            $classes = '';
+                            if( $breakpoint['default'] ) {
+                                $classes = ' selected ';
+                            } 
+                            echo '<div class="gridmaster-responsive-fields-device ' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
+                                . '<span class="dashicons dashicons-' . esc_attr( $breakpoint['icon'] ) . '"></span>' . 
+                            '</div>';
+                        }
+                        ?>
+                        </div>
+                        <div class="d-flex preview-scale">
+                            <input id="gm-preview-scale-input" type="range" min="0.1" max="1" step="any" />
+                            <p>Value: <output id="value"></output></p>
+                        </div>
+                    </div>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
@@ -229,3 +248,18 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         </main>
     </div>
 </form>
+
+<script>
+    const value = document.querySelector("#value")
+const input = document.querySelector("#gm-preview-scale-input")
+value.textContent = input.value
+input.addEventListener("input", (event) => {
+  value.textContent = event.target.value
+  //round to 2 decimal places
+    const scale = Math.round(event.target.value * 100) / 100
+    const iframe = document.querySelector("#gm-iframe")
+    iframe.style.transform = `scale(${scale})`
+    
+})
+
+</script>

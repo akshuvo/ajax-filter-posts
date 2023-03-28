@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+.d-flex {
+    display: flex;
+}
+
 .toplevel_page_gridmaster #wpwrap {
     height: 100%;
 }
@@ -141,11 +145,11 @@ span.gridmaster-responsive-fields-devices-wrap {
     background-color: #ddd;
 }
 
-span.gridmaster-responsive-fields-device {
+.gridmaster-responsive-fields-device {
     position:relative;
 }
 
-span.gridmaster-responsive-fields-device:hover:after{
+.gridmaster-responsive-fields-device:hover:after{
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: center;
@@ -159,4 +163,14 @@ span.gridmaster-responsive-fields-device:hover:after{
   position: absolute;
   white-space: nowrap;
   bottom: 110%;
+}
+
+.preview-action-buttons {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.preview-action-buttons .gridmaster-responsive-fields-devices {
+    display: flex;
 }
