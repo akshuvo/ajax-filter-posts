@@ -7,7 +7,7 @@ function gm_get_breakpoints() {
         'xs' => array(
             'label' => __( 'Extra Small', 'gridmaster' ),
             'value' => '0',
-            'default' => true,
+            'default' => false,
             'icon' => 'dashicons dashicons-smartphone'
         ),
         'sm' => array(
@@ -25,7 +25,7 @@ function gm_get_breakpoints() {
         'lg'  => array(
             'label' => __( 'Large', 'gridmaster' ),
             'value' => '1200',
-            'default' => false,
+            'default' => true,
             'icon' => 'dashicons dashicons-laptop'
         ),
         'xl' => array(

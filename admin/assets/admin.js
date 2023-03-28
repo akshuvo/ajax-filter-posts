@@ -10,8 +10,16 @@ jQuery(document).ready(function($) {
         jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
     });
 
+    // Close All Panels
+    let closeAllPanels = () => {
+        jQuery(document).find('.gridmaster-responsive-fields-devices-wrap.open').removeClass('open').find('.gridmaster-responsive-fields-devices').hide();
+    }
+
     // Device Panel Toggle
     jQuery( document ).on( 'click', '.gridmaster-responsive-fields-selected-devices', function(e) {
+        // Close All Panels
+        closeAllPanels();
+        // Toggle Current Panel
         jQuery(this).parent().toggleClass('open').find('.gridmaster-responsive-fields-devices').slideToggle('fast');
     });
 
@@ -19,10 +27,21 @@ jQuery(document).ready(function($) {
     jQuery( document ).on( 'click', '.gridmaster-responsive-fields-device', function(e) {
         let $this = jQuery(this);
         let device = $this.attr('data-device');
+
+        // Remove Selected Class
         $this.parent().find('.gridmaster-responsive-fields-device').removeClass('selected');
-        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
+        // Hide All Devices
+        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
+        jQuery('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
+        // Select Device
         $this.addClass('selected').closest('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
-        $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').html($this.html()).click();
+        jQuery('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+        // Show Current Device
+        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').html($this.html()).click();
+        jQuery('.gridmaster-responsive-fields-selected-devices').html($this.html());
+        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').click();
+        // Close All Panels
+        closeAllPanels();
     });
 
     // Shortcode Generator
