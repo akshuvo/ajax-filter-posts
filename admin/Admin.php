@@ -61,6 +61,7 @@ class Admin {
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
             'home_url' => home_url(),
+            'breakpoints' => gm_get_breakpoints(),
         ) );
 
         wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.css', array(), GRIDMASTER_VERSION );

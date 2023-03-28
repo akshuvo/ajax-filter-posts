@@ -224,8 +224,18 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ?>
                         </div>
                         <div class="d-flex preview-scale">
-                            <input id="gm-preview-scale-input" type="range" min="0.1" max="1" step="any" />
-                            <p>Value: <output id="value"></output></p>
+                                                   
+                            <div id="gm-responsive-bar-scale__minus">
+                                <span class="dashicons dashicons-minus"></span>
+                            </div>
+                            <div id="gm-responsive-bar-scale__value-wrapper"><input class="skip-reload" id="gm-preview-scale-input" type="number" min="50" max="120" step="10" value="100" />%</div>
+                            <div id="gm-responsive-bar-scale__plus">
+                                <span class="dashicons dashicons-plus"></span>
+                            </div>
+                            <div id="gm-responsive-bar-scale__reset">
+                                <span class="dashicons dashicons-image-rotate"></span>
+                            </div>
+                
                         </div>
                     </div>
                     <div class="handle-actions pe-2">
@@ -251,15 +261,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
 <script>
     const value = document.querySelector("#value")
-const input = document.querySelector("#gm-preview-scale-input")
-value.textContent = input.value
-input.addEventListener("input", (event) => {
-  value.textContent = event.target.value
-  //round to 2 decimal places
-    const scale = Math.round(event.target.value * 100) / 100
-    const iframe = document.querySelector("#gm-iframe")
-    iframe.style.transform = `scale(${scale})`
-    
-})
+    const input = document.querySelector("#gm-preview-scale-input")
+    // value.textContent = input.value
+    input.addEventListener("input", (event) => {
+    //   value.textContent = event.target.value
+    //round to 2 decimal places
+        const scale = Math.round(event.target.value) / 100
+        const iframe = document.querySelector("#gm-iframe")
+        iframe.style.transform = `scale(${scale})`
 
+    })
 </script>

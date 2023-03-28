@@ -6,7 +6,7 @@ function gm_get_breakpoints() {
     return array(
         'xs' => array(
             'label' => __( 'Extra Small', 'gridmaster' ),
-            'value' => '0',
+            'value' => '320',
             'default' => false,
             'icon' => 'dashicons dashicons-smartphone'
         ),

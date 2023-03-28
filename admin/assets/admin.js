@@ -5,15 +5,18 @@
  * @version 1.0.0
  */
 jQuery(document).ready(function($) {
-    // Slide Toggle
-    jQuery( document ).on( 'click', '.gm-slide-toggle .postbox-header', function(e) {
-        jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
-    });
 
     // Close All Panels
     let closeAllPanels = () => {
         jQuery(document).find('.gridmaster-responsive-fields-devices-wrap.open').removeClass('open').find('.gridmaster-responsive-fields-devices').hide();
     }
+
+    let breakpoints = gridmaster_params.breakpoints;
+
+    // Slide Toggle
+    jQuery( document ).on( 'click', '.gm-slide-toggle .postbox-header', function(e) {
+        jQuery(this).parent().toggleClass('closed').find('.inside').slideToggle('fast');
+    });
 
     // Device Panel Toggle
     jQuery( document ).on( 'click', '.gridmaster-responsive-fields-selected-devices', function(e) {
@@ -43,10 +46,15 @@ jQuery(document).ready(function($) {
 
         // Close All Panels
         closeAllPanels();
+
+        // Update Preview iframe width
+        let iframeWidth = breakpoints[device].value;
+        jQuery("#gm-iframe").css('width', iframeWidth + 'px');
+
     });
 
     // Shortcode Generator
-    jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input', function(e) {
+    jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input:not(.skip-reload)', function(e) {
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
         let responsiveFields = [];
 
