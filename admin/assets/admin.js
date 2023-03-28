@@ -29,17 +29,18 @@ jQuery(document).ready(function($) {
         let device = $this.attr('data-device');
 
         // Remove Selected Class
-        $this.parent().find('.gridmaster-responsive-fields-device').removeClass('selected');
+        jQuery('.gridmaster-responsive-fields-device').removeClass('selected');
+        
         // Hide All Devices
-        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
         jQuery('.gridmaster-responsive-fields-content .responsive-field').removeClass('hidden').hide();
+        
         // Select Device
-        $this.addClass('selected').closest('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+        jQuery('.gridmaster-responsive-fields-device[data-device="' + device + '"]').addClass('selected');
         jQuery('.gridmaster-responsive-fields').find('.gridmaster-input-' + device).removeClass('hidden').fadeIn('fast');
+        
         // Show Current Device
-        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').html($this.html()).click();
         jQuery('.gridmaster-responsive-fields-selected-devices').html($this.html());
-        // $this.closest('.gridmaster-responsive-fields').find('.gridmaster-responsive-fields-selected-devices').click();
+
         // Close All Panels
         closeAllPanels();
     });

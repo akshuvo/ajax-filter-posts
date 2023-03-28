@@ -14,8 +14,13 @@
     visibility:hidden;
 }
 
+.form-row.gm-pro-field .gridmaster-responsive-fields-content {
+    opacity: 0.6;
+}
+
+
 .form-row.gm-pro-field .gridmaster-input-wrapper {
-    opacity: .6
+    color: #a9a9a9;
 }
 
 .form-row.gm-pro-field:hover  .gm-field-label:before {
