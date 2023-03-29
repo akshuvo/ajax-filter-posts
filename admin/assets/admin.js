@@ -126,5 +126,12 @@ jQuery(document).ready(function($) {
         document.execCommand("copy");
     } );
 
+    // Change Image Size
+    jQuery(document).on( 'change', '#grid_image_size', function(e) {
+        let $val = jQuery(this).val();
+        jQuery('.show-if-image-size-custom').hide();
+        jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
+    } );
+
 
 });

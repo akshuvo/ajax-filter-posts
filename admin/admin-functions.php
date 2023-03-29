@@ -268,3 +268,39 @@ function gm_get_post_types() {
 
     return $options;
 }
+
+// Get Image Sizes
+function gm_get_image_sizes() {
+    global $_wp_additional_image_sizes;
+
+    $get_intermediate_image_sizes = get_intermediate_image_sizes();
+
+    $sizes = array();
+    foreach ( $get_intermediate_image_sizes as $_size ) {
+        if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ), true ) ) {
+            $sizes[ $_size ]['width']  = get_option( $_size . '_size_w' );
+            $sizes[ $_size ]['height'] = get_option( $_size . '_size_h' );
+            $sizes[ $_size ]['crop']   = (bool) get_option( $_size . '_crop' );
+        } elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
+            $sizes[ $_size ] = array(
+                'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
+                'height' => $_wp_additional_image_sizes[ $_size ]['height'],
+                'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
+            );
+        }
+    }
+
+    $image_sizes = array();
+    foreach ( $sizes as $size => $atts ) {
+        $image_sizes[ $size ] = str_replace( '_', ' ', $size ) . ' - ' . $atts['width'] . 'x' . $atts['height'];
+    }
+
+    // Full
+    $image_sizes['full'] = __( 'Full', 'gridmaster' );
+
+    // Custom
+    $image_sizes['custom'] = __( 'Custom', 'gridmaster' );
+
+
+    return $image_sizes;
+}

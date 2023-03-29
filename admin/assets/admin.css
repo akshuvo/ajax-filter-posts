@@ -176,3 +176,12 @@ span.gridmaster-responsive-fields-devices-wrap {
 .preview-action-buttons .gridmaster-responsive-fields-devices {
     display: flex;
 }
+/* End Responsive Devices */
+
+.show-if-image-size-custom {
+    display: none;
+}
+
+#grid_image_size {
+    text-transform: capitalize;
+}

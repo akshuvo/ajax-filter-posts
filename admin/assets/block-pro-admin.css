@@ -14,7 +14,7 @@
     visibility:hidden;
 }
 
-.form-row.gm-pro-field .gridmaster-responsive-fields-content {
+.form-row.gm-pro-field input, .form-row.gm-pro-field select, .form-row.gm-pro-field textarea {
     opacity: 0.6;
 }
 

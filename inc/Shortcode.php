@@ -98,6 +98,7 @@ class Shortcode {
             'grid_id'  			=> wp_generate_password( 8, false ), // grid ID
             'taxonomy'  		=> 'category',
             'terms'  			=> '',
+            'grid_image_size'   => 'full',
 
         ], $atts, 'gridmaster' );
 
@@ -119,11 +120,6 @@ class Shortcode {
         $this->render_styles([
             'grid_style' => $atts['grid_style']
         ]);
-
-        // Excerpt Length Filter
-        add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $atts ) {
-            return absint( $atts['excerpt_length'] );
-        } );
 
 
         extract($atts);
@@ -377,9 +373,20 @@ class Shortcode {
             'has_tax_query' => false,
         ]);
 
+
+        // Excerpt Length Filter
+        add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {
+            return absint( $args['excerpt_length'] );
+        } );
+
+        // Thumbnail size filter
+        add_filter( 'gridmaster_post_thumb_size', function( $thumb_size ) use ( $args ) {
+            return sanitize_text_field( $args['grid_image_size'] );
+        } );
         
         // Apply Filter
         $args = apply_filters( 'gridmaster_render_grid_args', $args );
+
         // Post Query Args
         $query_args = array(
             'post_type' => $args['post_type'],
@@ -387,7 +394,6 @@ class Shortcode {
             'paged' => $args['paged'],
         );
 
-        
         // If json data found
         if ( !empty( $args['posts_per_page'] ) ) {
             $query_args['posts_per_page'] = intval( $args['posts_per_page'] );
