@@ -122,7 +122,7 @@ class Shortcode {
 
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $atts ) {
-            return $atts['excerpt_length'];
+            return absint( $atts['excerpt_length'] );
         } );
 
 

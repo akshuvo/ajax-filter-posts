@@ -228,7 +228,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             <div id="gm-responsive-bar-scale__minus">
                                 <span class="dashicons dashicons-minus"></span>
                             </div>
-                            <div id="gm-responsive-bar-scale__value-wrapper"><input class="skip-reload" id="gm-preview-scale-input" type="number" min="50" max="120" step="10" value="100" />%</div>
+                            <div id="gm-responsive-bar-scale__value-wrapper">
+                                <input class="skip-reload hidden" id="gm-preview-scale-input" type="number" min="50" max="120" step="10" value="100" readonly/>
+                                <span id="gm-responsive-bar-scale__value">100</span>%
+                            </div>
                             <div id="gm-responsive-bar-scale__plus">
                                 <span class="dashicons dashicons-plus"></span>
                             </div>
@@ -260,15 +263,37 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 </form>
 
 <script>
-    const value = document.querySelector("#value")
-    const input = document.querySelector("#gm-preview-scale-input")
-    // value.textContent = input.value
-    input.addEventListener("input", (event) => {
-    //   value.textContent = event.target.value
-    //round to 2 decimal places
-        const scale = Math.round(event.target.value) / 100
+
+    // Scale preview
+    const scaleInput = document.querySelector("#gm-preview-scale-input")
+    scaleInput.addEventListener("input", (event) => {
+        let thisVal = Math.round(event.target.value)
+        const scale =  thisVal/ 100
         const iframe = document.querySelector("#gm-iframe")
         iframe.style.transform = `scale(${scale})`
-
+        document.querySelector("#gm-responsive-bar-scale__value").innerHTML = thisVal
     })
+
+    // Increase scale
+    const incrBtn = document.querySelector("#gm-responsive-bar-scale__plus")
+    incrBtn.addEventListener("click", (event) => {
+        scaleInput.stepUp();
+        scaleInput.dispatchEvent(new Event('input', {bubbles:true}));
+    })
+
+    // Decrease scale
+    const decrBtn = document.querySelector("#gm-responsive-bar-scale__minus")
+    decrBtn.addEventListener("click", (event) => {
+        scaleInput.stepDown();
+        scaleInput.dispatchEvent(new Event('input', {bubbles:true}));
+    })
+
+    // Reset scale
+    const resetBtn = document.querySelector("#gm-responsive-bar-scale__reset")
+    resetBtn.addEventListener("click", (event) => {
+        scaleInput.value = 100;
+        scaleInput.dispatchEvent(new Event('input', {bubbles:true}));
+    })
+
+
 </script>
