@@ -74,15 +74,11 @@ class Shortcode {
             'order' => 'DESC',
             'tax_query' => [],
             'meta_query' => [],
-            'columns' => 3,
-            'column_gap' => 20,
-            'row_gap' => 20,
-            'image_size' => 'large',
-            'image_position' => 'top',
-            'image_height' => 200,
-            'title_tag' => 'h2',
             'title_length' => 50,
+            'content_from' => 'excerpt',
             'excerpt_length' => 15,
+            'show_read_more' => 'yes',
+            'read_more_text' => '',
             // START OLD ATTRIBUTES
             'show_filter' 		=> "yes",
             'btn_all' 			=> "yes",
@@ -376,7 +372,7 @@ class Shortcode {
 
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {
-            return absint( $args['excerpt_length'] );
+            return intval( $args['excerpt_length'] );
         } );
 
         // Thumbnail size filter
@@ -386,6 +382,11 @@ class Shortcode {
         
         // Apply Filter
         $args = apply_filters( 'gridmaster_render_grid_args', $args );
+
+        // Get render grid args filter
+        add_filter( 'gridmaster_get_render_grid_args', function( $arguments ) use ( $args ) {
+            return $args;
+        } );
 
         // Post Query Args
         $query_args = array(
@@ -442,6 +443,7 @@ class Shortcode {
             $query_args['tax_query'] = $tax_query;
         } 
         
+     
 
         //post query
         $query = new \WP_Query( $query_args );

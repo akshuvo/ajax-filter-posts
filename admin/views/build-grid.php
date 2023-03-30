@@ -8,7 +8,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             
             <div id="gm-select-filter" class="postbox gm-slide-toggle closed--">
                 <div class="postbox-header">
-                    <h2 class="hndle"><?php esc_html_e( 'Select Filter Style', 'gridmaster' ); ?></h2>
+                    <h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
@@ -43,7 +43,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
             <div id="gm-select-grid" class="postbox gm-slide-toggle closed--">
                 <div class="postbox-header">
-                    <h2 class="hndle"><?php esc_html_e( 'Select Grid Style', 'gridmaster' ); ?></h2>
+                    <h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
@@ -114,6 +114,17 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ],
                         'default' => 'DESC',
                     ) ); ?>
+
+                    <!-- Show content from  -->
+                    <?php gridmaster_form_field( gm_field_name('content_from'),array(
+                        'type' => 'select',
+                        'label' => 'Show content from',
+                        'options' => [
+                            'excerpt' => 'Post Excerpt',
+                            'content' => 'Post Content',
+                        ],
+                        'default' => 'excerpt',
+                    ) ); ?>
                     
                     <!-- excerpt_length -->
                     <?php gridmaster_form_field( gm_field_name('excerpt_length'),array(
@@ -122,6 +133,26 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 15,
                     ) ); ?>
 
+                    <!-- show_read_more -->
+                    <?php gridmaster_form_field( gm_field_name('show_read_more'),array(
+                        'type' => 'radio',
+                        'label' => 'Show Read More',
+                        'options' => [
+                            'yes' => 'Yes',
+                            'no' => 'No',
+                        ],
+                        'default' => 'yes',
+                    ) ); ?>
+
+                    <!-- read_more_text -->
+                    <?php gridmaster_form_field( gm_field_name('read_more_text'),array(
+                        'type' => 'text',
+                        'label' => 'Read More Text',
+                        'default' => '',
+                        'placeholder' => 'Read More',
+                    ) ); ?>
+
+                    <hr>
                     <?php
                     // Column Gap
                     gridmaster_form_field( gm_field_name('grid_col_gap'),array(
@@ -185,7 +216,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             
             <div id="gm-select-pagination" class="postbox gm-slide-toggle closed--">
                 <div class="postbox-header">
-                    <h2 class="hndle"><?php esc_html_e( 'Select Pagination Style', 'gridmaster' ); ?></h2>
+                    <h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
