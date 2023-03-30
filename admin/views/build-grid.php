@@ -36,6 +36,22 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'yes',
                     ) ); ?>
 
+                    <!-- Select taxonomy -->
+                    <?php 
+                    $taxonomies = gm_get_taxonomies();
+                    $taxonomy_options = $taxonomies['options'];
+                    $taxonomy_object_types = $taxonomies['object_types'];
+
+                    gridmaster_form_field( gm_field_name('taxonomy'),array(
+                        'type' => 'select',
+                        'label' => 'Select Taxonomy',
+                        'options' => $taxonomy_options,
+                        'default' => 'category',
+                        'class' => 'gm-select-taxonomy',
+                    ) ); ?>
+                    <script>
+                        window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
+                    </script>
 
                 </div>
             </div>
@@ -352,6 +368,47 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         scaleInput.value = 100;
         scaleInput.dispatchEvent(new Event('input', {bubbles:true}));
     })
+
+    // Add classes to taxonomy options
+    const taxOptions = document.querySelectorAll(".gm-select-taxonomy option");
+    taxOptions.forEach( (option) => {
+        const tax = option.value;
+        if( gm_taxonomy_object_types[tax] ) {
+            // Add classes with 'post_type_' prefix
+            const classes = gm_taxonomy_object_types[tax].map( (post_type) => {
+                return 'obj_type_' + post_type
+            })
+            option.classList.add(...classes)
+        }
+    })
+
+    // Post Type change
+    const postTypeSelect = document.querySelector("#post_type");
+    postTypeSelect.addEventListener("change", (event) => {
+        const postType = event.target.value;
+        const taxSelect = document.querySelector("#gm-select-taxonomy");
+      
+        taxOptions.forEach( (option) => {
+            if( option.classList.contains('obj_type_' + postType) ) {
+                option.classList.remove('hidden')
+            } else {
+                option.classList.add('hidden')
+            }
+        })
+
+        // reset tax select
+        taxSelect.value = '-';
+
+    })
+
+    // Window load event
+    window.addEventListener("load", (event) => {})
+
+        
+
+    
+
+
 
 
 </script>

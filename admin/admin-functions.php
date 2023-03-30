@@ -269,6 +269,21 @@ function gm_get_post_types() {
     return $options;
 }
 
+// Get Taxonomies
+function gm_get_taxonomies() {
+    $taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
+    $options    = array();
+    $object_types = array();
+
+    $options['-'] = esc_html__( 'Select Taxonomy', 'gridmaster' );
+    foreach ( $taxonomies as $taxonomy ) {
+        $options[ $taxonomy->name ] = $taxonomy->label;
+        $object_types[ $taxonomy->name ] = $taxonomy->object_type;
+    }
+
+    return array( 'options' => $options, 'object_types' => $object_types );
+}
+
 // Get Image Sizes
 function gm_get_image_sizes() {
     global $_wp_additional_image_sizes;
