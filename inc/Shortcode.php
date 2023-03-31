@@ -569,6 +569,11 @@ class Shortcode {
 
     // Init Hook
     public function init_hook() {
+        // Return if admin
+        if ( is_admin() ) {
+            return;
+        }
+
         // gm_shortcode_preview for frontend
         // url: ?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) );
         if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {

@@ -121,10 +121,12 @@ final class GridMasterPlugin {
   
     }
 
-    // Enqueue scripts and styles.
+    /**
+     * Enqueue scripts and styles
+     *
+     * @return void
+     */
     public function scripts() {
-        // Register Bootstrap from CDN
-        // wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css', array(), GRIDMASTER_VERSION );
 
         wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
