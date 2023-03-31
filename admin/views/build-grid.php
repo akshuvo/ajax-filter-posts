@@ -77,6 +77,12 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'style-2' => 'Style 2',
                             'style-3' => 'Style 3',
                             'style-4' => 'Style 4',
+                            'style-5' => 'Style 5',
+                            'style-6' => 'Style 6',
+                            'style-7' => 'Style 7',
+                            'style-8' => 'Style 8',
+                            'style-9' => 'Style 9',
+                            'style-10' => 'Style 10',
                         ] ),
                         'default' => 'default',
                     ) ); ?>
@@ -386,18 +392,21 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     const postTypeSelect = document.querySelector("#post_type");
     postTypeSelect.addEventListener("change", (event) => {
         const postType = event.target.value;
-        const taxSelect = document.querySelector("#gm-select-taxonomy");
       
         taxOptions.forEach( (option) => {
             if( option.classList.contains('obj_type_' + postType) ) {
                 option.classList.remove('hidden')
             } else {
-                option.classList.add('hidden')
+                if( option.value !== '-' ) {
+                    option.classList.add('hidden')
+                }
+            }
+
+            // Select first option
+            if( option.value == '-' ) {
+                option.selected = true;
             }
         })
-
-        // reset tax select
-        taxSelect.value = '-';
 
     })
 
