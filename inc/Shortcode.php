@@ -132,6 +132,8 @@ class Shortcode {
         // Public Attributes
         $public_atts = apply_filters( 'gridmaster_shortcode_public_atts', $atts );
 
+        $filter_style = 'default';
+
         ob_start();
 
         // Texonomy arguments
@@ -151,6 +153,7 @@ class Shortcode {
         <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> " data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
     
             <?php if ( $show_filter == "yes" && $tax_terms && !is_wp_error( $tax_terms ) ){ ?>
+                <?php //$this->get_template_part( $filter_style, 'filter' ); ?>
                 <div class="asr-filter-div">
                     <div class="gm-taxonomy-filter">
 
