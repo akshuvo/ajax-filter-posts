@@ -1,2 +1,2 @@
-<?php
-echo '<pre>'; print_r( $args ); echo '</pre>';
+<?php 
+// echo '<pre>'; print_r( $args ); echo '</pre>';
