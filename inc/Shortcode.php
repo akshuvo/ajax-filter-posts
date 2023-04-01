@@ -21,6 +21,7 @@ class Shortcode {
         add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
 
         add_action( 'init', [ $this, 'init_hook' ] );
+        add_action( 'gridmaster_render_filter', [ $this, 'render_filter' ] );
     }
 
     /**
@@ -151,7 +152,9 @@ class Shortcode {
         $input_id = $grid_id . '-' . $taxonomy . '_all';
         ?>
         <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> " data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
-    
+
+            <?php do_action( 'gridmaster_render_filter', $atts ); ?>
+
             <?php if ( $show_filter == "yes" && $tax_terms && !is_wp_error( $tax_terms ) ){ ?>
                 <?php //$this->get_template_part( $filter_style, 'filter' ); ?>
                 <div class="asr-filter-div">
@@ -193,6 +196,22 @@ class Shortcode {
         $output = ob_get_clean();
 
         return apply_filters( 'gridmaster_shortcode_output', $output, $atts );
+    }
+
+    /**
+     * Render Filter
+     *
+     * @param array $args
+     *
+     * @return string
+     */
+    function render_filter( $args ){
+
+        // print_r($args);
+
+        $filter_style = 'default';
+
+        $this->get_template_part( $filter_style, 'filter', $args );
     }
 
     /**
@@ -262,7 +281,6 @@ class Shortcode {
         $data = [];
 
         $term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
-
 
 
         // Pagination
@@ -549,6 +567,7 @@ class Shortcode {
      * @return string
      */
     function locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
+        
         $located = '';
         foreach ( (array) $template_names as $template_name ) {
             if ( ! $template_name ) {
@@ -565,7 +584,7 @@ class Shortcode {
         }
                 
         if ( $load && '' != $located ) {
-            load_template( $located, $require_once );
+            load_template( $located, $require_once, $args );
         }
         return $located;
     }
