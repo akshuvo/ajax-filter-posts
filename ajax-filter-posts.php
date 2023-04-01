@@ -26,6 +26,7 @@ final class GridMasterPlugin {
      * Class construcotr
      */
     private function __construct() {
+        // Define constants
         $this->define_constants();
 
         // Enqueue scripts and styles.
@@ -33,13 +34,10 @@ final class GridMasterPlugin {
 
         // register_activation_hook( __FILE__, [ $this, 'activate' ] );
 
-        
+        // Plugin init
         add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 
-
-
         // Admin Functions
-		// add_action( 'admin_init', [ $this, 'admin_init' ], 9 );
 		if ( is_admin() ) {
 			$this->admin_init();
 		}
@@ -102,12 +100,6 @@ final class GridMasterPlugin {
 			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
 		}
 		$shortcode = GridMaster\Shortcode::init();
-		
-
-		// Load Old Version
-		// require_once GRIDMASTER_PATH . '/older-version/ajax-filter-posts.php';
-
-        
 
 	}
 
