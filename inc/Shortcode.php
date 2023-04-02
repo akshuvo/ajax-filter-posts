@@ -96,7 +96,7 @@ class Shortcode {
             'taxonomy'  		=> 'category',
             'terms'  			=> '',
             'grid_image_size'   => 'full',
-            'filter_style'  	=> 'pro-filter-1', // default
+            'filter_style'  	=> 'default',
 
         ], $atts, 'gridmaster' );
 

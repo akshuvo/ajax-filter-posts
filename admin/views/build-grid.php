@@ -46,7 +46,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'select',
                         'label' => 'Select Taxonomy',
                         'options' => $taxonomy_options,
-                        'default' => 'category',
+                        'default' => 'product_tag', // category
                         'class' => 'gm-select-taxonomy',
                     ) ); ?>
                     <script>
@@ -56,25 +56,26 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <!-- filter_style -->
                     <?php gridmaster_form_field( gm_field_name('filter_style'),array(
                         'type' => 'select',
-                        'label' => 'Filter Style',
+                        'label' => __('Filter Style', 'gridmaster'),
                         'options' => [
                             'default' => 'Default',
+                            'style-1' => 'Style 1',
                             'pro-filter-1' => 'Pro Style 1',
                         ],
-                        'default' => 'default',
+                        'default' => 'pro-filter-1', // default
                         'is_pro' => true,
                     ) ); ?>
 
                     <!-- Allow Multiple Selection -->
                     <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
                         'type' => 'radio',
-                        'label' => 'Allow Multiple Select',
+                        'label' => __('Allow Multiple Select', 'gridmaster'),
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster')
                         ],
                         'default' => 'no',
-                        'description' => 'Allow multiple selection of terms in the filter.',
+                        'description' => __('Allow multiple selection of terms in the filter.', 'gridmaster'),
                         'is_pro' => true,
                     ) ); ?>
 
