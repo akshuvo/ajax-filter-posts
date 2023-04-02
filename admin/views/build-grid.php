@@ -435,11 +435,4 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         iframe.parentNode.classList.remove('loading')
     })
 
-
-
-    
-
-
-
-
 </script>
