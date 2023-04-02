@@ -96,6 +96,7 @@ class Shortcode {
             'taxonomy'  		=> 'category',
             'terms'  			=> '',
             'grid_image_size'   => 'full',
+            'filter_style'  	=> 'default',
 
         ], $atts, 'gridmaster' );
 
@@ -133,7 +134,6 @@ class Shortcode {
         // Public Attributes
         $public_atts = apply_filters( 'gridmaster_shortcode_public_atts', $atts );
 
-        $filter_style = 'default';
 
         ob_start();
 
@@ -169,53 +169,30 @@ class Shortcode {
      * @return string
      */
     function render_filter( $atts ){
-        // echo '<pre>'; print_r($atts); echo '</pre>';
+        // echo '<pre>'; print_r( $atts['filter_style'] ); echo '</pre>';
 
         if ( $atts['show_filter'] == "yes" ) :  ?>
             <div class="asr-filter-div">
                 <?php
-                // Grid ID
-                $grid_id = $atts['grid_id'];
-
                 // Texonomy arguments
-                $taxonomy = $atts['taxonomy'];
                 $tax_args = array(
                     'hide_empty' => $atts['hide_empty'],
-                    'taxonomy' => $taxonomy,
+                    'taxonomy' => $atts['taxonomy'],
                     'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
                 );
 
-                // Get category terms
-                $tax_terms = get_terms($tax_args); 
-
-                $input_name = 'tax_input[' . $taxonomy . '][]';
-                $input_id = $grid_id . '-' . $taxonomy . '_all';
-
-                $input_type = apply_filters( 'gridmaster_filter_input_type', 'radio', $atts );
-
-                if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
-                    <div class="gm-taxonomy-filter">
-
-                        <?php if( $atts['btn_all'] != "no" ) : ?>
-                            <div class="gm-taxonomy-item gm-taxonomy-all">
-                                <input type="<?php esc_attr_e( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
-                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html('All','gridmaster'); ?></label>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php foreach( $tax_terms as $term ) :
-                            $taxonomy = $term->taxonomy;
-                            $input_id = $grid_id . '-' . $taxonomy . '_' . $term->term_id;
-                            $input_name = 'tax_input[' . $taxonomy . '][]';
-                            ?>
-                            <div class="gm-taxonomy-item">
-                                <input type="<?php esc_attr_e( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
-                                <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
-                            </div>
-                        <?php endforeach; ?>
-
-                    </div>
-                <?php endif; ?>
+                // Filter arguments
+                $filter_args = [
+                    // 'atts' => $atts,
+                    'tax_args' => $tax_args,
+                    'grid_id' => $atts['grid_id'],
+                    'btn_all' => $atts['btn_all'],
+                    'filter_style' => $atts['filter_style'],
+                    'input_type' => apply_filters( 'gridmaster_filter_input_type', 'radio', $atts ),
+                ];
+                ?>
+                <?php $this->get_template_part( $atts['filter_style'], 'filter', $filter_args ); ?>
+                
             </div>
         <?php endif; ?>
         <?php
@@ -591,7 +568,7 @@ class Shortcode {
                 break;
             }
         }
-                
+
         if ( $load && '' != $located ) {
             load_template( $located, $require_once, $args );
         }
