@@ -53,6 +53,19 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
                     </script>
 
+                    <!-- Allow Multiple Selection -->
+                    <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
+                        'type' => 'radio',
+                        'label' => 'Allow Multiple Select',
+                        'options' => [
+                            'yes' => 'Yes',
+                            'no' => 'No',
+                        ],
+                        'default' => 'no',
+                        'description' => 'Allow multiple selection of terms in the filter.',
+                        'is_pro' => true,
+                    ) ); ?>
+
                 </div>
             </div>
             

@@ -23,7 +23,7 @@
     color: #a9a9a9;
 }
 
-.form-row.gm-pro-field:hover  .gm-field-label:before {
+.form-row.gm-pro-field:hover  .gm-field-label:not(.radio):before {
     opacity: 1;
     visibility:visible;
     
