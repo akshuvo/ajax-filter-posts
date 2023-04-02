@@ -313,7 +313,7 @@ class Shortcode {
             ];
         }
         
-        // Tax Input: New way
+        // Tax Input: Skip old way, Proceed New way
         $taxInput = [];
         if( isset( $_POST['taxInput'] ) ) {
             parse_str( $_POST['taxInput'], $taxInput );
@@ -363,9 +363,11 @@ class Shortcode {
             $args['has_tax_query'] = true;
 
             // Unset Tax Input
-            unset( $args['tax_input'] );
-        }
+            if( !function_exists( 'GridMasterProPlugin' ) ) {
+                unset( $args['tax_input'] );
+            }
 
+        }
 
         return $args;
     }
