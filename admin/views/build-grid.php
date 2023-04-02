@@ -53,6 +53,18 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
                     </script>
 
+                    <!-- filter_style -->
+                    <?php gridmaster_form_field( gm_field_name('filter_style'),array(
+                        'type' => 'select',
+                        'label' => 'Filter Style',
+                        'options' => [
+                            'default' => 'Default',
+                            'pro-filter-1' => 'Pro Style 1',
+                        ],
+                        'default' => 'default',
+                        'is_pro' => true,
+                    ) ); ?>
+
                     <!-- Allow Multiple Selection -->
                     <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
                         'type' => 'radio',

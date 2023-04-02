@@ -1,6 +1,7 @@
 <?php
 /**
  * Gridmaster Taxonomy Filter Template
+ * Name: Default
  *
  * @package Gridmaster
  * @since 1.0
