@@ -194,3 +194,65 @@ span.gridmaster-responsive-fields-devices-wrap {
 #grid_image_size {
     text-transform: capitalize;
 }
+
+/* Preloader */
+.asr-loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 9;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: none;
+}
+
+.loading .asr-loader {
+    display: block;
+}
+
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 1px solid #333;
+    border-color: #333 transparent #333 transparent;
+    -webkit-animation: lds-dual-ring 1.2s linear infinite;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@-webkit-keyframes lds-dual-ring {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+   }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+   }
+}
+@keyframes lds-dual-ring {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+   }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+   }
+}
+/* End Preloader */

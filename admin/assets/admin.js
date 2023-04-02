@@ -115,6 +115,8 @@ jQuery(document).ready(function($) {
         jQuery(".gm-copy-inp").val(shortCode);
         console.log(shortCode);
 
+        jQuery(".gm-iframe-wrap").addClass('loading');
+
         // Update Preview
         //?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) )
         jQuery("#gm-iframe").attr('src', gridmaster_params.home_url + '?gm_shortcode_preview=1&shortcode=' + encodeURIComponent(shortCode) );

@@ -340,7 +340,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 </div>
                 <div class="inside">
                     <div id="gm-grid-preview">
-                        <div class="gm-iframe-wrap">
+                        <div class="gm-iframe-wrap loading">
+                            <div class="asr-loader">
+                                <div class="lds-dual-ring"></div>
+                            </div>
                             <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
                         </div>
                     </div>
@@ -426,7 +429,13 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     // Window load event
     window.addEventListener("load", (event) => {})
 
-        
+    // Add a loader class when Iframe is loading
+    const iframe = document.querySelector("#gm-iframe")
+    iframe.addEventListener("load", (event) => {
+        iframe.parentNode.classList.remove('loading')
+    })
+
+
 
     
 
