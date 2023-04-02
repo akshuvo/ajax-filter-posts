@@ -61,8 +61,9 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'default' => 'Default',
                             'style-1' => 'Style 1',
                             'pro-filter-1' => 'Pro Style 1',
+                            'pro-filter-2' => 'Pro Style 2',
                         ],
-                        'default' => 'pro-filter-1', // default
+                        'default' => 'pro-filter-2', // default
                         'is_pro' => true,
                     ) ); ?>
 
