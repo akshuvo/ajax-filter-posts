@@ -6,13 +6,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : '';
 
-// Left Tabs : Welcome, Build Grid, Settings, Support,
+// Left Tabs : Welcome, Templates, Build Grid, Settings, Support,
 $left_tabs = [
     [
         'title' => __( 'Welcome', 'gridmaster' ),
         'url'   => admin_url( 'admin.php?page=gridmaster' ),
         'icon'  => 'dashicons dashicons-admin-home',
         'path' => '',
+    ],
+    [
+        'title' => __( 'Templates', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
+        'icon'  => 'dashicons dashicons-layout',
+        'path' => 'templates',
     ],
     [
         'title' => __( 'Grid Builder', 'gridmaster' ),
@@ -58,6 +64,11 @@ $left_tabs = [
         <?php
         if ( $path == 'build-grid' ) {
             $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
+            if( file_exists( $file_path ) ) {
+                require_once $file_path;
+            }
+        } elseif ( $path == 'templates' ) {
+            $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
             if( file_exists( $file_path ) ) {
                 require_once $file_path;
             }
