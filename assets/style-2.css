@@ -1,7 +1,3 @@
-
-body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){
-    width: 1000px !important;
-}
 .am_single_grid {
     display: flex;
 }
@@ -38,4 +34,3 @@ body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alig
         width: 60%;
     }
 }
-
