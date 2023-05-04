@@ -68,9 +68,9 @@ final class GridMasterPlugin {
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );
         define( 'GRIDMASTER_ASSETS', GRIDMASTER_URL . '/assets' );
-        if ( ! defined( 'GRIDMASTER_PRO_DIR' ) ) {
-            define( 'GRIDMASTER_PRO_DIR', plugin_dir_path( __DIR__ ) . 'gridmaster-pro' );
-        }
+        // if ( ! defined( 'GRIDMASTER_PRO_PATH' ) ) {
+        //     define( 'GRIDMASTER_PRO_PATH', plugin_dir_path( __DIR__ ) . 'gridmaster-pro' );
+        // }
         if ( ! defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ) {
             define( 'GRIDMASTER_PRO_ASSETS_URL', plugins_url('gridmaster-pro') . '/assets' );
         }

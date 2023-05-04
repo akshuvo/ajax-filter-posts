@@ -49,15 +49,14 @@ class Shortcode {
         $grid_style = $args['grid_style'];
 
         // Enqueue Styles
-        if( file_exists( GRIDMASTER_PRO_DIR . '/assets/' . $grid_style . '.css' ) ) {
+        if( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/assets/' . $grid_style . '.css' ) ) {
             wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         } elseif( file_exists( GRIDMASTER_PATH . '/assets/style-1.css' ) ) {
             wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         }
 
- 
-
     }
+    
     /**
      * Render the shortcode
      *
@@ -553,21 +552,28 @@ class Shortcode {
      * @return string
      */
     function locate_template( $template_names, $load = false, $require_once = true, $args = array() ) {
-        
+        $template_names = (array) $template_names;
         $located = '';
-        foreach ( (array) $template_names as $template_name ) {
+        foreach ( $template_names as $template_name ) {
             if ( ! $template_name ) {
                 continue;
             }
 
-            if ( file_exists( GRIDMASTER_PRO_DIR . '/templates/' . $template_name ) ) {
-                $located = GRIDMASTER_PRO_DIR . '/templates/' . $template_name;
+            // Load from child theme if child theme is active
+            if ( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( get_stylesheet_directory() . '/gridmaster/templates/' . $template_name ) ) {
+                $located = get_stylesheet_directory() . '/gridmaster/templates/' . $template_name;
+                break;
+            } elseif ( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/templates/' . $template_name ) ) {
+                $located = GRIDMASTER_PRO_PATH . '/templates/' . $template_name;
                 break;
             } elseif ( file_exists( GRIDMASTER_PATH . '/templates/' . $template_name ) ) {
                 $located = GRIDMASTER_PATH . '/templates/' . $template_name;
                 break;
             }
         }
+
+        // Filter for locating template file
+        $located = apply_filters( 'gm_locate_template', $located, $template_names, $args );
 
         if ( $load && '' != $located ) {
             load_template( $located, $require_once, $args );

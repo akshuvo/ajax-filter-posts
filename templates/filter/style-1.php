@@ -16,12 +16,10 @@ $tax_args = $args['tax_args'];
 // Get category terms
 $tax_terms = get_terms($tax_args); 
 
-
 $taxonomy = $tax_args['taxonomy'];
 $grid_id = $args['grid_id'];
 $input_type = $args['input_type'];
 $filter_style = $args['filter_style'];
-
 
 $input_name = 'tax_input[' . $taxonomy . '][]';
 $input_id = $grid_id . '-' . $taxonomy . '_all';
