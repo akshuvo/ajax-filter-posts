@@ -1,7 +1,7 @@
 <?php
 /**
  * Gridmaster Taxonomy Filter Template
- * Name: Default
+ * Name: Style 2
  *
  * @package Gridmaster
  * @since 1.0

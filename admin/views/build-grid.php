@@ -98,19 +98,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <?php gridmaster_form_field( gm_field_name('grid_style'),array(
                         'type' => 'select',
                         'label' => 'Select Grid Style',
-                        'options' => apply_filters( 'gridmaster_grid_styles', [
-                            'default' => 'Default',
-                            'style-1' => 'Style 1',
-                            'style-2' => 'Style 2',
-                            'style-3' => 'Style 3',
-                            'style-4' => 'Style 4',
-                            'style-5' => 'Style 5',
-                            'style-6' => 'Style 6',
-                            'style-7' => 'Style 7',
-                            'style-8' => 'Style 8',
-                            'style-9' => 'Style 9',
-                            'style-10' => 'Style 10',
-                        ] ),
+                        'options' => gridmaster_grid_styles(),
                         'default' => 'default',
                     ) ); ?>
 

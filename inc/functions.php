@@ -86,3 +86,31 @@ function gridmaster_read_more_link( $link_text = '' ) {
 
     return $output;
 }
+
+// Grid Styles
+function gridmaster_grid_styles(){
+    return apply_filters( 'gridmaster_grid_styles', [
+        'default' => 'Style 1 (Default)',
+        'style-2' => 'Style 2',
+        'style-3' => 'Style 3',
+    ] );
+}
+
+// Grid Pro Styles
+add_filter( 'gridmaster_grid_styles', 'gridmaster_grid_pro_styles', 9 );
+function gridmaster_grid_pro_styles( $styles ){
+
+    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+    $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
+        'pro-style-2' => 'Pro Style 2' . $pro_text,
+        'pro-style-3' => 'Pro Style 3' . $pro_text,
+        'pro-style-4' => 'Pro Style 4' . $pro_text,
+        'pro-style-5' => 'Pro Style 5' . $pro_text,
+        'pro-style-6' => 'Pro Style 6' . $pro_text,
+        'pro-style-7' => 'Pro Style 7' . $pro_text,
+        'pro-style-8' => 'Pro Style 8' . $pro_text,
+        'pro-style-9' => 'Pro Style 9' . $pro_text,
+        'pro-style-10' => 'Pro Style 10' . $pro_text,
+    ] );
+    return array_merge( $styles, $pro_styles );
+}

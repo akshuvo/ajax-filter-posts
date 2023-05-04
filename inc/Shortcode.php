@@ -56,7 +56,7 @@ class Shortcode {
         }
 
     }
-    
+
     /**
      * Render the shortcode
      *
@@ -142,8 +142,6 @@ class Shortcode {
 
             <?php do_action( 'gridmaster_render_filter', $atts ); ?>
 
-           
-    
             <div class="asr-ajax-container">
                 <div class="asr-loader">
                     <div class="lds-dual-ring"></div>
