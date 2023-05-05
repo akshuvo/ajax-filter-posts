@@ -67,13 +67,13 @@ final class GridMasterPlugin {
         define( 'GRIDMASTER_FILE', __FILE__ );
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );
-        define( 'GRIDMASTER_ASSETS', GRIDMASTER_URL . '/assets' );
+        define( 'GRIDMASTER_ASSETS', GRIDMASTER_URL . '/assets/' );
         // if ( ! defined( 'GRIDMASTER_PRO_PATH' ) ) {
         //     define( 'GRIDMASTER_PRO_PATH', plugin_dir_path( __DIR__ ) . 'gridmaster-pro' );
         // }
-        if ( ! defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ) {
-            define( 'GRIDMASTER_PRO_ASSETS_URL', plugins_url('gridmaster-pro') . '/assets' );
-        }
+        // if ( ! defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ) {
+        //     define( 'GRIDMASTER_PRO_ASSETS_URL', plugins_url('gridmaster-pro') . '/assets' );
+        // }
 
     }
 
@@ -120,7 +120,7 @@ final class GridMasterPlugin {
      */
     public function scripts() {
 
-        wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
 		// Localization
 		wp_localize_script( 'gridmaster-frontend', 'asr_ajax_params', array(
@@ -129,7 +129,7 @@ final class GridMasterPlugin {
 		) );
 
 
-        wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . '/frontend.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.css', array(), GRIDMASTER_VERSION );
 
     }
 

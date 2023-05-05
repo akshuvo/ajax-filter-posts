@@ -160,7 +160,11 @@ span.gridmaster-responsive-fields-devices-wrap {
     position:relative;
 }
 
-.gridmaster-responsive-fields-device:hover:after{
+.gm-tooltip {
+    position: relative;
+}
+
+.gm-tooltip:hover:after{
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: center;
@@ -174,6 +178,8 @@ span.gridmaster-responsive-fields-devices-wrap {
   position: absolute;
   white-space: nowrap;
   bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .preview-action-buttons {

@@ -49,10 +49,10 @@ class Shortcode {
         $grid_style = $args['grid_style'];
 
         // Enqueue Styles
-        if( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/assets/' . $grid_style . '.css' ) ) {
-            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
-        } elseif( file_exists( GRIDMASTER_PATH . '/assets/style-1.css' ) ) {
-            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_ASSETS . '/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+        if( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/assets/css/' . $grid_style . '.css' ) ) {
+            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/css/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
+        } elseif( file_exists( GRIDMASTER_PATH . '/assets/css/' . $grid_style . '.css' ) ) {
+            wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_ASSETS . 'css/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
         }
 
     }

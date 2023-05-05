@@ -305,32 +305,32 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
                     <div class="preview-action-buttons">
-                        <div class="gridmaster-responsive-fields-devices">
+                        <div class="gridmaster-responsive-fields-devices px-2">
                         <?php
                         foreach( gm_get_breakpoints() as $device => $breakpoint ) {
                             $classes = '';
                             if( $breakpoint['default'] ) {
                                 $classes = ' selected ';
                             } 
-                            echo '<div class="gridmaster-responsive-fields-device ' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
+                            echo '<div class="gridmaster-responsive-fields-device gm-tooltip' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
                                 . '<span class="dashicons dashicons-' . esc_attr( $breakpoint['icon'] ) . '"></span>' . 
                             '</div>';
                         }
                         ?>
                         </div>
-                        <div class="d-flex preview-scale">
+                        <div class="align-items-center d-flex preview-scale px-2">
                                                    
-                            <div id="gm-responsive-bar-scale__minus">
+                            <div id="gm-responsive-bar-scale__minus" class="gm-tooltip" title="<?php esc_attr_e('Scale Down', 'gridmaster'); ?>">
                                 <span class="dashicons dashicons-minus"></span>
                             </div>
                             <div id="gm-responsive-bar-scale__value-wrapper">
                                 <input class="skip-reload hidden" id="gm-preview-scale-input" type="number" min="50" max="120" step="10" value="100" readonly/>
                                 <span id="gm-responsive-bar-scale__value">100</span>%
                             </div>
-                            <div id="gm-responsive-bar-scale__plus">
+                            <div id="gm-responsive-bar-scale__plus" class="gm-tooltip" title="<?php esc_attr_e('Scale Up', 'gridmaster'); ?>">
                                 <span class="dashicons dashicons-plus"></span>
                             </div>
-                            <div id="gm-responsive-bar-scale__reset">
+                            <div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e('Reset Scale', 'gridmaster'); ?>">
                                 <span class="dashicons dashicons-image-rotate"></span>
                             </div>
                 
@@ -346,7 +346,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             <div class="asr-loader">
                                 <div class="lds-dual-ring"></div>
                             </div>
-                            <iframe id="gm-iframe" src="<?php echo esc_url( 'http://ajax-post-grid.local/?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+                            <iframe id="gm-iframe" src="<?php echo esc_url( home_url('/') . '?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
                         </div>
                     </div>
                 </div>
