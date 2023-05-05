@@ -41,8 +41,9 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     $taxonomies = gm_get_taxonomies();
                     $taxonomy_options = $taxonomies['options'];
                     $taxonomy_object_types = $taxonomies['object_types'];
+                    $terms = $taxonomies['terms'];
 
-                    gridmaster_form_field( gm_field_name('taxonomy'),array(
+                    gridmaster_form_field( gm_field_name('taxonomy'), array(
                         'type' => 'select',
                         'label' => 'Select Taxonomy',
                         'options' => $taxonomy_options,
@@ -52,6 +53,23 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <script>
                         window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
                     </script>
+
+                    <?php 
+
+                    echo '<pre>'; print_r($terms); echo '</pre>';
+                    
+                    gridmaster_form_field( gm_field_name('terms'), array(
+                        'type' => 'checkbox',
+                        'label' => 'Select Terms',
+                        'options' => [
+                            'default' => 'Default',
+                            'style-1' => 'Style 1',
+                            'pro-filter-1' => 'Pro Style 1',
+                            'pro-filter-2' => 'Pro Style 2',
+                        ],
+                        'default' => '', // category
+                        'class' => 'gm-select-term',
+                    ) ); ?>
 
                     <!-- filter_style -->
                     <?php gridmaster_form_field( gm_field_name('filter_style'),array(

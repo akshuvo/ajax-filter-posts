@@ -272,16 +272,36 @@ function gm_get_post_types() {
 // Get Taxonomies
 function gm_get_taxonomies() {
     $taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
+    
     $options    = array();
     $object_types = array();
+    $terms = array();
 
     $options['-'] = esc_html__( 'Select Taxonomy', 'gridmaster' );
     foreach ( $taxonomies as $taxonomy ) {
         $options[ $taxonomy->name ] = $taxonomy->label;
         $object_types[ $taxonomy->name ] = $taxonomy->object_type;
+        $terms[ $taxonomy->name ] = gm_get_taxonomy_terms( $taxonomy->name );
     }
 
-    return array( 'options' => $options, 'object_types' => $object_types );
+    return [
+        'options' => $options, 
+        'object_types' => $object_types,
+        'terms' => $terms
+    ];
+}
+
+// Get Taxonomy Terms
+function gm_get_taxonomy_terms( $taxonomy ) {
+    $terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+    $options = array();
+
+    // $options['-'] = esc_html__( 'Select Term', 'gridmaster' );
+    foreach ( $terms as $term ) {
+        $options[ $term->term_id ] = $term->name;
+    }
+
+    return $options;
 }
 
 // Get Image Sizes
