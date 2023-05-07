@@ -57,6 +57,7 @@ jQuery(document).ready(function($) {
     jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input:not(.skip-reload)', function(e) {
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
         let responsiveFields = [];
+        let terms = [];
 
         let shortCode = '[gridmaster';
         jQuery.each($fields, function(i, field) {
@@ -71,10 +72,21 @@ jQuery(document).ready(function($) {
                 return;
             }
 
+            // Terms
+            if ( fieldName == 'terms' ) {
+                terms.push(fieldVal);
+                return;
+            }
+
             if ( fieldVal ) {
                 shortCode += ' ' + fieldName + '="' + fieldVal + '"';
             }
         } );
+
+        // Terms
+        if ( terms.length ) {
+            shortCode += ' terms="' + terms.join(',') + '"';
+        }
 
         // Responsive Fields Make Unique
         responsiveFields = [...new Set(responsiveFields)];

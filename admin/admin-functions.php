@@ -166,6 +166,19 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
             }
 
             break;
+        case 'checkbox-list':
+            $label_id .= '_' . current( array_keys( $args['options'] ) );
+
+            if ( ! empty( $args['options'] ) ) {
+                foreach ( $args['options'] as $option_key => $option_text ) {
+                    $field .= '<span class="gm-checkbox-wrapper">';
+                    $field .= '<input type="checkbox" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( $option_key ) . '" name="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '"' . checked( $value, $option_key, false ) . ' />';
+                    $field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_key ) . '" class="radio ' . implode( ' ', $args['label_class'] ) . '">' . esc_html( $option_text ) . '</label>';
+                    $field .= '</span>';
+                }
+            }
+
+            break;
     }
 
     if ( ! empty( $field ) ) {

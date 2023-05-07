@@ -52,23 +52,25 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     ) ); ?>
                     <script>
                         window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
+                        window.terms = <?php echo json_encode($terms); ?>;
                     </script>
+
 
                     <?php 
 
-                    echo '<pre>'; print_r($terms); echo '</pre>';
+                    // echo '<pre>'; print_r($terms); echo '</pre>';
                     
                     gridmaster_form_field( gm_field_name('terms'), array(
-                        'type' => 'checkbox',
+                        'id' => 'terms',
+                        'type' => 'checkbox-list',
                         'label' => 'Select Terms',
-                        'options' => [
-                            'default' => 'Default',
-                            'style-1' => 'Style 1',
-                            'pro-filter-1' => 'Pro Style 1',
-                            'pro-filter-2' => 'Pro Style 2',
-                        ],
-                        'default' => '', // category
+                        'placeholder' => 'Select Terms',
+                        'options' => $terms['product_tag'],
+                        // 'default' => '', // category
                         'class' => 'gm-select-term',
+                        'custom_attributes' => array(
+                            'multiple' => 'multiple',
+                        ),
                     ) ); ?>
 
                     <!-- filter_style -->
@@ -81,7 +83,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'pro-filter-1' => 'Pro Style 1',
                             'pro-filter-2' => 'Pro Style 2',
                         ],
-                        'default' => 'pro-filter-2', // default
+                        'default' => 'pro-filter-1', // default
                         'is_pro' => true,
                     ) ); ?>
 
