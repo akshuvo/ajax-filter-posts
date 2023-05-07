@@ -48,3 +48,25 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
 
     </div>
 <?php endif; ?>
+
+<style>
+.asr-filter-div .gm-tax-filter-style-style-2 .asr_texonomy {
+    margin-right: 15px;
+    background: #ffeeae;
+    padding: 18px 20px;
+    border-radius: 14px;
+    transition: all .2s;
+    cursor: pointer;
+    box-shadow: rgba(0,0,0,.05) 0 0 0 1px;
+    min-width: 82px;
+    font-size: 16px;
+}
+.gm-tax-filter-style-style-2 .asr_texonomy:hover{
+    transform: translateY(-4px);
+    background: #fff5d0;
+}
+.gm-tax-filter-style-style-2 .gm-taxonomy-item input:checked + label {
+    box-shadow: rgba(0,0,0,.16) 0 1px 10px, #b89932 0 0 0 1px;
+    background: #fffae7;
+}
+</style>

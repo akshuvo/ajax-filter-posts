@@ -78,8 +78,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'select',
                         'label' => __('Filter Style', 'gridmaster'),
                         'options' => [
-                            'default' => 'Default',
-                            'style-1' => 'Style 1',
+                            'default' => 'Style 1 (Default)',
+                            'style-2' => 'Style 2',
                             'pro-filter-1' => 'Pro Style 1',
                             'pro-filter-2' => 'Pro Style 2',
                         ],
