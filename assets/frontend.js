@@ -54,6 +54,29 @@ jQuery(document).ready(function($) {
 
     });
 
+    // Uncheck other checkboxes
+    jQuery(document).on('change', '.gm-taxonomy-item.gm-taxonomy-all input', function(e){
+        let $this = jQuery(this);
+        
+        // Is checked
+        if ( $this.is(':checked') ) {
+            $this.closest('.gm-taxonomy-item').siblings().find('input').prop('checked', false);
+        }
+
+    });
+
+    // Uncheck gm-taxonomy-all checkbox if other checkbox is checked
+    jQuery(document).on('change', '.gm-taxonomy-item:not(.gm-taxonomy-all) input', function(e){
+        let $this = jQuery(this);
+        let $all = $this.closest('.gm-taxonomy-item').siblings('.gm-taxonomy-all').find('input');
+
+        // Is checked
+        if ( $this.is(':checked') ) {
+            $all.prop('checked', false);
+        }
+
+    });
+
     // Set scroll flag
     var flag = false;
 
