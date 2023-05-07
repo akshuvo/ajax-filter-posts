@@ -310,7 +310,8 @@ class Shortcode {
      * @return void
      */
     public function filter_render_grid_args( $args ) {
-            
+        $all_terms = isset( $args['terms'] ) ? explode(',', $args['terms']) : [];
+
         // Tax Query
         if ( isset( $args['tax_input'] ) && !empty( $args['tax_input'] ) ) {
             $tax_query = [];
@@ -323,6 +324,14 @@ class Shortcode {
 
                 // Continue if terms is empty or -1 in array
                 if ( empty( $terms ) || in_array( "-1", $terms ) ) {
+                    if ( !empty( $all_terms ) ) {
+                        $tax_query[] = [
+                            'taxonomy' => 'category',
+                            'field' => 'term_id',
+                            'terms' => array_filter( $all_terms ),
+                        ];
+                    }
+                    
                     continue;
                 }
 
@@ -371,6 +380,9 @@ class Shortcode {
                 'category' => []
             ],
             'has_tax_query' => false,
+            // Old Args
+            'taxonomy' => '',
+            'terms' => '',
         ]);
 
 
@@ -447,7 +459,18 @@ class Shortcode {
             $query_args['tax_query'] = $tax_query;
         } 
         
-     
+        // if( !empty( $args['taxonomy'] ) && !empty( $args['terms'] ) ) {
+        //     $query_args['tax_query'] = [
+        //         [
+        //             'taxonomy' => $args['taxonomy'],
+        //             'field' => 'term_id',
+        //             'terms' => explode( ',', $args['terms'] ),
+        //         ]
+        //     ];
+        // }
+        
+        // Apply Filter for query args
+        $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
 
         //post query
         $query = new \WP_Query( $query_args );
