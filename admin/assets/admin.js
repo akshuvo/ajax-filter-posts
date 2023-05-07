@@ -72,13 +72,16 @@ jQuery(document).ready(function($) {
                 return;
             }
 
-            // Terms
-            if ( fieldName == 'terms' ) {
-                terms.push(fieldVal);
-                return;
-            }
-
+            // If has value
             if ( fieldVal ) {
+
+                // Terms
+                if ( fieldName == 'terms' ) {
+                    terms.push(fieldVal);
+                    return;
+                }
+
+                // Push to Shortcode
                 shortCode += ' ' + fieldName + '="' + fieldVal + '"';
             }
         } );

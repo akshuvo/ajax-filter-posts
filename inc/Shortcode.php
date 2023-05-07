@@ -417,7 +417,7 @@ class Shortcode {
         $pagination_type = sanitize_text_field( $args['pagination_type'] );
         $dataPaged = sanitize_text_field( $args['paged'] );
 
-        // echo '<pre>'; print_r( $args ); echo '</pre>';
+        echo '<pre>'; print_r( $args ); echo '</pre>';
 
         // Grid Style
         $grid_style = sanitize_text_field( $args['grid_style'] );
