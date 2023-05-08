@@ -50,6 +50,10 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
 <?php endif; ?>
 
 <style>
+.gm-taxonomy-filter.gm-tax-filter-style-style-2 {
+    flex-wrap: nowrap;
+    overflow: scroll;
+}
 .asr-filter-div .gm-tax-filter-style-style-2 .asr_texonomy {
     margin-right: 15px;
     background: #ffeeae;
@@ -60,6 +64,7 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
     box-shadow: rgba(0,0,0,.05) 0 0 0 1px;
     min-width: 82px;
     font-size: 16px;
+    white-space: nowrap;
 }
 .gm-tax-filter-style-style-2 .asr_texonomy:hover{
     transform: translateY(-4px);
