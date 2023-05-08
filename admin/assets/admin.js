@@ -53,8 +53,37 @@ jQuery(document).ready(function($) {
 
     });
 
+    // Taxonomy on Change
+    let changeTaxonomyTerms = () => {
+        let $val = jQuery('#taxonomy').val();
+
+        // Get Terms
+        let terms = window.gm_terms[$val];
+        let html = '';
+
+        if ( terms && terms.length > 0 ) {
+            jQuery.each(terms, function(term_id, term_name) {
+                html += '<span class="gm-checkbox-wrapper"><input type="checkbox" class="input-radio " value="' + term_id + '" name="terms" id="terms_' + term_id + '"><label for="terms_' + term_id + '" class="radio gm-field-label">' + term_name + '</label></span>';
+            } );
+        } else {
+            html = '<i>No Terms Found</i>';
+        }
+
+        jQuery('#terms_field .gridmaster-input-wrapper').html(html);
+
+    }
+    
+
     // Shortcode Generator
     jQuery( document ).on( 'change', '#gm-shortcode-generator select, #gm-shortcode-generator input:not(.skip-reload)', function(e) {
+        let $this = jQuery(this);
+
+        // Change Taxonomy Terms
+        if ( $this.attr('id') == 'taxonomy' ) {
+            changeTaxonomyTerms();
+        }
+
+
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
         let responsiveFields = [];
         let terms = [];
@@ -149,6 +178,7 @@ jQuery(document).ready(function($) {
         jQuery('.show-if-image-size-custom').hide();
         jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
     } );
+    
 
 
 });

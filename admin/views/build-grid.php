@@ -47,12 +47,12 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'select',
                         'label' => 'Select Taxonomy',
                         'options' => $taxonomy_options,
-                        'default' => 'product_tag', // category
+                        'default' => 'category', // category
                         'class' => 'gm-select-taxonomy',
                     ) ); ?>
                     <script>
                         window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
-                        window.terms = <?php echo json_encode($terms); ?>;
+                        window.gm_terms = <?php echo json_encode(  $terms); ?>;
                     </script>
 
 
@@ -65,12 +65,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'checkbox-list',
                         'label' => 'Select Terms',
                         'placeholder' => 'Select Terms',
-                        'options' => $terms['product_tag'],
-                        // 'default' => '', // category
+                        'options' => $terms['category'],
                         'class' => 'gm-select-term',
-                        'custom_attributes' => array(
-                            'multiple' => 'multiple',
-                        ),
                     ) ); ?>
 
                     <!-- filter_style -->
