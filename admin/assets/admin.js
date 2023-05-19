@@ -57,20 +57,28 @@ jQuery(document).ready(function($) {
     let changeTaxonomyTerms = () => {
         let $val = jQuery('#taxonomy').val();
 
+        // Check If Has Pro
+        let inpDisabled = '';
+        if( gridmaster_params.has_pro == 0 && $val != 'category' ) {
+            jQuery('#terms_field').addClass('gm-pro-field');
+            inpDisabled = ' disabled ';
+        } else {
+            jQuery('#terms_field').removeClass('gm-pro-field');
+        }
+
         // Get Terms
         let terms = window.gm_terms[$val];
         let html = '';
 
-        if ( terms && terms.length > 0 ) {
+        if ( terms && terms.length != 0 ) {
             jQuery.each(terms, function(term_id, term_name) {
-                html += '<span class="gm-checkbox-wrapper"><input type="checkbox" class="input-radio " value="' + term_id + '" name="terms" id="terms_' + term_id + '"><label for="terms_' + term_id + '" class="radio gm-field-label">' + term_name + '</label></span>';
+                html += '<span class="gm-checkbox-wrapper"><input type="checkbox" class="input-radio " value="' + term_id + '" name="terms" id="terms_' + term_id + '" '+inpDisabled+'><label for="terms_' + term_id + '" class="radio gm-field-label">' + term_name + '</label></span>';
             } );
         } else {
             html = '<i>No Terms Found</i>';
         }
 
         jQuery('#terms_field .gridmaster-input-wrapper').html(html);
-
     }
     
 
@@ -82,7 +90,6 @@ jQuery(document).ready(function($) {
         if ( $this.attr('id') == 'taxonomy' ) {
             changeTaxonomyTerms();
         }
-
 
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
         let responsiveFields = [];

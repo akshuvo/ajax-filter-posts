@@ -262,3 +262,11 @@ span.gridmaster-responsive-fields-devices-wrap {
    }
 }
 /* End Preloader */
+
+.gm-checkbox-wrapper {
+    white-space: nowrap;
+}
+
+.gm-checkbox-wrapper input:checked + label {
+    font-weight: bold;
+}

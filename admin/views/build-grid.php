@@ -80,7 +80,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'pro-filter-2' => 'Pro Style 2',
                         ],
                         'default' => 'pro-filter-1', // default
-                        'is_pro' => true,
                     ) ); ?>
 
                     <!-- Allow Multiple Selection -->
