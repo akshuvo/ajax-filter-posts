@@ -55,11 +55,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         window.gm_terms = <?php echo json_encode(  $terms); ?>;
                     </script>
 
-
-                    <?php 
-
-                    // echo '<pre>'; print_r($terms); echo '</pre>';
-                    
+                    <?php
                     gridmaster_form_field( gm_field_name('terms'), array(
                         'id' => 'terms',
                         'type' => 'checkbox-list',
@@ -67,6 +63,17 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'placeholder' => 'Select Terms',
                         'options' => $terms['category'],
                         'class' => 'gm-select-term',
+                    ) ); ?>
+                    
+                    <!-- hide_empty -->
+                    <?php gridmaster_form_field( gm_field_name('hide_empty'),array(
+                        'type' => 'radio',
+                        'label' => 'Hide Empty Terms',
+                        'options' => [
+                            '1' => 'Yes',
+                            '0' => 'No',
+                        ],
+                        'default' => '0',
                     ) ); ?>
 
                     <!-- filter_style -->

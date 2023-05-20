@@ -85,7 +85,7 @@ class Shortcode {
             'initial' 			=> "-1",
             'cat' 				=> '',
             'paginate' 			=> 'no',
-            'hide_empty' 		=> 'true',
+            'hide_empty' 		=> 0,
             'pagination_type'   => '',
             'infinite_scroll'   => '',
             'animation'  		=> '',
@@ -164,7 +164,7 @@ class Shortcode {
      * @return string
      */
     function render_filter( $atts ){
-        // echo '<pre>'; print_r( $atts['filter_style'] ); echo '</pre>';
+        // echo '<pre>'; print_r( $atts ); echo '</pre>';
 
         if ( $atts['show_filter'] == "yes" ) :  ?>
             <div class="asr-filter-div">
