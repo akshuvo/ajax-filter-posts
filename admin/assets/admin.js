@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
         let inpDisabled = '';
         if( gridmaster_params.has_pro == 0 && $val != 'category' ) {
             jQuery('#terms_field').addClass('gm-pro-field');
-            // inpDisabled = ' disabled ';
+            inpDisabled = ' disabled ';
         } else {
             jQuery('#terms_field').removeClass('gm-pro-field');
         }

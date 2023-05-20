@@ -425,6 +425,11 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 return 'obj_type_' + post_type
             })
             option.classList.add(...classes)
+
+            // If post type is not `post` then add hidden class
+            if( !gm_taxonomy_object_types[tax].includes('post') ) {
+                option.classList.add('hidden')
+            }
         }
     })
 
@@ -451,7 +456,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     })
 
     // Window load event
-    window.addEventListener("load", (event) => {})
+    window.addEventListener("load", (event) => {
+        // Trigger Post Type change
+        // postTypeSelect.dispatchEvent(new Event('change', {bubbles:true}));
+    })
 
     // Add a loader class when Iframe is loading
     const iframe = document.querySelector("#gm-iframe")
