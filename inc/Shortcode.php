@@ -111,8 +111,6 @@ class Shortcode {
         // If id is set then get args from the database and render the grid
         // Otherwise render the grid from the shortcode attributes
 
-        // echo '<pre>'; print_r($atts); echo '</pre>';
-
         // Render dynamic styles
         $this->render_styles([
             'grid_style' => $atts['grid_style']
@@ -197,6 +195,7 @@ class Shortcode {
 
     /**
      * Get args from shortcode attributes
+     * Trigger when no ajax, default load
      *
      * @param array $atts
      *
@@ -240,16 +239,16 @@ class Shortcode {
         } elseif ( isset( $jsonData['terms'] ) && !empty( $jsonData['terms'] ) ) {
             $terms = explode(',', $jsonData['terms']);
         }
-    
-        
-        // Tax Query
+            
+        // Tax Query: Default Load
         if ( !empty( $terms ) ) {
+            $data['has_terms'] = true;
             $data['tax_query'] = [
                 'category' => $terms,
             ];
         }
     
-        return $data;
+        return apply_filters( 'gridmaster_get_args_from_atts', $data );
     }
 
         
@@ -274,6 +273,8 @@ class Shortcode {
         $argsArray = isset( $_POST['argsArray'] ) ? $_POST['argsArray'] : [];
         // Merge Json Data
         $data = array_merge( $this->get_args_from_atts( $argsArray ), $data );
+        
+  
 
         // Current Page
         if ( isset( $_POST['paged'] ) ) {
@@ -311,7 +312,7 @@ class Shortcode {
      */
     public function filter_render_grid_args( $args ) {
         $all_terms = isset( $args['terms'] ) ? explode(',', $args['terms']) : [];
-
+        echo '<pre>'; print_r( $args ); echo '</pre>';
         // Tax Query
         if ( isset( $args['tax_input'] ) && !empty( $args['tax_input'] ) ) {
             $tax_query = [];
@@ -385,7 +386,7 @@ class Shortcode {
             'terms' => '',
         ]);
 
-
+      
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {
             return intval( $args['excerpt_length'] );
@@ -429,7 +430,7 @@ class Shortcode {
         $pagination_type = sanitize_text_field( $args['pagination_type'] );
         $dataPaged = sanitize_text_field( $args['paged'] );
 
-        // echo '<pre>'; print_r( $args ); echo '</pre>';
+        
 
         // Grid Style
         $grid_style = sanitize_text_field( $args['grid_style'] );
@@ -437,7 +438,7 @@ class Shortcode {
         // Tax Query
         if ( $args['has_tax_query'] ) {
             $query_args['tax_query'] = $args['tax_query'];
-        } elseif ( !empty( $tax_query ) && !$args['has_tax_query'] ) {
+        } elseif ( !empty( $args['tax_query'] ) && !$args['has_tax_query'] ) {
 
             // Tax Query Var
             $tax_query = [];
@@ -458,6 +459,8 @@ class Shortcode {
 
             $query_args['tax_query'] = $tax_query;
         } 
+
+        
         
         // if( !empty( $args['taxonomy'] ) && !empty( $args['terms'] ) ) {
         //     $query_args['tax_query'] = [
@@ -471,6 +474,9 @@ class Shortcode {
         
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
+
+        echo '<pre>'; print_r( $query_args ); echo '</pre>';
+
 
         //post query
         $query = new \WP_Query( $query_args );
@@ -619,7 +625,6 @@ class Shortcode {
             // Remove BackSlash
             $shortcode = wp_unslash( $shortcode );
 
-            // echo '<pre>'; print_r( $shortcode ); echo '</pre>';
             ?>
             <!-- Blank HTML Template  -->
             <html>
