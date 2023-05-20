@@ -114,3 +114,8 @@ function gridmaster_grid_pro_styles( $styles ){
     ] );
     return array_merge( $styles, $pro_styles );
 }
+
+// Is Pro
+function gridmaster_is_pro(){
+    return defined( 'GRIDMASTER_PRO_VERSION' );
+}

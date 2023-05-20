@@ -176,6 +176,14 @@ class Shortcode {
                     'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
                 );
 
+                // If not pro
+                if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
+                    if( current_user_can( 'manage_options' ) ){
+                        echo '<div class="notice notice-warning"><p>' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), 'https://gridmaster.io/pro' ) . '</p></div>';
+                    }
+                    return;
+                }
+
                 // Filter arguments
                 $filter_args = [
                     // 'atts' => $atts,
