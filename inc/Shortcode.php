@@ -397,7 +397,7 @@ class Shortcode {
             return sanitize_text_field( $args['grid_image_size'] );
         } );
         
-        // Apply Filter
+        // Render Args Apply Filter
         $args = apply_filters( 'gridmaster_render_grid_args', $args );
 
         // Get render grid args filter
@@ -424,19 +424,16 @@ class Shortcode {
         if ( !empty( $args['order'] ) ) {
             $query_args['order'] = sanitize_text_field( $args['order'] );
         }
-        
 
         // Pagination Type
         $pagination_type = sanitize_text_field( $args['pagination_type'] );
-        $dataPaged = sanitize_text_field( $args['paged'] );
-
-        
+        $dataPaged = intval( $args['paged'] );
 
         // Grid Style
         $grid_style = sanitize_text_field( $args['grid_style'] );
 
         // Tax Query
-        if ( $args['has_tax_query'] ) {
+        if ( $args['has_tax_query'] ) { // Already has tax query so add it to query args
             $query_args['tax_query'] = $args['tax_query'];
         } elseif ( !empty( $args['tax_query'] ) && !$args['has_tax_query'] ) {
 
@@ -460,23 +457,8 @@ class Shortcode {
             $query_args['tax_query'] = $tax_query;
         } 
 
-        
-        
-        // if( !empty( $args['taxonomy'] ) && !empty( $args['terms'] ) ) {
-        //     $query_args['tax_query'] = [
-        //         [
-        //             'taxonomy' => $args['taxonomy'],
-        //             'field' => 'term_id',
-        //             'terms' => explode( ',', $args['terms'] ),
-        //         ]
-        //     ];
-        // }
-        
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
-
-        echo '<pre>'; print_r( $query_args ); echo '</pre>';
-
 
         //post query
         $query = new \WP_Query( $query_args );
@@ -521,7 +503,7 @@ class Shortcode {
                 if( $pagination_type == 'load_more' ){
 
                     if( $paginate_links && $dataPaged < $query->max_num_pages ){
-                        echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'ajax-filter-posts' )."</button>";
+                        echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'gridmaster' )."</button>";
                     }
 
                 } else {
@@ -535,7 +517,7 @@ class Shortcode {
 
             <?php
         else:
-            esc_html_e('No Posts Found','ajax-filter-posts');
+            esc_html_e('No Posts Found','gridmaster');
         endif;
         wp_reset_query();
 
