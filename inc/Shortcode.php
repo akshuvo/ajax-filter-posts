@@ -311,8 +311,8 @@ class Shortcode {
      * @return void
      */
     public function filter_render_grid_args( $args ) {
-        $all_terms = isset( $args['terms'] ) ? explode(',', $args['terms']) : [];
-        echo '<pre>'; print_r( $args ); echo '</pre>';
+        $all_terms = isset( $args['terms'] ) ? array_filter( explode(',', $args['terms'])) : [];
+        
         // Tax Query
         if ( isset( $args['tax_input'] ) && !empty( $args['tax_input'] ) ) {
             $tax_query = [];
@@ -329,7 +329,7 @@ class Shortcode {
                         $tax_query[] = [
                             'taxonomy' => 'category',
                             'field' => 'term_id',
-                            'terms' => array_filter( $all_terms ),
+                            'terms' => $all_terms,
                         ];
                     }
                     
