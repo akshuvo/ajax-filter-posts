@@ -9,7 +9,6 @@
             <?php echo gridmaster_the_content(); ?>
 
             <?php echo gridmaster_read_more_link( __('Read More', 'gridmaster') ); ?>
-            <p>style 2</p>
         </div>
     </div>
 </div>

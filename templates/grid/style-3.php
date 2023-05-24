@@ -10,7 +10,6 @@
 
             <?php echo gridmaster_read_more_link( __('Read More', 'gridmaster') ); ?>
 
-            <p>style 3</p>
         </div>
     </div>
 </div>

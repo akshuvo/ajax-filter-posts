@@ -32,12 +32,6 @@ $left_tabs = [
         'icon'  => 'dashicons dashicons-admin-generic',
         'path' => 'settings',
     ],
-    [
-        'title' => __( 'Support', 'gridmaster' ),
-        'url'   => admin_url( 'admin.php?page=gridmaster&path=support' ),
-        'icon'  => 'dashicons dashicons-sos',
-        'path' => 'support',
-    ],
 ];
 ?>
 <div class="gridmaster-wrap ">
