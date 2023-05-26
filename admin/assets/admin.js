@@ -69,16 +69,19 @@ jQuery(document).ready(function($) {
         // Get Terms
         let terms = window.gm_terms[$val];
         let html = '';
+        let options = '<option value="-1">All - Default</option><option value="auto">Auto Select</option>';
 
         if ( terms && terms.length != 0 ) {
             jQuery.each(terms, function(term_id, term_name) {
                 html += '<span class="gm-checkbox-wrapper"><input type="checkbox" class="input-radio " value="' + term_id + '" name="terms" id="terms_' + term_id + '" '+inpDisabled+'><label for="terms_' + term_id + '" class="radio gm-field-label">' + term_name + '</label></span>';
+                options += '<option value="' + term_id + '">' + term_name + '</option>';
             } );
         } else {
             html = '<i>No Terms Found</i>';
         }
 
         jQuery('#terms_field .gridmaster-input-wrapper').html(html);
+        jQuery('#initial_term').html(options);
     }
     
 

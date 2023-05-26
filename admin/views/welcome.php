@@ -1,4 +1,4 @@
-<div class="gridmaster-wrap cogm-welcome-ntainer">
+<div class="gridmaster-wrap gm-welcome-container">
     <div class="container-fluid pt-0 pt-3 gm-container">
         <div class="row">
             <div class="col-md-12">

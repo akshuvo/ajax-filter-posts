@@ -47,6 +47,12 @@
     display: none;
 }
 
+.toplevel_page_gridmaster .lmfwppt-license-validation .notice, 
+.toplevel_page_gridmaster .lmfwppt-license-validation div.error, 
+.toplevel_page_gridmaster .lmfwppt-license-validation div.updated {
+    display: inherit;
+}
+
 .gridmaster-wrap  .postbox-header,
 .gridmaster-wrap  .postbox-header * {
     cursor: pointer !important;

@@ -14,6 +14,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     </div>
                 </div>
                 <div class="inside">
+
                     <!-- show_filter -->
                     <?php gridmaster_form_field( gm_field_name('show_filter'),array(
                         'type' => 'radio',
@@ -23,6 +24,20 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'no' => 'No',
                         ],
                         'default' => 'yes',
+                    ) ); ?>
+
+
+                    <!-- filter_style -->
+                    <?php gridmaster_form_field( gm_field_name('filter_style'),array(
+                        'type' => 'select',
+                        'label' => __('Filter Style', 'gridmaster'),
+                        'options' => [
+                            'default' => 'Style 1 (Default)',
+                            'style-2' => 'Style 2',
+                            'pro-filter-1' => 'Pro Style 1',
+                            'pro-filter-2' => 'Pro Style 2',
+                        ],
+                        'default' => 'default', // default
                     ) ); ?>
 
                     <!-- btn_all -->
@@ -76,18 +91,19 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => '0',
                     ) ); ?>
 
-                    <!-- filter_style -->
-                    <?php gridmaster_form_field( gm_field_name('filter_style'),array(
+                     <!-- // Initial Term on Page Load -->
+                     <?php gridmaster_form_field( gm_field_name('initial_term'),array(
                         'type' => 'select',
-                        'label' => __('Filter Style', 'gridmaster'),
+                        'label' => 'Initial Term on Page Load',
                         'options' => [
-                            'default' => 'Style 1 (Default)',
-                            'style-2' => 'Style 2',
-                            'pro-filter-1' => 'Pro Style 1',
-                            'pro-filter-2' => 'Pro Style 2',
+                            '-1' => __('All - Default', 'gridmaster'),
+                            'auto' => __('Auto Select', 'gridmaster'),
                         ],
-                        'default' => 'default', // default
+                        'default' => '-1',
+                        'is_pro' => true,
+                        'description' => __('Select the initial term to be selected on page load.', 'gridmaster'),
                     ) ); ?>
+
 
                     <!-- Allow Multiple Selection -->
                     <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
@@ -459,6 +475,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     window.addEventListener("load", (event) => {
         // Trigger Post Type change
         // postTypeSelect.dispatchEvent(new Event('change', {bubbles:true}));
+
+        // Trigger Taxonomy change
+        jQuery('#taxonomy').trigger('change');
+
     })
 
     // Add a loader class when Iframe is loading
