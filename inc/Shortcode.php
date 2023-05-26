@@ -82,7 +82,7 @@ class Shortcode {
             // START OLD ATTRIBUTES
             'show_filter' 		=> "yes",
             'btn_all' 			=> "yes",
-            'initial' 			=> "-1",
+            // 'initial' 			=> "-1",
             'cat' 				=> '',
             'paginate' 			=> 'no',
             'hide_empty' 		=> 0,
@@ -115,6 +115,10 @@ class Shortcode {
         $this->render_styles([
             'grid_style' => $atts['grid_style']
         ]);
+
+        // echo '<pre>';
+        // print_r($atts);
+        // echo '</pre>';
 
 
         extract($atts);
@@ -467,6 +471,8 @@ class Shortcode {
 
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
+
+        // echo '<pre>'; print_r( $query_args ); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );

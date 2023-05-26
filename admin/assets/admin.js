@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
         // Get Terms
         let terms = window.gm_terms[$val];
         let html = '';
-        let options = '<option value="-1">All - Default</option><option value="auto">Auto Select</option>';
+        let options = '<option value="">All - Default</option><option value="auto">Auto Select</option>';
 
         if ( terms && terms.length != 0 ) {
             jQuery.each(terms, function(term_id, term_name) {
