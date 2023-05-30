@@ -135,10 +135,17 @@ class Shortcode {
         // Public Attributes
         $public_atts = apply_filters( 'gridmaster_shortcode_public_atts', $atts );
 
+        // Unset for Public Attributes
+        unset( $public_atts['grid_col_gap'] );
+        unset( $public_atts['grid_row_gap'] );
+        unset( $public_atts['grid_item_per_row'] );
+        unset( $public_atts['tax_query'] );
+        unset( $public_atts['meta_query'] );
+        unset( $public_atts['grid_style'] );
+        unset( $public_atts['filter_style'] );
 
-        ob_start();
 
-        
+        ob_start();   
         ?>
         <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> " data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
@@ -308,6 +315,9 @@ class Shortcode {
         if ( !empty( $taxInput ) ) {
             $data = array_merge( $data, $taxInput );
         }
+
+        // Ajax Flag
+        $data['ajax'] = true;
         
         // Output
         echo $this->render_grid( $data );
@@ -472,7 +482,8 @@ class Shortcode {
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
 
-        // echo '<pre>'; print_r( $query_args ); echo '</pre>';
+        // echo '<pre>'; print_r( $args ); echo '</pre>';
+        echo '<pre>'; print_r( $query_args ); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );
