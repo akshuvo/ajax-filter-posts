@@ -230,9 +230,14 @@
 .am_has_animation .am_grid_col{
     display: none;
 }
-
-
-
 /* Style 1 CSS */
 
+.gm-admin-notice {
+    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid #ffbf05;
+    width: 100%;
+    border-style: dashed;
+    padding: 5px 10px;
+}
 

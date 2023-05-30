@@ -190,7 +190,7 @@ class Shortcode {
                 // If not pro
                 if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
                     if( current_user_can( 'manage_options' ) ){
-                        echo '<div class="notice notice-warning"><p>' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), 'https://gridmaster.io/pro' ) . '</p></div>';
+                        echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), 'https://gridmaster.io/pro' ) . '</div>';
                     }
                     return;
                 }
