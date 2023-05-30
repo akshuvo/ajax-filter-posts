@@ -290,7 +290,12 @@ function gm_get_taxonomies() {
     $object_types = array();
     $terms = array();
 
+    
     $options['-'] = esc_html__( 'Select Taxonomy', 'gridmaster' );
+
+    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+    $options['auto'] = esc_html__( 'Auto Select', 'gridmaster' ) . $pro_text;
+
     foreach ( $taxonomies as $taxonomy ) {
         $options[ $taxonomy->name ] = $taxonomy->label;
         $object_types[ $taxonomy->name ] = $taxonomy->object_type;
