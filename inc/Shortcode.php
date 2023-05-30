@@ -482,8 +482,7 @@ class Shortcode {
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
 
-        // echo '<pre>'; print_r( $args ); echo '</pre>';
-        echo '<pre>'; print_r( $query_args ); echo '</pre>';
+        // echo '<pre>'; print_r( $query_args ); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );
