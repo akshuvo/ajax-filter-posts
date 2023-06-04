@@ -26,7 +26,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'yes',
                     ) ); ?>
 
-
                     <!-- filter_style -->
                     <?php gridmaster_form_field( gm_field_name('filter_style'),array(
                         'type' => 'select',

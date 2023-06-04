@@ -66,6 +66,12 @@ class Shortcode {
      * @return void
      */
     public function render_shortcode( $atts, $content = null ) {
+        
+        // Check if GridMaster Pro is not installed and current user is admin
+        if( !gridmaster_is_pro() && current_user_can( 'manage_options' ) && isset( $atts['post_type_selection'] ) && $atts['post_type_selection'] == 'auto' ) {
+            echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
+        }
+
         $atts = shortcode_atts( [
             'id' => '',
             'post_type' => 'post',
@@ -190,7 +196,7 @@ class Shortcode {
                 // If not pro
                 if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
                     if( current_user_can( 'manage_options' ) ){
-                        echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), 'https://gridmaster.io/pro' ) . '</div>';
+                        echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
                     }
                     return;
                 }

@@ -74,6 +74,7 @@ final class GridMasterPlugin {
         // if ( ! defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ) {
         //     define( 'GRIDMASTER_PRO_ASSETS_URL', plugins_url('gridmaster-pro') . '/assets' );
         // }
+        define( 'GRIDMASTER_PRO_LINK', 'https://addonmaster.com/gridmaster/' );
 
     }
 
