@@ -203,5 +203,9 @@ jQuery(document).ready(function($) {
 window.addEventListener('load', (event) => {
     // jQuery(document).trigger('am_ajax_post_grid_init');
     // console.log('on load triggered')
+    // Trigger slide down animation
     jQuery('.am_grid_col').slideDown();
+
+    // Trigger scroll event
+    jQuery(window).trigger('scroll');
 });

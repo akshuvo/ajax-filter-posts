@@ -148,6 +148,18 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'post',
                     ) ); ?>
 
+                    <!-- Select Advanced Post Type -->
+                    <?php gridmaster_form_field( gm_field_name('post_type_selection'),array(
+                        'type' => 'select',
+                        'label' => 'Post Type Advanced Selection',
+                        'options' => [
+                            '' => __('None', 'gridmaster'),
+                            'auto' => __('Auto Select', 'gridmaster'),
+                        ],
+                        'default' => '',
+                        'is_pro' => true,
+                    ) ); ?>
+
                     <!-- posts_per_page -->
                     <?php gridmaster_form_field( gm_field_name('posts_per_page'),array(
                         'type' => 'number',
@@ -225,7 +237,34 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'label' => 'Read More Text',
                         'default' => '',
                         'placeholder' => 'Read More',
-                    ) ); ?>
+                    ) ); 
+
+                    // Grid Image Size
+                    gridmaster_form_field( gm_field_name('grid_image_size'),array(
+                        'type' => 'select',
+                        'label' => 'Grid Image Size',
+                        'options' => gm_get_image_sizes(),
+                        'default' => 'full',
+                    ) );
+                    ?>
+                    <div class="show-if-image-size-custom">
+                        <p><i>You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.</i></p>
+                        <!-- image_width -->
+                        <?php gridmaster_form_field( gm_field_name('grid_image_width'),array(
+                            'type' => 'number',
+                            'label' => 'Image Width',
+                            'default' => 350,
+                            'is_pro' => true,
+                        ) ); ?>
+
+                        <!-- image_height -->
+                        <?php gridmaster_form_field( gm_field_name('grid_image_height'),array(
+                            'type' => 'number',
+                            'label' => 'Image Height',
+                            'default' => 200,
+                            'is_pro' => true,
+                        ) ); ?>
+                    </div>
 
                     <hr>
                     <?php
@@ -256,34 +295,9 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'responsive_field' => true,
                     ) );
 
-                    // Grid Image Size
-                    gridmaster_form_field( gm_field_name('grid_image_size'),array(
-                        'type' => 'select',
-                        'label' => 'Grid Image Size',
-                        'options' => gm_get_image_sizes(),
-                        'default' => 'full',
-                    ) );
 
                     ?>
 
-                    <div class="show-if-image-size-custom">
-                        <p><i>You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.</i></p>
-                        <!-- image_width -->
-                        <?php gridmaster_form_field( gm_field_name('grid_image_width'),array(
-                            'type' => 'number',
-                            'label' => 'Image Width',
-                            'default' => 350,
-                            'is_pro' => true,
-                        ) ); ?>
-
-                        <!-- image_height -->
-                        <?php gridmaster_form_field( gm_field_name('grid_image_height'),array(
-                            'type' => 'number',
-                            'label' => 'Image Height',
-                            'default' => 200,
-                            'is_pro' => true,
-                        ) ); ?>
-                    </div>
 
                     <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
                 </div>
