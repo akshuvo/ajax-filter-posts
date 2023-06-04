@@ -31,7 +31,7 @@ class Admin {
      * @return void
      */
     public function admin_menu() {
-        add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), 'manage_options', 'gridmaster', [ $this, 'plugin_page' ], 'dashicons-grid-view', 110 );
+        add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), 'manage_options', 'gridmaster', [ $this, 'plugin_page' ], 'dashicons-forms', 110 );
     }
 
     /**
