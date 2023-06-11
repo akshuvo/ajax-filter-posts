@@ -517,4 +517,9 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         height: 100%;
     }
 
+    #gm-shortcode-generator p {
+        color: #3c434a;
+        font-size: inherit;
+    }
+
 </style>

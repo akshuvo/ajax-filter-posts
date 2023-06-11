@@ -147,33 +147,3 @@
         
     </div> 
 </div>
-
-
-<style>
-
-   
-
-    /* .gm-card.gm-features-free-pro {
-        display: flex;
-        gap: 24px;
-    } */
-
-    /* .gm-features-list {
-        flex: 1;
-        border: 1px solid #ddd;
-        padding: 30px;
-        border-radius: 8px;
-    }
-
-    .gm-features-list li {
-        font-size: 18px;
-        padding: 8px 0px;
-    }
-
-    .gm-features-list.gm-pro {
-
-    }
-    .gm-pro :is( p, h1, h2, h3, h4, h5, h6, li ){
-        color: #000;
-    } */
-</style>
