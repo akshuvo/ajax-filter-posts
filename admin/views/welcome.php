@@ -132,6 +132,7 @@
             <div class="gm-support-btns mt-4 pt-1">
                 <a href="https://wordpress.org/support/plugin/ajax-filter-posts/" class="gm-btn" target="_blank"><?php echo esc_html('Support Forum', 'gridmaster'); ?></a>
                 <a href="https://addonmaster.com/submit-a-ticket/" class="gm-btn gm-btn-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
+                <a href="https://addonmaster.com/docs-category/gridmaster/" class="gm-btn gm-btn-secondary" target="_blank"><?php echo esc_html('Documentation', 'gridmaster'); ?></a>
             </div>
         </div>
 
