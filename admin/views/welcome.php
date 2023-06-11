@@ -1,5 +1,52 @@
-<div class="gridmaster-wrap gm-welcome-container">
-    <div class="container-fluid pt-0 pt-3 gm-container">
+<div class="gridmaster-wrap gm-welcome-container pt-5">
+    <div class="container-fluid gm-container">
+        <!-- Key Features  -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Custom Post Type & Taxonomy', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('With GridMaster, effortlessly display any custom post types and taxonomies on your post grid.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Pre-Built Grid and Filter Styles', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('GridMaster features various pre-designed grid and filter styles for a quick, stylish setup. No custom design needed.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Versatile Pagination Options', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('GridMaster offers a variety of pagination options to help you display your content in the most effective way.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Key Features  -->
+
+        <h2 class="text-center">Why Opt for GridMaster?</h2>
+        <p> <?php echo esc_html('GridMaster is a powerful post filter plugin that allows you to display your content in a stylish and modern way. It offers a variety of pre-designed grid and filter styles that you can easily customize to your liking.', 'gridmaster'); ?> </p>
+    
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
@@ -18,6 +65,9 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-12">
+
+
+
                         <div class="gm-card gm-features-free-pro">
                             <h2 class="gm-title-lg"> <?php echo esc_html('GridMaster Features', 'gridmaster'); ?> </h2>
                             <table>

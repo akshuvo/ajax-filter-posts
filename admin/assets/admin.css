@@ -15,6 +15,10 @@
     display: flex;
 }
 
+.text-center {
+    text-align: center;
+}
+
 /* Header CSS */
 .gm-admin-header {
     text-align: center;
@@ -36,7 +40,7 @@
     color: #23282d;
 }
 
-.gridmaster-wrap {
+.gridmaster-wrap, .gridmaster-wrap p {
     font-size: 15px;
     line-height: 1.8;
     color: #687c93;
