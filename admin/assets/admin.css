@@ -2,6 +2,16 @@
     box-sizing: border-box;
 }
 
+.gridmaster-wrap  {
+    --gm-primary-color: #060097;
+    --gm-primary-hover-color: #03004e;
+    --gm-border-color: #DFDFDF;
+    --gm-main-text-color: #474747;
+    --gm-sec-text-color: #828282;
+    --gm-dark-bg-color: #252421;
+    --gm-sec-bg-color: #f5f7f9;
+}
+
 .bg-white {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
@@ -19,6 +29,52 @@
     text-align: center;
 }
 
+.h-100 {
+    height: 100%;
+}
+
+.gm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    padding: 0 25px;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: .01em;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    box-sizing: border-box;
+    transition: color .2s ease,background .2s ease,transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+    color: rgba(46,68,83,.8);
+    background: #fff;
+    border-color: #e2e6eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    white-space: nowrap;
+}
+
+.gm-btn:hover {
+    color: rgba(46,68,83,.8);
+    border-color: #cfd7df;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+.gm-btn-fill {
+    color: #fff;
+    background: var(--gm-primary-color);
+    border-color: var(--gm-primary-color);
+}
+
+.gm-btn-fill:hover, .gm-btn-fill-hover:hover  {
+    color: #fff;
+    background: var(--gm-primary-hover-color);
+    border-color: var(--gm-primary-hover-color);
+}
 /* Header CSS */
 .gm-admin-header {
     text-align: center;
@@ -46,11 +102,9 @@
     color: #687c93;
 }
 
-.gm-admin-header p {
-    font-size: 15px;
-    line-height: 1.8;
+.gm-admin-header p,
+.gm-support-container p {
     margin-top: 10px;
-    color: #687c93;
     max-width: 580px;
     margin: 25px auto 0 auto;
 }
@@ -77,7 +131,8 @@
     align-items: center;
 }
 
-.gm-admin-toolbar .nav-tab span {
+.gm-admin-toolbar .nav-tab span,
+.gm-btn span {
     color: #687c93;
     margin-right: 10px;
 }
@@ -364,4 +419,21 @@ span.gridmaster-responsive-fields-devices-wrap {
 
 .gm-checkbox-wrapper input:checked + label {
     font-weight: bold;
+}
+
+.gm-support-container {
+    border-radius: 3px;
+    background: var( --gm-sec-bg-color );
+}
+
+.gm-border-primary {
+    border: 1px solid var( --gm-primary-color );
+}
+
+.gm-border-width-2x {
+    border-width: 3px;
+}
+
+.gm-livechat-container p {
+    max-width: 700px;
 }

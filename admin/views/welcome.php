@@ -44,11 +44,11 @@
         </div>
         <!-- Key Features  -->
 
-        <div class="text-center">
+        <div class="pb-3 pt-4 text-center">
             <h2><?php echo esc_html('Why GridMaster is Different?', 'gridmaster'); ?></h2>
         </div>
 
-        <!-- Key Features  -->
+        <!-- Code Features  -->
         <div class="row">
             <div class="col-md-4">
                 <div class="gm-card">
@@ -115,88 +115,35 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Key Features  -->
-    
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="gm-welcome-details">
-                            <div class="gm-welcome-details-head">
-                                <h2 class="gm-title-lg"> <?php echo esc_html('Welcome to GridMaster', 'gridmaster'); ?>  <span> <?php echo esc_html('Version', 'gridmaster'); ?> 1.0.0 </span> </h2>
-                                <p><?php echo esc_html('We are the most powerful Post Filter in Wordpress', 'gridmaster'); ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row pt-3">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-12">
-
-
-
-                        <div class="gm-card gm-features-free-pro">
-                            <h2 class="gm-title-lg"> <?php echo esc_html('GridMaster Features', 'gridmaster'); ?> </h2>
-                            <table>
-                                <tr>
-                                    <th>Features</th>
-                                    <th>GridMaster Free</th>
-                                    <th>GridMaster Pro</th>
-                                </tr>
-                                <tr>
-                                    <td>Feature 1</td>
-                                    <td><span class="dashicons dashicons-yes"></span> </td>
-                                    <td><span class="dashicons dashicons-no"></span></td>
-                                </tr> <tr>
-                                    <td>Feature 1</td>
-                                    <td><span class="dashicons dashicons-yes"></span> </td>
-                                    <td><span class="dashicons dashicons-no"></span></td>
-                                </tr> <tr>
-                                    <td>Feature 1</td>
-                                    <td><span class="dashicons dashicons-yes"></span> </td>
-                                    <td><span class="dashicons dashicons-no"></span></td>
-                                </tr> <tr>
-                                    <td>Feature 1</td>
-                                    <td><span class="dashicons dashicons-yes"></span> </td>
-                                    <td><span class="dashicons dashicons-no"></span></td>
-                                </tr> <tr>
-                                    <td>Feature 1</td>
-                                    <td><span class="dashicons dashicons-yes"></span> </td>
-                                    <td><span class="dashicons dashicons-no"></span></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="gm-update-pro">
-                            <a class="btn gm-bttn btn-primary" href="#"> <?php echo esc_html('UPGRADE TO PRO!', 'gridmaster'); ?>  </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-4">
-                <div class="gm-welcome-sidebar">
-                    <div class="gm-card">
-                        <div class="gm-card-details">
-                            <div class="gm-icon">
-                                <span class="dashicons dashicons-editor-help"></span>
-                            </div>
-                            <div class="gm-card-containt">
-                                <h2 class="gm-title-md"><?php echo esc_html('Support And Feedback', 'gridmaster'); ?></h2>
-                                <p><?php echo esc_html('Do you feel like you need expert advice? Create a support ticket,  Create a support ticket, and we will be delighted to assist you :)', 'gridmaster'); ?>  </p>
-                                <a class="button button-secondary" href="#"> <?php echo esc_html('Get Support', 'gridmaster'); ?>  </a>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="align-content-center d-flex flex-column flex-wrap h-100 justify-content-center text-center">
+                    <h4><?php echo esc_html('Still Not Convinced?', 'gridmaster'); ?></h4>
+                    <a class="gm-btn gm-btn-fill"><span class="dashicons dashicons-external"></span> <?php echo esc_html('Check Out the Pro Version', 'gridmaster'); ?></a>
                 </div>
             </div>
         </div>
+        <!-- Code Features  -->
+
+        <div class="gm-seperator pt-4"></div>
+
+        <div class="gm-support-container mt-5 p-5 text-center">
+            <h2 class="m-0"><?php echo esc_html('Encounter a Puzzle? Raise a Support Ticket', 'gridmaster'); ?></h2>
+            <p><?php echo esc_html('Should you need guidance or assistance, don\'t hesitate to create a support ticket. Our team is ready to solve your GridMaster mysteries.', 'gridmaster'); ?> </p>
+            <div class="gm-support-btns mt-4 pt-1">
+                <a href="https://wordpress.org/support/plugin/ajax-filter-posts/" class="gm-btn" target="_blank"><?php echo esc_html('Support Forum', 'gridmaster'); ?></a>
+                <a href="https://addonmaster.com/submit-a-ticket/" class="gm-btn gm-btn-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
+            </div>
+        </div>
+
+        <div class="align-items-center d-flex gm-livechat-container gm-support-container justify-content-between mt-5 px-5 py-4 gm-border-primary gm-border-width-2x">
+            <div class="">
+                <h2 class="m-0"><?php echo esc_html('GridMaster Pro? Access Instant Support!', 'gridmaster'); ?></h2>
+                <p class="m-0"><?php echo esc_html('As a GridMaster Pro user, take advantage of our Live Chat feature for immediate help and assistance.', 'gridmaster'); ?> </p>
+            </div>
+            <a href="https://addonmaster.com/live-chat/" class="gm-btn gm-btn-fill-hover" target="_blank"><?php echo esc_html('Live Chat', 'gridmaster'); ?></a>
+        </div>
+    
+        
     </div> 
 </div>
 
