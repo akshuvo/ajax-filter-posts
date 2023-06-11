@@ -44,8 +44,79 @@
         </div>
         <!-- Key Features  -->
 
-        <h2 class="text-center">Why Opt for GridMaster?</h2>
-        <p> <?php echo esc_html('GridMaster is a powerful post filter plugin that allows you to display your content in a stylish and modern way. It offers a variety of pre-designed grid and filter styles that you can easily customize to your liking.', 'gridmaster'); ?> </p>
+        <div class="text-center">
+            <h2><?php echo esc_html('Why GridMaster is Different?', 'gridmaster'); ?></h2>
+        </div>
+
+        <!-- Key Features  -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Seamless Efficiency with Clean Code', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('GridMaster is built with clean, well-organized code to ensure seamless efficiency and performance.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Frontend-Backend Code Balance', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('We don\'t clutter your frontend with backend code. GridMaster maintains a lean codebase for optimal site performance.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Customizable with Shortcode Builder', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('Shortcode Builder lets you place post grids anywhere on your site. Plus, build your custom theme with GridMaster with ease.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Works with Any Theme', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('GridMaster is compatible with any WordPress theme. No need to change your theme to use GridMaster.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gm-card">
+                    <div class="gm-card-details">
+                        <div class="gm-icon">
+                            <span class="dashicons dashicons-editor-help"></span>
+                        </div>
+                        <div class="gm-card-containt">
+                            <h4><?php echo esc_html('Essential Features at No Cost', 'gridmaster'); ?></h4>
+                            <p> <?php echo esc_html('GridMaster comes packed with nearly all necessary features as part of its free package, ensuring exceptional value.', 'gridmaster'); ?> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Key Features  -->
     
         <div class="row">
             <div class="col-md-12">
