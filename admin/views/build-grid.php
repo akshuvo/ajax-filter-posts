@@ -30,12 +30,11 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <?php gridmaster_form_field( gm_field_name('filter_style'),array(
                         'type' => 'select',
                         'label' => __('Filter Style', 'gridmaster'),
-                        'options' => [
+                        'options' => apply_filters( 'gridmaster_filter_styles', [
                             'default' => 'Style 1 (Default)',
                             'style-2' => 'Style 2',
-                            'pro-filter-1' => 'Pro Style 1',
-                            'pro-filter-2' => 'Pro Style 2',
-                        ],
+                            'style-3' => 'Style 3',
+                        ] ),
                         'default' => 'default', // default
                     ) ); ?>
 
@@ -501,3 +500,21 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     })
 
 </script>
+<style>
+    .gm-admin-content {
+        max-width: 100% !important;
+    }
+    .gm-admin-into {
+        display: none;
+    }
+    .toplevel_page_gridmaster #wpcontent #wpbody {
+        height: calc(100vh - 72px);
+        overflow: hidden;
+    }
+
+    .toplevel_page_gridmaster #wpcontent #wpbody-content {
+        padding-bottom: 0;
+        height: 100%;
+    }
+
+</style>

@@ -35,24 +35,30 @@ $left_tabs = [
 ];
 ?>
 <div class="gridmaster-wrap ">
-    <h1 class="wp-heading-inline"><?php echo esc_html( get_admin_page_title() ); ?></h1>
-    <div class="gm-admin-toolbar">
-        <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
-            <?php foreach( $left_tabs as $tab ) : ?>
-                <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>">
-                    <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
-                    <?php echo esc_html( $tab['title'] ); ?>
-                </a>
-            <?php endforeach; ?>
-            <?php if( $path == 'build-grid' ) : ?>
-            <div class="bg-white float-end gm-copy-nav nav-tab">
-                <div class="gm-copy-wrap">
-                    <input type="text" id="blogname" value="[gridmaster]" class="regular-text gm-copy-inp" readonly>
-                    <button type="button" class="button gm-copy-btn">Copy Shortcode</button>
+    <div class="gm-admin-header">
+        <div class="gm-admin-into">
+            <h2><span class="dashicons dashicons-schedule"></span> <?php esc_html_e( 'GridMaster', 'gridmaster' ); ?></h2>
+            <p><?php esc_html_e( 'Build awesome post grids with GridMaster', 'gridmaster' ); ?></p>
+        </div>
+
+        <div class="gm-admin-toolbar">
+            <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
+                <?php foreach( $left_tabs as $tab ) : ?>
+                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>">
+                        <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
+                        <?php echo esc_html( $tab['title'] ); ?>
+                    </a>
+                <?php endforeach; ?>
+                <?php if( $path == 'build-grid' ) : ?>
+                <div class="bg-white float-end gm-copy-nav nav-tab">
+                    <div class="gm-copy-wrap">
+                        <input type="text" id="blogname" value="[gridmaster]" class="regular-text gm-copy-inp" readonly>
+                        <button type="button" class="button gm-copy-btn">Copy Shortcode</button>
+                    </div>
                 </div>
-            </div>
-            <?php endif; ?>
-        </nav>
+                <?php endif; ?>
+            </nav>
+        </div>
     </div>
     <div class="gm-admin-content">
         <?php

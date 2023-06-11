@@ -171,4 +171,4 @@ function enqueue_select2_jquery() {
     wp_enqueue_style( 'select2' );
     wp_enqueue_script( 'select2' );
 }
-add_action( 'admin_enqueue_scripts', 'enqueue_select2_jquery' );
+// add_action( 'admin_enqueue_scripts', 'enqueue_select2_jquery' );

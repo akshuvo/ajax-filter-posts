@@ -15,6 +15,100 @@
     display: flex;
 }
 
+/* Header CSS */
+.gm-admin-header {
+    text-align: center;
+    overflow: hidden;
+    background: #f5f7f9;
+}
+
+.gm-admin-into {
+    padding: 60px 0;
+}
+
+.gm-admin-header h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 700;
+    margin: 0;
+    color: #23282d;
+}
+
+.gridmaster-wrap {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #687c93;
+}
+
+.gm-admin-header p {
+    font-size: 15px;
+    line-height: 1.8;
+    margin-top: 10px;
+    color: #687c93;
+    max-width: 580px;
+    margin: 25px auto 0 auto;
+}
+
+.gm-admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gm-admin-toolbar .nav-tab-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 0;
+}
+
+.gm-admin-toolbar .nav-tab {
+    border-bottom: 0;
+    background-color: #f6f7f9;
+    border-color: #e9e9e9;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.gm-admin-toolbar .nav-tab span {
+    color: #687c93;
+    margin-right: 10px;
+}
+
+.gm-admin-toolbar .nav-tab:hover,
+.gm-admin-toolbar .nav-tab.nav-tab-active {
+    background: #fff;
+}
+
+/* Header CSS */
+
+.gm-admin-content {
+    max-width: 1200px;
+    min-height: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.gm-card {
+    box-shadow: 0px 13px 30px #E0E8EE;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.gm-icon {
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.gm-icon span {
+    font-size: 62px;
+    color: #30057b;
+}
+
 .toplevel_page_gridmaster #wpwrap {
     height: 100%;
 }
@@ -27,15 +121,6 @@
     overflow-y: auto;
 }
 
-.toplevel_page_gridmaster #wpcontent #wpbody {
-    height: calc(100vh - 72px);
-    overflow: hidden;
-}
-
-.toplevel_page_gridmaster #wpcontent #wpbody-content {
-    padding-bottom: 0;
-    height: 100%;
-}
 
 .gridmaster-wrap {
     height: 100%;

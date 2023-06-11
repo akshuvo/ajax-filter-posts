@@ -114,6 +114,16 @@ function gridmaster_grid_pro_styles( $styles ){
     ] );
     return array_merge( $styles, $pro_styles );
 }
+// Filter Pro  Styles
+add_filter( 'gridmaster_filter_styles', 'gridmaster_filter_pro_styles', 9 );
+function gridmaster_filter_pro_styles( $styles ){
+    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+    $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
+        'pro-filter-1' => 'Pro Filter 1' . $pro_text,
+        'pro-filter-2' => 'Pro Filter 2' . $pro_text,
+    ] );
+    return array_merge( $styles, $pro_styles );
+}
 
 // Is Pro
 function gridmaster_is_pro(){

@@ -59,7 +59,7 @@ $templates_preivew = [
         <div class="row gridmaster-template-view">
 
         <?php foreach( $templates_preivew as $template ) : ?>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="gridmaster-template-card">
                 <div class="template-card-thumbnail">
                     <img src="<?php echo $template['thumbnail']; ?>" alt="">
