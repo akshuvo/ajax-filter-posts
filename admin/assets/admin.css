@@ -229,6 +229,7 @@ span.description {
     display: block;
     font-size: 12px;
     font-style: italic;
+    font-weight: normal;
 }
 
 #gm-grid-preview {
@@ -436,4 +437,18 @@ span.gridmaster-responsive-fields-devices-wrap {
 
 .gm-livechat-container p {
     max-width: 700px;
+}
+
+.gridmaster-options-form .form-row {
+    border-bottom: 1px solid #eaecf0;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+}
+
+.gridmaster-options-form .form-row:last-child {
+    border: 0;
+}
+
+.gridmaster-options-form .gridmaster-input-wrapper {
+    min-width: 60%;
 }

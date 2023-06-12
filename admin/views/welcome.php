@@ -130,9 +130,9 @@
             <h2 class="m-0"><?php echo esc_html('Encounter a Puzzle? Raise a Support Ticket', 'gridmaster'); ?></h2>
             <p><?php echo esc_html('Should you need guidance or assistance, don\'t hesitate to create a support ticket. Our team is ready to solve your GridMaster mysteries.', 'gridmaster'); ?> </p>
             <div class="gm-support-btns mt-4 pt-1">
-                <a href="https://wordpress.org/support/plugin/ajax-filter-posts/" class="gm-btn" target="_blank"><?php echo esc_html('Support Forum', 'gridmaster'); ?></a>
-                <a href="https://addonmaster.com/submit-a-ticket/" class="gm-btn gm-btn-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
-                <a href="https://addonmaster.com/docs-category/gridmaster/" class="gm-btn gm-btn-secondary" target="_blank"><?php echo esc_html('Documentation', 'gridmaster'); ?></a>
+                <a href="https://wordpress.org/support/plugin/ajax-filter-posts/" class="gm-btn gm-btn-fill-hover" target="_blank"><?php echo esc_html('Support Forum', 'gridmaster'); ?></a>
+                <a href="https://addonmaster.com/submit-a-ticket/" class="gm-btn gm-btn-fill-hover gm-btn gm-btn-fill-hover-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
+                <a href="https://addonmaster.com/docs-category/gridmaster/" class="gm-btn gm-btn-fill-hover gm-btn-secondary" target="_blank"><?php echo esc_html('Documentation', 'gridmaster'); ?></a>
             </div>
         </div>
 

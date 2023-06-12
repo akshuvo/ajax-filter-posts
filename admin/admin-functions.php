@@ -283,18 +283,19 @@ function gm_get_post_types() {
 }
 
 // Get Taxonomies
-function gm_get_taxonomies() {
+function gm_get_taxonomies( $raw = false ) {
     $taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
     
     $options    = array();
     $object_types = array();
     $terms = array();
 
-    
-    $options['-'] = esc_html__( 'Select Taxonomy', 'gridmaster' );
-
-    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
-    $options['auto'] = esc_html__( 'Auto Select', 'gridmaster' ) . $pro_text;
+    // Add Extra Options
+    if( !$raw ) {
+        $options['-'] = esc_html__( 'Select Taxonomy', 'gridmaster' );
+        $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+        $options['auto'] = esc_html__( 'Auto Select', 'gridmaster' ) . $pro_text;
+    }
 
     foreach ( $taxonomies as $taxonomy ) {
         $options[ $taxonomy->name ] = $taxonomy->label;
