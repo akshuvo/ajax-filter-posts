@@ -8,7 +8,7 @@ class Admin {
      */
     function __construct() {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-        add_action( 'admin_init', [ $this, 'register_settings' ] );
+        add_action( 'wp_ajax_gridmaster_ajax', [ $this, 'register_ajax' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'scripts' ] );
     }
     
@@ -35,13 +35,34 @@ class Admin {
     }
 
     /**
-     * Register the plugin settings
+     * Register ajax
      *
      * @return void
      */
-    public function register_settings() {
-  
-        register_setting( 'gridmaster', 'gridmaster_settings' );
+    public function register_ajax() {
+        $nonce = isset( $_POST['gm_nonce'] ) ? sanitize_text_field( $_POST['gm_nonce'] ) : '';
+        if( !wp_verify_nonce( $nonce, 'gm-ajax-nonce' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'gridmaster' ) );
+        }
+
+        $action = isset( $_POST['gm-action'] ) ? sanitize_title( $_POST['gm-action'] ) : '';
+        if( !$action ) {
+            wp_send_json_error( __( 'Invalid action', 'gridmaster' ) );
+        }
+
+        // Include the admin functions
+        require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
+
+        $function = 'gridmaster_ajax_' . str_replace( '-', '_', $action );
+        if( !function_exists( $function ) ) {
+            wp_send_json_error( __( "Function {$function} doesn't exist", 'gridmaster' ) );
+        }
+
+        // Call the ajax function
+        $response = $function( $_POST );
+
+        
+        wp_die();
     }
 
     /**
@@ -59,7 +80,7 @@ class Admin {
         wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
         wp_localize_script( 'gridmaster-admin-script', 'gridmaster_params', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce' => wp_create_nonce( 'wp-instance-script-nonce' ),
+            'nonce' => wp_create_nonce( 'gm-ajax-nonce' ),
             'home_url' => home_url(),
             'breakpoints' => gm_get_breakpoints(),
             'has_pro' => defined( 'GRIDMASTER_PRO_VERSION' ) ? 1 : 0,

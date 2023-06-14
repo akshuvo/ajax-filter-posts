@@ -62,6 +62,13 @@ function gridmaster_the_content() {
     return $output;
 }
 
+// Get gridmaster_settings
+function gridmaster_get_settings() {
+    $settings = get_option( 'gridmaster_settings', [] );
+    $settings = !empty( $settings ) && is_array( $settings ) ? $settings : [];
+    return $settings;
+}
+
 // Read More Link
 function gridmaster_read_more_link( $link_text = '' ) {
 

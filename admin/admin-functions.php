@@ -358,3 +358,23 @@ function gm_get_image_sizes() {
 
     return $image_sizes;
 }
+
+// gridmaster_ajax_save_settings
+function gridmaster_ajax_save_settings( $params ) {
+
+    // Get Data
+    $data = isset( $params['gridmaster_options'] ) ? $params['gridmaster_options'] : array();
+
+    // Get Settings
+    $settings = gridmaster_get_settings();
+    $settings = array_merge( $settings, $data );
+
+    // Save Settings
+    update_option( 'gridmaster_settings', $settings );
+
+    // Return
+    wp_send_json_success( array(
+        'message' => __( 'Settings Saved Successfully', 'gridmaster' ),
+        'data' => $settings
+    ) );
+}

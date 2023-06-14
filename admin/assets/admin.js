@@ -188,6 +188,9 @@ jQuery(document).ready(function($) {
         jQuery('.show-if-image-size-custom').hide();
         jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
     } );
+
+    // Notice Timeout
+    let noticeTimeout = false;
     
     // Ajax form submit
     jQuery( document ).on( 'submit', '.gm-ajax-form', function(e) {
@@ -204,6 +207,13 @@ jQuery(document).ready(function($) {
         // Ajax Response 
         $form.find('.gm-ajax-response').html('');
 
+        // Clear Timeout
+        if ( noticeTimeout ) {
+            clearTimeout(noticeTimeout);
+        }
+
+        // License Form Submit
+        // jQuery('.lmfwppt-license-submit-btn').trigger('click');
 
         // Ajax
         jQuery.ajax({
@@ -212,7 +222,7 @@ jQuery(document).ready(function($) {
             data: $data,
             dataType: 'json',
             success: function (response) {
-                console.log(response);
+                
                 // Enable Button
                 $form.find('[type="submit"]').removeAttr('disabled');
 
@@ -225,7 +235,7 @@ jQuery(document).ready(function($) {
               
             },
             error: function (response) {
-                console.log(response);
+              
                 // Enable Button
                 $form.find('[type="submit"]').removeAttr('disabled');
 
@@ -237,6 +247,11 @@ jQuery(document).ready(function($) {
                 // Spinner
                 $form.find('.spinner').removeClass('is-active');
                 jQuery(document).trigger( 'wp-updates-notice-added' );
+
+                // Hide Notice after 5 seconds
+                noticeTimeout = setTimeout(function() {
+                    $form.find('.gm-ajax-response .notice').fadeOut('fast');
+                } , 5000);
             }
 
         });

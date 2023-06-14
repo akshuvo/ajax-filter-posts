@@ -2,8 +2,8 @@
 // Include the admin functions
 require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
-$gridmaster_options = isset( $_POST['gridmaster_options'] ) ? $_POST['gridmaster_options'] : array();
-// ppr( $gridmaster_options );
+$setting = gridmaster_get_settings();
+ppr( $setting );
 ?>
 <div class="gridmaster-wrap gm-settings-container pt-5">
     <form class="gridmaster-options-form gm-ajax-form" method="post" action="">
@@ -66,7 +66,9 @@ $gridmaster_options = isset( $_POST['gridmaster_options'] ) ? $_POST['gridmaster
             <div class="gm-ajax-response"></div>
             <span class="spinner"></span>
             <button type="submit" class="gm-btn gm-btn-fill"><?php _e( 'Save Changes', 'gridmaster' ); ?></button>
-            <input type="hidden" name="action" value="gridmaster_save_settings">
+            <input type="hidden" name="action" value="gridmaster_ajax">
+            <input type="hidden" name="gm-action" value="save_settings">
+            <?php wp_nonce_field( 'gm-ajax-nonce', 'gm_nonce' ); ?>
         </div>
 
     </form>
