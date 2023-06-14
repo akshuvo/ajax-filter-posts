@@ -6,7 +6,7 @@ $gridmaster_options = isset( $_POST['gridmaster_options'] ) ? $_POST['gridmaster
 // ppr( $gridmaster_options );
 ?>
 <div class="gridmaster-wrap gm-settings-container pt-5">
-    <form class="gridmaster-options-form" method="post" action="">
+    <form class="gridmaster-options-form gm-ajax-form" method="post" action="">
         <div class="gm-card">
 
             <?php gridmaster_form_field( 'gridmaster_options[debug-mode]',array(
@@ -62,8 +62,11 @@ $gridmaster_options = isset( $_POST['gridmaster_options'] ) ? $_POST['gridmaster
 
         <!-- Submit Button  -->
 
-        <div class="d-flex  justify-content-end">
+        <div class="align-items-center d-flex justify-content-end">
+            <div class="gm-ajax-response"></div>
+            <span class="spinner"></span>
             <button type="submit" class="gm-btn gm-btn-fill"><?php _e( 'Save Changes', 'gridmaster' ); ?></button>
+            <input type="hidden" name="action" value="gridmaster_save_settings">
         </div>
 
     </form>

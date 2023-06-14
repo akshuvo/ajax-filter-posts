@@ -75,6 +75,12 @@
     background: var(--gm-primary-hover-color);
     border-color: var(--gm-primary-hover-color);
 }
+
+button.gm-btn:disabled{
+    opacity: 0.5;
+    cursor: wait;
+}
+
 /* Header CSS */
 .gm-admin-header {
     text-align: center;
@@ -189,6 +195,22 @@
 .toplevel_page_gridmaster div.error, 
 .toplevel_page_gridmaster div.updated {
     display: none;
+}
+
+.toplevel_page_gridmaster .gm-ajax-response .notice, 
+.toplevel_page_gridmaster .gm-ajax-response div.error, 
+.toplevel_page_gridmaster .gm-ajax-response div.updated {
+    display: inherit;
+}
+
+.gm-ajax-response {
+    position: fixed;
+    top: 42px;
+    right: 20px;
+}
+
+.gm-ajax-response p {
+    line-height: normal;
 }
 
 .toplevel_page_gridmaster .lmfwppt-license-validation .notice, 

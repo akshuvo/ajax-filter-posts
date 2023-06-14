@@ -189,6 +189,57 @@ jQuery(document).ready(function($) {
         jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
     } );
     
+    // Ajax form submit
+    jQuery( document ).on( 'submit', '.gm-ajax-form', function(e) {
+        e.preventDefault();
+        let $form = jQuery(this);
+        let $data = $form.serialize();
+        
+        // Disable Button
+        $form.find('[type="submit"]').attr('disabled', 'disabled');
 
+        // Spinner
+        $form.find('.spinner').addClass('is-active');
+
+        // Ajax Response 
+        $form.find('.gm-ajax-response').html('');
+
+
+        // Ajax
+        jQuery.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: $data,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                // Enable Button
+                $form.find('[type="submit"]').removeAttr('disabled');
+
+                // Success
+                if ( response.success ) {
+                    $form.find('.gm-ajax-response').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                } else {
+                    $form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>' + response.data.message + '</p></div>');
+                }
+              
+            },
+            error: function (response) {
+                console.log(response);
+                // Enable Button
+                $form.find('[type="submit"]').removeAttr('disabled');
+
+                // Error
+                $form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>Something went wrong. Please try again.</p></div>');
+                
+            },
+            complete: function (response) { 
+                // Spinner
+                $form.find('.spinner').removeClass('is-active');
+                jQuery(document).trigger( 'wp-updates-notice-added' );
+            }
+
+        });
+    } );
 
 });
