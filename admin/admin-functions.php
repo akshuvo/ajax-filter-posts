@@ -364,6 +364,7 @@ function gridmaster_ajax_save_settings( $params ) {
 
     // Get Data
     $data = isset( $params['gridmaster_options'] ) ? $params['gridmaster_options'] : array();
+    $data['disable-icon-color-options'] = isset( $data['disable-icon-color-options'] ) ? $data['disable-icon-color-options'] : [];
 
     // Get Settings
     $settings = gridmaster_get_settings();
