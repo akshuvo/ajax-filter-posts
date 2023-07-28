@@ -61,5 +61,10 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
     font-size: 16px;
     white-space: nowrap;
     border: 0;
+    border-bottom: 2px solid transparent;
+}
+.gm-tax-filter-style-style-3 .gm-taxonomy-item input:checked + label,
+.gm-tax-filter-style-style-3 .asr_texonomy:hover{
+    border-bottom-color: #333333;
 }
 </style>
