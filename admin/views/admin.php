@@ -13,24 +13,34 @@ $left_tabs = [
         'url'   => admin_url( 'admin.php?page=gridmaster' ),
         'icon'  => 'dashicons dashicons-admin-home',
         'path' => '',
+        'target' => '',
     ],
-    [
-        'title' => __( 'Templates', 'gridmaster' ),
-        'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
-        'icon'  => 'dashicons dashicons-layout',
-        'path' => 'templates',
-    ],
+    // [
+    //     'title' => __( 'Templates', 'gridmaster' ),
+    //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
+    //     'icon'  => 'dashicons dashicons-layout',
+    //     'path' => 'templates',
+    // ],
     [
         'title' => __( 'Grid Builder', 'gridmaster' ),
         'url'   => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
         'icon'  => 'dashicons dashicons-schedule',
         'path' => 'build-grid',
+        'target' => '',
     ],
     [
         'title' => __( 'Settings', 'gridmaster' ),
         'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
         'icon'  => 'dashicons dashicons-admin-generic',
         'path' => 'settings',
+        'target' => '',
+    ],
+    [
+        'title' => __( 'Free vs Pro', 'gridmaster' ),
+        'url'   => gridmaster_website_url( 'gridmaster/free-vs-pro/' ),
+        'icon'  => 'dashicons dashicons-star-filled',
+        'path' => '',
+        'target' => '_blank'
     ],
 ];
 ?>
@@ -44,7 +54,7 @@ $left_tabs = [
         <div class="gm-admin-toolbar">
             <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
                 <?php foreach( $left_tabs as $tab ) : ?>
-                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>">
+                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
                         <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
                         <?php echo esc_html( $tab['title'] ); ?>
                     </a>

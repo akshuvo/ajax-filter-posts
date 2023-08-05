@@ -3,7 +3,6 @@
 require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
 $setting = gridmaster_get_settings();
-ppr( $setting );
 ?>
 <div class="gridmaster-wrap gm-settings-container pt-5">
     <form class="gridmaster-options-form gm-ajax-form" method="post" action="">
@@ -28,7 +27,7 @@ ppr( $setting );
 
             $field_name = 'gridmaster_options[disable-icon-color-options][]';
             ?>
-            <div class="form-row d-flex" id="<?php esc_attr_e( $field_name ); ?>_field" data-priority="">
+            <div class="form-row d-flex gm-pro-field gm-pro-inp-disable" id="<?php esc_attr_e( $field_name ); ?>_field" data-priority="">
                 <div class="gm-field-label">
                     <label><?php _e( 'Disable Icon & Color Options on Taxonomies', 'gridmaster' ); ?></label>
                     <span class="description"><?php _e( 'Disable icon and color options from Taxonomies.', 'gridmaster' ); ?></span>

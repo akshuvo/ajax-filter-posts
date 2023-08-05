@@ -99,7 +99,7 @@ function gridmaster_grid_styles(){
     return apply_filters( 'gridmaster_grid_styles', [
         'default' => 'Style 1 (Default)',
         'style-2' => 'Style 2',
-        'style-3' => 'Style 3',
+        'style-3' => 'Style 3 (Coming Soon)',
     ] );
 }
 
@@ -109,6 +109,7 @@ function gridmaster_grid_pro_styles( $styles ){
 
     $pro_text = __( ' (Available in Pro)', 'gridmaster' );
     $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
+        'pro-style-1' => 'Pro Style 1' . $pro_text,
         'pro-style-2' => 'Pro Style 2' . $pro_text,
         'pro-style-3' => 'Pro Style 3' . $pro_text,
         'pro-style-4' => 'Pro Style 4' . $pro_text,
@@ -135,4 +136,9 @@ function gridmaster_filter_pro_styles( $styles ){
 // Is Pro
 function gridmaster_is_pro(){
     return defined( 'GRIDMASTER_PRO_VERSION' );
+}
+
+// gridmaster_website_url
+function gridmaster_website_url( $path = '' ) {
+    return esc_url( 'https://addonmaster.com/' . $path );
 }

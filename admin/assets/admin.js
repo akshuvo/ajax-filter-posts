@@ -59,7 +59,7 @@ jQuery(document).ready(function($) {
 
         // Check If Has Pro
         let inpDisabled = '';
-        if( gridmaster_params.has_pro == 0 && $val != 'category' ) {
+        if( !gridmaster_params.has_pro && $val != 'category' ) {
             jQuery('#terms_field').addClass('gm-pro-field');
             inpDisabled = ' disabled ';
         } else {
@@ -256,5 +256,10 @@ jQuery(document).ready(function($) {
 
         });
     } );
+
+    // Block Pro Features
+    if( !gridmaster_params.has_pro ) {
+        jQuery('.gm-pro-inp-disable input').attr('disabled', 'disabled');
+    }
 
 });

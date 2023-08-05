@@ -36,4 +36,8 @@
     position: relative;
     color: #a9a9a9;
 }
+
+.gm-pro-inp-disable input{
+    cursor: not-allowed;
+}
 /* Is Pro  */

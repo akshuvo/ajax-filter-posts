@@ -83,7 +83,7 @@ class Admin {
             'nonce' => wp_create_nonce( 'gm-ajax-nonce' ),
             'home_url' => home_url(),
             'breakpoints' => gm_get_breakpoints(),
-            'has_pro' => defined( 'GRIDMASTER_PRO_VERSION' ) ? 1 : 0,
+            'has_pro' => gridmaster_is_pro()
         ) );
 
         wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.css', array(), GRIDMASTER_VERSION );

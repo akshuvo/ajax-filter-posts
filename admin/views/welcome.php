@@ -118,7 +118,7 @@
             <div class="col-md-4">
                 <div class="align-content-center d-flex flex-column flex-wrap h-100 justify-content-center text-center">
                     <h4><?php echo esc_html('Still Not Convinced?', 'gridmaster'); ?></h4>
-                    <a class="gm-btn gm-btn-fill"><span class="dashicons dashicons-external"></span> <?php echo esc_html('Check Out the Pro Version', 'gridmaster'); ?></a>
+                    <a class="gm-btn gm-btn-fill" href="<?php echo gridmaster_website_url('gridmaster/'); ?>" target="_blank"><span class="dashicons dashicons-external"></span> <?php echo esc_html('Check Out the Pro Version', 'gridmaster'); ?></a>
                 </div>
             </div>
         </div>
@@ -131,8 +131,8 @@
             <p><?php echo esc_html('Should you need guidance or assistance, don\'t hesitate to create a support ticket. Our team is ready to solve your GridMaster mysteries.', 'gridmaster'); ?> </p>
             <div class="gm-support-btns mt-4 pt-1">
                 <a href="https://wordpress.org/support/plugin/ajax-filter-posts/" class="gm-btn gm-btn-fill-hover" target="_blank"><?php echo esc_html('Support Forum', 'gridmaster'); ?></a>
-                <a href="https://addonmaster.com/submit-a-ticket/" class="gm-btn gm-btn-fill-hover gm-btn gm-btn-fill-hover-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
-                <a href="https://addonmaster.com/docs-category/gridmaster/" class="gm-btn gm-btn-fill-hover gm-btn-secondary" target="_blank"><?php echo esc_html('Documentation', 'gridmaster'); ?></a>
+                <a href="<?php echo gridmaster_website_url('submit-a-ticket/'); ?>" class="gm-btn gm-btn-fill-hover gm-btn gm-btn-fill-hover-secondary" target="_blank"><?php echo esc_html('Submit a Ticket', 'gridmaster'); ?></a>
+                <a href="<?php echo gridmaster_website_url('docs-category/gridmaster/'); ?>" class="gm-btn gm-btn-fill-hover gm-btn-secondary" target="_blank"><?php echo esc_html('Documentation', 'gridmaster'); ?></a>
             </div>
         </div>
 
@@ -141,7 +141,7 @@
                 <h2 class="m-0"><?php echo esc_html('GridMaster Pro? Access Instant Support!', 'gridmaster'); ?></h2>
                 <p class="m-0"><?php echo esc_html('As a GridMaster Pro user, take advantage of our Live Chat feature for immediate help and assistance.', 'gridmaster'); ?> </p>
             </div>
-            <a href="https://addonmaster.com/live-chat/" class="gm-btn gm-btn-fill-hover" target="_blank"><?php echo esc_html('Live Chat', 'gridmaster'); ?></a>
+            <a href="<?php echo gridmaster_website_url('live-chat/'); ?>" class="gm-btn gm-btn-fill-hover" target="_blank"><?php echo esc_html('Live Chat', 'gridmaster'); ?></a>
         </div>
     
         
