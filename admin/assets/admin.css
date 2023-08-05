@@ -280,6 +280,9 @@ span.description {
 }
 
 .toplevel_page_gridmaster #wpfooter {
+    background: #fff;
+}
+.toplevel_page_gridmaster #wpfooter #footer-upgrade {
     display: none;
 }
 

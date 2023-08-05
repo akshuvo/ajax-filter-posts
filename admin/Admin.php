@@ -10,6 +10,9 @@ class Admin {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'wp_ajax_gridmaster_ajax', [ $this, 'register_ajax' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'scripts' ] );
+
+        // Admin Footer Text
+        add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 9999 );
     }
     
     /**
@@ -32,6 +35,26 @@ class Admin {
      */
     public function admin_menu() {
         add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), 'manage_options', 'gridmaster', [ $this, 'plugin_page' ], 'dashicons-forms', 110 );
+    }
+
+    /**
+     * Admin Footer Text
+     *
+     * @return void
+     */
+    public function admin_footer_text( $text ) {
+        if( !current_user_can( 'manage_options' ) ) {
+            return $text;
+        }
+
+        $current_screen = get_current_screen();
+        if( $current_screen->id != 'toplevel_page_gridmaster' ) {
+            return $text;
+        }
+
+        $text = sprintf( __( 'If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!', 'gridmaster' ), '<a href="https://wordpress.org/support/plugin/ajax-filter-posts/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>' );
+
+        return $text;
     }
 
     /**

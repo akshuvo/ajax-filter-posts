@@ -1,98 +1,118 @@
-=== Post Grid Ajax ===
+=== Gridmaster - The Ultimate Post Grid Solution with Ajax Filter ===
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.1.1
-Stable tag: 3.3.0
+Tested up to: 6.2.2
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Post Grid with Ajax Filter plugin is a simple WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
+
+Gridmaster helps you to create post grid with ajax filter. You can create grid layout with taxonomy filter, pagination, load more button, infinite scroll, and many more.
 
 == Description ==
-Post Grid Ajax plugin is a simple, clean, and easy to use WordPress plugin that helps you filter your post by category terms with Ajax including Infinite scroll. Ajax post grid will help you Load posts with grid layout and you can also filter by post category.
+Gridmaster helps you to create post grid with ajax filter. You can create grid layout with taxonomy filter, pagination, load more button, infinite scroll, and many more.
 
-Just use below shortcodes anywhere. Below you can see all available shortcodes.
+Gridmaster has a shortcode generator that helps you to generate the shortcode easily and you can use the shortcode anywhere to show the post grid. You can also use the shortcode in your theme template file.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8Th_jp8YEk4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### [See the Live demo](http://plugins.addonmaster.com/post-grid-with-ajax-filter/)
 
-###Features
-* Shortcodes for showing anywhere
-* Load More Button
-* Infinite Scroll
-* Animate on Post load
-* Pre-Build Layout
-* Grid Layout
-* Ajax Post Grid
-* Category Filter with ajax
-* Controlling Options
-* Post pagination
-* Show/Hide Specific category terms
+###Features of Gridmaster
+Gridmaster offers you a lot of features that will help you to create a post grid with ajax filter easily. You can develope your custom theme templates easily by using the Gridmaster shortcode. Here are some of the features that you will get with Gridmaster.
 
-## Shortcodes
-* Default Shortcode
-<pre>[am_post_grid]</pre>
+**Shortcode Generator**
+Gridmaster has a shortcode generator that helps you to generate the shortcode easily and you can use the shortcode anywhere to show the post grid. You can also use the shortcode in your theme template file. It has a preview shortcode feature that helps you to preview the post grid before using the shortcode.
 
-* Control for Show or Hide the filter
-Options: yes,no
-Default: yes
-<pre>[am_post_grid show_filter="no"]</pre>
+**Pre-Build Grid Layout**
+Gridmaster has few pre-build post grid layouts (more are coming) that you can use to create your post grid. It has some unique classes that you can use to create your own layout easily using CSS.
 
-* Control Number of Posts Per Page
-Options: Integers, -1 for all posts
-Default: WordPress Default
-<pre>[am_post_grid posts_per_page="6"]</pre>
+**Custom Post Type Support**
+We are not only supporting the default post type but also supporting the custom post type. You can create a post grid with any custom post type.
 
-* Post pagination
-Options: yes,no
-Default: "yes"
-<pre>[am_post_grid posts_per_page="6" paginate="yes"]</pre>
+**Posts Per Page**
+Gridmaster offers you to control the number of posts per page. You can show all posts or you can show a specific number of posts per page.
 
-* Show/Hide "All" Button before filter
-Options: yes,no
-Default: "yes"
-<pre>[am_post_grid btn_all="yes"]</pre>
+**Order By/Order**
+Gridmaster offers you to control the order of the post. You can order the post by date, title, menu order, random, comment count, ID, author, and more. You can also order the post in ascending or descending order.
 
-* Show/Hide Specific Category Terms
-Options: 1,2,3,4
-Default: ""
-<pre>[am_post_grid cat="100,101,103"]</pre>
-or
-<pre>[am_post_grid terms="100,101,103"]</pre>
+**Excerpt Length**
+Gridmaster offers you to control the excerpt length. You can control the excerpt length by the number of words. You can also choose from where you want to get the content (excerpt or content).
 
-* Hide/Show Empty Category Terms
-Options: true, false
-Default: "true"
-<pre>[am_post_grid hide_empty="false"]</pre>
+**Read More Button**
+Gridmaster offers you to hide or show the read more button in the post grid. You can also change the read more button text.
 
-* Post Order
-Options: ASC, DESC
-Default: "DESC"
-<pre>[am_post_grid order="DESC"]</pre>
+**Filter Style**
+Gridmaster has 3 filter styles that you can use to show the filter. You can also hide the filter and show post grid only. You can also show the filter without the "All" button.
 
-* Post Orderby
-Default: 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
-<pre>[am_post_grid orderby="title"]</pre>
+**Custom Taxonomy Support**
+Gridmaster offers you to create a custom taxonomy filter. You can create a custom taxonomy filter and show the post grid based on the taxonomy. You can also show selected category terms only in the filter.
 
-Here is the full documentation for post order/orderby: [Order & Orderby Parameters](https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters)
+**Ajax Pagination**
+Gridmaster has ajax pagination that helps you to load the next page without reloading the page. It has 2 types of pagination. You can use the default pagination or you can use the load more button.
 
-* Pagination Type: Load More button or Paginate Links
-Options: "",load_more
-Default: ""
-<pre>[am_post_grid pagination_type="load_more"]</pre>
+**Load More Button**
+It has a load more button that helps you to load the next page posts grid with a button click.
+
+**Infinite Scroll**
+It also has infinite scroll that helps you to load the next page post grid when you scroll down the page. Using this feature you can load the next page post grid without clicking any button.
+
+**Animate on Post load**
+Gridmaster has an animation effect that helps you to animate the post when the post loads.
+
+**Grid Image Thumbnail Size**
+Gridmaster offers you to control the image thumbnail size. You can choose the image thumbnail size from the available image sizes.
 
 
-* Infinite Scroll (Works only for pagination_type="load_more" attributes )
-Options: "",true
-Default: ""
-<pre>[am_post_grid infinite_scroll="true"]</pre>
+###Other Features
+* **Works with Any Theme:** Gridmaster works with any WordPress theme. You can use it with any theme.
+* **Seamless Efficiency with Clean Code:** Gridmaster is developed with clean code and it is optimized for speed and performance. We don't clutter your frontend with backend code. GridMaster maintains a lean codebase for optimal site performance.
+* **Responsive:** Gridmaster is fully responsive and it works perfectly on all devices.
+* **Cross Browser Compatible:** Gridmaster is cross-browser compatible. It works perfectly with all the major browsers.
+* **Translation Ready:** Gridmaster is translation ready. You can translate it easily.
+* **Well Documented:** Gridmaster is well documented. It has step by step documentation that helps you to use it easily.
+* **Essential Features at No Cost:** GridMaster comes packed with nearly all necessary features as part of its free package, ensuring exceptional value.
+
+**Still have questions?**
+If you have any questions or queries regarding Gridmaster, you can ask them in the [support forum](https://wordpress.org/support/plugin/ajax-filter-posts/) or [contact us](https://addonmaster.com/submit-a-ticket/). We will try to answer your questions as soon as possible.
 
 
-* Animation effect
-Options: "",true
-Default: ""
-<pre>[am_post_grid animation="true"]</pre>
+### Pro Features
+There are some pro features that you will get with the pro version of Gridmaster. Here are some of the pro features.
 
+**Pro Filter Style**
+Gridmaster has 3 filter styles in the free version. But with the pro version, you will get few more filter styles.
+
+**Pro Grid Layout**
+Gridmaster has few pre-build post grid layouts in the free version. But with the pro version, you will get few more grid layouts.
+
+**Auto Select Taxonomy**
+Auto select taxonomy is a pro feature that helps you to select the taxonomy automatically when you visit the taxonomy page. You will need to use the shortcode in the taxonomy template file to use this feature.
+
+**Custom Taxonomy Terms**
+By default Gridmaster shows all the taxonomy terms in the filter. But with the pro version, you can show selected taxonomy terms only in the filter.
+
+**Initial Term on Page Load**
+This feature helps you to show the post grid based on the initial term on page load. You can use this feature to show the post grid based on the initial term on page load.
+
+**Auto-Select Initial Term**
+This feature helps you to auto-select the initial term when you visit the term page. The shortcode needs to be used in the taxonomy template file to use this feature. 
+
+**Allow Multiple Selection**
+Gridmaster has a multiple selection feature that helps you to show post grid based on the selected terms. You can select more than one term and show the post grid based on the selected terms.
+
+**Auto Post Type Selection**
+This feature helps you to select the post type automatically when you visit the post type page. You will need to place the shortcode in the post type template file to use this feature.
+
+**Column Gap Control**
+Gridmaster has a column gap control feature that helps you to control the column gap of the post grid.
+
+**Row Gap Control**
+Gridmaster has a row gap control feature that helps you to control the row gap of the post grid.
+
+**Post Items Per Row**
+Gridmaster has a post items per row feature that helps you to control the number of post items per row. You can select different post items per row for different devices.
+
+= More feature coming soon... = 
 
 
 ## Privacy Policy 
@@ -105,18 +125,55 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Installation ==
-1. Upload "ajax-filter-posts.zip\" to the "/wp-content/plugins/" directory.
-2. Activate the plugin through the "Plugins" menu in WordPress.
+1. Download and unzip the plugin. Upload the unzipped folder to the wp-contents/plugins folder of your WordPress installation.
+2. Active the plugin from the WordPress Plugins administration page.
+3. OR, Go to WP admin panel, click 'Plugins' -> 'Add new'. In the search input box, type 'Gridmaster'.
+4. Install and activate the plugin.
+5. That's it. From dashboard go to Gridmaster menu and create your first post grid.
 
 == Frequently Asked Questions ==
-= How to use it? =
-use this shortcode: [am_post_grid]
+= How to create a post grid? =
+Go to Gridmaster menu from the dashboard. Then click on the "Grid Builder" tab. Then select the available options (filter type, post grid style, post type, etc) and then copy the shortcode and paste it where you want to show the post grid.
 
-= Why the plugin is not working? =
-Please post details on support forum.
+= Will it work with my theme? =
+Yes, it will work with any standard WordPress theme. If you face any problem, please let us know.
+
+= Will it work with any page builder? =
+Yes, it will work with any standard page builder. Just copy the shortcode and paste it where you want to show the post grid.
+
+= Can I use multiple post grids on the same page? =
+Yes, you can use multiple post grids on the same page.
+
+= Will it slow down my website? =
+No, it will not slow down your website. It is developed with clean code and it is optimized for speed and performance.
+
+
+= Can I create a post grid with custom taxonomy? =
+Yes, you can create a post grid with any custom taxonomy.
+
+= How to create a post grid with custom taxonomy? =
+From the Grid Builder tab, select the "Show Filter" option. Then select the taxonomy from the "Select Taxonomy" option. Then select the terms from the "Terms" option. Then select the other available options. Then copy the shortcode and paste it where you want to show the post grid.
+
+= Can I create a post grid with custom post type? =
+Yes, you can create a post grid with any custom post type.
+
+= Can I hide the filter? =
+Yes, you can hide the filter from the post grid.
+
+= Is it possible to show the post grid without the "All" button? =
+Yes, you can show the post grid without the "All" button.
+
+= Can I paginate the post grid with Load More Button? =
+Yes, you can paginate the post grid with the Load More Button.
+
+= Can I paginate the post grid with Infinite Scroll? =
+Yes, you can paginate the post grid with Infinite Scroll.
+
+= Can I change the read more button text? =
+Yes, you can change the read more button text.
 
 = I need help with custom feature? =
-email me at addonmasterwp@gmail.com
+If you need any custom feature, please let us know. We will try to add the feature in the next update. Some features will be added in the pro version only. Email us at [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for any custom feature request.
 
 
 == Screenshots ==
@@ -125,6 +182,26 @@ email me at addonmasterwp@gmail.com
 3. Pagination Preview
 
 == Changelog ==
+
+= 3.4.0 =
+* Aug 6, 2023
+- Rebrand: Post Grid with Ajax Filter to Gridmaster
+- Rebuid the plugin from scratch
+- Added: Shortcode Generator
+- Old shortcode support
+- Clean & Optimized Code
+- Huge Code Refactor
+- Added: 2 Grid Layouts
+- Added: 3 Filter Layouts
+- Added: Backend Preview
+- Added: Filter Preview
+- Added: Pagination Preview
+- Added: Post Grid Preview
+- Added: Excerpt Control
+- Added: Excerpt Length Control
+- Added: Read More Button Text Control
+- and many more...
+
 
 = 3.3.0 =
 * March 1, 2023
