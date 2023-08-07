@@ -241,3 +241,6 @@
     padding: 5px 10px;
 }
 
+.am__readmore {
+    white-space: nowrap;
+}

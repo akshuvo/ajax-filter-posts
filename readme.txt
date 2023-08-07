@@ -85,6 +85,9 @@ Gridmaster has 3 filter styles in the free version. But with the pro version, yo
 **Pro Grid Layout**
 Gridmaster has few pre-build post grid layouts in the free version. But with the pro version, you will get few more grid layouts.
 
+**Taxonomy Image and Color** 
+Gridmaster has a taxonomy image and color feature that helps you show the taxonomy image and color in the filter. You can also show the taxonomy image and color in the post grid.
+
 **Auto Select Taxonomy**
 Auto select taxonomy is a pro feature that helps you to select the taxonomy automatically when you visit the taxonomy page. You will need to use the shortcode in the taxonomy template file to use this feature.
 

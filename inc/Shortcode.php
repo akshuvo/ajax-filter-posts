@@ -153,7 +153,10 @@ class Shortcode {
 
         ob_start();   
         ?>
-        <div data-grid-style="<?php echo esc_attr( $atts['grid_style'] ); ?>" data-grid-id="<?php echo esc_attr($grid_id); ?>" class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> " data-pagination_type="<?php echo esc_attr($pagination_type); ?>" data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
+        <div id="<?php echo esc_attr($grid_id); ?>" 
+            class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> <?php echo esc_attr( 'gridmaster-'.$atts['grid_style'] ); ?>" 
+            data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
+            data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
             <?php do_action( 'gridmaster_render_filter', $atts ); ?>
 
