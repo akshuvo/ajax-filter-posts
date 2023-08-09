@@ -112,6 +112,9 @@ class Shortcode {
             // $atts = get_post_meta( $id, 'gridmaster_args', true );
         }
 
+        // Grid Style
+        $grid_style = $atts['grid_style'];
+
         // $atts['tax_query'] = ! empty( $atts['tax_query'] ) ? json_decode( $atts['tax_query'], true ) : [];
 
         // If id is set then get args from the database and render the grid
@@ -119,7 +122,7 @@ class Shortcode {
 
         // Render dynamic styles
         $this->render_styles([
-            'grid_style' => $atts['grid_style']
+            'grid_style' => $grid_style
         ]);
 
         // echo '<pre>';
@@ -147,14 +150,15 @@ class Shortcode {
         unset( $public_atts['grid_item_per_row'] );
         unset( $public_atts['tax_query'] );
         unset( $public_atts['meta_query'] );
-        unset( $public_atts['grid_style'] );
+        // unset( $public_atts['grid_style'] ); // Didn't know why put this here
         unset( $public_atts['filter_style'] );
 
 
         ob_start();   
         ?>
         <div id="<?php echo esc_attr($grid_id); ?>" 
-            class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> <?php echo esc_attr( 'gridmaster-'.$atts['grid_style'] ); ?>" 
+            data-grid-style="<?php echo esc_attr( $grid_style ); ?>"
+            class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> <?php echo esc_attr( 'gridmaster-'.$grid_style ); ?>" 
             data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
             data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
@@ -417,6 +421,7 @@ class Shortcode {
             'terms' => '',
         ]);
 
+        // echo '<pre>'; print_r( $args ); echo '</pre>';
       
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {
@@ -490,8 +495,6 @@ class Shortcode {
 
         // Apply Filter for query args
         $query_args = apply_filters( 'gridmaster_render_grid_query_args', $query_args, $args );
-
-        // echo '<pre>'; print_r( $query_args ); echo '</pre>';
 
         //post query
         $query = new \WP_Query( $query_args );
