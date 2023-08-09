@@ -288,7 +288,13 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     gridmaster_form_field( gm_field_name('grid_item_per_row'),array(
                         'type' => 'number',
                         'label' => 'Item Per Row',
-                        'default' => 3,
+                        'default' => [
+                            'xs' => 1,
+                            'sm' => 2,
+                            'md' => 3,
+                            'lg' => 3,
+                            'xl' => 3,
+                        ],
                         'is_pro' => true,
                         'responsive_field' => true,
                     ) );
@@ -362,7 +368,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             if( $breakpoint['default'] ) {
                                 $classes = ' selected ';
                             } 
-                            echo '<div class="gridmaster-responsive-fields-device gm-tooltip' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] ) . '">' 
+                            echo '<div class="gridmaster-responsive-fields-device gm-tooltip' . esc_attr( $classes ) . '" data-device="' . esc_attr( $device ) . '" title="' . esc_attr( $breakpoint['label'] . ' (>=' . $breakpoint['value'] . 'px)' ) . '">' 
                                 . '<span class="dashicons dashicons-' . esc_attr( $breakpoint['icon'] ) . '"></span>' . 
                             '</div>';
                         }
