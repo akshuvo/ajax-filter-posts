@@ -148,7 +148,13 @@ function gridmaster_is_pro(){
     return defined( 'GRIDMASTER_PRO_VERSION' );
 }
 
-// gridmaster_website_url
+// Get Pro URL
 function gridmaster_website_url( $path = '' ) {
     return esc_url( 'https://addonmaster.com/' . $path );
+}
+
+// Get the date
+function gridmaster_get_the_date( $format = '' ) {
+    $format = !empty( $format ) ? $format : get_option( 'date_format' );
+    return get_the_date( $format );
 }

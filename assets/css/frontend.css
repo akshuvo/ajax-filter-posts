@@ -241,6 +241,7 @@
     padding: 5px 10px;
 }
 
-.am__readmore {
+.am__readmore, .gm_read_more {
     white-space: nowrap;
+    cursor: pointer;
 }
