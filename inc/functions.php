@@ -37,6 +37,13 @@ function gm_get_breakpoints() {
     );
 }
 
+// Post Title
+function gridmaster_get_post_title( $tag = 'h2', $link = true ) {
+    $title = esc_html( get_the_title() );
+    $title = $link ? '<a href="'. esc_url( get_the_permalink() ) .'">'. $title .'</a>' : $title;
+    return '<'. $tag .' class="am__title">'. $title .'</'. $tag .'>';
+}
+
 // Post content
 function gridmaster_the_content() {
 
