@@ -185,9 +185,9 @@ function gridmaster_get_the_terms( $post_id = 0, $taxonomy = '', $separator = ',
         foreach( $terms as $term ) {
             $term_link = get_term_link( $term );
             if( $link ) {
-                $output .= '<a href="'. esc_url( $term_link ) .'">'. esc_html( $term->name ) .'</a>' . $separator;
+                $output .= '<a class="gm-term" href="'. esc_url( $term_link ) .'">'. esc_html( $term->name ) .'</a>' . $separator;
             } else {
-                $output .= esc_html( $term->name ) . $separator;
+                $output .= '<span class="gm-term">' . esc_html( $term->name ) . '</span>' . $separator;
             }
         }
     }
