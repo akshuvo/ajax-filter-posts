@@ -156,5 +156,69 @@ function gridmaster_website_url( $path = '' ) {
 // Get the date
 function gridmaster_get_the_date( $format = '' ) {
     $format = !empty( $format ) ? $format : get_option( 'date_format' );
-    return get_the_date( $format );
+    $date = get_the_date( $format );
+    $title = sprintf(
+        esc_html_x( 'Posted on %s', 'post date', 'gridmaster' ),
+        esc_html( $date )
+    );
+    return '<span title="' . $title . '" class="gm-post-date">'. $date .'</span>';
+}
+
+// Get the terms
+function gridmaster_get_the_terms( $post_id = 0, $taxonomy = '', $separator = ', ', $link = true ) {
+    // Shortcode atts
+    $args = apply_filters( 'gridmaster_get_render_grid_args', [] );
+
+    // Set taxonomy from shortcode atts
+    if( empty( $taxonomy ) ) {
+        $taxonomy = isset( $args['taxonomy'] ) ? $args['taxonomy'] : 'category';
+    }
+
+    // Post ID
+    $post_id = !empty( $post_id ) ? $post_id : get_the_ID();
+
+    // Get terms
+    $terms = get_the_terms( $post_id, $taxonomy );
+
+    $output = '';
+    if( !empty( $terms ) && !is_wp_error( $terms ) ) {
+        foreach( $terms as $term ) {
+            $term_link = get_term_link( $term );
+            if( $link ) {
+                $output .= '<a href="'. esc_url( $term_link ) .'">'. esc_html( $term->name ) .'</a>' . $separator;
+            } else {
+                $output .= esc_html( $term->name ) . $separator;
+            }
+        }
+    }
+    $output =  trim( $output, $separator );
+
+    return $output ? '<span class="gm-taxonomy">'. $output .'</span>' : '';
+}
+
+// Posted by
+function gridmaster_posted_by() {
+
+    // Author Name
+    $author = get_the_author();
+
+
+    $byline = sprintf(
+        esc_html_x( 'by %s', 'post author', 'gridmaster' ),
+        '<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span>'
+    );
+
+    $title = sprintf(
+        esc_html_x( 'Posted by %s', 'post author', 'gridmaster' ),
+        esc_html( $author )
+    );
+
+    return '<span title="' . $title . '" class="gm-byline"> ' . $byline . '</span>';
+}
+
+// Comments number
+function gridmaster_comments_number() {
+    if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
+        return '<span class="comments-link">'. get_comments_number_text( '', __( '1 Comment', 'gridmaster' ), __( '% Comments', 'gridmaster' ) ) .'</span>';
+    }
 }
