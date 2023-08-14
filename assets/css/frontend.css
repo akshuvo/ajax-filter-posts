@@ -245,3 +245,8 @@
     white-space: nowrap;
     cursor: pointer;
 }
+
+.am__title a {
+    color: inherit;
+    
+}
