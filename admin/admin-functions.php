@@ -126,7 +126,14 @@ function gridmaster_form_field( $key = '', $args = [], $value = null ) {
         case 'email':
         case 'url':
         case 'tel':
-            $field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+            // $field_value = $value;
+            // if ( is_array( $value ) ) {
+            //     $field_value = isset( $value[0] ) ? sanitize_text_field( $value[0] ) : '';
+            // }
+
+            $field_value = is_array( $value ) && isset( $value[0] ) ? sanitize_text_field( $value[0] ) : $value;
+
+            $field .= '<input type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $field_value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 
             break;
         case 'hidden':
