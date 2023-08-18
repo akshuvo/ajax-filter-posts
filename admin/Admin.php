@@ -13,6 +13,9 @@ class Admin {
 
         // Admin Footer Text
         add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 9999 );
+
+        // Change version text
+        add_filter( 'update_footer', [ $this, 'update_footer' ], 9999 ); 
     }
     
     /**
@@ -53,6 +56,36 @@ class Admin {
         }
 
         $text = sprintf( __( 'If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!', 'gridmaster' ), '<a href="https://wordpress.org/support/plugin/ajax-filter-posts/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>' );
+
+        return $text;
+    }
+
+    /**
+     * Change version text
+     *
+     * @return void
+     */
+    public function update_footer( $text ) {
+        if( !current_user_can( 'manage_options' ) ) {
+            return $text;
+        }
+
+        $current_screen = get_current_screen();
+        if( $current_screen->id != 'toplevel_page_gridmaster' ) {
+            return $text;
+        }
+
+        $path = isset( $_GET['path'] ) ? sanitize_text_field( $_GET['path'] ) : '';
+        if( $path != 'build-grid' ) {
+            return '';
+        }
+
+        // Live chat offer for pro users
+        $text = sprintf( 
+            __( 'Stuck somewhere? Need help? %s or %s', 'gridmaster' ), 
+            '<a href="'.gridmaster_website_url('live-chat/').'" target="_blank">' . __( 'Live chat(Pro only)', 'gridmaster' ) . '</a>',
+            '<a href="'.gridmaster_website_url('submit-a-ticket/').'" target="_blank">' . __( 'Submit a ticket', 'gridmaster' ) . '</a>'
+        );
 
         return $text;
     }
