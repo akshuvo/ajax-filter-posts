@@ -39,6 +39,7 @@ function gm_get_breakpoints() {
 
 // Post Title
 function gridmaster_get_post_title( $tag = 'h2', $link = true ) {
+    $tag = apply_filters( 'gridmaster_post_title_tag', $tag );
     $title = esc_html( get_the_title() );
     $title = $link ? '<a href="'. esc_url( get_the_permalink() ) .'">'. $title .'</a>' : $title;
     return '<'. $tag .' class="am__title">'. $title .'</'. $tag .'>';
@@ -115,8 +116,8 @@ function gridmaster_read_more_link( $link_text = '' ) {
 function gridmaster_grid_styles(){
     return apply_filters( 'gridmaster_grid_styles', [
         'default' => 'Style 1 (Default)',
-        'style-2' => 'Style 2',
-        'style-3' => 'Style 3 (Coming Soon)',
+        'style-2' => 'Style 2 (New)',
+        'style-3' => 'Style 3 (New)',
     ] );
 }
 
@@ -124,7 +125,7 @@ function gridmaster_grid_styles(){
 add_filter( 'gridmaster_grid_styles', 'gridmaster_grid_pro_styles', 9 );
 function gridmaster_grid_pro_styles( $styles ){
 
-    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+    $pro_text = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
     $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
         'pro-style-1' => 'Pro Style 1' . $pro_text,
         'pro-style-2' => 'Pro Style 2' . $pro_text,
@@ -142,7 +143,7 @@ function gridmaster_grid_pro_styles( $styles ){
 // Filter Pro  Styles
 add_filter( 'gridmaster_filter_styles', 'gridmaster_filter_pro_styles', 9 );
 function gridmaster_filter_pro_styles( $styles ){
-    $pro_text = __( ' (Available in Pro)', 'gridmaster' );
+    $pro_text = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
     $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
         'pro-filter-1' => 'Pro Filter 1' . $pro_text,
         'pro-filter-2' => 'Pro Filter 2' . $pro_text,

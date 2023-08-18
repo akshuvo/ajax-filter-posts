@@ -32,8 +32,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'label' => __('Filter Style', 'gridmaster'),
                         'options' => apply_filters( 'gridmaster_filter_styles', [
                             'default' => 'Style 1 (Default)',
-                            'style-2' => 'Style 2',
-                            'style-3' => 'Style 3',
+                            'style-2' => 'Style 2 (New)',
+                            'style-3' => 'Style 3 (New)',
                         ] ),
                         'default' => 'default', // default
                     ) ); ?>
@@ -266,6 +266,46 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
                     <hr>
                     <?php
+                    // Heading Tag
+                    gridmaster_form_field ( gm_field_name('title_tag'), array(
+                        'type' => 'select',
+                        'label' => 'Heading Tag',
+                        'options' => [
+                            '' => 'Select Tag',
+                            'h1' => 'H1',
+                            'h2' => 'H2',
+                            'h3' => 'H3',
+                            'h4' => 'H4',
+                            'h5' => 'H5',
+                            'h6' => 'H6',
+                            'div' => 'div',
+                            'span' => 'span',
+                            'p' => 'p',
+                        ],
+                        'default' => '',
+                        'is_pro' => true,
+                        'description' => 'Select the heading tag for the post title.',
+                    ) );
+
+                    // Heading Font Size
+                    gridmaster_form_field( gm_field_name('heading_font_size'),array(
+                        'type' => 'text',
+                        'label' => 'Heading Font Size',
+                        'default' => [
+                            'xs' => '16px',
+                            'sm' => '18px',
+                            'md' => '20px',
+                            'lg' => '22px',
+                            'xl' => '24px',
+                        ],
+                        'is_pro' => true,
+                        'responsive_field' => true,
+                        'description' => 'Set the font size for the post title in different devices.',
+                    ) );
+                    ?>
+
+                    <hr>
+                    <?php
                     // Column Gap
                     gridmaster_form_field( gm_field_name('grid_col_gap'),array(
                         'type' => 'number',
@@ -298,6 +338,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'is_pro' => true,
                         'responsive_field' => true,
                     ) );
+
+                  
 
 
                     ?>
