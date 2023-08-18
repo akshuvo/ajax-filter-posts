@@ -53,6 +53,7 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
 .gm-taxonomy-filter.gm-tax-filter-style-style-2 {
     flex-wrap: nowrap;
     overflow: scroll;
+    padding-top: 10px;
 }
 .asr-filter-div .gm-tax-filter-style-style-2 .asr_texonomy {
     margin-right: 15px;
