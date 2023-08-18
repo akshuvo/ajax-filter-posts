@@ -95,6 +95,9 @@ final class GridMasterPlugin {
      * @return void
      */
     public function init_plugin() {
+
+        // Load Localization
+        load_plugin_textdomain( 'gridmaster', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
         
         // Include the functions.php
         require_once GRIDMASTER_PATH . '/inc/functions.php';

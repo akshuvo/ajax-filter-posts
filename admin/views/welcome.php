@@ -45,6 +45,10 @@
         <!-- Key Features  -->
 
         <div class="pb-3 pt-4 text-center">
+            <a class="gm-btn gm-btn-fill" href="<?php echo admin_url('admin.php?page=gridmaster&path=build-grid'); ?>"><?php echo esc_html('Build Your First Grid', 'gridmaster'); ?></a>
+        </div>
+
+        <div class="pb-3 pt-4 text-center">
             <h2><?php echo esc_html('Why GridMaster is Different?', 'gridmaster'); ?></h2>
         </div>
 
