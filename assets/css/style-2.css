@@ -1,0 +1,26 @@
+.am_single_grid {
+    display: flex;
+}
+.am__col-3 .am_grid_col {
+    max-width: 50%;
+    -ms-flex: 0 0 50%;
+    -webkit-box-flex: 0;
+    -webkit-flex: 50%;
+    flex: 0 0 50%;  
+}
+.am_thumb{
+    width: 40%;
+    height: 100%;
+}
+.am_cont{
+    width: 60%;
+}
+@media only screen and (max-width: 767px) {
+    .am__col-3 .am_grid_col {
+        max-width: 100%;
+        -ms-flex: 0 0 100%;
+        -webkit-box-flex: 0;
+        -webkit-flex: 100%;
+        flex: 0 0 100%;  
+    }
+}

@@ -1,21 +1,23 @@
 jQuery(document).ready(function($) {
-    	
+
 	// Post loading
-	jQuery(document).on('click', '.asr_texonomy', function(){
+	jQuery(document).on('change', '.gm-taxonomy-item input', function(){
         let $this = jQuery(this);
 		var term_id = $this.attr('data_id');   		
  
-		if( !$this.hasClass('active') ) {
-            $this.addClass('active').siblings().removeClass('active');
+		// if( !$this.hasClass('active') ) {
+        //     $this.addClass('active').siblings().removeClass('active');
             
-            // Load Grid
-            asr_ajax_get_postdata(term_id, $this);
-        }
+            
+        // }
+
+        // Load Grid
+        asr_ajax_get_postdata('', $this);
 
 	});
 
     // Pagination
-    jQuery( document ).on('click', '#am_posts_navigation_init a.page-numbers, .am-post-grid-load-more', function(e){
+    jQuery( document ).on('click', '.am_posts_navigation_init a.page-numbers, .am-post-grid-load-more', function(e){
         e.preventDefault();
 
         var term_id = "-1";
@@ -28,6 +30,14 @@ jQuery(document).ready(function($) {
         if ( $this.hasClass('am-post-grid-load-more') ) {
             paged = $this.data('next');
             loadMore = true;
+        } 
+        else if ( $this.hasClass('next') ) {
+            let currentPage = $this.closest('.am_posts_navigation_init').find('.page-numbers.current').text();
+            paged = parseInt(currentPage) + 1;
+        }
+        else if ( $this.hasClass('prev') ) {
+            let currentPage = $this.closest('.am_posts_navigation_init').find('.page-numbers.current').text();
+            paged = parseInt(currentPage) - 1;
         }
 
         var theSelector = $this.closest('.am_ajax_post_grid_wrap').find('.asr_texonomy');
@@ -40,7 +50,30 @@ jQuery(document).ready(function($) {
         }
 
         // Load Post Grids
-        asr_ajax_get_postdata(term_id, activeSelector, paged, loadMore);
+        asr_ajax_get_postdata('-1', $this, paged, loadMore);
+
+    });
+
+    // Uncheck other checkboxes
+    jQuery(document).on('change', '.gm-taxonomy-item.gm-taxonomy-all input', function(e){
+        let $this = jQuery(this);
+        
+        // Is checked
+        if ( $this.is(':checked') ) {
+            $this.closest('.gm-taxonomy-item').siblings().find('input').prop('checked', false);
+        }
+
+    });
+
+    // Uncheck gm-taxonomy-all checkbox if other checkbox is checked
+    jQuery(document).on('change', '.gm-taxonomy-item:not(.gm-taxonomy-all) input', function(e){
+        let $this = jQuery(this);
+        let $all = $this.closest('.gm-taxonomy-item').siblings('.gm-taxonomy-all').find('input');
+
+        // Is checked
+        if ( $this.is(':checked') ) {
+            $all.prop('checked', false);
+        }
 
     });
 
@@ -49,19 +82,23 @@ jQuery(document).ready(function($) {
 
 	//ajax filter function
 	function asr_ajax_get_postdata(term_ID, selector, paged, loadMore){
+        let $wrapper = jQuery(selector).closest('.am_ajax_post_grid_wrap');
 
-        var getLayout = jQuery(selector).closest('.am_ajax_post_grid_wrap').find(".asr-filter-div").attr("data-layout");
-        var pagination_type = jQuery(selector).closest('.am_ajax_post_grid_wrap').attr("data-pagination_type");
-        var jsonData = jQuery(selector).closest('.am_ajax_post_grid_wrap').attr('data-am_ajax_post_grid');
+        let getLayout = $wrapper.find(".asr-filter-div").attr("data-layout");
+        let pagination_type = $wrapper.attr("data-pagination_type");
+        let jsonData = $wrapper.attr('data-am_ajax_post_grid');
+        let taxInput = $wrapper.find(".gm-taxonomy-item input:checked").serialize();
 
-        var $args = JSON.parse(jsonData);
-        
-        var data = {
+        let $args = JSON.parse(jsonData);
+
+        let data = {
             action: 'asr_filter_posts',
             asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
             term_ID: term_ID,
+            taxInput: taxInput,
             layout: (getLayout) ? getLayout : "1",
-            jsonData: jsonData,
+            argsArray: $args,
+            // jsonData: JSON.stringify( $args ),
             pagination_type: pagination_type,
             loadMore: loadMore,
         }
@@ -74,23 +111,24 @@ jQuery(document).ready(function($) {
 			type: 'post',
 			url: asr_ajax_params.asr_ajax_url,
 			data: data,
+            // dataType: 'json',
 			beforeSend: function(data){
 				
                 if ( loadMore ) {
                     // Loading Animation Start
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.am-post-grid-load-more').addClass('loading');
+                    $wrapper.find('.am-post-grid-load-more').addClass('loading');
                     flag = true;
                 } else {
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').show();
+                    $wrapper.find('.asr-loader').show();
                 }
 			},
 			complete: function(data){
 				
                 if ( loadMore ) {
                     // Loading Animation End
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.am-post-grid-load-more').removeClass('loading');
+                    $wrapper.find('.am-post-grid-load-more').removeClass('loading');
                 } else {
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.asr-loader').hide();
+                    $wrapper.find('.asr-loader').hide();
                 }
 			},
 			success: function(data){
@@ -100,12 +138,12 @@ jQuery(document).ready(function($) {
                     var newPosts = jQuery('.am_post_grid', data).html();
                     var newPagination = jQuery('.am_posts_navigation', data).html();
 
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_post_grid').append(newPosts);
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
+                    $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                    $wrapper.find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
 
                 } else {
 
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
+                    $wrapper.find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
                         //jQuery(this).html(data).fadeIn(300);
                     });
                 }
@@ -115,7 +153,7 @@ jQuery(document).ready(function($) {
 
                 // Animation
                 if( $args.animation == "true" ){
-                    jQuery(selector).closest('.am_ajax_post_grid_wrap').find('.am_grid_col').slideDown();
+                    $wrapper.find('.am_grid_col').slideDown();
                 }
                 
 			},
@@ -165,4 +203,9 @@ jQuery(document).ready(function($) {
 window.addEventListener('load', (event) => {
     // jQuery(document).trigger('am_ajax_post_grid_init');
     // console.log('on load triggered')
+    // Trigger slide down animation
+    jQuery('.am_grid_col').slideDown();
+
+    // Trigger scroll event
+    jQuery(window).trigger('scroll');
 });

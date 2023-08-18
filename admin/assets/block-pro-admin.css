@@ -1,0 +1,43 @@
+/* Is Pro  */
+.form-row.gm-pro-field {
+    position: relative;
+}
+
+.form-row.gm-pro-field .gm-field-label:before {
+    content: "Get Pro";
+    position: absolute;
+    color: #ab0000;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.5);
+    opacity:0;
+    visibility:hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.form-row.gm-pro-field input, .form-row.gm-pro-field select, .form-row.gm-pro-field textarea {
+    opacity: 0.6;
+}
+
+
+.form-row.gm-pro-field .gridmaster-input-wrapper {
+    color: #a9a9a9;
+}
+
+.form-row.gm-pro-field:hover  .gm-field-label:not(.radio):before {
+    opacity: 1;
+    visibility:visible;
+    
+}
+
+.form-row.gm-pro-field .gm-field-label {
+    position: relative;
+    color: #a9a9a9;
+}
+
+.gm-pro-inp-disable input{
+    cursor: not-allowed;
+}
+/* Is Pro  */
