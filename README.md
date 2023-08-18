@@ -3,7 +3,7 @@
 ```md
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter, ajax grid, display post grid, post type grid, wp post grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.2.2
+Tested up to: 6.3
 Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ Gridmaster helps you create post grids with ajax filter. You can create grid lay
 Gridmaster has a shortcode generator that helps you generate the shortcode easily, and you can use the shortcode anywhere to show the post grid. You can also use the shortcode in your theme template file.
 
 
-### [See the Live demo](http://plugins.addonmaster.com/post-grid-with-ajax-filter/)
+### [See the Live demo](https://plugins.addonmaster.com/gridmaster/)
 [![Live preview video](https://img.youtube.com/vi/8Th_jp8YEk4/0.jpg)](https://www.youtube.com/watch?v=8Th_jp8YEk4)
 
 ### Features of Gridmaster
