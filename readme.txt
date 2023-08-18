@@ -193,7 +193,7 @@ If you need any custom feature, please let us know. We will try to add the featu
 == Changelog ==
 
 = 3.4.0 =
-* Aug 6, 2023
+* Aug 19, 2023
 - Rebrand: Post Grid with Ajax Filter to Gridmaster
 - Rebuid the plugin from scratch
 - Added: Shortcode Generator
