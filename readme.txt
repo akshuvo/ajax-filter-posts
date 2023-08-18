@@ -106,6 +106,12 @@ Gridmaster has a multiple selection feature that helps you to show post grid bas
 **Auto Post Type Selection**
 This feature helps you to select the post type automatically when you visit the post type page. You will need to place the shortcode in the post type template file to use this feature.
 
+**Heading Tag**
+This feature helps you to change the heading tag of the post title. You can change the heading tag from h1 to h6, div, span, p.
+
+**Heading Font Size**
+This feature helps you to change the font size of the post title. You can set the font size for different devices.
+
 **Column Gap Control**
 Gridmaster has a column gap control feature that helps you to control the column gap of the post grid.
 
