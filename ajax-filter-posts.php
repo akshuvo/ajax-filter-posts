@@ -66,7 +66,7 @@ final class GridMasterPlugin {
      */
     public function define_constants() {
 
-        define( 'GRIDMASTER_VERSION', '3.4.00001' );
+        define( 'GRIDMASTER_VERSION', '3.4.000001' );
         define( 'GRIDMASTER_FILE', __FILE__ );
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );

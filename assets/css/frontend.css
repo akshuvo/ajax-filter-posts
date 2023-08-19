@@ -258,7 +258,7 @@
 
 /* Style the scrollbar thumb (handle) */
 .gm-taxonomy::-webkit-scrollbar-thumb {
-    background-color: #888;
+    background-color: transparent;
 }
 
 /* Style the scrollbar track */
@@ -273,9 +273,10 @@
 
 /* Style the scrollbar resizer */
 .gm-taxonomy::-webkit-resizer {
-    background-color: #888;
+    background-color: transparent;
 }
 
 .gm-term {
     white-space: nowrap;
+    display: inline-block;
 }
