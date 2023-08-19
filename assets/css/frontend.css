@@ -250,6 +250,32 @@
     color: inherit;
 }
 
+/* Style the main scrollbar */
+.gm-taxonomy::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+}
+
+/* Style the scrollbar thumb (handle) */
+.gm-taxonomy::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+/* Style the scrollbar track */
+.gm-taxonomy::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+/* Style the scrollbar corner */
+.gm-taxonomy::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+/* Style the scrollbar resizer */
+.gm-taxonomy::-webkit-resizer {
+    background-color: #888;
+}
+
 .gm-term {
     white-space: nowrap;
 }
