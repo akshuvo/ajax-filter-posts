@@ -248,5 +248,8 @@
 
 .am__title a {
     color: inherit;
-    
+}
+
+.gm-term {
+    white-space: nowrap;
 }
