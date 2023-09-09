@@ -191,9 +191,9 @@ button.gm-btn:disabled{
     height: 100%;
 }
 
-.toplevel_page_gridmaster .notice, 
-.toplevel_page_gridmaster div.error, 
-.toplevel_page_gridmaster div.updated {
+.toplevel_page_gridmaster .notice:not(.gm-notice-show), 
+.toplevel_page_gridmaster div.error:not(.gm-notice-show), 
+.toplevel_page_gridmaster div.updated:not(.gm-notice-show) {
     display: none;
 }
 

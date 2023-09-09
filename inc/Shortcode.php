@@ -633,8 +633,7 @@ class Shortcode {
             return;
         }
 
-        // gm_shortcode_preview for frontend
-        // url: ?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) );
+        // Shortcode for frontend
         if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
             // Disable admin bar
             add_filter( 'show_admin_bar', '__return_false' );
@@ -642,7 +641,6 @@ class Shortcode {
             $shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
             // Remove BackSlash
             $shortcode = wp_unslash( $shortcode );
-
             ?>
             <!-- Blank HTML Template  -->
             <html>
@@ -663,9 +661,7 @@ class Shortcode {
                     <?php wp_footer(); ?>
                 </body>
             </html>
-            <?php die(); ?>
-        <?php } ?>
-
-    <?php }
-
+            <?php die();
+        }
+    }
 }
