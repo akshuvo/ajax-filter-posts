@@ -5,9 +5,7 @@
         </div>
         <div class="am_cont">
             <?php echo gridmaster_get_post_title(); ?>
-            
             <?php echo gridmaster_the_content(); ?>
-
             <?php echo gridmaster_read_more_link( __('Read More', 'gridmaster') ); ?>
         </div>
     </div>

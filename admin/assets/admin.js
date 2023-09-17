@@ -189,6 +189,14 @@ jQuery(document).ready(function($) {
         jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
     } );
 
+    // Change Image Size
+    jQuery(document).on( 'change', '[name="link_thumbnail"]', function(e) {
+        let $val = jQuery(this).val();
+        console.log($val);
+        jQuery('.show-if-link_thumbnail-yes').hide();
+        jQuery('.show-if-link_thumbnail-' + $val ).fadeIn('fast');
+    } );
+
     // Notice Timeout
     let noticeTimeout = false;
     

@@ -20,8 +20,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Show Filter',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -43,8 +43,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Show All Button',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -83,8 +83,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Hide Empty Terms',
                         'options' => [
-                            '1' => 'Yes',
-                            '0' => 'No',
+                            '1' => __('Yes', 'gridmaster'),
+                            '0' => __('No', 'gridmaster'),
                         ],
                         'default' => '0',
                     ) ); ?>
@@ -223,8 +223,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Show Read More',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -232,10 +232,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <!-- read_more_text -->
                     <?php gridmaster_form_field( gm_field_name('read_more_text'),array(
                         'type' => 'text',
-                        'label' => 'Read More Text',
+                        'label' => __('Read More Text', 'gridmaster'),
                         'default' => '',
-                        'placeholder' => 'Read More',
-                    ) ); 
+                        'placeholder' => __('Read More', 'gridmaster'),
+                    ) );
 
                     // Grid Image Size
                     gridmaster_form_field( gm_field_name('grid_image_size'),array(
@@ -260,6 +260,32 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'type' => 'number',
                             'label' => 'Image Height',
                             'default' => 200,
+                            'is_pro' => true,
+                        ) ); ?>
+                    </div>
+
+                    <!-- Apply Link on Thumbnail -->
+                    <?php gridmaster_form_field( gm_field_name('link_thumbnail'),array(
+                        'type' => 'radio',
+                        'label' => __('Apply Link on Thumbnail', 'gridmaster'),
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'no',
+                        'is_pro' => true,
+                    ) ); ?>
+
+                    <div class="show-if-link_thumbnail-yes hidden">
+                        <!-- link_thumbnail_to -->
+                        <?php gridmaster_form_field( gm_field_name('link_thumbnail_to'),array(
+                            'type' => 'select',
+                            'label' => 'Link Thumbnail To',
+                            'options' => [
+                                'post' => __('Post Link', 'gridmaster'),
+                                'image' => __('Image Link', 'gridmaster'),
+                            ],
+                            'default' => 'post',
                             'is_pro' => true,
                         ) ); ?>
                     </div>
