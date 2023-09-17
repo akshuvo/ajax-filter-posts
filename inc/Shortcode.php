@@ -420,8 +420,6 @@ class Shortcode {
             'taxonomy' => '',
             'terms' => '',
         ]);
-
-        // echo '<pre>'; print_r( $args ); echo '</pre>';
       
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {

@@ -230,3 +230,10 @@ function gridmaster_comments_number() {
         return '<span class="comments-link">'. get_comments_number_text( '', __( '1 Comment', 'gridmaster' ), __( '% Comments', 'gridmaster' ) ) .'</span>';
     }
 }
+
+function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
+    // Shortcode atts
+    $args = apply_filters( 'gridmaster_get_render_grid_args', [] );
+    ppr($args);
+	echo get_the_post_thumbnail( null, $size, $attr );
+}
