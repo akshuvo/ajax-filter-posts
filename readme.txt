@@ -2,7 +2,7 @@
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
 Tested up to: 6.3
-Stable tag: 3.4.1
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

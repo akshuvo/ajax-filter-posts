@@ -231,9 +231,7 @@ function gridmaster_comments_number() {
     }
 }
 
+// Post Thumbnail
 function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
-    // Shortcode atts
-    $args = apply_filters( 'gridmaster_get_render_grid_args', [] );
-    ppr($args);
-	echo get_the_post_thumbnail( null, $size, $attr );
+    echo apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
 }
