@@ -182,6 +182,30 @@ jQuery(document).ready(function($) {
         document.execCommand("copy");
     } );
 
+    // Change Filter Style
+    jQuery(document).on( 'change', '#filter_style', function(e) {
+        let $val = jQuery(this).val();
+        // Hide
+        jQuery('.filter-demo-link-button').hide().html('');
+        // Add Link if exists
+        if(gridmaster_params.filter_demo_links[$val]){
+            let link = `<a href="${gridmaster_params.demo_link + gridmaster_params.filter_demo_links[$val]}" target="_blank" class="align-items-center button button-secondary d-inline-flex"><span class="me-2 dashicons dashicons-external"></span>View Demo</a>`;
+            jQuery('.filter-demo-link-button').html( link ).fadeIn('fast')
+        }
+    } );
+
+    // Change Grid Style
+    jQuery(document).on( 'change', '#grid_style', function(e) {
+        let $val = jQuery(this).val();
+        // Hide
+        jQuery('.grid-demo-link-button').hide().html('');
+        // Add Link if exists
+        if(gridmaster_params.grid_demo_links[$val]){
+            let link = `<a href="${gridmaster_params.demo_link + gridmaster_params.grid_demo_links[$val]}" target="_blank" class="align-items-center button button-secondary d-inline-flex"><span class="me-2 dashicons dashicons-external"></span>View Demo</a>`;
+            jQuery('.grid-demo-link-button').html( link ).fadeIn('fast')
+        }
+    } );
+
     // Change Image Size
     jQuery(document).on( 'change', '#grid_image_size', function(e) {
         let $val = jQuery(this).val();

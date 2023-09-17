@@ -6,14 +6,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     <div class="row">
         <nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
             
-            <div id="gm-select-filter" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-filter" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
 
                     <!-- show_filter -->
                     <?php gridmaster_form_field( gm_field_name('show_filter'),array(
@@ -37,6 +37,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ] ),
                         'default' => 'default', // default
                     ) ); ?>
+                    <div class="filter-demo-link-button hidden"></div>
 
                     <!-- btn_all -->
                     <?php gridmaster_form_field( gm_field_name('btn_all'),array(
@@ -120,14 +121,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             </div>
             
 
-            <div id="gm-select-grid" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-grid" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                 <?php do_action( 'gridmaster_grid_settings_fields_before' ); ?>
 
                     <!-- Select Style -->
@@ -137,6 +138,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'options' => gridmaster_grid_styles(),
                         'default' => 'default',
                     ) ); ?>
+                    <div class="grid-demo-link-button hidden"></div>
 
                     <!-- Select Post Type -->
                     <?php gridmaster_form_field( gm_field_name('post_type'),array(
@@ -375,14 +377,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 </div>
             </div>
             
-            <div id="gm-select-pagination" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-pagination" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                     <!-- pagination_type -->
                     <?php gridmaster_form_field( gm_field_name('pagination_type'),array(
                         'type' => 'radio',
@@ -425,7 +427,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
             <!-- Grid Preview  -->
-            <div class="postbox gm-slide-toggle-- closed--">
+            <div class="postbox gm-slide-toggle-- ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
                     <div class="preview-action-buttons">
@@ -464,7 +466,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                     <div id="gm-grid-preview">
                         <div class="gm-iframe-wrap loading">
                             <div class="asr-loader">

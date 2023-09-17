@@ -287,6 +287,11 @@ span.description {
 span.gridmaster-responsive-fields {
     display: inline-flex;
     align-items: center;
+    max-width: 170px;
+}
+
+.gridmaster-responsive-fields input {
+    width: 100%;
 }
 
 span.gridmaster-responsive-fields-devices {
@@ -473,4 +478,8 @@ span.gridmaster-responsive-fields-devices-wrap {
 
 .gridmaster-options-form .gridmaster-input-wrapper {
     min-width: 60%;
+}
+
+#gm-shortcode-generator .form-row {
+    margin: 1.2em 0;
 }
