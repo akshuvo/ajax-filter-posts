@@ -193,11 +193,12 @@ If you need any custom feature, please let us know. We will try to add the featu
 == Changelog ==
 
 = 3.4.2 =
-* Sep 18, 2023
+* Sep 19, 2023
 - Added: Thumbnail Function
 - Added: Submenu navigation
 - Added: View Demo Button for pro links
 - Fixed: Minor code changes.
+- Fixed: Minor CSS changes.
 
 = 3.4.1 =
 * Sep 09, 2023
