@@ -280,3 +280,33 @@
     white-space: nowrap;
     display: inline-block;
 }
+
+.gm-comments-link svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+
+.gm-title-tooltip [title] {
+    position: relative;
+}
+
+.gm-title-tooltip [title]:hover:before{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  background: #444;
+  border-radius: 3px;
+  color: #fff;
+  content: attr(title);
+  font-size: 11px;
+  padding: 4px 10px;
+  position: absolute;
+  white-space: nowrap;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+}
