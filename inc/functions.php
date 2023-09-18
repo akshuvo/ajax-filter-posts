@@ -252,12 +252,15 @@ function gridmaster_comments_number( $args = [] ) {
         // Before
         $comment_html .= $args['before'];
 
-        $comment_html .=  $comment_number . '</span>';
+        $comment_html .=  $comment_number;
+
+        // After
+        $comment_html .= $args['after'] . '</span>';
+        
         if( $args['comments_link'] ) {
             $comment_html .= '</a>';
         }
-        // After
-        $comment_html .= $args['after'];
+
 
         return $comment_html;
     }
