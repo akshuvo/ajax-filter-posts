@@ -447,6 +447,7 @@ span.gridmaster-responsive-fields-devices-wrap {
 
 .gm-checkbox-wrapper input:checked + label {
     font-weight: bold;
+    color: #000;
 }
 
 .gm-support-container {
@@ -482,4 +483,27 @@ span.gridmaster-responsive-fields-devices-wrap {
 
 #gm-shortcode-generator .form-row {
     margin: 1.2em 0;
+}
+
+#grid_image_size_field select,
+#taxonomy_field select {
+    width: 120px;
+}
+
+#terms_field .gridmaster-input-wrapper {
+    display: block;
+}
+ #terms_field .gridmaster-input-wrapper .gm-checkbox-wrapper {
+    border: 1px solid #dcdcdc;
+    margin-right: .5em;
+    display: inline-block;
+    margin-bottom: .5em;
+}
+ #terms_field .gm-checkbox-wrapper .gm-field-label{
+    padding: 4px 10px 4px 0px;
+    display: inline-block;
+    margin: 0;
+}
+ #terms_field .gm-checkbox-wrapper input {
+    margin-left: 8px;
 }
