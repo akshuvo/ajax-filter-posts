@@ -310,3 +310,14 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
+.infinite_scroll.am-post-grid-load-more {
+    text-indent: -9999px;
+    overflow: hidden;
+    position: relative;
+    background-color: transparent !important;
+    border: 0 !important;
+}
+.infinite_scroll.am-post-grid-load-more.loading:after{
+    border-top-color: #000;
+}

@@ -549,8 +549,7 @@ class Shortcode {
             ?>
             </div>
 
-            <?php
-        else:
+        <?php else:
             esc_html_e('No Posts Found','gridmaster');
         endif;
         wp_reset_query();
@@ -646,7 +645,6 @@ class Shortcode {
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                    
                     <?php wp_head(); ?>
                     <style>
                         html body {
@@ -659,14 +657,7 @@ class Shortcode {
                 <body>
                     <?php echo do_shortcode( $shortcode ); ?>
                     <?php wp_footer(); ?>
-                    <script>
-                    window.addEventListener('message', function(event) {
-                        data = event.data;
-                        console.log(data);
-                    });
-                    </script>
                 </body>
-
             </html>
             <?php die();
         }

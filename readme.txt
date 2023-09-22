@@ -186,9 +186,14 @@ If you need any custom feature, please let us know. We will try to add the featu
 
 
 == Screenshots ==
-1. Frontend Preview
-2. Filter Preview
-3. Pagination Preview
+1. Backend Grid Builder/Shortcode Generator (Free/Pro)
+2. Backend Preview (Welcome Page)
+3. Key Features
+4. Free Features Overview 
+5. Pro Features Overview
+6. Gridmaster Grid & Filter Style 1 (Free)
+7. Gridmaster Grid & Filter Style 2 (Free)
+8. Gridmaster Grid & Filter Style 3 (Free)
 
 == Changelog ==
 
