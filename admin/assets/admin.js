@@ -49,6 +49,8 @@ jQuery(document).ready(function($) {
 
         // Update Preview iframe width
         let iframeWidth = breakpoints[device].value;
+        // Add padding
+        iframeWidth = parseInt(iframeWidth) + 32;
         jQuery("#gm-iframe").css('width', iframeWidth + 'px');
 
     });

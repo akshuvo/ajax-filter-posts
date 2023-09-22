@@ -47,7 +47,7 @@ $left_tabs = [
 <div class="gridmaster-wrap ">
     <div class="gm-admin-header">
         <div class="gm-admin-into">
-            <h2><span class="dashicons dashicons-schedule"></span> <?php esc_html_e( 'GridMaster', 'gridmaster' ); ?></h2>
+            <h2><span class="dashicons dashicons-forms me-2"></span> <?php esc_html_e( 'GridMaster', 'gridmaster' ); ?></h2>
             <p><?php esc_html_e( 'Your ultimate tool for crafting visually stunning, customizable, and user-friendly post grids with ease.', 'gridmaster' ); ?></p>
         </div>
 

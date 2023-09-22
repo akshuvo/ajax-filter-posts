@@ -427,7 +427,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
             <!-- Grid Preview  -->
-            <div class="postbox gm-slide-toggle-- ">
+            <div class="gm-iframe-postbox postbox gm-slide-toggle-- ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
                     <div class="preview-action-buttons">
@@ -457,7 +457,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                                 <span class="dashicons dashicons-plus"></span>
                             </div>
                             <div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e('Reset Scale', 'gridmaster'); ?>">
-                                <span class="dashicons dashicons-image-rotate"></span>
+                                <span class="dashicons dashicons-undo"></span>
                             </div>
                 
                         </div>
