@@ -199,6 +199,7 @@ If you need any custom feature, please let us know. We will try to add the featu
 - Added: View Demo Button for pro links
 - Fixed: Minor code changes.
 - Fixed: Minor CSS changes.
+- Fixed: Minor changes in admin panel.
 
 = 3.4.1 =
 * Sep 09, 2023

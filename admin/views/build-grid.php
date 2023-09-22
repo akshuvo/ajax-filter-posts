@@ -454,7 +454,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                                 <span id="gm-responsive-bar-scale__value">100</span>%
                             </div>
                             <div id="gm-responsive-bar-scale__plus" class="gm-tooltip" title="<?php esc_attr_e('Scale Up', 'gridmaster'); ?>">
-                                <span class="dashicons dashicons-plus"></span>
+                                <span class="dashicons dashicons-plus-alt2"></span>
                             </div>
                             <div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e('Reset Scale', 'gridmaster'); ?>">
                                 <span class="dashicons dashicons-undo"></span>
