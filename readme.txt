@@ -2,7 +2,7 @@
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
 Tested up to: 6.3
-Stable tag: 3.4.0
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -186,11 +186,31 @@ If you need any custom feature, please let us know. We will try to add the featu
 
 
 == Screenshots ==
-1. Frontend Preview
-2. Filter Preview
-3. Pagination Preview
+1. Backend Grid Builder/Shortcode Generator (Free/Pro)
+2. Backend Preview (Welcome Page)
+3. Key Features
+4. Free Features Overview 
+5. Pro Features Overview
+6. Gridmaster Grid & Filter Style 1 (Free)
+7. Gridmaster Grid & Filter Style 2 (Free)
+8. Gridmaster Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.2 =
+* Sep 19, 2023
+- Added: Thumbnail Function
+- Added: Submenu navigation
+- Added: View Demo Button for pro links
+- Fixed: Minor code changes.
+- Fixed: Minor CSS changes.
+- Fixed: Minor changes in admin panel.
+
+= 3.4.1 =
+* Sep 09, 2023
+- Fixed: Cannot modify header information issue fixed.
+- Fixed: Minor code changes.
+
 
 = 3.4.0 =
 * Aug 19, 2023

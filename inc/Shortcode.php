@@ -420,8 +420,6 @@ class Shortcode {
             'taxonomy' => '',
             'terms' => '',
         ]);
-
-        // echo '<pre>'; print_r( $args ); echo '</pre>';
       
         // Excerpt Length Filter
         add_filter( 'gridmaster_excerpt_length', function( $length ) use ( $args ) {
@@ -551,8 +549,7 @@ class Shortcode {
             ?>
             </div>
 
-            <?php
-        else:
+        <?php else:
             esc_html_e('No Posts Found','gridmaster');
         endif;
         wp_reset_query();
@@ -633,8 +630,7 @@ class Shortcode {
             return;
         }
 
-        // gm_shortcode_preview for frontend
-        // url: ?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) );
+        // Shortcode for frontend
         if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
             // Disable admin bar
             add_filter( 'show_admin_bar', '__return_false' );
@@ -642,7 +638,6 @@ class Shortcode {
             $shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
             // Remove BackSlash
             $shortcode = wp_unslash( $shortcode );
-
             ?>
             <!-- Blank HTML Template  -->
             <html>
@@ -650,22 +645,21 @@ class Shortcode {
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <?php wp_head(); ?>
                     <style>
-                        body {
+                        html body {
                             margin: 0;
-                            padding: 0 15px;
+                            padding: 16px;
+                            background: transparent;
                         }
                     </style>
-                    <?php wp_head(); ?>
                 </head>
                 <body>
                     <?php echo do_shortcode( $shortcode ); ?>
                     <?php wp_footer(); ?>
                 </body>
             </html>
-            <?php die(); ?>
-        <?php } ?>
-
-    <?php }
-
+            <?php die();
+        }
+    }
 }

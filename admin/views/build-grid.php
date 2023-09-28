@@ -6,22 +6,22 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     <div class="row">
         <nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
             
-            <div id="gm-select-filter" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-filter" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
 
                     <!-- show_filter -->
                     <?php gridmaster_form_field( gm_field_name('show_filter'),array(
                         'type' => 'radio',
                         'label' => 'Show Filter',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -37,14 +37,15 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ] ),
                         'default' => 'default', // default
                     ) ); ?>
+                    <div class="filter-demo-link-button hidden"></div>
 
                     <!-- btn_all -->
                     <?php gridmaster_form_field( gm_field_name('btn_all'),array(
                         'type' => 'radio',
                         'label' => 'Show All Button',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -83,8 +84,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Hide Empty Terms',
                         'options' => [
-                            '1' => 'Yes',
-                            '0' => 'No',
+                            '1' => __('Yes', 'gridmaster'),
+                            '0' => __('No', 'gridmaster'),
                         ],
                         'default' => '0',
                     ) ); ?>
@@ -120,14 +121,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             </div>
             
 
-            <div id="gm-select-grid" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-grid" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                 <?php do_action( 'gridmaster_grid_settings_fields_before' ); ?>
 
                     <!-- Select Style -->
@@ -137,6 +138,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'options' => gridmaster_grid_styles(),
                         'default' => 'default',
                     ) ); ?>
+                    <div class="grid-demo-link-button hidden"></div>
 
                     <!-- Select Post Type -->
                     <?php gridmaster_form_field( gm_field_name('post_type'),array(
@@ -223,8 +225,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'radio',
                         'label' => 'Show Read More',
                         'options' => [
-                            'yes' => 'Yes',
-                            'no' => 'No',
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
                         ],
                         'default' => 'yes',
                     ) ); ?>
@@ -232,10 +234,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <!-- read_more_text -->
                     <?php gridmaster_form_field( gm_field_name('read_more_text'),array(
                         'type' => 'text',
-                        'label' => 'Read More Text',
+                        'label' => __('Read More Text', 'gridmaster'),
                         'default' => '',
-                        'placeholder' => 'Read More',
-                    ) ); 
+                        'placeholder' => __('Read More', 'gridmaster'),
+                    ) );
 
                     // Grid Image Size
                     gridmaster_form_field( gm_field_name('grid_image_size'),array(
@@ -260,6 +262,32 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'type' => 'number',
                             'label' => 'Image Height',
                             'default' => 200,
+                            'is_pro' => true,
+                        ) ); ?>
+                    </div>
+
+                    <!-- Apply Link on Thumbnail -->
+                    <?php gridmaster_form_field( gm_field_name('link_thumbnail'),array(
+                        'type' => 'radio',
+                        'label' => __('Apply Link on Thumbnail', 'gridmaster'),
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'no',
+                        'is_pro' => true,
+                    ) ); ?>
+
+                    <div class="show-if-link_thumbnail-yes hidden">
+                        <!-- link_thumbnail_to -->
+                        <?php gridmaster_form_field( gm_field_name('link_thumbnail_to'),array(
+                            'type' => 'select',
+                            'label' => 'Link Thumbnail To',
+                            'options' => [
+                                'post' => __('Post Link', 'gridmaster'),
+                                'image' => __('Image Link', 'gridmaster'),
+                            ],
+                            'default' => 'post',
                             'is_pro' => true,
                         ) ); ?>
                     </div>
@@ -349,14 +377,14 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 </div>
             </div>
             
-            <div id="gm-select-pagination" class="postbox gm-slide-toggle closed--">
+            <div id="gm-select-pagination" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'gridmaster' ); ?></h2>
                     <div class="handle-actions pe-2">
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                     <!-- pagination_type -->
                     <?php gridmaster_form_field( gm_field_name('pagination_type'),array(
                         'type' => 'radio',
@@ -399,7 +427,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
             <?php //echo do_shortcode("[gridmaster]"); ?>
 
             <!-- Grid Preview  -->
-            <div class="postbox gm-slide-toggle-- closed--">
+            <div class="gm-iframe-postbox postbox gm-slide-toggle-- ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
                     <div class="preview-action-buttons">
@@ -426,10 +454,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                                 <span id="gm-responsive-bar-scale__value">100</span>%
                             </div>
                             <div id="gm-responsive-bar-scale__plus" class="gm-tooltip" title="<?php esc_attr_e('Scale Up', 'gridmaster'); ?>">
-                                <span class="dashicons dashicons-plus"></span>
+                                <span class="dashicons dashicons-plus-alt2"></span>
                             </div>
                             <div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e('Reset Scale', 'gridmaster'); ?>">
-                                <span class="dashicons dashicons-image-rotate"></span>
+                                <span class="dashicons dashicons-undo"></span>
                             </div>
                 
                         </div>
@@ -438,7 +466,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         <span class="dashicons dashicons-arrow-down">
                     </div>
                 </div>
-                <div class="inside">
+                <div class="inside" style="display: block;">
                     <div id="gm-grid-preview">
                         <div class="gm-iframe-wrap loading">
                             <div class="asr-loader">

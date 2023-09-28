@@ -175,34 +175,36 @@ jQuery(document).ready(function($) {
         });
     });
 
+    // Function to check if an element is in the viewport
+    function isElementInViewport(el, pixelsBeforeInview = 0) {
+        var rect = el.getBoundingClientRect();
+        return (
+            rect.top >= -pixelsBeforeInview &&
+            rect.left >= -pixelsBeforeInview &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + pixelsBeforeInview &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth) + pixelsBeforeInview
+        );
+    }
+
     // Handle Infinite scroll
     jQuery( window ).on('scroll', function(e){
-        jQuery('.infinite_scroll.am-post-grid-load-more').each(function(i,el){
-
-            var $this = jQuery(this);
-
-            var H = jQuery(window).height(),
-                r = el.getBoundingClientRect(),
-                t=r.top,
-                b=r.bottom;
-
-            var tAdj = parseInt(t-(H/2));
-
-            if ( flag === false && (H >= tAdj) ) {
-                //console.log( 'inview' );
-                $this.trigger('click');
+        jQuery('.infinite_scroll.am-post-grid-load-more').each(function(i, el) {
+            // Check if the element is in the viewport
+            if (flag === false && isElementInViewport(el, 1000)) {
+                console.log('inview');
+                // Trigger a click event on the button
+                jQuery(el).trigger('click');
             } else {
-                //console.log( 'outview' );
+                console.log('outview');
             }
         });
+
     });
 
 });
 
 // Load Each Grid on Page Load
 window.addEventListener('load', (event) => {
-    // jQuery(document).trigger('am_ajax_post_grid_init');
-    // console.log('on load triggered')
     // Trigger slide down animation
     jQuery('.am_grid_col').slideDown();
 

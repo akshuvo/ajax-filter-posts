@@ -212,7 +212,7 @@ function gridmaster_posted_by() {
 
 
     $byline = sprintf(
-        esc_html_x( 'by %s', 'post author', 'gridmaster' ),
+        esc_html_x( '%s', 'post author', 'gridmaster' ),
         '<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span>'
     );
 
@@ -225,8 +225,48 @@ function gridmaster_posted_by() {
 }
 
 // Comments number
-function gridmaster_comments_number() {
-    if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
-        return '<span class="comments-link">'. get_comments_number_text( '', __( '1 Comment', 'gridmaster' ), __( '% Comments', 'gridmaster' ) ) .'</span>';
+function gridmaster_comments_number( $args = [] ) {
+    $args = wp_parse_args( $args, [
+        'after' => '',
+        'before' => '',
+        'comments_link' => false,
+    ] );
+    if ( ! is_single() && ! post_password_required() ) {
+
+        // Comment Number
+        $comment_number = get_comments_number();
+
+        // Number text
+        $comment_text = sprintf(
+            esc_html( _nx( '1 Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
+            number_format_i18n( $comment_number )
+        );
+
+        $comment_html = '<span class="gm-comments-link">';
+
+        // Comments link
+        if( $args['comments_link'] ) {
+            $comment_html .= '<a href="' . esc_url( get_comments_link() ) . '" title="' . esc_attr( $comment_text ) . '">';
+        }
+
+        // Before
+        $comment_html .= $args['before'];
+
+        $comment_html .=  $comment_number;
+
+        // After
+        $comment_html .= $args['after'] . '</span>';
+        
+        if( $args['comments_link'] ) {
+            $comment_html .= '</a>';
+        }
+
+
+        return $comment_html;
     }
+}
+
+// Post Thumbnail
+function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
+    echo apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
 }

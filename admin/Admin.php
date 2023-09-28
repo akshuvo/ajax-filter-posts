@@ -37,7 +37,45 @@ class Admin {
      * @return void
      */
     public function admin_menu() {
-        add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), 'manage_options', 'gridmaster', [ $this, 'plugin_page' ], 'dashicons-forms', 110 );
+        $parent_slug = 'gridmaster';
+        $capability = 'manage_options';
+
+        add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), $capability, $parent_slug, [ $this, 'plugin_page' ], 'dashicons-forms', 110 );
+
+        $submenus = [
+            [
+                'title' => __( 'Welcome', 'gridmaster' ),
+                'url'   => 'gridmaster',
+                'icon'  => 'dashicons dashicons-admin-home',
+                'path' => '',
+                'target' => '',
+            ],
+            // [
+            //     'title' => __( 'Templates', 'gridmaster' ),
+            //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
+            //     'icon'  => 'dashicons dashicons-layout',
+            //     'path' => 'templates',
+            // ],
+            [
+                'title' => __( 'Grid Builder', 'gridmaster' ),
+                'url'   => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
+                'icon'  => 'dashicons dashicons-schedule',
+                'path' => 'build-grid',
+                'target' => '',
+            ],
+            [
+                'title' => __( 'Settings', 'gridmaster' ),
+                'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
+                'icon'  => 'dashicons dashicons-admin-generic',
+                'path' => 'settings',
+                'target' => '',
+            ]
+        ];
+
+        // Submenus
+        foreach( $submenus as $tab ) {
+            add_submenu_page( $parent_slug, $tab['title'], $tab['title'], $capability, $tab['url'] );
+        }
     }
 
     /**
@@ -139,12 +177,27 @@ class Admin {
             'nonce' => wp_create_nonce( 'gm-ajax-nonce' ),
             'home_url' => home_url(),
             'breakpoints' => gm_get_breakpoints(),
-            'has_pro' => gridmaster_is_pro()
+            'has_pro' => gridmaster_is_pro(),
+            'demo_link' => esc_url('https://plugins.addonmaster.com/gridmaster/'),
+            'filter_demo_links' => [
+                'pro-filter-1' => 'gridmaster-pro-filter-style-1',
+                'pro-filter-2' => 'gridmaster-pro-filter-style-2',
+            ],
+            'grid_demo_links' => [
+                'pro-style-1' => 'pro-grid-style-1',
+                'pro-style-2' => 'pro-grid-style-2',
+                'pro-style-3' => 'pro-grid-style-3',
+                'pro-style-4' => 'pro-grid-style-4',
+                'pro-style-5' => 'pro-grid-style-5',
+                'pro-style-6' => 'pro-grid-style-6',
+                'pro-style-7' => 'pro-grid-style-7',
+                'pro-style-8' => 'pro-grid-style-8',
+                'pro-style-9' => 'pro-grid-style-9',
+                'pro-style-10' => 'pro-grid-style-10',
+            ],
         ) );
 
-        wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.css', array(), GRIDMASTER_VERSION );
-        // wp_enqueue_style( 'bootstrap-utilities', GRIDMASTER_URL . '/admin/assets/bootstrap-utilities.css', array(), GRIDMASTER_VERSION );
-        // wp_enqueue_style( 'bootstrap-css', GRIDMASTER_URL . '/admin/assets/bootstrap.min.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.min.css', array(), GRIDMASTER_VERSION );
         wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
 
         if( !defined( 'GRIDMASTER_PRO_VERSION' ) ) {

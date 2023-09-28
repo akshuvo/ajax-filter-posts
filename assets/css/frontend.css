@@ -248,5 +248,76 @@
 
 .am__title a {
     color: inherit;
-    
+}
+
+/* Style the main scrollbar */
+.gm-taxonomy::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+}
+
+/* Style the scrollbar thumb (handle) */
+.gm-taxonomy::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+/* Style the scrollbar track */
+.gm-taxonomy::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+/* Style the scrollbar corner */
+.gm-taxonomy::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+/* Style the scrollbar resizer */
+.gm-taxonomy::-webkit-resizer {
+    background-color: transparent;
+}
+
+.gm-term {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.gm-comments-link svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+
+.gm-title-tooltip [title] {
+    position: relative;
+}
+
+.gm-title-tooltip [title]:hover:before{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  background: #444;
+  border-radius: 3px;
+  color: #fff;
+  content: attr(title);
+  font-size: 11px;
+  padding: 4px 10px;
+  position: absolute;
+  white-space: nowrap;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.infinite_scroll.am-post-grid-load-more {
+    text-indent: -9999px;
+    overflow: hidden;
+    position: relative;
+    background-color: transparent !important;
+    border: 0 !important;
+}
+.infinite_scroll.am-post-grid-load-more.loading:after{
+    border-top-color: #000;
 }
