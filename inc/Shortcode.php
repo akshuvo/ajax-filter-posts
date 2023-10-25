@@ -82,6 +82,7 @@ class Shortcode {
             'meta_query' => [],
             'title_length' => 50,
             'content_from' => 'excerpt',
+            'excerpt_type' => 'words',
             'excerpt_length' => 15,
             'show_read_more' => 'yes',
             'read_more_text' => '',

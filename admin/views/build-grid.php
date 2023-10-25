@@ -212,6 +212,17 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ],
                         'default' => 'excerpt',
                     ) ); ?>
+
+                    <!-- excerpt_type -->
+                    <?php gridmaster_form_field( gm_field_name('excerpt_type'),array(
+                        'type' => 'select',
+                        'label' => 'Excerpt Type',
+                        'options' => [
+                            'words' => 'Words',
+                            'characters' => 'Characters',
+                        ],
+                        'default' => 'words',
+                    ) ); ?>
                     
                     <!-- excerpt_length -->
                     <?php gridmaster_form_field( gm_field_name('excerpt_length'),array(

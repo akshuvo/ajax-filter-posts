@@ -51,9 +51,10 @@ function gridmaster_the_content() {
     // Shortcode atts
     $args = apply_filters( 'gridmaster_get_render_grid_args', [] );
     $content_from = isset( $args['content_from'] ) ? $args['content_from'] : 'excerpt';
+    $excerpt_type = isset( $args['excerpt_type'] ) ? $args['excerpt_type'] : 'words'; // words or characters
     $excerpt_length = apply_filters('gridmaster_excerpt_length', 15);
 
-
+    // Output
     $output = '<div class="am__excerpt">';
 
     if( $content_from == 'content' ) {
@@ -66,7 +67,11 @@ function gridmaster_the_content() {
 
     // Apply excerpt length
     if( $excerpt_length != "-1" ) {
-        $content = wp_trim_words( $content, $excerpt_length, '');
+        if( $excerpt_type == 'characters' ) {
+            $content = substr( $content, 0, $excerpt_length );
+        } else {
+            $content = wp_trim_words( $content, $excerpt_length, '');
+        }
     }
 
     // Remove All HTML tags 
