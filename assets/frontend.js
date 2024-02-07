@@ -132,20 +132,36 @@ jQuery(document).ready(function($) {
                 }
 			},
 			success: function(data){
+
+                let isSlider = true;
+                let append = false;
 				
                 if ( loadMore ) {
 
                     var newPosts = jQuery('.am_post_grid', data).html();
                     var newPagination = jQuery('.am_posts_navigation', data).html();
 
-                    $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                    // Append pagination
                     $wrapper.find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
 
-                } else {
+                    // Slider
+                    if( asr_ajax_params.is_pro && isSlider ){
+                        if ( !$wrapper.hasClass('slider-initialized') ) {
+                            append = true;
+                        } else {
+                            $wrapper.find('.am_post_grid').slick('slickAdd', newPosts);
+                        }
+                    } else {
+                        append = true;
+                    }
 
-                    $wrapper.find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
-                        //jQuery(this).html(data).fadeIn(300);
-                    });
+                    // Append new posts
+                    if ( append ) {
+                        $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                    }
+
+                } else {
+                    $wrapper.find('.asrafp-filter-result').html(data);
                 }
 
                 flag = false;
@@ -154,6 +170,13 @@ jQuery(document).ready(function($) {
                 // Animation
                 if( $args.animation == "true" ){
                     $wrapper.find('.am_grid_col').slideDown();
+                }
+
+                // Scroll to the top of the grid
+                if ( !loadMore ) {
+                    jQuery('html, body').animate({
+                        scrollTop: $wrapper.offset().top - 80
+                    }, 400);
                 }
                 
 			},

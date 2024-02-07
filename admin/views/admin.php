@@ -15,12 +15,12 @@ $left_tabs = [
         'path' => '',
         'target' => '',
     ],
-    // [
-    //     'title' => __( 'Templates', 'gridmaster' ),
-    //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
-    //     'icon'  => 'dashicons dashicons-layout',
-    //     'path' => 'templates',
-    // ],
+    [
+        'title' => __( 'Templates', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
+        'icon'  => 'dashicons dashicons-layout',
+        'path' => 'templates',
+    ],
     [
         'title' => __( 'Grid Builder', 'gridmaster' ),
         'url'   => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
