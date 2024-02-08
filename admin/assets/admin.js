@@ -179,7 +179,7 @@ jQuery(document).ready(function($) {
         console.log(sliderOptions);
 
         // Slider Options
-        shortCode += ' slider_options=\'' + JSON.stringify(sliderOptions) + '\'';
+        shortCode += ' slider_args=\'' + JSON.stringify(sliderOptions) + '\'';
 
         // Close Shortcode
         shortCode += ']';

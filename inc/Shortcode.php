@@ -140,12 +140,23 @@ class Shortcode {
         // unset( $public_atts['grid_style'] ); // Didn't know why put this here
         unset( $public_atts['filter_style'] );
 
+        // Wrapper Classes
+        $wrapper_classes = [
+            'am_ajax_post_grid_wrap',
+            $grid_id,
+            'gridmaster-' . $grid_style,
+        ];
+
+        // Add Slider Class
+        if( isset( $atts['enable_slider'] ) ) {
+            $wrapper_classes[] = 'gm-enable-slider-' . $atts['enable_slider'];
+        }
 
         ob_start();   
         ?>
         <div id="<?php echo esc_attr($grid_id); ?>" 
             data-grid-style="<?php echo esc_attr( $grid_style ); ?>"
-            class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> <?php echo esc_attr( 'gridmaster-'.$grid_style ); ?>" 
+            class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
             data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
             data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
