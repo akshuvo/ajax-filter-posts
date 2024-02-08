@@ -510,7 +510,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ) );
 
                         // centerMode
-                        gridmaster_form_field( gm_field_name('slider_center_mode'),array(
+                        gridmaster_form_field( gm_field_name('slider_centerMode'),array(
                             'type' => 'radio',
                             'label' => __('Enable Center View', 'gridmaster'),
                             'options' => [
