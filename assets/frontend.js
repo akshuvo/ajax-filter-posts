@@ -91,6 +91,9 @@ jQuery(document).ready(function($) {
 
         let $args = JSON.parse(jsonData);
 
+        let enableSlider = $args.enable_slider;
+        console.log('enableSlider', enableSlider);
+
         let data = {
             action: 'asr_filter_posts',
             asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
@@ -132,9 +135,6 @@ jQuery(document).ready(function($) {
                 }
 			},
 			success: function(data){
-
-                let isSlider = true;
-                let append = false;
 				
                 if ( loadMore ) {
 
@@ -145,21 +145,18 @@ jQuery(document).ready(function($) {
                     $wrapper.find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
 
                     // Slider
-                    if( asr_ajax_params.is_pro && isSlider ){
+                    if( asr_ajax_params.is_pro && enableSlider ){
                         if ( !$wrapper.hasClass('slider-initialized') ) {
-                            append = true;
+                            $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+
+                            // Trigger Enable Slider
+                            jQuery( document ).trigger('gridmaster_init_slider', [ $wrapper, $args ] );
                         } else {
                             $wrapper.find('.am_post_grid').slick('slickAdd', newPosts);
                         }
                     } else {
-                        append = true;
-                    }
-
-                    // Append new posts
-                    if ( append ) {
                         $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
                     }
-
                 } else {
                     $wrapper.find('.asrafp-filter-result').html(data);
                 }

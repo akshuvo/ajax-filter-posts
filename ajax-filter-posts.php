@@ -127,6 +127,7 @@ final class GridMasterPlugin {
 			'asr_ajax_nonce' => wp_create_nonce( 'asr_ajax_nonce' ),
 			'asr_ajax_url' => admin_url( 'admin-ajax.php' ),
             'is_pro' => gridmaster_is_pro(),
+            'breakpoints' => gm_get_breakpoints(),
 		) );
 
         wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.css', array(), GRIDMASTER_VERSION );

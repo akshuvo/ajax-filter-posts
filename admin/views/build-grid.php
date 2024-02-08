@@ -258,7 +258,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'full',
                     ) );
                     ?>
-                    <div class="show-if-image-size-custom">
+                    <div class="show-if-grid_image_size-custom">
                         <p><i>You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.</i></p>
                         <!-- image_width -->
                         <?php gridmaster_form_field( gm_field_name('grid_image_width'),array(
@@ -385,6 +385,147 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
 
                     <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
+                </div>
+            </div>
+
+            <div id="gm-select-slider" class="postbox gm-slide-toggle ">
+                <div class="postbox-header">
+                    <h2 class="hndle"><?php esc_html_e( 'Slider Options', 'gridmaster' ); ?></h2>
+                    <div class="handle-actions pe-2">
+                        <span class="dashicons dashicons-arrow-down">
+                    </div>
+                </div>
+                <div class="inside" style="display: block;">
+
+                    <?php gridmaster_form_field( gm_field_name('enable_slider'),array(
+                        'type' => 'radio',
+                        'label' => __('Enable Slider', 'gridmaster'),
+                        'options' => [
+                            '' => __('No', 'gridmaster'),
+                            'yes' => __('Yes', 'gridmaster'),
+                        ],
+                        'default' => '',
+                        'is_pro' => true,
+                    ) );
+                    ?>
+
+                    <div class="show-if-enable_slider-yes">
+                        <?php
+                        // slidesToShow
+                        gridmaster_form_field( gm_field_name('slider_slidesToShow'),array(
+                            'type' => 'number',
+                            'label' => __('Slides to Show', 'gridmaster'),
+                            'default' => [
+                                'xs' => 1,
+                                'sm' => 2,
+                                'md' => 3,
+                                'lg' => 3,
+                                'xl' => 3,
+                            ],
+                            'is_pro' => true,
+                            'responsive_field' => true,
+                        ) );
+
+                        // slidesToScroll
+                        gridmaster_form_field( gm_field_name('slider_slidesToScroll'),array(
+                            'type' => 'number',
+                            'label' => __('Slides to Scroll', 'gridmaster'),
+                            'default' => [
+                                'xs' => 1,
+                                'sm' => 1,
+                                'md' => 1,
+                                'lg' => 1,
+                                'xl' => 1,
+                            ],
+                            'is_pro' => true,
+                            'responsive_field' => true,
+                        ) );
+
+                        // arrows
+                        gridmaster_form_field( gm_field_name('slider_arrows'),array(
+                            'type' => 'radio',
+                            'label' => __('Show Prev/Next Arrows', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '1',
+                            'is_pro' => true,
+                        ) );
+
+                        // dots
+                        gridmaster_form_field( gm_field_name('slider_dots'),array(
+                            'type' => 'radio',
+                            'label' => __('Show Dots', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // autoplay
+                        gridmaster_form_field( gm_field_name('slider_autoplay'),array(
+                            'type' => 'radio',
+                            'label' => __('Enable Autoplay', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // autoplaySpeed
+                        gridmaster_form_field( gm_field_name('slider_autoplaySpeed'),array(
+                            'type' => 'number',
+                            'label' => __('Autoplay Speed', 'gridmaster'),
+                            'default' => 3000,
+                            'is_pro' => true,
+                        ) );
+
+                        // pauseOnHover
+                        gridmaster_form_field( gm_field_name('slider_pauseOnHover'),array(
+                            'type' => 'radio',
+                            'label' => __('Pause Autoplay on Hover', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // infinite
+                        gridmaster_form_field( gm_field_name('slider_infinite'),array(
+                            'type' => 'radio',
+                            'label' => __('Infinite loop sliding', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // centerMode
+                        gridmaster_form_field( gm_field_name('slider_center_mode'),array(
+                            'type' => 'radio',
+                            'label' => __('Enable Center View', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        ?>
+                    </div>
+
+
+                    
                 </div>
             </div>
             

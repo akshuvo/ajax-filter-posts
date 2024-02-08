@@ -73,7 +73,6 @@ class Shortcode {
         }
 
         $atts = shortcode_atts( [
-            'id' => '',
             'post_type' => 'post',
             'posts_per_page' => 9,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
@@ -98,7 +97,7 @@ class Shortcode {
             'animation'  		=> '',
             // END OLD ATTRIBUTES
             'grid_style'  		=> 'default', // master ID
-            'grid_id'  			=> wp_generate_password( 8, false ), // grid ID
+            'grid_id'  			=> 'gm-' . wp_generate_password( 8, false ), // grid ID
             'taxonomy'  		=> 'category',
             'terms'  			=> '',
             'grid_image_size'   => 'full',
@@ -106,20 +105,8 @@ class Shortcode {
 
         ], $atts, 'gridmaster' );
 
-        $id = $atts['id'];
-
-        if ( !empty( $id ) ) {
-            // Get args from the database
-            // $atts = get_post_meta( $id, 'gridmaster_args', true );
-        }
-
         // Grid Style
         $grid_style = $atts['grid_style'];
-
-        // $atts['tax_query'] = ! empty( $atts['tax_query'] ) ? json_decode( $atts['tax_query'], true ) : [];
-
-        // If id is set then get args from the database and render the grid
-        // Otherwise render the grid from the shortcode attributes
 
         // Render dynamic styles
         $this->render_styles([
@@ -130,14 +117,13 @@ class Shortcode {
         // print_r($atts);
         // echo '</pre>';
 
-
         extract($atts);
-
-        // Grid ID 
-        $atts['grid_id'] = 'gridmaster-' . $atts['grid_id'];
 
         // Grid ID
         $grid_id = $atts['grid_id'];
+
+        // If id is set then get args from the database and render the grid
+        // Otherwise render the grid from the shortcode attributes
 
         // Pagination
         $pagination_type = $atts['pagination_type'];
@@ -628,6 +614,11 @@ class Shortcode {
     public function init_hook() {
         // Return if admin
         if ( is_admin() ) {
+            return;
+        }
+
+        // Is logged in
+        if ( ! is_user_logged_in() ) {
             return;
         }
 

@@ -370,7 +370,7 @@ span.gridmaster-responsive-fields-devices-wrap {
 }
 /* End Responsive Devices */
 
-.show-if-image-size-custom {
+div[class^="show-if-"] {
     display: none;
 }
 
