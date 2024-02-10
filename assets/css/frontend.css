@@ -321,3 +321,7 @@
 .infinite_scroll.am-post-grid-load-more.loading:after{
     border-top-color: #000;
 }
+
+.gm-enable-slider-yes .am-post-grid-load-more {
+    display: none;
+}

@@ -92,7 +92,6 @@ jQuery(document).ready(function($) {
         let $args = JSON.parse(jsonData);
 
         let enableSlider = $args.enable_slider;
-        console.log('enableSlider', enableSlider);
 
         let data = {
             action: 'asr_filter_posts',
