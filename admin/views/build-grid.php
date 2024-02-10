@@ -446,7 +446,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'type' => 'radio',
                             'label' => __('Show Prev/Next Arrows', 'gridmaster'),
                             'options' => [
-                                '' => __('No', 'gridmaster'),
+                                '0' => __('No', 'gridmaster'),
                                 '1' => __('Yes', 'gridmaster'),
                             ],
                             'default' => '1',
@@ -502,10 +502,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                             'type' => 'radio',
                             'label' => __('Infinite loop sliding', 'gridmaster'),
                             'options' => [
-                                '' => __('No', 'gridmaster'),
+                                '0' => __('No', 'gridmaster'),
                                 '1' => __('Yes', 'gridmaster'),
                             ],
-                            'default' => '',
+                            'default' => '1',
                             'is_pro' => true,
                         ) );
 

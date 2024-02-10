@@ -146,7 +146,7 @@ jQuery(document).ready(function($) {
 
                     // Slider
                     if( asr_ajax_params.is_pro && enableSlider ){
-                        if ( !$wrapper.hasClass('slider-initialized') ) {
+                        if ( !$wrapper.find('.am_post_grid').hasClass('slick-initialized') ) {
                             $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
 
                             // Trigger Enable Slider
@@ -159,6 +159,11 @@ jQuery(document).ready(function($) {
                     }
                 } else {
                     $wrapper.find('.asrafp-filter-result').html(data);
+                }
+
+                // Init Sliders
+                if( asr_ajax_params.is_pro && enableSlider ){
+                    jQuery(document).trigger('gridmaster_init_all_sliders');
                 }
 
                 flag = false;
