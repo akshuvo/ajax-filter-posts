@@ -16,7 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 /**
  * The main plugin class
  */
@@ -120,7 +119,7 @@ final class GridMasterPlugin {
      */
     public function scripts() {
 
-        wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
 		// Localization
 		wp_localize_script( 'gridmaster-frontend', 'asr_ajax_params', array(
@@ -130,7 +129,7 @@ final class GridMasterPlugin {
             'breakpoints' => gm_get_breakpoints(),
 		) );
 
-        wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.min.css', array(), GRIDMASTER_VERSION );
     }
 
     /**

@@ -572,7 +572,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     ) ); ?>
                 </div>
             </div>
-            
+            <!-- Spacer -->
+            <div class="gm-spacer clear" style="height: 100px;"></div>
         </nav>
 
         <main class="pt-3 gm-right-sidebar col-md-9 ms-sm-auto col-lg-9 ">

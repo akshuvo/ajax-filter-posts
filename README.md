@@ -100,16 +100,19 @@ There are some pro features that you will get with the pro version of Gridmaster
 
 - **Post Items Per Row:** Gridmaster has a post items per row feature that helps you control the number of post items per row. You can select different post items per row for different devices.
 
+- **Slider Option** Post Grid Master has a slider option that helps you to show the post grid in a slider. You can show the post grid in a slider with different slider options. Those are:
+- Slides to Show
+- Slides to Scroll
+- Show Prev/Next Arrows
+- Show Dots
+- Enable Autoplay
+- Autoplay Speed
+- Pause Autoplay on Hover
+- Infinite loop sliding
+- Enable Center View
+
 More features coming soon...
 
-## Privacy Policy
-Gridmaster uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster & make product improvements.
-
-Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
-
-Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
-
-Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 ## Installation
 1. Download and unzip the plugin. Upload the unzipped folder to the wp-contents/plugins folder of your WordPress installation.
@@ -171,6 +174,13 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 3. Pagination Preview
 
 ## Changelog
+= 3.4.6 =
+- Feb 14, 2024
+- Fixed: Minor code changes.
+- Tested up to WordPress 6.4.3
+- Minified CSS and JS
+
+
 = 3.4.0 =
 - Aug 6, 2023
 - Rebrand: Post Grid with Ajax Filter to Gridmaster

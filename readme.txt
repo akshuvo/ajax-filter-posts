@@ -1,6 +1,6 @@
 === Post Grid Master - Custom Post Types, Taxonomies & Ajax Filter Everything with Infinite Scroll, Load More, Pagination & Shortcode Builder ===
 Contributors: mdshuvo, addonmaster
-Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, displaypost gridpost, type grid, wp post frid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
+Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, ajax filter
 Tested up to: 6.4.1
 Stable tag: 3.4.5
 License: GPLv2 or later
@@ -121,6 +121,18 @@ Post Grid Master has a row gap control feature that helps you to control the row
 **Post Items Per Row**
 Post Grid Master has a post items per row feature that helps you to control the number of post items per row. You can select different post items per row for different devices.
 
+**Slider Option**
+Post Grid Master has a slider option that helps you to show the post grid in a slider. You can show the post grid in a slider with different slider options. Those are:
+- Slides to Show
+- Slides to Scroll
+- Show Prev/Next Arrows
+- Show Dots
+- Enable Autoplay
+- Autoplay Speed
+- Pause Autoplay on Hover
+- Infinite loop sliding
+- Enable Center View
+
 = More feature coming soon... = 
 
 
@@ -196,6 +208,13 @@ If you need any custom feature, please let us know. We will try to add the featu
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.6 =
+* Feb 14, 2024
+- Fixed: Minor code changes.
+- Tested up to WordPress 6.4.3
+- Minified CSS and JS
+
 
 = 3.4.3 =
 * Oct 26, 2023
