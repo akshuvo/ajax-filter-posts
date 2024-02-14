@@ -171,7 +171,7 @@ class Admin {
     // Enqueue scripts and styles.
     public function scripts() {
 
-        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
         wp_localize_script( 'gridmaster-admin-script', 'gridmaster_params', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'gm-ajax-nonce' ),
@@ -198,10 +198,10 @@ class Admin {
         ) );
 
         wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.min.css', array(), GRIDMASTER_VERSION );
-        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.min.css', array(), GRIDMASTER_VERSION );
 
         if( !defined( 'GRIDMASTER_PRO_VERSION' ) ) {
-            wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.css', array(), GRIDMASTER_VERSION );
+            wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.min.css', array(), GRIDMASTER_VERSION );
         }
 
     }

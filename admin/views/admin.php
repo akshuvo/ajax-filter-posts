@@ -39,7 +39,7 @@ $left_tabs = [
         'title' => __( 'Free vs Pro', 'gridmaster' ),
         'url'   => gridmaster_website_url( 'gridmaster/free-vs-pro/' ),
         'icon'  => 'dashicons dashicons-star-filled',
-        'path' => '',
+        'path' => 'free-vs-pro',
         'target' => '_blank'
     ],
 ];

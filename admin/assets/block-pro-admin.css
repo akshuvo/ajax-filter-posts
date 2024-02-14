@@ -17,7 +17,7 @@
     align-items: center;
 }
 
-.form-row.gm-pro-field input, .form-row.gm-pro-field select, .form-row.gm-pro-field textarea {
+.form-row.gm-pro-field input, .form-row.gm-pro-field select, .form-row.gm-pro-field textarea, .gm-slide-toggle .postbox-header {
     opacity: 0.6;
 }
 
@@ -29,7 +29,6 @@
 .form-row.gm-pro-field:hover  .gm-field-label:not(.radio):before {
     opacity: 1;
     visibility:visible;
-    
 }
 
 .form-row.gm-pro-field .gm-field-label {

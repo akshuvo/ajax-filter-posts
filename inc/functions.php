@@ -86,9 +86,12 @@ function gridmaster_the_content() {
 }
 
 // Get gridmaster_settings
-function gridmaster_get_settings() {
+function gridmaster_get_settings( $key = '' ) {
     $settings = get_option( 'gridmaster_settings', [] );
     $settings = !empty( $settings ) && is_array( $settings ) ? $settings : [];
+    if( !empty( $key ) ) {
+        return isset( $settings[$key] ) ? $settings[$key] : '';
+    }
     return $settings;
 }
 

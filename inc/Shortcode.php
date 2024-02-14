@@ -578,6 +578,9 @@ class Shortcode {
         }
 
         if ( ! $this->locate_template( $templates, true, false, $args ) ) {
+            if( gridmaster_get_settings('debug-mode') == 'yes' ){
+                printf( __( 'Template file not found: %s <br>', 'gridmaster' ), $slug );
+            }
             return false;
         }
     }
