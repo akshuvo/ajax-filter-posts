@@ -1,8 +1,8 @@
 === Post Grid Master - Custom Post Types, Taxonomies & Ajax Filter Everything with Infinite Scroll, Load More, Pagination & Shortcode Builder ===
 Contributors: mdshuvo, addonmaster
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, ajax filter
-Tested up to: 6.4.1
-Stable tag: 3.4.5
+Tested up to: 6.4.3
+Stable tag: 3.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
