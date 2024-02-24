@@ -12,7 +12,6 @@ class Shortcode {
         add_shortcode( 'am_post_grid', [ $this, 'render_shortcode' ] );
         add_shortcode( 'asr_ajax', [ $this, 'render_shortcode' ] );
 
-                
         // Load Posts Ajax actions
         add_action('wp_ajax_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
         add_action('wp_ajax_nopriv_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
@@ -26,7 +25,7 @@ class Shortcode {
         }
 
         // Render Filter
-        add_action( 'gridmaster_render_filter', [ $this, 'render_filter' ] );
+        add_action( 'gridmaster_render_filters', [ $this, 'render_filter' ] );
     }
 
     /**
@@ -161,7 +160,7 @@ class Shortcode {
             data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
             data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
-            <?php do_action( 'gridmaster_render_filter', $atts ); ?>
+            <?php do_action( 'gridmaster_render_filters', $atts ); ?>
 
             <div class="asr-ajax-container">
                 <div class="asr-loader">
