@@ -20,7 +20,12 @@ class Shortcode {
         // Filter Gridmaster Render Grid Args
         add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
 
-        add_action( 'init', [ $this, 'init_hook' ] );
+        // Init Preview Hook
+        if( !is_admin() && is_user_logged_in() ){
+            add_action( 'init', [ $this, 'init_hook' ] );
+        }
+
+        // Render Filter
         add_action( 'gridmaster_render_filter', [ $this, 'render_filter' ] );
     }
 
@@ -112,10 +117,6 @@ class Shortcode {
         $this->render_styles([
             'grid_style' => $grid_style
         ]);
-
-        // echo '<pre>';
-        // print_r($atts);
-        // echo '</pre>';
 
         extract($atts);
 
@@ -623,16 +624,6 @@ class Shortcode {
 
     // Init Hook
     public function init_hook() {
-        // Return if admin
-        if ( is_admin() ) {
-            return;
-        }
-
-        // Is logged in
-        if ( ! is_user_logged_in() ) {
-            return;
-        }
-
         // Shortcode for frontend
         if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
             // Disable admin bar
