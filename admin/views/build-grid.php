@@ -31,9 +31,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'select',
                         'label' => __('Filter Style', 'gridmaster'),
                         'options' => apply_filters( 'gridmaster_filter_styles', [
-                            'default' => 'Style 1 (Default)',
-                            'style-2' => 'Style 2 (New)',
-                            'style-3' => 'Style 3 (New)',
+                            'default' => __('Style 1 (Default)'),
+                            'style-2' => __('Style 2 (New)'),
+                            'style-3' => __('Style 3 (New)'),
+                            'style-4' => __('Style 4 (New)'),
                         ] ),
                         'default' => 'default', // default
                     ) ); ?>

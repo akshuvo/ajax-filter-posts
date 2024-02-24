@@ -42,28 +42,24 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
 <?php endif; ?>
 
 <style>
-.gm-taxonomy-filter.gm-tax-filter-style-style-2 {
+.gm-taxonomy-filter.gm-tax-filter-style-style-4 {
     flex-wrap: nowrap;
     overflow: scroll;
 }
-.asr-filter-div .gm-tax-filter-style-style-2 .asr_texonomy {
+.asr-filter-div .gm-tax-filter-style-style-4 .asr_texonomy {
     margin-right: 15px;
-    background: #f9f9f9;
-    padding: 18px 20px;
-    border-radius: 14px;
-    transition: all .2s;
-    cursor: pointer;
-    box-shadow: rgba(0,0,0,.05) 0 0 0 1px;
-    min-width: 82px;
-    font-size: 16px;
-    white-space: nowrap;
+    border: 0;
+    padding-left: 2px;
+    opacity: 0.9;
 }
-.gm-tax-filter-style-style-2 .asr_texonomy:hover{
-    transform: translateY(-4px);
-    background: #fff5d0;
+.gm-tax-filter-style-style-4 .gm-taxonomy-item input:checked + label,
+.gm-tax-filter-style-style-4 .asr_texonomy:hover{
+    border-bottom-color: #333333;
+    background: transparent;
+    opacity: 1;
 }
-.gm-tax-filter-style-style-2 .gm-taxonomy-item input:checked + label {
-    box-shadow: rgba(0,0,0,.16) 0 1px 10px, #b89932 0 0 0 1px;
-    background: #fffae7;
+.gm-tax-filter-style-style-4.gm-taxonomy-filter input[type=checkbox], 
+.gm-tax-filter-style-style-4.gm-taxonomy-filter input[type=radio]{
+    display: unset;
 }
 </style>

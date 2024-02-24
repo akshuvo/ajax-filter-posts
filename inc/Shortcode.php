@@ -182,12 +182,9 @@ class Shortcode {
      * Render Filter
      *
      * @param array $args
-     *
      * @return string
      */
     function render_filter( $atts ){
-        // echo '<pre>'; print_r( $atts ); echo '</pre>';
-
         if ( $atts['show_filter'] == "yes" ) :  ?>
             <div class="asr-filter-div">
                 <?php

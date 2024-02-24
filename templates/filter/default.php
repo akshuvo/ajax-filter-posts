@@ -28,7 +28,6 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
     
     <div class="gm-taxonomy-filter <?php esc_attr_e(" gm-tax-filter-style-{$filter_style} gm-filter-grid-id-{$grid_id} ")?>">
         <?php echo gm_taxonomy_item_all( $args ); ?>
-
         <?php foreach( $tax_terms as $term ) :
             $taxonomy = $term->taxonomy;
             $input_id = $grid_id . '-' . $taxonomy . '_' . $term->term_id;
@@ -39,6 +38,5 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
             </div>
         <?php endforeach; ?>
-
     </div>
 <?php endif; ?>
