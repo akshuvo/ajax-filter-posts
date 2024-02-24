@@ -17,7 +17,10 @@
     align-items: center;
 }
 
-.form-row.gm-pro-field input, .form-row.gm-pro-field select, .form-row.gm-pro-field textarea, .gm-slide-toggle .postbox-header {
+.form-row.gm-pro-field input, 
+.form-row.gm-pro-field select, 
+.form-row.gm-pro-field textarea, 
+#gm-select-slider .postbox-header {
     opacity: 0.6;
 }
 

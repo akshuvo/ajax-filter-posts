@@ -278,3 +278,24 @@ function gridmaster_comments_number( $args = [] ) {
 function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
     echo apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
 }
+
+// Get Filter All Text
+function gm_taxonomy_item_all( $args = [] ){
+    // Taxonomy Args
+    $tax_args = $args['tax_args'];
+
+    $taxonomy = $tax_args['taxonomy'];
+    $grid_id = $args['grid_id'];
+    $input_type = $args['input_type'];
+    $filter_style = $args['filter_style'];
+
+    $input_name = 'tax_input[' . $taxonomy . '][]';
+    $input_id = $grid_id . '-' . $taxonomy . '_all';
+
+    if( $args['btn_all'] != "no" ) : ?>
+        <div class="gm-taxonomy-item gm-taxonomy-all">
+            <input type="<?php esc_attr_e( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
+            <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html__('All','gridmaster'); ?></label>
+        </div>
+    <?php endif;
+}

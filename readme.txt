@@ -2,7 +2,7 @@
 Contributors: mdshuvo, addonmaster
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter,ajax grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, ajax filter
 Tested up to: 6.4.3
-Stable tag: 3.4.6
+Stable tag: 3.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Post Grid Master has a shortcode generator that helps you to generate the shortc
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8Th_jp8YEk4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-### [See the Live demo](https://plugins.addonmaster.com/Post Grid Master/)
+### [See the Live demo](https://plugins.addonmaster.com/gridmaster/)
 
 ###Features of Post Grid Master
 Post Grid Master offers you a lot of features that will help you to create a post grid with ajax filter easily. You can develope your custom theme templates easily by using the Post Grid Master shortcode. Here are some of the features that you will get with Post Grid Master.
