@@ -325,3 +325,26 @@
 .gm-enable-slider-yes .am-post-grid-load-more {
     display: none;
 }
+
+/* Toggle Filter  */
+.gm-filter-toggle-yes .gm-single-filter {
+    display: none;
+    box-shadow: 0 4px 5px rgba(18, 18, 18,0);
+    border: 1px solid rgb(18 18 18 / 10%);
+    padding: 20px;
+    max-width: 320px;
+}
+.gm-filter-heading svg {
+    /* position: absolute; */
+    height: 0.6em;
+    padding: 0 10px;
+}
+
+.gm-filter-heading {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+}

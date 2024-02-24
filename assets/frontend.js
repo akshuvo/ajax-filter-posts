@@ -3,17 +3,10 @@ jQuery(document).ready(function($) {
 	// Post loading
 	jQuery(document).on('change', '.gm-taxonomy-item input', function(){
         let $this = jQuery(this);
-		var term_id = $this.attr('data_id');   		
- 
-		// if( !$this.hasClass('active') ) {
-        //     $this.addClass('active').siblings().removeClass('active');
-            
-            
-        // }
 
         // Load Grid
         asr_ajax_get_postdata('', $this);
-
+        console.log('changed');
 	});
 
     // Pagination
@@ -54,7 +47,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    // Uncheck other checkboxes
+    // Uncheck other checkboxes if All is checked
     jQuery(document).on('change', '.gm-taxonomy-item.gm-taxonomy-all input', function(e){
         let $this = jQuery(this);
         
@@ -223,6 +216,12 @@ jQuery(document).ready(function($) {
             }
         });
 
+    });
+
+    // Filter Heading Toggle
+    jQuery(document).on('click', '.gm-filter-toggle-yes .gm-filter-heading', function(e){
+        jQuery(this).next().slideToggle('fast');
+        jQuery(this).parent().toggleClass('gm-filter-open');
     });
 
 });

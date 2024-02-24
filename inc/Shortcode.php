@@ -106,7 +106,7 @@ class Shortcode {
             'terms'  			=> '',
             'grid_image_size'   => 'full',
             'filter_style'  	=> 'default',
-
+            'filter_heading'  	=> '',
         ], $atts, 'gridmaster' );
 
         // Grid Style
@@ -154,6 +154,8 @@ class Shortcode {
 
         ob_start();   
         ?>
+
+       
         <div id="<?php echo esc_attr($grid_id); ?>" 
             data-grid-style="<?php echo esc_attr( $grid_style ); ?>"
             class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
@@ -161,7 +163,6 @@ class Shortcode {
             data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
 
             <?php do_action( 'gridmaster_render_filters', $atts ); ?>
-
             <div class="asr-ajax-container">
                 <div class="asr-loader">
                     <div class="lds-dual-ring"></div>
@@ -187,34 +188,53 @@ class Shortcode {
     function render_filter( $atts ){
         if ( $atts['show_filter'] == "yes" ) :  ?>
             <div class="asr-filter-div">
+                <!-- Single Filter -->
                 <?php
-                // Texonomy arguments
-                $tax_args = array(
-                    'hide_empty' => $atts['hide_empty'],
-                    'taxonomy' => $atts['taxonomy'],
-                    'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
-                );
-
-                // If not pro
-                if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
-                    if( current_user_can( 'manage_options' ) ){
-                        echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
-                    }
-                    return;
-                }
-
-                // Filter arguments
-                $filter_args = [
-                    // 'atts' => $atts,
-                    'tax_args' => $tax_args,
-                    'grid_id' => $atts['grid_id'],
-                    'btn_all' => $atts['btn_all'],
-                    'filter_style' => $atts['filter_style'],
-                    'input_type' => apply_filters( 'gridmaster_filter_input_type', 'radio', $atts ),
-                ];
+                $filter_heading = trim( $atts['filter_heading'] );
+                $filter_heading = "Categories";
+                $filter_toggle_items = "yes";
                 ?>
-                <?php $this->get_template_part( $atts['filter_style'], 'filter', $filter_args ); ?>
-                
+                <div class="gm-filter-wrap <?php echo esc_attr( 'gm-filter-toggle-' . $filter_toggle_items ); ?>">
+                    <?php if( !empty( $filter_heading ) ) : ?>
+                        <div class="gm-filter-heading">
+                            <span><?php echo esc_html( $filter_heading ); ?></span>
+                            <?php if( $filter_toggle_items == "yes" ) : ?>
+                                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path></svg>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="gm-single-filter">
+                        <?php
+                        // Texonomy arguments
+                        $tax_args = array(
+                            'hide_empty' => $atts['hide_empty'],
+                            'taxonomy' => $atts['taxonomy'],
+                            'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
+                        );
+
+                        // If not pro
+                        if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
+                            if( current_user_can( 'manage_options' ) ){
+                                echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
+                            }
+                            return;
+                        }
+
+                        // Filter arguments
+                        $filter_args = [
+                            // 'atts' => $atts,
+                            'tax_args' => $tax_args,
+                            'grid_id' => $atts['grid_id'],
+                            'btn_all' => $atts['btn_all'],
+                            'filter_style' => $atts['filter_style'],
+                            'input_type' => apply_filters( 'gridmaster_filter_input_type', 'radio', $atts ),
+                        ];
+                        ?>
+                        <?php $this->get_template_part( $atts['filter_style'], 'filter', $filter_args ); ?>
+                    </div>
+                </div>
+                <!-- End Single Filter -->
             </div>
         <?php endif; ?>
         <?php
