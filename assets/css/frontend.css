@@ -331,13 +331,8 @@
     display: none;
     box-shadow: 0 4px 5px rgba(18, 18, 18,0);
     border: 1px solid rgb(18 18 18 / 10%);
-    padding: 20px;
-    max-width: 320px;
-}
-.gm-filter-heading svg {
-    /* position: absolute; */
-    height: 0.6em;
-    padding: 0 10px;
+    padding: 15px;
+    margin-top: -1px;
 }
 
 .gm-filter-heading {
@@ -347,4 +342,23 @@
     display: inline-flex;
     align-items: center;
     margin-right: 20px;
+    border-bottom: 1px solid transparent;
+}
+.gm-filter-heading .gm-filter-caret {
+    /* position: absolute; */
+    height: 0.6em;
+    padding: 0 10px;
+    transition: all .3s ease-in-out;
+}
+.gm-filter-heading svg {
+    display: block;
+    height: 100%;
+}
+.gm-filter-open .gm-filter-heading .gm-filter-caret {
+    transform: rotate(180deg);
+}
+
+.gm-filter-heading:hover,
+.gm-filter-open .gm-filter-heading{
+    border-color: #444;
 }

@@ -107,6 +107,7 @@ class Shortcode {
             'grid_image_size'   => 'full',
             'filter_style'  	=> 'default',
             'filter_heading'  	=> '',
+            'toggle_filter_items'  	=> '',
         ], $atts, 'gridmaster' );
 
         // Grid Style
@@ -191,15 +192,16 @@ class Shortcode {
                 <!-- Single Filter -->
                 <?php
                 $filter_heading = trim( $atts['filter_heading'] );
-                $filter_heading = "Categories";
-                $filter_toggle_items = "yes";
+                $toggle_items = sanitize_text_field( $atts['toggle_filter_items'] );
                 ?>
-                <div class="gm-filter-wrap <?php echo esc_attr( 'gm-filter-toggle-' . $filter_toggle_items ); ?>">
+                <div class="gm-filter-wrap <?php echo esc_attr( 'gm-filter-toggle-' . $toggle_items ); ?>">
                     <?php if( !empty( $filter_heading ) ) : ?>
                         <div class="gm-filter-heading">
                             <span><?php echo esc_html( $filter_heading ); ?></span>
-                            <?php if( $filter_toggle_items == "yes" ) : ?>
-                                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path></svg>
+                            <?php if( $toggle_items == "yes" ) : ?>
+                                <span class="gm-filter-caret">
+                                    <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path></svg>
+                                </span>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
