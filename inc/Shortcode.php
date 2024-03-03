@@ -567,7 +567,7 @@ class Shortcode {
             </div>
 
         <?php else:
-            esc_html_e('No Posts Found','gridmaster');
+            esc_html_e('No items found', 'gridmaster');
         endif;
         wp_reset_query();
 

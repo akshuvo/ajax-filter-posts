@@ -293,10 +293,10 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'type' => 'select',
                         'label' => __('Filter Style', 'gridmaster'),
                         'options' => apply_filters( 'gridmaster_filter_styles', [
-                            'default' => __('Style 1 (Default)'),
-                            'style-2' => __('Style 2 (New)'),
-                            'style-3' => __('Style 3 (New)'),
-                            'style-4' => __('Style 4 (New)'),
+                            'default' => __('Style 1 (Default)', 'gridmaster'),
+                            'style-2' => __('Style 2 (New)', 'gridmaster'),
+                            'style-3' => __('Style 3 (New)', 'gridmaster'),
+                            'style-4' => __('Style 4 (New)', 'gridmaster'),
                         ] ),
                         'default' => 'default', // default
                     ) ); ?>
@@ -336,8 +336,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     gridmaster_form_field( gm_field_name('terms'), array(
                         'id' => 'terms',
                         'type' => 'checkbox-list',
-                        'label' => 'Select Terms',
-                        'placeholder' => 'Select Terms',
+                        'label' => __('Select Terms', 'gridmaster'),
+                        'placeholder' => __('Select Terms', 'gridmaster'),
                         'options' => $terms['category'],
                         'class' => 'gm-select-term',
                     ) ); ?>
@@ -377,6 +377,25 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'no',
                         'description' => __('Allow multiple selection of terms in the filter.', 'gridmaster'),
                         'is_pro' => true,
+                    ) ); ?>
+                    <hr>
+                    <!-- Filter Heading -->
+                    <?php gridmaster_form_field( gm_field_name('filter_heading'),array(
+                        'type' => 'text',
+                        'label' => __('Add a Filter Heading?', 'gridmaster'),
+                        'default' => '',
+                        'placeholder' => __('Category', 'gridmaster'),
+                    ) ); ?>
+
+                    <!-- Toggle Filter Items -->
+                    <?php gridmaster_form_field( gm_field_name('toggle_filter_items'),array(
+                        'type' => 'radio',
+                        'label' => __('Toggle Filter Items', 'gridmaster'),
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'no',
                     ) ); ?>
 
                 </div>

@@ -343,17 +343,22 @@
     align-items: center;
     margin-right: 20px;
     border-bottom: 1px solid transparent;
+    font-size: 14px;
+    padding: 7px 0;
+    font-weight: bold;
 }
+
 .gm-filter-heading .gm-filter-caret {
-    /* position: absolute; */
-    height: 0.6em;
+    height: 10px;
     padding: 0 10px;
     transition: all .3s ease-in-out;
 }
+
 .gm-filter-heading svg {
     display: block;
     height: 100%;
 }
+
 .gm-filter-open .gm-filter-heading .gm-filter-caret {
     transform: rotate(180deg);
 }
