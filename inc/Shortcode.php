@@ -567,7 +567,7 @@ class Shortcode {
             </div>
 
         <?php else:
-            esc_html_e('No items found', 'gridmaster');
+            echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'gridmaster' ) ) . '</div>';
         endif;
         wp_reset_query();
 

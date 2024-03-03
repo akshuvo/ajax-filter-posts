@@ -3,8 +3,8 @@
 ```md
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter, ajax grid, display post grid, post type grid, wp post grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.3
-Stable tag: 3.4.0
+Tested up to: 6.4.3
+Stable tag: 3.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ```
@@ -50,6 +50,13 @@ Gridmaster offers you a lot of features that will help you create a post grid wi
 - **Animate on Post Load:** Gridmaster has an animation effect that helps you animate the post when the post loads.
 
 - **Grid Image Thumbnail Size:** Gridmaster offers you to control the image thumbnail size. You can choose the image thumbnail size from the available image sizes.
+
+- **Filter Heading Option**
+Post Grid Master has a filter heading option that helps you to show the filter heading. You can add any text as the filter heading. You can also hide the filter heading.
+
+- **Toggle Filter Items Option**
+Post Grid Master has a toggle filter items option that helps you to show/hide the filter items by clicking on the filter heading. By default, filter items are hidden.
+
 
 ### Other Features
 - **Works with Any Theme:** Gridmaster works with any WordPress theme. You can use it with any theme.
@@ -174,6 +181,15 @@ More features coming soon...
 3. Pagination Preview
 
 ## Changelog
+= 3.4.7 - Mar 04, 2024=
+- Added: Filter Heading Option
+- Added: Toggle Filter Items Option
+- Added: No Post Found Filter Hook (gridmaster-no-posts-found)
+- Fixed: Translatable "All" text
+- Fixed: Minor code changes.
+- Detailed Documentation: https://addonmaster.com/post-grid-master-wordpress-post-grid-plugin-updates-mar-04-2024/
+
+
 = 3.4.6 =
 - Feb 14, 2024
 - Fixed: Minor code changes.

@@ -62,6 +62,12 @@ Post Grid Master has an animation effect that helps you to animate the post when
 **Grid Image Thumbnail Size**
 Post Grid Master offers you to control the image thumbnail size. You can choose the image thumbnail size from the available image sizes.
 
+**Filter Heading Option**
+Post Grid Master has a filter heading option that helps you to show the filter heading. You can add any text as the filter heading. You can also hide the filter heading.
+
+**Toggle Filter Items Option**
+Post Grid Master has a toggle filter items option that helps you to show/hide the filter items by clicking on the filter heading. By default, filter items are hidden.
+
 
 ###Other Features
 * **Works with Any Theme:** Post Grid Master works with any WordPress theme. You can use it with any theme.
@@ -208,6 +214,15 @@ If you need any custom feature, please let us know. We will try to add the featu
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.7 =
+* Mar 04, 2024
+- Added: Filter Heading Option
+- Added: Toggle Filter Items Option
+- Added: No Post Found Filter Hook (gridmaster-no-posts-found)
+- Fixed: Translatable "All" text
+- Fixed: Minor code changes.
+- Detailed Documentation: https://addonmaster.com/post-grid-master-wordpress-post-grid-plugin-updates-mar-04-2024/
 
 = 3.4.6 =
 * Feb 14, 2024

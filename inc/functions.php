@@ -299,3 +299,7 @@ function gm_taxonomy_item_all( $args = [] ){
         </div>
     <?php endif;
 }
+
+add_filter('gridmaster-no-posts-found', function(){
+    return '<img src="https://img.freepik.com/free-vector/404-error-with-landscape-concept-illustration_114360-7898.jpg?t=st=1709495735~exp=1709499335~hmac=9326a93e3aee009317c3ffa1e2aea5d011a47ae1151a8cfaf691259dfd32caa3&w=2000" alt="No Posts Found" style="width: 100%; max-width: 500px; margin: 0 auto; display: block;">';
+});
