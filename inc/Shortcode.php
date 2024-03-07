@@ -73,7 +73,8 @@ class Shortcode {
         
         // Check if GridMaster Pro is not installed and current user is admin
         if( !gridmaster_is_pro() && current_user_can( 'manage_options' ) && isset( $atts['post_type_selection'] ) && $atts['post_type_selection'] == 'auto' ) {
-            echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
+            /* translators: %s: upgrade url */
+            echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
         $atts = shortcode_atts( [
@@ -169,7 +170,7 @@ class Shortcode {
                     <div class="lds-dual-ring"></div>
                 </div>
                 <div class="asrafp-filter-result">
-                    <?php echo $this->render_grid( $this->get_args_from_atts($atts) ); ?>
+                    <?php echo $this->render_grid( $this->get_args_from_atts($atts) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 </div>
             </div>
         </div>
@@ -218,7 +219,8 @@ class Shortcode {
                         // If not pro
                         if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
                             if( current_user_can( 'manage_options' ) ){
-                                echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
+                                /* translators: %s: upgrade url */
+                                echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                             }
                             return;
                         }
@@ -350,7 +352,7 @@ class Shortcode {
         $data['ajax'] = true;
         
         // Output
-        echo $this->render_grid( $data );
+        echo $this->render_grid( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         die();
     }
@@ -561,14 +563,16 @@ class Shortcode {
                 } else {
 
                     // Paginate links
-                    echo "<div class='am_posts_navigation_init'>{$paginate_links}</div>";
+                    echo '<div class="am_posts_navigation_init">';
+                    echo $paginate_links; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '</div>';
                 }
 
             ?>
             </div>
 
         <?php else:
-            echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'gridmaster' ) ) . '</div>';
+            echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'gridmaster' ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         endif;
         wp_reset_query();
 
@@ -599,7 +603,8 @@ class Shortcode {
 
         if ( ! $this->locate_template( $templates, true, false, $args ) ) {
             if( gridmaster_get_settings('debug-mode') == 'yes' ){
-                printf( __( 'Template file not found: %s <br>', 'gridmaster' ), $slug );
+                /* translators: %s: template file */
+                printf( __( 'Template file not found: %s <br>', 'gridmaster' ), esc_html( $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
             return false;
         }
