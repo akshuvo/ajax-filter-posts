@@ -6,7 +6,6 @@ jQuery(document).ready(function($) {
 
         // Load Grid
         asr_ajax_get_postdata('', $this);
-        console.log('changed');
 	});
 
     // Pagination

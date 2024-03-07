@@ -174,6 +174,7 @@ function gridmaster_get_the_date( $format = '' ) {
     $format = !empty( $format ) ? $format : get_option( 'date_format' );
     $date = get_the_date( $format );
     $title = sprintf(
+        /* translators: %s: post date */
         esc_html_x( 'Posted on %s', 'post date', 'gridmaster' ),
         esc_html( $date )
     );
@@ -218,18 +219,13 @@ function gridmaster_posted_by() {
     // Author Name
     $author = get_the_author();
 
-
-    $byline = sprintf(
-        esc_html_x( '%s', 'post author', 'gridmaster' ),
-        '<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span>'
-    );
-
     $title = sprintf(
+        /* translators: %s: post author */
         esc_html_x( 'Posted by %s', 'post author', 'gridmaster' ),
         esc_html( $author )
     );
 
-    return '<span title="' . $title . '" class="gm-byline"> ' . $byline . '</span>';
+    return '<span title="' . $title . '" class="gm-byline"><span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span></span>';
 }
 
 // Comments number
@@ -246,7 +242,8 @@ function gridmaster_comments_number( $args = [] ) {
 
         // Number text
         $comment_text = sprintf(
-            esc_html( _nx( '1 Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
+            /* translators: 1: comment number, 2: title. */
+            esc_html( _nx( '%1$s Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
             number_format_i18n( $comment_number )
         );
 
@@ -276,7 +273,8 @@ function gridmaster_comments_number( $args = [] ) {
 
 // Post Thumbnail
 function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
-    echo apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
+    $output = apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
+    echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 // Get Filter All Text
@@ -294,12 +292,8 @@ function gm_taxonomy_item_all( $args = [] ){
 
     if( $args['btn_all'] != "no" ) : ?>
         <div class="gm-taxonomy-item gm-taxonomy-all">
-            <input type="<?php esc_attr_e( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="-1" />
-            <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo esc_html__('All','gridmaster'); ?></label>
+            <input type="<?php echo esc_attr( $input_type ); ?>" name="<?php echo esc_attr( $input_name ); ?>" id="<?php echo esc_attr( $input_id ); ?>" value="-1" />
+            <label class="asr_texonomy" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html__('All','gridmaster'); ?></label>
         </div>
     <?php endif;
 }
-
-add_filter('gridmaster-no-posts-found', function(){
-    return '<img src="https://img.freepik.com/free-vector/404-error-with-landscape-concept-illustration_114360-7898.jpg?t=st=1709495735~exp=1709499335~hmac=9326a93e3aee009317c3ffa1e2aea5d011a47ae1151a8cfaf691259dfd32caa3&w=2000" alt="No Posts Found" style="width: 100%; max-width: 500px; margin: 0 auto; display: block;">';
-});

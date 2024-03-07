@@ -161,7 +161,7 @@ class Shortcode {
             data-grid-style="<?php echo esc_attr( $grid_style ); ?>"
             class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
             data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
-            data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
+            data-am_ajax_post_grid='<?php echo esc_attr(wp_json_encode($public_atts));?>'>
 
             <?php do_action( 'gridmaster_render_filters', $atts ); ?>
             <div class="asr-ajax-container">
@@ -549,12 +549,13 @@ class Shortcode {
                     'next_text' => '»',
                 ) );
 
-
+                $classes = $args['infinite_scroll'] . ' am-post-grid-load-more';
+                
                 // Load more button
                 if( $pagination_type == 'load_more' ){
 
                     if( $paginate_links && $dataPaged < $query->max_num_pages ){
-                        echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'gridmaster' )."</button>";
+                        echo '<button type="button" data-paged="'.esc_attr( $dataPaged ).'" data-next="'.esc_attr($dataNext).'" class="'.esc_attr($classes).'">'. esc_html__( 'Load More', 'gridmaster' ).'</button>';
                     }
 
                 } else {
