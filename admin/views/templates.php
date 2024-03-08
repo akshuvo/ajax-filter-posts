@@ -62,7 +62,7 @@ $templates_preivew = [
         <div class="col-md-4 mb-4">
             <div class="gridmaster-template-card">
                 <div class="template-card-thumbnail">
-                    <img src="<?php echo $template['thumbnail']; ?>" alt="">
+                    <img src="<?php echo esc_url( $template['thumbnail'] ); ?>">
                     <?php if( $template['is_pro'] == 'yes' ){ ?>
                         <div class="template-badge pro">Pro</div>
                     <?php } else{  ?>
@@ -80,7 +80,7 @@ $templates_preivew = [
                             <?php } ?>
                         </div>
                         <div class="template-card-title">
-                            <h3><?php echo $template['name']; ?></h3>
+                            <h3><?php echo esc_html( $template['name'] ); ?></h3>
                         </div>
                     </div>
                 </div>

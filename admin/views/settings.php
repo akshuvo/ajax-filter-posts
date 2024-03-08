@@ -29,8 +29,8 @@ $setting = gridmaster_get_settings();
             ?>
             <div class="form-row d-flex gm-pro-field gm-pro-inp-disable" id="<?php echo esc_attr( $field_name ); ?>_field" data-priority="">
                 <div class="gm-field-label">
-                    <label><?php _e( 'Disable Icon & Color Options on Taxonomies', 'gridmaster' ); ?></label>
-                    <span class="description"><?php _e( 'Disable icon and color options from Taxonomies.', 'gridmaster' ); ?></span>
+                    <label><?php esc_html_e( 'Disable Icon & Color Options on Taxonomies', 'gridmaster' ); ?></label>
+                    <span class="description"><?php esc_html_e( 'Disable icon and color options from Taxonomies.', 'gridmaster' ); ?></span>
                 </div>
                 <div class="gridmaster-input-wrapper">
 
@@ -48,8 +48,8 @@ $setting = gridmaster_get_settings();
 
             <div class="form-row d-flex" id="license_activation_field">
                 <div class="gm-field-label">
-                    <label><?php _e( 'License Activation', 'gridmaster' ); ?></label>
-                    <span class="description"><?php _e( 'Enter your license key to activate GridMaster Pro.', 'gridmaster' ); ?></span>
+                    <label><?php esc_html_e( 'License Activation', 'gridmaster' ); ?></label>
+                    <span class="description"><?php esc_html_e( 'Enter your license key to activate GridMaster Pro.', 'gridmaster' ); ?></span>
                 </div>
                 <div class="gridmaster-input-wrapper">
 
@@ -67,7 +67,7 @@ $setting = gridmaster_get_settings();
         <div class="align-items-center d-flex justify-content-end">
             <div class="gm-ajax-response"></div>
             <span class="spinner"></span>
-            <button type="submit" class="gm-btn gm-btn-fill"><?php _e( 'Save Changes', 'gridmaster' ); ?></button>
+            <button type="submit" class="gm-btn gm-btn-fill"><?php esc_html_e( 'Save Changes', 'gridmaster' ); ?></button>
             <input type="hidden" name="action" value="gridmaster_ajax">
             <input type="hidden" name="gm-action" value="save_settings">
             <?php wp_nonce_field( 'gm-ajax-nonce', 'gm_nonce' ); ?>

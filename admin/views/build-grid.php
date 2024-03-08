@@ -328,8 +328,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'class' => 'gm-select-taxonomy',
                     ) ); ?>
                     <script>
-                        window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
-                        window.gm_terms = <?php echo json_encode(  $terms); ?>;
+                        window.gm_taxonomy_object_types = <?php echo wp_json_encode($taxonomy_object_types); ?>;
+                        window.gm_terms = <?php echo wp_json_encode($terms); ?>;
                     </script>
 
                     <?php
