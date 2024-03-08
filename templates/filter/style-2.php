@@ -26,7 +26,7 @@ $input_id = $grid_id . '-' . $taxonomy . '_all';
 
 if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
     
-    <div class="gm-taxonomy-filter <?php esc_attr_e(" gm-tax-filter-style-{$filter_style} gm-filter-grid-id-{$grid_id} ")?>">
+    <div class="gm-taxonomy-filter <?php echo esc_attr(" gm-tax-filter-style-{$filter_style} gm-filter-grid-id-{$grid_id} ")?>">
         <?php echo gm_taxonomy_item_all( $args ); ?>
         <?php foreach( $tax_terms as $term ) :
             $taxonomy = $term->taxonomy;
@@ -34,7 +34,7 @@ if( $tax_terms && !is_wp_error( $tax_terms ) ) : ?>
             $input_name = 'tax_input[' . $taxonomy . '][]';
             ?>
             <div class="gm-taxonomy-item">
-                <input type="<?php esc_attr_e( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
+                <input type="<?php echo esc_attr( $input_type ); ?>" name="<?php echo $input_name; ?>" id="<?php echo $input_id; ?>" value="<?php echo $term->term_id; ?>" />
                 <label class="asr_texonomy" for="<?php echo $input_id; ?>"><?php echo $term->name; ?></label>
             </div>
         <?php endforeach; ?>

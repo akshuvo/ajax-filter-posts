@@ -27,7 +27,7 @@ $setting = gridmaster_get_settings();
 
             $field_name = 'gridmaster_options[disable-icon-color-options][]';
             ?>
-            <div class="form-row d-flex gm-pro-field gm-pro-inp-disable" id="<?php esc_attr_e( $field_name ); ?>_field" data-priority="">
+            <div class="form-row d-flex gm-pro-field gm-pro-inp-disable" id="<?php echo esc_attr( $field_name ); ?>_field" data-priority="">
                 <div class="gm-field-label">
                     <label><?php _e( 'Disable Icon & Color Options on Taxonomies', 'gridmaster' ); ?></label>
                     <span class="description"><?php _e( 'Disable icon and color options from Taxonomies.', 'gridmaster' ); ?></span>
@@ -36,8 +36,8 @@ $setting = gridmaster_get_settings();
 
                     <?php foreach( $taxonomy_options as $tax_name => $tax_label ): ?>
                         <div> <label class="radio gm-field-label">
-                            <input type="checkbox" class="input-radio " value="<?php esc_attr_e( $tax_name ); ?>" name="<?php esc_attr_e( $field_name ); ?>" id="<?php esc_attr_e( $field_name . $tax_name ); ?>" <?php checked( in_array( $tax_name, $setting['disable-icon-color-options'] ?? [] ) ); ?>>
-                            <?php esc_attr_e( $tax_label ); ?>
+                            <input type="checkbox" class="input-radio " value="<?php echo esc_attr( $tax_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" id="<?php echo esc_attr( $field_name . $tax_name ); ?>" <?php checked( in_array( $tax_name, $setting['disable-icon-color-options'] ?? [] ) ); ?>>
+                            <?php echo esc_attr( $tax_label ); ?>
                         </label></div>
                     <?php endforeach; ?>
 
