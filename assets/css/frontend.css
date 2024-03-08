@@ -321,3 +321,49 @@
 .infinite_scroll.am-post-grid-load-more.loading:after{
     border-top-color: #000;
 }
+
+.gm-enable-slider-yes .am-post-grid-load-more {
+    display: none;
+}
+
+/* Toggle Filter  */
+.gm-filter-toggle-yes .gm-single-filter {
+    display: none;
+    box-shadow: 0 4px 5px rgba(18, 18, 18,0);
+    border: 1px solid rgb(18 18 18 / 10%);
+    padding: 15px;
+    margin-top: -1px;
+}
+
+.gm-filter-heading {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+    border-bottom: 1px solid transparent;
+    font-size: 14px;
+    padding: 7px 0;
+    font-weight: bold;
+}
+
+.gm-filter-heading .gm-filter-caret {
+    height: 10px;
+    padding: 0 10px;
+    transition: all .3s ease-in-out;
+}
+
+.gm-filter-heading svg {
+    display: block;
+    height: 100%;
+}
+
+.gm-filter-open .gm-filter-heading .gm-filter-caret {
+    transform: rotate(180deg);
+}
+
+.gm-filter-heading:hover,
+.gm-filter-open .gm-filter-heading{
+    border-color: #444;
+}

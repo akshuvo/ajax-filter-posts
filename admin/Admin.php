@@ -92,7 +92,7 @@ class Admin {
         if( $current_screen->id != 'toplevel_page_gridmaster' ) {
             return $text;
         }
-
+        /* translators: %s: review url. */
         $text = sprintf( __( 'If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!', 'gridmaster' ), '<a href="https://wordpress.org/support/plugin/ajax-filter-posts/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>' );
 
         return $text;
@@ -120,7 +120,8 @@ class Admin {
 
         // Live chat offer for pro users
         $text = sprintf( 
-            __( 'Stuck somewhere? Need help? %s or %s', 'gridmaster' ), 
+            /* translators: 1: live chat. 2: ticket url. */
+            __( 'Stuck somewhere? Need help? %1$s or %2$s', 'gridmaster' ), 
             '<a href="'.gridmaster_website_url('live-chat/').'" target="_blank">' . __( 'Live chat(Pro only)', 'gridmaster' ) . '</a>',
             '<a href="'.gridmaster_website_url('submit-a-ticket/').'" target="_blank">' . __( 'Submit a ticket', 'gridmaster' ) . '</a>'
         );
@@ -149,7 +150,7 @@ class Admin {
 
         $function = 'gridmaster_ajax_' . str_replace( '-', '_', $action );
         if( !function_exists( $function ) ) {
-            wp_send_json_error( __( "Function {$function} doesn't exist", 'gridmaster' ) );
+            wp_send_json_error( __( 'Function doesn\'t exist', 'gridmaster' ) );
         }
 
         // Call the ajax function
@@ -171,7 +172,7 @@ class Admin {
     // Enqueue scripts and styles.
     public function scripts() {
 
-        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+        wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
         wp_localize_script( 'gridmaster-admin-script', 'gridmaster_params', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'gm-ajax-nonce' ),
@@ -198,10 +199,10 @@ class Admin {
         ) );
 
         wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.min.css', array(), GRIDMASTER_VERSION );
-        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
+        wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.min.css', array(), GRIDMASTER_VERSION );
 
         if( !defined( 'GRIDMASTER_PRO_VERSION' ) ) {
-            wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.css', array(), GRIDMASTER_VERSION );
+            wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.min.css', array(), GRIDMASTER_VERSION );
         }
 
     }

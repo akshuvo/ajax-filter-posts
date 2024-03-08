@@ -3,8 +3,8 @@
 ```md
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter, ajax grid, display post grid, post type grid, wp post grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.3
-Stable tag: 3.4.0
+Tested up to: 6.4.3
+Stable tag: 3.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ```
@@ -50,6 +50,13 @@ Gridmaster offers you a lot of features that will help you create a post grid wi
 - **Animate on Post Load:** Gridmaster has an animation effect that helps you animate the post when the post loads.
 
 - **Grid Image Thumbnail Size:** Gridmaster offers you to control the image thumbnail size. You can choose the image thumbnail size from the available image sizes.
+
+- **Filter Heading Option**
+Post Grid Master has a filter heading option that helps you to show the filter heading. You can add any text as the filter heading. You can also hide the filter heading.
+
+- **Toggle Filter Items Option**
+Post Grid Master has a toggle filter items option that helps you to show/hide the filter items by clicking on the filter heading. By default, filter items are hidden.
+
 
 ### Other Features
 - **Works with Any Theme:** Gridmaster works with any WordPress theme. You can use it with any theme.
@@ -100,16 +107,19 @@ There are some pro features that you will get with the pro version of Gridmaster
 
 - **Post Items Per Row:** Gridmaster has a post items per row feature that helps you control the number of post items per row. You can select different post items per row for different devices.
 
+- **Slider Option** Post Grid Master has a slider option that helps you to show the post grid in a slider. You can show the post grid in a slider with different slider options. Those are:
+- Slides to Show
+- Slides to Scroll
+- Show Prev/Next Arrows
+- Show Dots
+- Enable Autoplay
+- Autoplay Speed
+- Pause Autoplay on Hover
+- Infinite loop sliding
+- Enable Center View
+
 More features coming soon...
 
-## Privacy Policy
-Gridmaster uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us troubleshoot problems faster & make product improvements.
-
-Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
-
-Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
-
-Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 ## Installation
 1. Download and unzip the plugin. Upload the unzipped folder to the wp-contents/plugins folder of your WordPress installation.
@@ -171,6 +181,22 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 3. Pagination Preview
 
 ## Changelog
+= 3.4.7 - Mar 04, 2024=
+- Added: Filter Heading Option
+- Added: Toggle Filter Items Option
+- Added: No Post Found Filter Hook (gridmaster-no-posts-found)
+- Fixed: Translatable "All" text
+- Fixed: Minor code changes.
+- Detailed Documentation: https://addonmaster.com/post-grid-master-wordpress-post-grid-plugin-updates-mar-04-2024/
+
+
+= 3.4.6 =
+- Feb 14, 2024
+- Fixed: Minor code changes.
+- Tested up to WordPress 6.4.3
+- Minified CSS and JS
+
+
 = 3.4.0 =
 - Aug 6, 2023
 - Rebrand: Post Grid with Ajax Filter to Gridmaster

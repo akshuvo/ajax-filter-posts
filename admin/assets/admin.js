@@ -99,6 +99,9 @@ jQuery(document).ready(function($) {
         let $fields = jQuery("#gm-shortcode-generator").serializeArray()
         let responsiveFields = [];
         let terms = [];
+        let sliderOptions = {};
+
+        
 
         let shortCode = '[gridmaster';
         jQuery.each($fields, function(i, field) {
@@ -119,6 +122,10 @@ jQuery(document).ready(function($) {
                 // Terms
                 if ( fieldName == 'terms' ) {
                     terms.push(fieldVal);
+                    return;
+                } else if ( fieldName.startsWith('slider_') ) {
+                    // sliderOptions.push({fieldName:fieldVal});
+                    sliderOptions[fieldName.substring(7)] = fieldVal;
                     return;
                 }
 
@@ -156,15 +163,25 @@ jQuery(document).ready(function($) {
             // Object to json string
             let valObjStr = JSON.stringify(valObj);
 
+            // Slider Options
+            if ( resFieldId.startsWith('slider_') ) {
+                sliderOptions[resFieldId.substring(7)] = valObj;
+                return;
+            }
+
             if ( valObjStr ) {
                 // shortCode += ' ' + resFieldId + '="' + valObjStr + '"';
                 shortCode += ' ' + resFieldId + '=\'' + valObjStr + '\'';
             }
 
-       
         } );
-        
-        
+
+        console.log(sliderOptions);
+
+        // Slider Options
+        shortCode += ' slider_args=\'' + JSON.stringify(sliderOptions) + '\'';
+
+        // Close Shortcode
         shortCode += ']';
 
         // Update Shortcode
@@ -209,10 +226,15 @@ jQuery(document).ready(function($) {
     } );
 
     // Change Image Size
-    jQuery(document).on( 'change', '#grid_image_size', function(e) {
+    jQuery(document).on( 'change', '.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]', function(e) {
         let $val = jQuery(this).val();
-        jQuery('.show-if-image-size-custom').hide();
-        jQuery('.show-if-image-size-' + $val ).fadeIn('fast');
+        let $id = jQuery(this).attr('name');
+
+        // Hide All
+        jQuery('div[class^="show-if-' + $id + '"]').hide();
+
+        // Show Current
+        jQuery('.show-if-' + $id + '-' + $val).fadeIn('fast');
     } );
 
     // Change Image Size

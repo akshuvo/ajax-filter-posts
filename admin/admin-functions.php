@@ -318,7 +318,10 @@ function gm_get_taxonomies( $raw = false ) {
 
 // Get Taxonomy Terms
 function gm_get_taxonomy_terms( $taxonomy ) {
-    $terms = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+    $terms = get_terms([
+        'taxonomy' => $taxonomy,
+        'hide_empty' => false
+    ]);
     $options = array();
 
     // $options['-'] = esc_html__( 'Select Term', 'gridmaster' );

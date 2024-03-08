@@ -6,121 +6,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     <div class="row">
         <nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
             
-            <div id="gm-select-filter" class="postbox gm-slide-toggle ">
-                <div class="postbox-header">
-                    <h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
-                    <div class="handle-actions pe-2">
-                        <span class="dashicons dashicons-arrow-down">
-                    </div>
-                </div>
-                <div class="inside" style="display: block;">
-
-                    <!-- show_filter -->
-                    <?php gridmaster_form_field( gm_field_name('show_filter'),array(
-                        'type' => 'radio',
-                        'label' => 'Show Filter',
-                        'options' => [
-                            'yes' => __('Yes', 'gridmaster'),
-                            'no' => __('No', 'gridmaster'),
-                        ],
-                        'default' => 'yes',
-                    ) ); ?>
-
-                    <!-- filter_style -->
-                    <?php gridmaster_form_field( gm_field_name('filter_style'),array(
-                        'type' => 'select',
-                        'label' => __('Filter Style', 'gridmaster'),
-                        'options' => apply_filters( 'gridmaster_filter_styles', [
-                            'default' => 'Style 1 (Default)',
-                            'style-2' => 'Style 2 (New)',
-                            'style-3' => 'Style 3 (New)',
-                        ] ),
-                        'default' => 'default', // default
-                    ) ); ?>
-                    <div class="filter-demo-link-button hidden"></div>
-
-                    <!-- btn_all -->
-                    <?php gridmaster_form_field( gm_field_name('btn_all'),array(
-                        'type' => 'radio',
-                        'label' => 'Show All Button',
-                        'options' => [
-                            'yes' => __('Yes', 'gridmaster'),
-                            'no' => __('No', 'gridmaster'),
-                        ],
-                        'default' => 'yes',
-                    ) ); ?>
-
-                    <!-- Select taxonomy -->
-                    <?php 
-                    $taxonomies = gm_get_taxonomies();
-                    $taxonomy_options = $taxonomies['options'];
-                    $taxonomy_object_types = $taxonomies['object_types'];
-                    $terms = $taxonomies['terms'];
-
-                    gridmaster_form_field( gm_field_name('taxonomy'), array(
-                        'type' => 'select',
-                        'label' => 'Select Taxonomy',
-                        'options' => $taxonomy_options,
-                        'default' => 'category', // category
-                        'class' => 'gm-select-taxonomy',
-                    ) ); ?>
-                    <script>
-                        window.gm_taxonomy_object_types = <?php echo json_encode($taxonomy_object_types); ?>;
-                        window.gm_terms = <?php echo json_encode(  $terms); ?>;
-                    </script>
-
-                    <?php
-                    gridmaster_form_field( gm_field_name('terms'), array(
-                        'id' => 'terms',
-                        'type' => 'checkbox-list',
-                        'label' => 'Select Terms',
-                        'placeholder' => 'Select Terms',
-                        'options' => $terms['category'],
-                        'class' => 'gm-select-term',
-                    ) ); ?>
-                    
-                    <!-- hide_empty -->
-                    <?php gridmaster_form_field( gm_field_name('hide_empty'),array(
-                        'type' => 'radio',
-                        'label' => 'Hide Empty Terms',
-                        'options' => [
-                            '1' => __('Yes', 'gridmaster'),
-                            '0' => __('No', 'gridmaster'),
-                        ],
-                        'default' => '0',
-                    ) ); ?>
-
-                     <!-- // Initial Term on Page Load -->
-                     <?php gridmaster_form_field( gm_field_name('initial_term'),array(
-                        'type' => 'select',
-                        'label' => 'Initial Term on Page Load',
-                        'options' => [
-                            '-1' => __('All - Default', 'gridmaster'),
-                            'auto' => __('Auto Select', 'gridmaster'),
-                        ],
-                        'default' => '-1',
-                        'is_pro' => true,
-                        'description' => __('Select the initial term to be selected on page load.', 'gridmaster'),
-                    ) ); ?>
-
-
-                    <!-- Allow Multiple Selection -->
-                    <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
-                        'type' => 'radio',
-                        'label' => __('Allow Multiple Select', 'gridmaster'),
-                        'options' => [
-                            'yes' => __('Yes', 'gridmaster'),
-                            'no' => __('No', 'gridmaster')
-                        ],
-                        'default' => 'no',
-                        'description' => __('Allow multiple selection of terms in the filter.', 'gridmaster'),
-                        'is_pro' => true,
-                    ) ); ?>
-
-                </div>
-            </div>
-            
-
             <div id="gm-select-grid" class="postbox gm-slide-toggle ">
                 <div class="postbox-header">
                     <h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
@@ -212,6 +97,17 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         ],
                         'default' => 'excerpt',
                     ) ); ?>
+
+                    <!-- excerpt_type -->
+                    <?php gridmaster_form_field( gm_field_name('excerpt_type'),array(
+                        'type' => 'select',
+                        'label' => 'Excerpt Type',
+                        'options' => [
+                            'words' => 'Words',
+                            'characters' => 'Characters',
+                        ],
+                        'default' => 'words',
+                    ) ); ?>
                     
                     <!-- excerpt_length -->
                     <?php gridmaster_form_field( gm_field_name('excerpt_length'),array(
@@ -247,7 +143,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'default' => 'full',
                     ) );
                     ?>
-                    <div class="show-if-image-size-custom">
+                    <div class="show-if-grid_image_size-custom">
                         <p><i>You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.</i></p>
                         <!-- image_width -->
                         <?php gridmaster_form_field( gm_field_name('grid_image_width'),array(
@@ -366,14 +262,284 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                         'is_pro' => true,
                         'responsive_field' => true,
                     ) );
+                    ?>
+                    <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
+                </div>
+            </div>
 
-                  
+            <!-- Filter Options -->
+            <div id="gm-select-filter" class="postbox gm-slide-toggle ">
+                <div class="postbox-header">
+                    <h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
+                    <div class="handle-actions pe-2">
+                        <span class="dashicons dashicons-arrow-down">
+                    </div>
+                </div>
+                <div class="inside" style="display: block;">
 
+                    <!-- show_filter -->
+                    <?php gridmaster_form_field( gm_field_name('show_filter'),array(
+                        'type' => 'radio',
+                        'label' => 'Show Filter',
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'yes',
+                    ) ); ?>
 
+                    <!-- filter_style -->
+                    <?php gridmaster_form_field( gm_field_name('filter_style'),array(
+                        'type' => 'select',
+                        'label' => __('Filter Style', 'gridmaster'),
+                        'options' => apply_filters( 'gridmaster_filter_styles', [
+                            'default' => __('Style 1 (Default)', 'gridmaster'),
+                            'style-2' => __('Style 2 (New)', 'gridmaster'),
+                            'style-3' => __('Style 3 (New)', 'gridmaster'),
+                            'style-4' => __('Style 4 (New)', 'gridmaster'),
+                        ] ),
+                        'default' => 'default', // default
+                    ) ); ?>
+                    <div class="filter-demo-link-button hidden"></div>
+
+                    <!-- btn_all -->
+                    <?php gridmaster_form_field( gm_field_name('btn_all'),array(
+                        'type' => 'radio',
+                        'label' => 'Show All Button',
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'yes',
+                    ) ); ?>
+
+                    <!-- Select taxonomy -->
+                    <?php 
+                    $taxonomies = gm_get_taxonomies();
+                    $taxonomy_options = $taxonomies['options'];
+                    $taxonomy_object_types = $taxonomies['object_types'];
+                    $terms = $taxonomies['terms'];
+
+                    gridmaster_form_field( gm_field_name('taxonomy'), array(
+                        'type' => 'select',
+                        'label' => 'Select Taxonomy',
+                        'options' => $taxonomy_options,
+                        'default' => 'category', // category
+                        'class' => 'gm-select-taxonomy',
+                    ) ); ?>
+                    <script>
+                        window.gm_taxonomy_object_types = <?php echo wp_json_encode($taxonomy_object_types); ?>;
+                        window.gm_terms = <?php echo wp_json_encode($terms); ?>;
+                    </script>
+
+                    <?php
+                    gridmaster_form_field( gm_field_name('terms'), array(
+                        'id' => 'terms',
+                        'type' => 'checkbox-list',
+                        'label' => __('Select Terms', 'gridmaster'),
+                        'placeholder' => __('Select Terms', 'gridmaster'),
+                        'options' => $terms['category'],
+                        'class' => 'gm-select-term',
+                    ) ); ?>
+                    
+                    <!-- hide_empty -->
+                    <?php gridmaster_form_field( gm_field_name('hide_empty'),array(
+                        'type' => 'radio',
+                        'label' => 'Hide Empty Terms',
+                        'options' => [
+                            '1' => __('Yes', 'gridmaster'),
+                            '0' => __('No', 'gridmaster'),
+                        ],
+                        'default' => '0',
+                    ) ); ?>
+
+                     <!-- // Initial Term on Page Load -->
+                     <?php gridmaster_form_field( gm_field_name('initial_term'),array(
+                        'type' => 'select',
+                        'label' => 'Initial Term on Page Load',
+                        'options' => [
+                            '-1' => __('All - Default', 'gridmaster'),
+                            'auto' => __('Auto Select', 'gridmaster'),
+                        ],
+                        'default' => '-1',
+                        'is_pro' => true,
+                        'description' => __('Select the initial term to be selected on page load.', 'gridmaster'),
+                    ) ); ?>
+
+                    <!-- Allow Multiple Selection -->
+                    <?php gridmaster_form_field( gm_field_name('multiple_select'),array(
+                        'type' => 'radio',
+                        'label' => __('Allow Multiple Select', 'gridmaster'),
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster')
+                        ],
+                        'default' => 'no',
+                        'description' => __('Allow multiple selection of terms in the filter.', 'gridmaster'),
+                        'is_pro' => true,
+                    ) ); ?>
+                    <hr>
+                    <!-- Filter Heading -->
+                    <?php gridmaster_form_field( gm_field_name('filter_heading'),array(
+                        'type' => 'text',
+                        'label' => __('Add a Filter Heading?', 'gridmaster'),
+                        'default' => '',
+                        'placeholder' => __('Category', 'gridmaster'),
+                    ) ); ?>
+
+                    <!-- Toggle Filter Items -->
+                    <?php gridmaster_form_field( gm_field_name('toggle_filter_items'),array(
+                        'type' => 'radio',
+                        'label' => __('Toggle Filter Items', 'gridmaster'),
+                        'options' => [
+                            'yes' => __('Yes', 'gridmaster'),
+                            'no' => __('No', 'gridmaster'),
+                        ],
+                        'default' => 'no',
+                    ) ); ?>
+
+                </div>
+            </div>
+            <!-- Filter Options -->
+
+            <div id="gm-select-slider" class="postbox gm-slide-toggle ">
+                <div class="postbox-header">
+                    <h2 class="hndle"><?php esc_html_e( 'Slider Options', 'gridmaster' ); ?></h2>
+                    <div class="handle-actions pe-2">
+                        <span class="dashicons dashicons-arrow-down">
+                    </div>
+                </div>
+                <div class="inside" style="display: block;">
+
+                    <?php gridmaster_form_field( gm_field_name('enable_slider'),array(
+                        'type' => 'radio',
+                        'label' => __('Enable Slider', 'gridmaster'),
+                        'options' => [
+                            '' => __('No', 'gridmaster'),
+                            'yes' => __('Yes', 'gridmaster'),
+                        ],
+                        'default' => '',
+                        'is_pro' => true,
+                    ) );
                     ?>
 
+                    <div class="show-if-enable_slider-yes">
+                        <?php
+                        // slidesToShow
+                        gridmaster_form_field( gm_field_name('slider_slidesToShow'),array(
+                            'type' => 'number',
+                            'label' => __('Slides to Show', 'gridmaster'),
+                            'default' => [
+                                'xs' => 1,
+                                'sm' => 2,
+                                'md' => 3,
+                                'lg' => 3,
+                                'xl' => 3,
+                            ],
+                            'is_pro' => true,
+                            'responsive_field' => true,
+                        ) );
 
-                    <?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
+                        // slidesToScroll
+                        gridmaster_form_field( gm_field_name('slider_slidesToScroll'),array(
+                            'type' => 'number',
+                            'label' => __('Slides to Scroll', 'gridmaster'),
+                            'default' => [
+                                'xs' => 1,
+                                'sm' => 1,
+                                'md' => 1,
+                                'lg' => 1,
+                                'xl' => 1,
+                            ],
+                            'is_pro' => true,
+                            'responsive_field' => true,
+                        ) );
+
+                        // arrows
+                        gridmaster_form_field( gm_field_name('slider_arrows'),array(
+                            'type' => 'radio',
+                            'label' => __('Show Prev/Next Arrows', 'gridmaster'),
+                            'options' => [
+                                '0' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '1',
+                            'is_pro' => true,
+                        ) );
+
+                        // dots
+                        gridmaster_form_field( gm_field_name('slider_dots'),array(
+                            'type' => 'radio',
+                            'label' => __('Show Dots', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // autoplay
+                        gridmaster_form_field( gm_field_name('slider_autoplay'),array(
+                            'type' => 'radio',
+                            'label' => __('Enable Autoplay', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // autoplaySpeed
+                        gridmaster_form_field( gm_field_name('slider_autoplaySpeed'),array(
+                            'type' => 'number',
+                            'label' => __('Autoplay Speed', 'gridmaster'),
+                            'default' => 3000,
+                            'is_pro' => true,
+                        ) );
+
+                        // pauseOnHover
+                        gridmaster_form_field( gm_field_name('slider_pauseOnHover'),array(
+                            'type' => 'radio',
+                            'label' => __('Pause Autoplay on Hover', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        // infinite
+                        gridmaster_form_field( gm_field_name('slider_infinite'),array(
+                            'type' => 'radio',
+                            'label' => __('Infinite loop sliding', 'gridmaster'),
+                            'options' => [
+                                '0' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '1',
+                            'is_pro' => true,
+                        ) );
+
+                        // centerMode
+                        gridmaster_form_field( gm_field_name('slider_centerMode'),array(
+                            'type' => 'radio',
+                            'label' => __('Enable Center View', 'gridmaster'),
+                            'options' => [
+                                '' => __('No', 'gridmaster'),
+                                '1' => __('Yes', 'gridmaster'),
+                            ],
+                            'default' => '',
+                            'is_pro' => true,
+                        ) );
+
+                        ?>
+                    </div>
+
+
+                    
                 </div>
             </div>
             
@@ -420,7 +586,8 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     ) ); ?>
                 </div>
             </div>
-            
+            <!-- Spacer -->
+            <div class="gm-spacer clear" style="height: 100px;"></div>
         </nav>
 
         <main class="pt-3 gm-right-sidebar col-md-9 ms-sm-auto col-lg-9 ">

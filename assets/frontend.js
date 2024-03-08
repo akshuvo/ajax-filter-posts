@@ -3,17 +3,9 @@ jQuery(document).ready(function($) {
 	// Post loading
 	jQuery(document).on('change', '.gm-taxonomy-item input', function(){
         let $this = jQuery(this);
-		var term_id = $this.attr('data_id');   		
- 
-		// if( !$this.hasClass('active') ) {
-        //     $this.addClass('active').siblings().removeClass('active');
-            
-            
-        // }
 
         // Load Grid
         asr_ajax_get_postdata('', $this);
-
 	});
 
     // Pagination
@@ -54,7 +46,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    // Uncheck other checkboxes
+    // Uncheck other checkboxes if All is checked
     jQuery(document).on('change', '.gm-taxonomy-item.gm-taxonomy-all input', function(e){
         let $this = jQuery(this);
         
@@ -91,9 +83,11 @@ jQuery(document).ready(function($) {
 
         let $args = JSON.parse(jsonData);
 
+        let enableSlider = $args.enable_slider;
+
         let data = {
             action: 'asr_filter_posts',
-            asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
+            nonce: asr_ajax_params.nonce,
             term_ID: term_ID,
             taxInput: taxInput,
             layout: (getLayout) ? getLayout : "1",
@@ -138,14 +132,29 @@ jQuery(document).ready(function($) {
                     var newPosts = jQuery('.am_post_grid', data).html();
                     var newPagination = jQuery('.am_posts_navigation', data).html();
 
-                    $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                    // Append pagination
                     $wrapper.find('.asrafp-filter-result .am_posts_navigation').html(newPagination);
 
-                } else {
+                    // Slider
+                    if( asr_ajax_params.is_pro && enableSlider ){
+                        if ( !$wrapper.find('.am_post_grid').hasClass('slick-initialized') ) {
+                            $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
 
-                    $wrapper.find('.asrafp-filter-result').hide().html(data).fadeIn(0, function() {
-                        //jQuery(this).html(data).fadeIn(300);
-                    });
+                            // Trigger Enable Slider
+                            jQuery( document ).trigger('gridmaster_init_slider', [ $wrapper, $args ] );
+                        } else {
+                            $wrapper.find('.am_post_grid').slick('slickAdd', newPosts);
+                        }
+                    } else {
+                        $wrapper.find('.asrafp-filter-result .am_post_grid').append(newPosts);
+                    }
+                } else {
+                    $wrapper.find('.asrafp-filter-result').html(data);
+                }
+
+                // Init Sliders
+                if( asr_ajax_params.is_pro && enableSlider ){
+                    jQuery(document).trigger('gridmaster_init_all_sliders');
                 }
 
                 flag = false;
@@ -154,6 +163,13 @@ jQuery(document).ready(function($) {
                 // Animation
                 if( $args.animation == "true" ){
                     $wrapper.find('.am_grid_col').slideDown();
+                }
+
+                // Scroll to the top of the grid
+                if ( !loadMore ) {
+                    jQuery('html, body').animate({
+                        scrollTop: $wrapper.offset().top - 80
+                    }, 400);
                 }
                 
 			},
@@ -199,6 +215,12 @@ jQuery(document).ready(function($) {
             }
         });
 
+    });
+
+    // Filter Heading Toggle
+    jQuery(document).on('click', '.gm-filter-toggle-yes .gm-filter-heading', function(e){
+        jQuery(this).next().slideToggle('fast');
+        jQuery(this).parent().toggleClass('gm-filter-open');
     });
 
 });

@@ -12,7 +12,6 @@ class Shortcode {
         add_shortcode( 'am_post_grid', [ $this, 'render_shortcode' ] );
         add_shortcode( 'asr_ajax', [ $this, 'render_shortcode' ] );
 
-                
         // Load Posts Ajax actions
         add_action('wp_ajax_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
         add_action('wp_ajax_nopriv_asr_filter_posts', [ $this, 'am_post_grid_load_posts_ajax_functions' ]);
@@ -20,8 +19,13 @@ class Shortcode {
         // Filter Gridmaster Render Grid Args
         add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
 
-        add_action( 'init', [ $this, 'init_hook' ] );
-        add_action( 'gridmaster_render_filter', [ $this, 'render_filter' ] );
+        // Init Preview Hook
+        if( !is_admin() && is_user_logged_in() ){
+            add_action( 'init', [ $this, 'init_hook' ] );
+        }
+
+        // Render Filter
+        add_action( 'gridmaster_render_filters', [ $this, 'render_filter' ] );
     }
 
     /**
@@ -69,11 +73,11 @@ class Shortcode {
         
         // Check if GridMaster Pro is not installed and current user is admin
         if( !gridmaster_is_pro() && current_user_can( 'manage_options' ) && isset( $atts['post_type_selection'] ) && $atts['post_type_selection'] == 'auto' ) {
-            echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
+            /* translators: %s: upgrade url */
+            echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
         $atts = shortcode_atts( [
-            'id' => '',
             'post_type' => 'post',
             'posts_per_page' => 9,
             'orderby' => 'menu_order date', //Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
@@ -82,6 +86,7 @@ class Shortcode {
             'meta_query' => [],
             'title_length' => 50,
             'content_from' => 'excerpt',
+            'excerpt_type' => 'words',
             'excerpt_length' => 15,
             'show_read_more' => 'yes',
             'read_more_text' => '',
@@ -97,46 +102,30 @@ class Shortcode {
             'animation'  		=> '',
             // END OLD ATTRIBUTES
             'grid_style'  		=> 'default', // master ID
-            'grid_id'  			=> wp_generate_password( 8, false ), // grid ID
+            'grid_id'  			=> 'gm-' . wp_generate_password( 8, false ), // grid ID
             'taxonomy'  		=> 'category',
             'terms'  			=> '',
             'grid_image_size'   => 'full',
             'filter_style'  	=> 'default',
-
+            'filter_heading'  	=> '',
+            'toggle_filter_items'  	=> '',
         ], $atts, 'gridmaster' );
-
-        $id = $atts['id'];
-
-        if ( !empty( $id ) ) {
-            // Get args from the database
-            // $atts = get_post_meta( $id, 'gridmaster_args', true );
-        }
 
         // Grid Style
         $grid_style = $atts['grid_style'];
-
-        // $atts['tax_query'] = ! empty( $atts['tax_query'] ) ? json_decode( $atts['tax_query'], true ) : [];
-
-        // If id is set then get args from the database and render the grid
-        // Otherwise render the grid from the shortcode attributes
 
         // Render dynamic styles
         $this->render_styles([
             'grid_style' => $grid_style
         ]);
 
-        // echo '<pre>';
-        // print_r($atts);
-        // echo '</pre>';
-
-
         extract($atts);
-
-        // Grid ID 
-        $atts['grid_id'] = 'gridmaster-' . $atts['grid_id'];
 
         // Grid ID
         $grid_id = $atts['grid_id'];
+
+        // If id is set then get args from the database and render the grid
+        // Otherwise render the grid from the shortcode attributes
 
         // Pagination
         $pagination_type = $atts['pagination_type'];
@@ -153,23 +142,35 @@ class Shortcode {
         // unset( $public_atts['grid_style'] ); // Didn't know why put this here
         unset( $public_atts['filter_style'] );
 
+        // Wrapper Classes
+        $wrapper_classes = [
+            'am_ajax_post_grid_wrap',
+            $grid_id,
+            'gridmaster-' . $grid_style,
+        ];
+
+        // Add Slider Class
+        if( isset( $atts['enable_slider'] ) ) {
+            $wrapper_classes[] = 'gm-enable-slider-' . $atts['enable_slider'];
+        }
 
         ob_start();   
         ?>
+
+       
         <div id="<?php echo esc_attr($grid_id); ?>" 
             data-grid-style="<?php echo esc_attr( $grid_style ); ?>"
-            class="am_ajax_post_grid_wrap <?php echo esc_attr($grid_id); ?> <?php echo esc_attr( 'gridmaster-'.$grid_style ); ?>" 
+            class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"
             data-pagination_type="<?php echo esc_attr($pagination_type); ?>" 
-            data-am_ajax_post_grid='<?php echo wp_json_encode($public_atts);?>'>
+            data-am_ajax_post_grid='<?php echo esc_attr(wp_json_encode($public_atts));?>'>
 
-            <?php do_action( 'gridmaster_render_filter', $atts ); ?>
-
+            <?php do_action( 'gridmaster_render_filters', $atts ); ?>
             <div class="asr-ajax-container">
                 <div class="asr-loader">
                     <div class="lds-dual-ring"></div>
                 </div>
                 <div class="asrafp-filter-result">
-                    <?php echo $this->render_grid( $this->get_args_from_atts($atts) ); ?>
+                    <?php echo $this->render_grid( $this->get_args_from_atts($atts) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 </div>
             </div>
         </div>
@@ -184,42 +185,60 @@ class Shortcode {
      * Render Filter
      *
      * @param array $args
-     *
      * @return string
      */
     function render_filter( $atts ){
-        // echo '<pre>'; print_r( $atts ); echo '</pre>';
-
         if ( $atts['show_filter'] == "yes" ) :  ?>
             <div class="asr-filter-div">
+                <!-- Single Filter -->
                 <?php
-                // Texonomy arguments
-                $tax_args = array(
-                    'hide_empty' => $atts['hide_empty'],
-                    'taxonomy' => $atts['taxonomy'],
-                    'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
-                );
-
-                // If not pro
-                if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
-                    if( current_user_can( 'manage_options' ) ){
-                        echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), GRIDMASTER_PRO_LINK ) . '</div>';
-                    }
-                    return;
-                }
-
-                // Filter arguments
-                $filter_args = [
-                    // 'atts' => $atts,
-                    'tax_args' => $tax_args,
-                    'grid_id' => $atts['grid_id'],
-                    'btn_all' => $atts['btn_all'],
-                    'filter_style' => $atts['filter_style'],
-                    'input_type' => apply_filters( 'gridmaster_filter_input_type', 'radio', $atts ),
-                ];
+                $filter_heading = trim( $atts['filter_heading'] );
+                $toggle_items = sanitize_text_field( $atts['toggle_filter_items'] );
                 ?>
-                <?php $this->get_template_part( $atts['filter_style'], 'filter', $filter_args ); ?>
-                
+                <div class="gm-filter-wrap <?php echo esc_attr( 'gm-filter-toggle-' . $toggle_items ); ?>">
+                    <?php if( !empty( $filter_heading ) ) : ?>
+                        <div class="gm-filter-heading">
+                            <span><?php echo esc_html( $filter_heading ); ?></span>
+                            <?php if( $toggle_items == "yes" ) : ?>
+                                <span class="gm-filter-caret">
+                                    <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path></svg>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="gm-single-filter">
+                        <?php
+                        // Texonomy arguments
+                        $tax_args = array(
+                            'hide_empty' => $atts['hide_empty'],
+                            'taxonomy' => $atts['taxonomy'],
+                            'include' => $atts['terms'] ? $atts['terms'] : $atts['cat'],
+                        );
+
+                        // If not pro
+                        if( !gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && !empty( $tax_args['include'] ) ){
+                            if( current_user_can( 'manage_options' ) ){
+                                /* translators: %s: upgrade url */
+                                echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            }
+                            return;
+                        }
+
+                        // Filter arguments
+                        $filter_args = [
+                            // 'atts' => $atts,
+                            'tax_args' => $tax_args,
+                            'grid_id' => $atts['grid_id'],
+                            'btn_all' => $atts['btn_all'],
+                            'filter_style' => $atts['filter_style'],
+                            'input_type' => apply_filters( 'gridmaster_filter_input_type', 'radio', $atts ),
+                        ];
+                        ?>
+                        <?php $this->get_template_part( $atts['filter_style'], 'filter', $filter_args ); ?>
+                    </div>
+                </div>
+                <!-- End Single Filter -->
             </div>
         <?php endif; ?>
         <?php
@@ -287,13 +306,15 @@ class Shortcode {
     // Load Posts Ajax function
     function am_post_grid_load_posts_ajax_functions(){
         // Verify nonce
-        // if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
-        // die('Permission denied');
+        if( gridmaster_get_settings('disable-nonce-check') != 'yes' ){
+            if( !isset( $_POST['nonce'] ) || !wp_verify_nonce( $_POST['nonce'], 'asr_ajax_nonce' ) ) {
+                die( 'Permission Denied. Please disable nonce check from settings.' );
+            }
+        }
 
         $data = [];
 
         $term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
-
 
         // Pagination
         if ( isset( $_POST['paged'] ) ) {
@@ -333,7 +354,7 @@ class Shortcode {
         $data['ajax'] = true;
         
         // Output
-        echo $this->render_grid( $data );
+        echo $this->render_grid( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         die();
     }
@@ -532,25 +553,28 @@ class Shortcode {
                     'next_text' => '»',
                 ) );
 
-
+                $classes = $args['infinite_scroll'] . ' am-post-grid-load-more';
+                
                 // Load more button
                 if( $pagination_type == 'load_more' ){
 
                     if( $paginate_links && $dataPaged < $query->max_num_pages ){
-                        echo "<button type='button' data-paged='{$dataPaged}' data-next='{$dataNext}' class='{$args['infinite_scroll']} am-post-grid-load-more'>" . esc_html__( 'Load More', 'gridmaster' )."</button>";
+                        echo '<button type="button" data-paged="'.esc_attr( $dataPaged ).'" data-next="'.esc_attr($dataNext).'" class="'.esc_attr($classes).'">'. esc_html__( 'Load More', 'gridmaster' ).'</button>';
                     }
 
                 } else {
 
                     // Paginate links
-                    echo "<div class='am_posts_navigation_init'>{$paginate_links}</div>";
+                    echo '<div class="am_posts_navigation_init">';
+                    echo $paginate_links; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '</div>';
                 }
 
             ?>
             </div>
 
         <?php else:
-            esc_html_e('No Posts Found','gridmaster');
+            echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'gridmaster' ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         endif;
         wp_reset_query();
 
@@ -580,6 +604,10 @@ class Shortcode {
         }
 
         if ( ! $this->locate_template( $templates, true, false, $args ) ) {
+            if( gridmaster_get_settings('debug-mode') == 'yes' ){
+                /* translators: %s: template file */
+                printf( __( 'Template file not found: %s <br>', 'gridmaster' ), esc_html( $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            }
             return false;
         }
     }
@@ -625,11 +653,6 @@ class Shortcode {
 
     // Init Hook
     public function init_hook() {
-        // Return if admin
-        if ( is_admin() ) {
-            return;
-        }
-
         // Shortcode for frontend
         if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
             // Disable admin bar

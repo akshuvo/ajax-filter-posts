@@ -51,9 +51,10 @@ function gridmaster_the_content() {
     // Shortcode atts
     $args = apply_filters( 'gridmaster_get_render_grid_args', [] );
     $content_from = isset( $args['content_from'] ) ? $args['content_from'] : 'excerpt';
+    $excerpt_type = isset( $args['excerpt_type'] ) ? $args['excerpt_type'] : 'words'; // words or characters
     $excerpt_length = apply_filters('gridmaster_excerpt_length', 15);
 
-
+    // Output
     $output = '<div class="am__excerpt">';
 
     if( $content_from == 'content' ) {
@@ -66,7 +67,11 @@ function gridmaster_the_content() {
 
     // Apply excerpt length
     if( $excerpt_length != "-1" ) {
-        $content = wp_trim_words( $content, $excerpt_length, '');
+        if( $excerpt_type == 'characters' ) {
+            $content = substr( $content, 0, $excerpt_length );
+        } else {
+            $content = wp_trim_words( $content, $excerpt_length, '');
+        }
     }
 
     // Remove All HTML tags 
@@ -81,9 +86,12 @@ function gridmaster_the_content() {
 }
 
 // Get gridmaster_settings
-function gridmaster_get_settings() {
+function gridmaster_get_settings( $key = '' ) {
     $settings = get_option( 'gridmaster_settings', [] );
     $settings = !empty( $settings ) && is_array( $settings ) ? $settings : [];
+    if( !empty( $key ) ) {
+        return isset( $settings[$key] ) ? $settings[$key] : '';
+    }
     return $settings;
 }
 
@@ -115,9 +123,9 @@ function gridmaster_read_more_link( $link_text = '' ) {
 // Grid Styles
 function gridmaster_grid_styles(){
     return apply_filters( 'gridmaster_grid_styles', [
-        'default' => 'Style 1 (Default)',
-        'style-2' => 'Style 2 (New)',
-        'style-3' => 'Style 3 (New)',
+        'default' => __('Style 1 (Default)'),
+        'style-2' => __('Style 2 (New)'),
+        'style-3' => __('Style 3 (New)'),
     ] );
 }
 
@@ -166,6 +174,7 @@ function gridmaster_get_the_date( $format = '' ) {
     $format = !empty( $format ) ? $format : get_option( 'date_format' );
     $date = get_the_date( $format );
     $title = sprintf(
+        /* translators: %s: post date */
         esc_html_x( 'Posted on %s', 'post date', 'gridmaster' ),
         esc_html( $date )
     );
@@ -210,18 +219,13 @@ function gridmaster_posted_by() {
     // Author Name
     $author = get_the_author();
 
-
-    $byline = sprintf(
-        esc_html_x( '%s', 'post author', 'gridmaster' ),
-        '<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span>'
-    );
-
     $title = sprintf(
+        /* translators: %s: post author */
         esc_html_x( 'Posted by %s', 'post author', 'gridmaster' ),
         esc_html( $author )
     );
 
-    return '<span title="' . $title . '" class="gm-byline"> ' . $byline . '</span>';
+    return '<span title="' . $title . '" class="gm-byline"><span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( $author ) . '</a></span></span>';
 }
 
 // Comments number
@@ -238,7 +242,8 @@ function gridmaster_comments_number( $args = [] ) {
 
         // Number text
         $comment_text = sprintf(
-            esc_html( _nx( '1 Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
+            /* translators: 1: comment number, 2: title. */
+            esc_html( _nx( '%1$s Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
             number_format_i18n( $comment_number )
         );
 
@@ -268,5 +273,27 @@ function gridmaster_comments_number( $args = [] ) {
 
 // Post Thumbnail
 function gridmaster_post_thumbnail( $size = 'post-thumbnail', $attr = '' ) {
-    echo apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
+    $output = apply_filters( 'gridmaster_post_thumbnail_html', get_the_post_thumbnail( null, $size, $attr ) );
+    echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+// Get Filter All Text
+function gm_taxonomy_item_all( $args = [] ){
+    // Taxonomy Args
+    $tax_args = $args['tax_args'];
+
+    $taxonomy = $tax_args['taxonomy'];
+    $grid_id = $args['grid_id'];
+    $input_type = $args['input_type'];
+    $filter_style = $args['filter_style'];
+
+    $input_name = 'tax_input[' . $taxonomy . '][]';
+    $input_id = $grid_id . '-' . $taxonomy . '_all';
+
+    if( $args['btn_all'] != "no" ) : ?>
+        <div class="gm-taxonomy-item gm-taxonomy-all">
+            <input type="<?php echo esc_attr( $input_type ); ?>" name="<?php echo esc_attr( $input_name ); ?>" id="<?php echo esc_attr( $input_id ); ?>" value="-1" />
+            <label class="asr_texonomy" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html__('All','gridmaster'); ?></label>
+        </div>
+    <?php endif;
 }

@@ -20,6 +20,7 @@ $left_tabs = [
     //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
     //     'icon'  => 'dashicons dashicons-layout',
     //     'path' => 'templates',
+    //     'target' => '',
     // ],
     [
         'title' => __( 'Grid Builder', 'gridmaster' ),
@@ -39,7 +40,7 @@ $left_tabs = [
         'title' => __( 'Free vs Pro', 'gridmaster' ),
         'url'   => gridmaster_website_url( 'gridmaster/free-vs-pro/' ),
         'icon'  => 'dashicons dashicons-star-filled',
-        'path' => '',
+        'path' => 'free-vs-pro',
         'target' => '_blank'
     ],
 ];
