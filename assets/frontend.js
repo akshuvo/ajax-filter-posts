@@ -87,7 +87,7 @@ jQuery(document).ready(function($) {
 
         let data = {
             action: 'asr_filter_posts',
-            asr_ajax_nonce: asr_ajax_params.asr_ajax_nonce,
+            nonce: asr_ajax_params.nonce,
             term_ID: term_ID,
             taxInput: taxInput,
             layout: (getLayout) ? getLayout : "1",

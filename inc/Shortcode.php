@@ -306,13 +306,15 @@ class Shortcode {
     // Load Posts Ajax function
     function am_post_grid_load_posts_ajax_functions(){
         // Verify nonce
-        // if( !isset( $_POST['asr_ajax_nonce'] ) || !wp_verify_nonce( $_POST['asr_ajax_nonce'], 'asr_ajax_nonce' ) )
-        // die('Permission denied');
+        if( gridmaster_get_settings('disable-nonce-check') != 'yes' ){
+            if( !isset( $_POST['nonce'] ) || !wp_verify_nonce( $_POST['nonce'], 'asr_ajax_nonce' ) ) {
+                die( 'Permission Denied. Please disable nonce check from settings.' );
+            }
+        }
 
         $data = [];
 
         $term_ID = isset( $_POST['term_ID'] ) ? sanitize_text_field( intval($_POST['term_ID']) ) : '';
-
 
         // Pagination
         if ( isset( $_POST['paged'] ) ) {

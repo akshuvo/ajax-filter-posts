@@ -20,6 +20,20 @@ $setting = gridmaster_get_settings();
             ) ); 
             ?>
 
+
+
+            <?php gridmaster_form_field( 'gridmaster_options[disable-nonce-check]',array(
+                'type' => 'radio',
+                'label' => __( 'Disable Nonce Check', 'gridmaster' ),
+                'options' => [
+                    'yes' => 'Yes',
+                    'no' => 'No',
+                ],
+                'default' => $setting['disable-nonce-check'] ?? 'no',
+                'description' => __( 'Disable if you are facing any issues with the nonce check.', 'gridmaster' ),
+            ) ); 
+            ?>
+
             <?php
 
             $taxonomies = gm_get_taxonomies( true );
@@ -33,17 +47,13 @@ $setting = gridmaster_get_settings();
                     <span class="description"><?php esc_html_e( 'Disable icon and color options from Taxonomies.', 'gridmaster' ); ?></span>
                 </div>
                 <div class="gridmaster-input-wrapper">
-
                     <?php foreach( $taxonomy_options as $tax_name => $tax_label ): ?>
                         <div> <label class="radio gm-field-label">
                             <input type="checkbox" class="input-radio " value="<?php echo esc_attr( $tax_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>" id="<?php echo esc_attr( $field_name . $tax_name ); ?>" <?php checked( in_array( $tax_name, $setting['disable-icon-color-options'] ?? [] ) ); ?>>
                             <?php echo esc_attr( $tax_label ); ?>
                         </label></div>
                     <?php endforeach; ?>
-
-
                 </div>
-                
             </div>
 
             <div class="form-row d-flex" id="license_activation_field">
@@ -52,14 +62,9 @@ $setting = gridmaster_get_settings();
                     <span class="description"><?php esc_html_e( 'Enter your license key to activate GridMaster Pro.', 'gridmaster' ); ?></span>
                 </div>
                 <div class="gridmaster-input-wrapper">
-
                     <?php do_action( 'lmfwppt_license_activation_form_fields' ); ?>
-
-
                 </div>
-                
             </div>
-
         </div>
 
         <!-- Submit Button  -->
