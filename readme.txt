@@ -6,7 +6,7 @@ Stable tag: 3.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Post Grid Master helps you to create post grid with ajax filter and grid. You can create post grid layout with taxonomy filter, ajax pagination, load more button, infinite scroll, and many more.
+Create post grid layout with taxonomy filter, ajax pagination, load more button, infinite scroll, custom post type and many more.
 
 == Description ==
 Post Grid Master helps you to create post grid with ajax filter and grid. You can create post grid layout with taxonomy filter, ajax pagination, load more button, infinite scroll, and many more.
@@ -214,6 +214,12 @@ If you need any custom feature, please let us know. We will try to add the featu
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.8 =
+* Mar 09, 2024
+- Fixed: Security issues
+- Added: Nonce checking on post grid 
+- Compatible with WordPress 6.4.3
 
 = 3.4.7 =
 * Mar 04, 2024
