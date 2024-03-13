@@ -156,23 +156,3 @@ function GridMasterPlugin() {
 
 // run the plugin
 GridMasterPlugin();
-
-/**
- * Initialize the plugin tracker
- *
- * @return void
- */
-function appsero_init_tracker_ajax_filter_posts() {
-
-    if ( ! class_exists( 'Appsero\Client' ) ) {
-      require_once __DIR__ . '/appsero/src/Client.php';
-    }
-
-	$client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'Gridmaster', __FILE__ );
-
-    // Active insights
-    $client->insights()->init();
-
-}
-
-appsero_init_tracker_ajax_filter_posts();
