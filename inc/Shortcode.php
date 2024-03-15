@@ -20,7 +20,7 @@ class Shortcode {
         add_filter('gridmaster_render_grid_args', [ $this, 'filter_render_grid_args' ], 10 );
 
         // Init Preview Hook
-        if( !is_admin() && is_user_logged_in() ){
+        if( !is_admin() && current_user_can( 'manage_options' ) ) {
             add_action( 'init', [ $this, 'init_hook' ] );
         }
 
