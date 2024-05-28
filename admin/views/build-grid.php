@@ -654,7 +654,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 </form>
 
 <script>
-
     // Scale preview
     const scaleInput = document.querySelector("#gm-preview-scale-input")
     scaleInput.addEventListener("input", (event) => {
@@ -734,6 +733,7 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
         // Trigger Taxonomy change
         jQuery('#taxonomy').trigger('change');
 
+
     })
 
     // Add a loader class when Iframe is loading
@@ -741,6 +741,26 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     iframe.addEventListener("load", (event) => {
         iframe.parentNode.classList.remove('loading')
     })
+
+    // Save the shortcode
+    jQuery(document).ready(function($) {
+        $('#gm-shortcode-generator').on('submit', function(e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            $.ajax({
+                url: ajaxurl,
+                type: 'post',
+                data: data,
+                success: function(response) {
+                    if( response.success ) {
+                        alert('Shortcode saved successfully');
+                    } else {
+                        alert('Failed to save shortcode');
+                    }
+                }
+            });
+        });
+    });
 
 </script>
 <style>

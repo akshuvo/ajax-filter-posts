@@ -1,30 +1,16 @@
 <?php
+
 // Create table if not exists
 if ( !class_exists( 'GridMaster\DB_Migration' ) ) {
     require_once GRIDMASTER_PATH . '/admin/DB_Migration.php';
 }
+if ( !class_exists( 'GridMaster\Grids' ) ) {
+    require_once GRIDMASTER_PATH . '/admin/Grids.php';
+}
+
+$my_grids = GridMaster\Grids::init()->list();
 
 
-$my_grids = [
-    [
-        'id'            => 1,
-        'name'          => 'Grid 1',
-        'description'   => 'This is grid 1',
-        'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png'
-    ],
-    [
-        'id'            => 2,
-        'name'          => 'Grid 2',
-        'description'   => 'This is grid 2',
-        'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png'
-    ],
-    [
-        'id'            => 3,
-        'name'          => 'Grid 3',
-        'description'   => 'This is grid 3',
-        'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png'
-    ]
-];
 ?>
 
 

@@ -1,4 +1,9 @@
 <?php
+// Get Grid by ID
+function gm_get_grid( $grid_id = 0 ) {
+    global $wpdb;
+    return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}gridmaster_grids WHERE id = %d", $grid_id ) );
+}
 
 // Responsive Breakpoints
 function gm_get_breakpoints() {
