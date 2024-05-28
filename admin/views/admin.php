@@ -64,10 +64,7 @@ $left_tabs = [
             
                 <?php if( $path == 'build-grid' ) : ?>
                     <div class=" float-end nav-tab">
-                        <!-- gm-copy-nav<div class="gm-copy-wrap">
-                            <input type="text" id="blogname" value="[gridmaster]" class="regular-text gm-copy-inp" readonly>
-                            <button type="button" class=" gm-copy-btn gm-btn "><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?></button>
-                        </div> -->
+                      
 
                         <button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
 

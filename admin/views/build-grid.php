@@ -653,6 +653,24 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
     </div>
 </form>
 
+<!-- Modal -->
+<div class="gm-modal-wrap">
+    <div class="gm-modal-inner">
+        <div class="gm-modal-body">
+            <div class="gm-modal-content">
+                <button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
+                <h2 class="m-0"><?php esc_html_e('Embed Shortcode', 'gridmaster'); ?></h2>
+                <p><?php esc_html_e('Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster'); ?></p>
+                <div class="gm-copy-wrap">
+                    <input type="text" id="blogname" value="[gridmaster]" class="regular-text gm-copy-inp" readonly>
+                    <button type="button" class=" gm-copy-btn gm-btn "><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?></button>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Scale preview
     const scaleInput = document.querySelector("#gm-preview-scale-input")
