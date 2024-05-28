@@ -15,6 +15,13 @@ $left_tabs = [
         'path' => '',
         'target' => '',
     ],
+    [
+        'title' => __( 'My Grids', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+        'icon'  => 'dashicons dashicons-layout',
+        'path' => 'my-grids',
+        'target' => '',
+    ],
     // [
     //     'title' => __( 'Templates', 'gridmaster' ),
     //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
@@ -73,31 +80,56 @@ $left_tabs = [
     </div>
     <div class="gm-admin-content">
         <?php
-        if ( $path == 'build-grid' ) {
-            $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
-            if( file_exists( $file_path ) ) {
-                require_once $file_path;
-            }
-        } elseif ( $path == 'templates' ) {
-            $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
-            if( file_exists( $file_path ) ) {
-                require_once $file_path;
-            }
-        } elseif ( $path == 'settings' ) {
-            $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
-            if( file_exists( $file_path ) ) {
-                require_once $file_path;
-            }
-        } elseif ( $path == 'support' ) {
-            $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
-            if( file_exists( $file_path ) ) {
-                require_once $file_path;
-            }
-        } else {
-            $file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
-            if( file_exists( $file_path ) ) {
-                require_once $file_path;
-            }
+        // if ( $path == 'build-grid' ) {
+        //     $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
+        //     if( file_exists( $file_path ) ) {
+        //         require_once $file_path;
+        //     }
+        // } elseif ( $path == 'templates' ) {
+        //     $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
+        //     if( file_exists( $file_path ) ) {
+        //         require_once $file_path;
+        //     }
+        // } elseif ( $path == 'settings' ) {
+        //     $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
+        //     if( file_exists( $file_path ) ) {
+        //         require_once $file_path;
+        //     }
+        // } elseif ( $path == 'support' ) {
+        //     $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
+        //     if( file_exists( $file_path ) ) {
+        //         require_once $file_path;
+        //     }
+        // } else {
+        //     $file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
+        //     if( file_exists( $file_path ) ) {
+        //         require_once $file_path;
+        //     }
+        // }
+
+        switch ( $path ) {
+            case 'build-grid':
+                $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
+                break;
+            case 'templates':
+                $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
+                break;
+            case 'settings':
+                $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
+                break;
+            case 'support':
+                $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
+                break;
+            case 'my-grids':
+                $file_path = GRIDMASTER_PATH . '/admin/views/my-grids.php';
+                break;
+            default:
+                $file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
+                break;
+        }
+
+        if( file_exists( $file_path ) ) {
+            require_once $file_path;
         }
         ?>
     </div>

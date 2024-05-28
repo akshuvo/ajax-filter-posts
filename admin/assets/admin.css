@@ -171,6 +171,7 @@ button.gm-btn:disabled{
 
 .gm-icon span {
     font-size: 62px;
+    width: 62px;
     color: #30057b;
 }
 

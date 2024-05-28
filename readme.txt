@@ -216,7 +216,7 @@ If you need any custom feature, please let us know. We will try to add the featu
 == Changelog ==
 
 = 3.4.8 =
-* Mar 09, 2024
+* Mar 16, 2024
 - Fixed: Security issues
 - Added: Nonce checking on post grid 
 - Compatible with WordPress 6.4.3
