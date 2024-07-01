@@ -539,13 +539,12 @@ div[class^="show-if-"] {
     width: 100%;
     justify-content: flex-end;
     margin: 0;
-    box-shadow: 1px 1px 9px #000;
 }
 
 /* Modal */
 .gm-modal-wrap {
     background-color: rgba(0, 0, 0, 0.5);
-    /* display: none; */
+    display: none;
     height: 100vh;
     left: 0;
     overflow: hidden;

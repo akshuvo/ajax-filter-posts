@@ -60,26 +60,23 @@ $left_tabs = [
         </div>
 
         <div class="gm-admin-toolbar">
-            
-            
-                <?php if( $path == 'build-grid' ) : ?>
-                    <div class=" float-end nav-tab">
-                      
-
-                        <button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
-
-                        <button type="button" class="  gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
-                    </div>
-                <?php else: ?>
-                    <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
-                    <?php foreach( $left_tabs as $tab ) : ?>
-                        <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
-                            <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
-                            <?php echo esc_html( $tab['title'] ); ?>
-                        </a>
-                    <?php endforeach; ?>
-                    </nav>
-                <?php endif; ?>
+            <?php if( $path == 'build-grid' ) : ?>
+                
+                <div class=" float-end nav-tab">
+                <input type="text">
+                    <button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
+                    <button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+                </div>
+            <?php else: ?>
+                <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
+                <?php foreach( $left_tabs as $tab ) : ?>
+                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
+                        <span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
+                        <?php echo esc_html( $tab['title'] ); ?>
+                    </a>
+                <?php endforeach; ?>
+                </nav>
+            <?php endif; ?>
        
         </div>
     </div>

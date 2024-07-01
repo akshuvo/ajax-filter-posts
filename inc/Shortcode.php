@@ -661,6 +661,9 @@ class Shortcode {
             $shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
             // Remove BackSlash
             $shortcode = wp_unslash( $shortcode );
+
+            // Sanitize
+            $shortcode = sanitize_text_field( $shortcode );
             ?>
             <!-- Blank HTML Template  -->
             <html>
