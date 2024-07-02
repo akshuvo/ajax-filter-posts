@@ -1,8 +1,8 @@
 === Post Grid Master - Custom Post Types, Taxonomies & Ajax Filter Everything with Infinite Scroll, Load More, Pagination & Shortcode Builder ===
 Contributors: mdshuvo, addonmaster
 Tags: infinite scroll, post grid, ajax pagination, taxonomy filter, ajax post filter
-Tested up to: 6.4.3
-Stable tag: 3.4.8
+Tested up to: 6.5.5
+Stable tag: 3.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,11 @@ If you need any custom feature, please let us know. We will try to add the featu
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.9 =
+* July 02, 2024
+- Fixed: Security issues
+- Compatible with WordPress 6.5.x
 
 = 3.4.8 =
 * Mar 16, 2024

@@ -15,13 +15,13 @@ $left_tabs = [
         'path' => '',
         'target' => '',
     ],
-    [
-        'title' => __( 'My Grids', 'gridmaster' ),
-        'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-        'icon'  => 'dashicons dashicons-layout',
-        'path' => 'my-grids',
-        'target' => '',
-    ],
+    // [
+    //     'title' => __( 'My Grids', 'gridmaster' ),
+    //     'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+    //     'icon'  => 'dashicons dashicons-layout',
+    //     'path' => 'my-grids',
+    //     'target' => '',
+    // ],
     // [
     //     'title' => __( 'Templates', 'gridmaster' ),
     //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
@@ -63,9 +63,9 @@ $left_tabs = [
             <?php if( $path == 'build-grid' ) : ?>
                 
                 <div class=" float-end nav-tab">
-                <input type="text">
+                    <!-- <input type="text"> -->
                     <button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
-                    <button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+                    <!-- <button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button> -->
                 </div>
             <?php else: ?>
                 <nav class="nav-tab-wrapper woo-nav-tab-wrapper">

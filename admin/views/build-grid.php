@@ -537,8 +537,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
 
                         ?>
                     </div>
-
-
                     
                 </div>
             </div>
@@ -645,10 +643,6 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                 </div>
             </div>
             <!-- End Grid Preview -->
-
-
-            
-            
         </main>
     </div>
 </form>
@@ -666,14 +660,12 @@ require_once( GRIDMASTER_PATH . '/admin/admin-functions.php' );
                     <button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
                 </div>
 
-                <h2><?php esc_html_e('Or below one', 'gridmaster'); ?></h2>
+                <!-- <h2><?php esc_html_e('Or below one', 'gridmaster'); ?></h2>
                 <div class="d-flex gm-copy-wrap">
                     <input type="text" value="<?php esc_attr_e('[gridmaster id="1"]', 'gridmaster');?>" class="regular-text gm-copy-val" readonly>
                     <button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
                 </div>
-                <div class="desc"><?php esc_html_e('If you saved the grid, you can use the below shortcode to display the grid.', 'gridmaster'); ?></div>
-
-                    
+                <div class="desc"><?php esc_html_e('If you saved the grid, you can use the below shortcode to display the grid.', 'gridmaster'); ?></div> -->
             </div>
         </div>
     </div>
