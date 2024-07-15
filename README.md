@@ -3,8 +3,8 @@
 ```md
 Contributors: mdshuvo, addonmaster, mdashikul
 Tags: infinite scroll, post grid, grid, post type grid, pagination, ajax pagination, grid display, filter, filtering, grid, layout, post, post filter, post layout, taxonomy, taxonomy filter, ajax grid, display post grid, post type grid, wp post grid, ajax post filter, filter post ajax, ajaxify, mixitup, isotop, category filter, filter without reload, ajax filter, ajax plugin
-Tested up to: 6.4.3
-Stable tag: 3.4.7
+Tested up to: 6.5.x
+Stable tag: 3.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ```
@@ -181,6 +181,12 @@ More features coming soon...
 3. Pagination Preview
 
 ## Changelog
+
+= 3.4.9 - July 02, 2024 =
+- Fixed: Security issues
+- Compatible with WordPress 6.5.x
+
+
 = 3.4.7 - Mar 04, 2024=
 - Added: Filter Heading Option
 - Added: Toggle Filter Items Option

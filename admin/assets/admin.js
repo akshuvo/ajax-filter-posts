@@ -197,8 +197,18 @@ jQuery(document).ready(function($) {
 
     // Copy Shortcode
     jQuery( document ).on( 'click', '.gm-copy-btn', function(e) {
-        jQuery(".gm-copy-inp").select();
+        jQuery(this).closest(".gm-copy-wrap").find(".gm-copy-val").select();
         document.execCommand("copy");
+    } );
+
+    // Modal Open
+    jQuery( document ).on( 'click', '.gm-toggle-modal', function(e) {
+        let modalId = jQuery(this).attr('data-modal-id');
+        jQuery('#' + modalId).fadeIn('fast');
+    } );
+    // Modal Close
+    jQuery( document ).on( 'click', '.gm-modal-close', function(e) {
+        jQuery(this).closest('.gm-modal-wrap').fadeOut('fast');
     } );
 
     // Change Filter Style
