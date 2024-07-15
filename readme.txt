@@ -2,7 +2,7 @@
 Contributors: mdshuvo, addonmaster
 Tags: infinite scroll, post grid, ajax pagination, taxonomy filter, ajax post filter
 Tested up to: 6.5.5
-Stable tag: 3.4.9
+Stable tag: 3.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
