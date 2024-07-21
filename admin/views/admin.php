@@ -15,13 +15,13 @@ $left_tabs = [
         'path' => '',
         'target' => '',
     ],
-    // [
-    //     'title' => __( 'My Grids', 'gridmaster' ),
-    //     'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-    //     'icon'  => 'dashicons dashicons-layout',
-    //     'path' => 'my-grids',
-    //     'target' => '',
-    // ],
+    [
+        'title' => __( 'My Grids', 'gridmaster' ),
+        'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+        'icon'  => 'dashicons dashicons-layout',
+        'path' => 'my-grids',
+        'target' => '',
+    ],
     // [
     //     'title' => __( 'Templates', 'gridmaster' ),
     //     'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),

@@ -140,16 +140,16 @@ function gridmaster_grid_pro_styles( $styles ){
 
     $pro_text = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
     $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
-        'pro-style-1' => 'Pro Style 1' . $pro_text,
-        'pro-style-2' => 'Pro Style 2' . $pro_text,
-        'pro-style-3' => 'Pro Style 3' . $pro_text,
-        'pro-style-4' => 'Pro Style 4' . $pro_text,
-        'pro-style-5' => 'Pro Style 5' . $pro_text,
-        'pro-style-6' => 'Pro Style 6' . $pro_text,
-        'pro-style-7' => 'Pro Style 7' . $pro_text,
-        'pro-style-8' => 'Pro Style 8' . $pro_text,
-        'pro-style-9' => 'Pro Style 9' . $pro_text,
-        'pro-style-10' => 'Pro Style 10' . $pro_text,
+        'pro-style-1' => __( 'Pro Style 1', 'gridmaster' ) . $pro_text,
+        'pro-style-2' => __( 'Pro Style 2', 'gridmaster' ) . $pro_text,
+        'pro-style-3' => __( 'Pro Style 3', 'gridmaster' ) . $pro_text,
+        'pro-style-4' => __( 'Pro Style 4', 'gridmaster' ) . $pro_text,
+        'pro-style-5' => __( 'Pro Style 5', 'gridmaster' ) . $pro_text,
+        'pro-style-6' => __( 'Pro Style 6', 'gridmaster' ) . $pro_text,
+        'pro-style-7' => __( 'Pro Style 7', 'gridmaster' ) . $pro_text,
+        'pro-style-8' => __( 'Pro Style 8', 'gridmaster' ) . $pro_text,
+        'pro-style-9' => __( 'Pro Style 9', 'gridmaster' ) . $pro_text,
+        'pro-style-10' => __( 'Pro Style 10', 'gridmaster' ) . $pro_text,
     ] );
     return array_merge( $styles, $pro_styles );
 }
@@ -158,8 +158,8 @@ add_filter( 'gridmaster_filter_styles', 'gridmaster_filter_pro_styles', 9 );
 function gridmaster_filter_pro_styles( $styles ){
     $pro_text = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
     $pro_styles = apply_filters( 'gridmaster_grid_pro_styles', [
-        'pro-filter-1' => 'Pro Filter 1' . $pro_text,
-        'pro-filter-2' => 'Pro Filter 2' . $pro_text,
+        'pro-filter-1' => __( 'Pro Filter 1', 'gridmaster' ) . $pro_text,
+        'pro-filter-2' => __( 'Pro Filter 2', 'gridmaster' ) . $pro_text,
     ] );
     return array_merge( $styles, $pro_styles );
 }
