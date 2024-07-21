@@ -36,20 +36,14 @@ $my_grids = GridMaster\Grids::init()->list();
 								</tr>
 							</thead>
 							<tbody id="the-list">
-							<tr>
+							    <tr>
 									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
 								</tr>
-								<tr>
-									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
-								</tr>
+								
 							</tbody>
 						</table>
 						</div>

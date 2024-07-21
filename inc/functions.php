@@ -1,16 +1,25 @@
 <?php
-// Get Grid by ID
-function gm_get_grid( $grid_id = 0 ) {
+/**
+ * Get Grid by ID
+ *
+ * @param  integer $grid_id Grid id.
+ * @return object
+ */
+function gm_get_grid( $grid_id ) {
 	// Grid Handler Class.
-    if ( ! class_exists( 'GridMaster\Grids' ) ) {
-        require_once GRIDMASTER_PATH . '/admin/Grids.php';
-    }
+	if ( ! class_exists( 'GridMaster\Grids' ) ) {
+		require_once GRIDMASTER_PATH . '/admin/Grids.php';
+	}
 
-    // Grid args
-    return GridMaster\Grids::get( $grid_id );
+	// Grid args
+	return GridMaster\Grids::get( $grid_id );
 }
 
-// Responsive Breakpoints
+/**
+ * Responsive Breakpoints
+ *
+ * @return array
+ */
 function gm_get_breakpoints() {
 	// All values are in pixels and are used for media queries up to the next breakpoint.
 	return array(
@@ -47,7 +56,12 @@ function gm_get_breakpoints() {
 	);
 }
 
-// Post Title
+/**
+ * Post Title
+ *
+ * @param  string  $tag Title html tag.
+ * @param  boolean $link Link the title.
+ */
 function gridmaster_get_post_title( $tag = 'h2', $link = true ) {
 	$tag   = apply_filters( 'gridmaster_post_title_tag', $tag );
 	$title = esc_html( get_the_title() );

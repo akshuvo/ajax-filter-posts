@@ -78,6 +78,12 @@ final class GridMasterPlugin {
 			require_once GRIDMASTER_PATH . '/admin/Admin.php';
 		}
 		$gridmaster = GridMaster\Admin::init();
+
+		// Ajax class
+		if ( ! class_exists( 'GridMaster\Ajax' ) ) {
+			require_once GRIDMASTER_PATH . '/admin/Ajax.php';
+		}
+		$ajax = new GridMaster\Ajax();
 	}
 
 	/**

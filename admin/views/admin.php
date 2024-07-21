@@ -6,10 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get path.
-$get_path = isset( $_GET['path'] ) ? wp_unslash( $_GET['path'] ) : '';
+$get_path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : '';
 
-// Left Tabs : Welcome, Templates, Build Grid, Settings, Support,
-$left_tabs = array(
+// Navigation Tabs.
+$nav_tabs = array(
 	array(
 		'title'  => __( 'Welcome', 'gridmaster' ),
 		'url'    => admin_url( 'admin.php?page=gridmaster' ),
@@ -62,9 +62,19 @@ $left_tabs = array(
 		</div>
 
 		<div class="gm-admin-toolbar">
-			<?php if ( $get_path == 'build-grid' ) : ?>
+			<?php
+			if ( 'build-grid' === $get_path ) :
+				// Grid id.
+				$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+
+				// Get grid.
+				$grid = gm_get_grid( $grid_id );
+
+				// Grid title.
+				$grid_title = isset( $grid->title ) ? $grid->title : '';
+				?>
 				<div class="nav-tab">
-					<input class="gm-grid-title" type="text" name="title" form="gm-shortcode-generator">
+					<input class="gm-grid-title" type="text" name="title" form="gm-shortcode-generator" value="<?php echo esc_attr( $grid_title ); ?>">
 					<div class="d-flex gap-1">
 						<span class="spinner"></span>
 						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
@@ -73,10 +83,10 @@ $left_tabs = array(
 				</div>
 			<?php else : ?>
 				<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
-				<?php foreach ( $left_tabs as $tab ) : ?>
-					<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $get_path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
-						<span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
-						<?php echo esc_html( $tab['title'] ); ?>
+				<?php foreach ( $nav_tabs as $nav_tab ) : ?>
+					<a href="<?php echo esc_url( $nav_tab['url'] ); ?>" class="nav-tab <?php echo $get_path === $nav_tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $nav_tab['target'] ); ?>">
+						<span class="<?php echo esc_attr( $nav_tab['icon'] ); ?>"></span>
+						<?php echo esc_html( $nav_tab['title'] ); ?>
 					</a>
 				<?php endforeach; ?>
 				</nav>

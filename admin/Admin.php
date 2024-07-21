@@ -7,8 +7,10 @@ class Admin {
 	 * Class constructor
 	 */
 	function __construct() {
+		// Menu.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'wp_ajax_gridmaster_ajax', array( $this, 'register_ajax' ) );
+
+		// Admin scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
 
 		// Admin Footer Text
@@ -127,36 +129,6 @@ class Admin {
 		);
 
 		return $text;
-	}
-
-	/**
-	 * Register ajax
-	 *
-	 * @return void
-	 */
-	public function register_ajax() {
-		$nonce = isset( $_POST['gm_nonce'] ) ? sanitize_text_field( $_POST['gm_nonce'] ) : '';
-		if ( ! wp_verify_nonce( $nonce, 'gm-ajax-nonce' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'gridmaster' ) );
-		}
-
-		$action = isset( $_POST['gm-action'] ) ? sanitize_title( $_POST['gm-action'] ) : '';
-		if ( ! $action ) {
-			wp_send_json_error( __( 'Invalid action', 'gridmaster' ) );
-		}
-
-		// Include the admin functions
-		require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
-
-		$function = 'gridmaster_ajax_' . str_replace( '-', '_', $action );
-		if ( ! function_exists( $function ) ) {
-			wp_send_json_error( __( 'Function doesn\'t exist', 'gridmaster' ) );
-		}
-
-		// Call the ajax function
-		$response = $function( $_POST );
-
-		wp_die();
 	}
 
 	/**
