@@ -22,33 +22,33 @@ $my_grids = GridMaster\Grids::init()->list();
 				<?php if ( ! empty( $my_grids ) ) : ?>
 					<div class="gm-grid-list">
 						<div class="gm-grid-list-header">
-							<h2><?php echo esc_html( 'My Grids', 'gridmaster' ); ?></h2>
+							<h2><?php esc_html_e( 'My Grids', 'gridmaster' ); ?></h2>
 						</div>
 						<div class="gm-grid-list-body">
 						<table class="wp-list-table widefat fixed striped table-view-list">
 							<thead>
 								<tr>
-									<th scope="col"><?php echo esc_html( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Actions', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
 								</tr>
 							</thead>
 							<tbody id="the-list">
 							<tr>
-									<th scope="col"><?php echo esc_html( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Actions', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
 								</tr>
 								<tr>
-									<th scope="col"><?php echo esc_html( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php echo esc_html( 'Actions', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
 								</tr>
 							</tbody>
 						</table>
@@ -61,8 +61,8 @@ $my_grids = GridMaster\Grids::init()->list();
 								<span class="dashicons dashicons-info-outline"></span>
 							</div>
 							<div class="gm-card-containt">
-								<h2><?php echo esc_html( 'No Grids Found', 'gridmaster' ); ?></h2>
-								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster&path=build-grid' ) ); ?>"><?php echo esc_html( 'Create Your First Grid', 'gridmaster' ); ?></a>
+								<h2><?php esc_html_e( 'No Grids Found', 'gridmaster' ); ?></h2>
+								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster&path=build-grid' ) ); ?>"><?php esc_html_e( 'Create Your First Grid', 'gridmaster' ); ?></a>
 							</div>
 						</div>
 					</div>

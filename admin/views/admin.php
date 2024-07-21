@@ -1,10 +1,12 @@
 <?php
+
 // Direct Access is not allowed.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$path = isset( $_GET['path'] ) ? $_GET['path'] : '';
+// Get path.
+$get_path = isset( $_GET['path'] ) ? wp_unslash( $_GET['path'] ) : '';
 
 // Left Tabs : Welcome, Templates, Build Grid, Settings, Support,
 $left_tabs = array(
@@ -52,7 +54,7 @@ $left_tabs = array(
 	),
 );
 ?>
-<div class="gridmaster-wrap <?php echo esc_attr( 'gm-page-' . $path ); ?>">
+<div class="gridmaster-wrap <?php echo esc_attr( 'gm-page-' . $get_path ); ?>">
 	<div class="gm-admin-header">
 		<div class="gm-admin-into">
 			<h2><span class="dashicons dashicons-forms me-2"></span> <?php esc_html_e( 'GridMaster', 'gridmaster' ); ?></h2>
@@ -60,7 +62,7 @@ $left_tabs = array(
 		</div>
 
 		<div class="gm-admin-toolbar">
-			<?php if ( $path == 'build-grid' ) : ?>
+			<?php if ( $get_path == 'build-grid' ) : ?>
 				
 				<div class=" float-end nav-tab">
 					<!-- <input type="text"> -->
@@ -70,7 +72,7 @@ $left_tabs = array(
 			<?php else : ?>
 				<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
 				<?php foreach ( $left_tabs as $tab ) : ?>
-					<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
+					<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab <?php echo $get_path == $tab['path'] ? 'nav-tab-active' : ''; ?>" target="<?php echo esc_attr( $tab['target'] ); ?>">
 						<span class="<?php echo esc_attr( $tab['icon'] ); ?>"></span>
 						<?php echo esc_html( $tab['title'] ); ?>
 					</a>
@@ -82,22 +84,22 @@ $left_tabs = array(
 	</div>
 	<div class="gm-admin-content">
 		<?php
-		// if ( $path == 'build-grid' ) {
+		// if ( $get_path == 'build-grid' ) {
 		// $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
 		// if( file_exists( $file_path ) ) {
 		// require_once $file_path;
 		// }
-		// } elseif ( $path == 'templates' ) {
+		// } elseif ( $get_path == 'templates' ) {
 		// $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
 		// if( file_exists( $file_path ) ) {
 		// require_once $file_path;
 		// }
-		// } elseif ( $path == 'settings' ) {
+		// } elseif ( $get_path == 'settings' ) {
 		// $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
 		// if( file_exists( $file_path ) ) {
 		// require_once $file_path;
 		// }
-		// } elseif ( $path == 'support' ) {
+		// } elseif ( $get_path == 'support' ) {
 		// $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
 		// if( file_exists( $file_path ) ) {
 		// require_once $file_path;
@@ -109,7 +111,7 @@ $left_tabs = array(
 		// }
 		// }
 
-		switch ( $path ) {
+		switch ( $get_path ) {
 			case 'build-grid':
 				$file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
 				break;
