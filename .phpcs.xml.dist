@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards for Shuvo Plugin">
+    <description>PHP CodeSniffer ruleset for Shuvo WordPress plugin.</description>
+
+    <!-- Additional configuration arguments -->
+    <arg value="sp"/>
+    <arg name="extensions" value="php"/>
+    <file>.</file>
+    <arg name="basepath" value="./"/>
+    <arg name="parallel" value="8"/>
+
+    <!-- Include WordPress Coding Standards -->
+    <rule ref="WordPress-Core" />
+    <rule ref="WordPress-Docs" />
+    <rule ref="WordPress-Extra" />
+
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+    </rule>
+
+    <!-- Configure I18n text domain properties -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="gridmaster"/>
+                <element value="default"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Exclude certain directories and files from being checked -->
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern type="relative">build/*</exclude-pattern>
+</ruleset>
