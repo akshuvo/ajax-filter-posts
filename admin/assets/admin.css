@@ -25,6 +25,10 @@
     display: flex;
 }
 
+.gap-1 {
+    gap: 16px;
+}
+
 .text-center {
     text-align: center;
 }
@@ -537,8 +541,16 @@ div[class^="show-if-"] {
 
 .gm-page-build-grid .nav-tab {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin: 0;
+}
+
+.gridmaster-wrap .gm-grid-title {
+    height: 100%;
+    border: 0;
+    box-shadow: none;
+    font-size: 20px;
+    color: #687c93;
 }
 
 /* Modal */

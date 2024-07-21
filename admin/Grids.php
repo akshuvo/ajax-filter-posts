@@ -30,7 +30,7 @@ class Grids {
 	/**
 	 * Add/update grid
 	 *
-	 * @param array $data
+	 * @param array $data Form data.
 	 * @return int
 	 */
 	public function save( $data ) {
@@ -66,7 +66,7 @@ class Grids {
 	/**
 	 * Get grid by ID
 	 *
-	 * @param int $id
+	 * @param int $id Grid id.
 	 * @return object
 	 */
 	public function get( $id ) {
@@ -78,7 +78,7 @@ class Grids {
 	/**
 	 * Delete grid
 	 *
-	 * @param int $id
+	 * @param int $id Grid id.
 	 * @return void
 	 */
 	public function delete( $id ) {

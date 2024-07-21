@@ -63,11 +63,12 @@ $left_tabs = array(
 
 		<div class="gm-admin-toolbar">
 			<?php if ( $get_path == 'build-grid' ) : ?>
-				
-				<div class=" float-end nav-tab">
-					<!-- <input type="text"> -->
-					<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
-					<!-- <button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button> -->
+				<div class="nav-tab">
+					<input class="gm-grid-title" type="text" name="title"/>
+					<div class="d-flex gap-1">
+						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
+						<button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+					</div>
 				</div>
 			<?php else : ?>
 				<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
@@ -84,33 +85,6 @@ $left_tabs = array(
 	</div>
 	<div class="gm-admin-content">
 		<?php
-		// if ( $get_path == 'build-grid' ) {
-		// $file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
-		// if( file_exists( $file_path ) ) {
-		// require_once $file_path;
-		// }
-		// } elseif ( $get_path == 'templates' ) {
-		// $file_path = GRIDMASTER_PATH . '/admin/views/templates.php';
-		// if( file_exists( $file_path ) ) {
-		// require_once $file_path;
-		// }
-		// } elseif ( $get_path == 'settings' ) {
-		// $file_path = GRIDMASTER_PATH . '/admin/views/settings.php';
-		// if( file_exists( $file_path ) ) {
-		// require_once $file_path;
-		// }
-		// } elseif ( $get_path == 'support' ) {
-		// $file_path = GRIDMASTER_PATH . '/admin/views/support.php';
-		// if( file_exists( $file_path ) ) {
-		// require_once $file_path;
-		// }
-		// } else {
-		// $file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
-		// if( file_exists( $file_path ) ) {
-		// require_once $file_path;
-		// }
-		// }
-
 		switch ( $get_path ) {
 			case 'build-grid':
 				$file_path = GRIDMASTER_PATH . '/admin/views/build-grid.php';
