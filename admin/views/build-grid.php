@@ -1,11 +1,19 @@
 <?php
 // Include the admin functions
 require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
+
+// Grid id.
+$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+
+// Get grid by id.
+$grid = gm_get_grid( $grid_id );
+
+
 ?>
-<form class="container-fluid gm-container metabox-holder pt-0" id="gm-shortcode-generator" action="" method="post">
+<form class="container-fluid gm-container metabox-holder pt-0 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
 	<div class="row">
 		<nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
-			
+			<?php ppr( $grid ); ?>
 			<div id="gm-select-grid" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
@@ -834,6 +842,12 @@ require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 			<!-- End Grid Preview -->
 		</main>
 	</div>
+
+	<div class="gm-ajax-response"></div>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $grid_id ); ?>">
+	<input class="gm-ignore-field" type="hidden" name="action" value="gridmaster_ajax">
+	<input class="gm-ignore-field" type="hidden" name="gm-action" value="save_grid">
+	<?php wp_nonce_field( 'gm-ajax-nonce', 'gm_nonce' ); ?>
 </form>
 
 <!-- Modal -->
@@ -843,18 +857,18 @@ require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 			<div class="gm-modal-content">
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'gridmaster' ); ?></h2>
-				<p><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
+				<p class="desc"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
+				<div class="d-flex gm-copy-wrap gm-saved-code">
+					<input type="text" value="<?php esc_attr_e( '[gridmaster id="1"]', 'gridmaster' ); ?>" class="regular-text gm-copy-val" readonly>
+					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+				</div>
+
+				<h2 class="mb-0"><?php esc_html_e( 'Or below one', 'gridmaster' ); ?></h2>
 				<div class="d-flex gm-copy-wrap">
 					<input type="text" value="[gridmaster]" class="regular-text gm-copy-inp gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
 
-				<!-- <h2><?php esc_html_e( 'Or below one', 'gridmaster' ); ?></h2>
-				<div class="d-flex gm-copy-wrap">
-					<input type="text" value="<?php esc_attr_e( '[gridmaster id="1"]', 'gridmaster' ); ?>" class="regular-text gm-copy-val" readonly>
-					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
-				</div>
-				<div class="desc"><?php esc_html_e( 'If you saved the grid, you can use the below shortcode to display the grid.', 'gridmaster' ); ?></div> -->
 			</div>
 		</div>
 	</div>
@@ -949,25 +963,25 @@ require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 		iframe.parentNode.classList.remove('loading')
 	})
 
-	// Save the shortcode
-	jQuery(document).ready(function($) {
-		$('#gm-shortcode-generator').on('submit', function(e) {
-			e.preventDefault();
-			var data = $(this).serialize();
-			$.ajax({
-				url: ajaxurl,
-				type: 'post',
-				data: data,
-				success: function(response) {
-					if( response.success ) {
-						alert('Shortcode saved successfully');
-					} else {
-						alert('Failed to save shortcode');
-					}
-				}
-			});
-		});
-	});
+	// // Save the shortcode
+	// jQuery(document).ready(function($) {
+	// 	$('#gm-shortcode-generator').on('submit', function(e) {
+	// 		e.preventDefault();
+	// 		var data = $(this).serialize();
+	// 		$.ajax({
+	// 			url: ajaxurl,
+	// 			type: 'post',
+	// 			data: data,
+	// 			success: function(response) {
+	// 				if( response.success ) {
+	// 					alert('Shortcode saved successfully');
+	// 				} else {
+	// 					alert('Failed to save shortcode');
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// });
 
 </script>
 <style>

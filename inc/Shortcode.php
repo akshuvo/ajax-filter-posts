@@ -73,7 +73,7 @@ class Shortcode {
 	 */
 	public function render_shortcode( $atts, $content = null ) {
 
-		// Check if GridMaster Pro is not installed and current user is admin
+		// Check if GridMaster Pro is not installed and current user is admin.
 		if ( ! gridmaster_is_pro() && current_user_can( 'manage_options' ) && isset( $atts['post_type_selection'] ) && $atts['post_type_selection'] == 'auto' ) {
 			/* translators: %s: upgrade url */
 			echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -83,7 +83,7 @@ class Shortcode {
 			array(
 				'post_type'           => 'post',
 				'posts_per_page'      => 9,
-				'orderby'             => 'menu_order date', // Display posts sorted by ‘menu_order’ with a fallback to post ‘date’
+				'orderby'             => 'menu_order date', // Display posts sorted by ‘menu_order’ with a fallback to post ‘date’.
 				'order'               => 'DESC',
 				'tax_query'           => array(),
 				'meta_query'          => array(),
@@ -93,7 +93,7 @@ class Shortcode {
 				'excerpt_length'      => 15,
 				'show_read_more'      => 'yes',
 				'read_more_text'      => '',
-				// START OLD ATTRIBUTES
+				// START OLD ATTRIBUTES.
 				'show_filter'         => 'yes',
 				'btn_all'             => 'yes',
 				// 'initial'            => "-1",
@@ -103,9 +103,9 @@ class Shortcode {
 				'pagination_type'     => '',
 				'infinite_scroll'     => '',
 				'animation'           => '',
-				// END OLD ATTRIBUTES
+				// END OLD ATTRIBUTES.
 				'grid_style'          => 'default', // master ID
-				'grid_id'             => 'gm-' . wp_generate_password( 8, false ), // grid ID
+				'grid_id'             => 'gm-' . wp_generate_password( 8, false ), // grid ID.
 				'taxonomy'            => 'category',
 				'terms'               => '',
 				'grid_image_size'     => 'full',
@@ -117,10 +117,10 @@ class Shortcode {
 			'gridmaster'
 		);
 
-		// Grid Style
+		// Grid Style.
 		$grid_style = $atts['grid_style'];
 
-		// Render dynamic styles
+		// Render dynamic styles.
 		$this->render_styles(
 			array(
 				'grid_style' => $grid_style,
@@ -129,7 +129,7 @@ class Shortcode {
 
 		extract( $atts );
 
-		// Grid ID
+		// Grid ID.
 		$grid_id = $atts['grid_id'];
 
 		// If id is set then get args from the database and render the grid

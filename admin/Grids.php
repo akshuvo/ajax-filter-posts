@@ -36,9 +36,9 @@ class Grids {
 	public function save( $data ) {
 		global $wpdb;
 
-		$id         = isset( $data['id'] ) ? $data['id'] : 0;
-		$title      = isset( $data['title'] ) ? $data['title'] : '';
-		$attributes = isset( $data['attributes'] ) ? $data['attributes'] : '';
+		$id         = isset( $data['id'] ) ? intval( $data['id'] ) : 0;
+		$title      = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
+		$attributes = isset( $data['attributes'] ) ? serialize( $data['attributes'] ) : null;
 
 		if ( $id ) {
 			$wpdb->update(
@@ -69,9 +69,14 @@ class Grids {
 	 * @param int $id Grid id.
 	 * @return object
 	 */
-	public function get( $id ) {
+	public static function get( $id ) {
 		global $wpdb;
 		$grid = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}gridmaster_grids WHERE id = %d", $id ) );
+
+		// Unserialize if found
+		if ( $grid ) {
+			$grid->attributes = maybe_unserialize( $grid->attributes );
+		}
 		return $grid;
 	}
 

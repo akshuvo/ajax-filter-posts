@@ -388,7 +388,7 @@ function gm_get_image_sizes() {
 /**
  * Save settings ajax handler
  *
- * @param  array $params Settings data.
+ * @param  array $params Form data.
  */
 function gridmaster_ajax_save_settings( $params ) {
 
@@ -407,6 +407,47 @@ function gridmaster_ajax_save_settings( $params ) {
 	wp_send_json_success(
 		array(
 			'message' => __( 'Settings Saved Successfully', 'gridmaster' ),
+			'data'    => $settings,
+		)
+	);
+}
+
+/**
+ * Save grid ajax handler
+ *
+ * @param  array $params Form data.
+ */
+function gridmaster_ajax_save_grid( $params ) {
+
+	// Get Data.
+	$grid_title = isset( $params['title'] ) ? sanitize_text_field( $params['title'] ) : 'Sample Grid #' . wp_generate_password( 8, false );
+	$grid_id    = isset( $params['id'] ) ? intval( $params['id'] ) : null;
+
+	print_r( $params );
+
+	// Grid Handler Class.
+	if ( ! class_exists( 'GridMaster\Grids' ) ) {
+		require_once GRIDMASTER_PATH . '/admin/Grids.php';
+	}
+
+	// DB data array.
+	$data = array(
+		'title'      => $grid_title,
+		'attributes' => $params,
+	);
+
+	// If has id
+	if ( $grid_id ) {
+		$data['id'] = $grid_id;
+	}
+
+	// Save/Update to DB.
+	$grid_insert_id = GridMaster\Grids::init()->save( $data );
+
+	// Return json.
+	wp_send_json_success(
+		array(
+			'message' => __( 'Grid Saved Successfully', 'gridmaster' ),
 			'data'    => $settings,
 		)
 	);

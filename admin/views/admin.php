@@ -64,10 +64,11 @@ $left_tabs = array(
 		<div class="gm-admin-toolbar">
 			<?php if ( $get_path == 'build-grid' ) : ?>
 				<div class="nav-tab">
-					<input class="gm-grid-title" type="text" name="title"/>
+					<input class="gm-grid-title" type="text" name="title" form="gm-shortcode-generator">
 					<div class="d-flex gap-1">
+						<span class="spinner"></span>
 						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
-						<button type="button" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
 					</div>
 				</div>
 			<?php else : ?>
