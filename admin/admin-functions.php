@@ -270,10 +270,21 @@ function gridmaster_form_field( $key = '', $args = array(), $value = null ) {
  * Shortcode Field name
  *
  * @param string $name Field name.
+ * @param  array  $attr Defaults attributes.
  */
-function gm_field_name( $name ) {
+function gm_field_name( $name, $attr = array() ) {
 	return $name;
-	return 'gridmaster_shortcode[' . $name . ']';
+}
+
+/**
+ * Field value.
+ *
+ * @param  string $name Field name.
+ * @param  array  $attr Defaults attributes.
+ * @return string
+ */
+function gm_field_value( $name, $attr = array() ) {
+	return isset( $attr[ $name ] ) ? $attr[ $name ] : '';
 }
 
 /**

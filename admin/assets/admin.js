@@ -240,6 +240,9 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	// Trigger on load.
+	jQuery( '#grid_style' ).change();
+
 	// Change Image Size
 	jQuery(document).on('change', '.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]', function (e) {
 		let $val = jQuery(this).val();
@@ -252,12 +255,18 @@ jQuery(document).ready(function ($) {
 		jQuery('.show-if-' + $id + '-' + $val).fadeIn('fast');
 	});
 
+	// Trigger on load.
+	jQuery( '.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]' ).change();
+
 	// Change Image Size
 	jQuery(document).on('change', '[name="link_thumbnail"]', function (e) {
 		let $val = jQuery(this).val();
 		jQuery('.show-if-link_thumbnail-yes').hide();
 		jQuery('.show-if-link_thumbnail-' + $val).fadeIn('fast');
 	});
+
+	// Trigger on load.
+	jQuery( '[name="link_thumbnail"]' ).change();
 
 	// Submit form button
 	jQuery(document).on('click', '.gm-save-grid', function (e) {
@@ -275,6 +284,9 @@ jQuery(document).ready(function ($) {
 
 		// Disable Button
 		$form.find('[type="submit"]').attr('disabled', 'disabled');
+
+		// Action Value
+		const gmAction = $form.find('[name="gm-action"]').val();
 
 		// Spinner
 		$form.find('.spinner').addClass('is-active');
@@ -307,6 +319,8 @@ jQuery(document).ready(function ($) {
 				} else {
 					$form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>' + response.data.message + '</p></div>');
 				}
+
+				jQuery( document ).trigger( 'gm-ajax-success-' + gmAction, [ response.data ] )
 
 			},
 			error: function (response) {

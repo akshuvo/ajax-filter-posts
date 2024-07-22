@@ -3,16 +3,17 @@
  * Get Grid by ID
  *
  * @param  integer $grid_id Grid id.
+ * @param boolean $defaults Show defaults data.
  * @return object
  */
-function gm_get_grid( $grid_id ) {
+function gm_get_grid( $grid_id, $defaults = false ) {
 	// Grid Handler Class.
 	if ( ! class_exists( 'GridMaster\Grids' ) ) {
 		require_once GRIDMASTER_PATH . '/admin/Grids.php';
 	}
 
 	// Grid args
-	return GridMaster\Grids::get( $grid_id );
+	return GridMaster\Grids::get( $grid_id, $defaults );
 }
 
 /**

@@ -25,27 +25,31 @@ $my_grids = GridMaster\Grids::init()->list();
 							<h2><?php esc_html_e( 'My Grids', 'gridmaster' ); ?></h2>
 						</div>
 						<div class="gm-grid-list-body">
-						<table class="wp-list-table widefat fixed striped table-view-list">
-							<thead>
-								<tr>
-									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
-								</tr>
-							</thead>
-							<tbody id="the-list">
-							    <tr>
-									<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
-								</tr>
-								
-							</tbody>
-						</table>
+							<table class="wp-list-table widefat fixed striped table-view-list">
+								<thead>
+									<tr>
+										<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
+									</tr>
+								</thead>
+								<tbody id="the-list">
+
+									
+									
+								</tbody>
+							</table>
+							<form class="gm-ajax-form" id="gm-list-grids" action="" method="post">
+							  
+
+								<input type="hidden" name="action" value="gridmaster_ajax">
+								<input type="hidden" name="gm-action" value="list_grids">
+								<?php wp_nonce_field( 'gm-ajax-nonce', 'gm_nonce' ); ?>
+
+								<button type="submit">Load</button>
+							</form>
 						</div>
 					</div>
 				<?php else : ?>
@@ -66,3 +70,31 @@ $my_grids = GridMaster\Grids::init()->list();
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	jQuery( document ).on( 'gm-ajax-success-list_grids', ( e, data ) => {
+		console.log(data)
+		let template = wp.template( 'wp-grid_row' );
+		let output = '';
+
+		const grids = data.grids;
+		for (let i = 0; i < grids.length; i++) {
+			const grid = grids[i];
+			output += template( grid );
+			
+		}
+
+		console.log(output)
+
+	})
+</script>
+
+<script id="tmpl-wp-grid_row" type="text/html">
+	<tr>
+		<th scope="col">{{ title }}</th>
+		<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
+		<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
+		<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
+		<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
+	</tr>
+</script>

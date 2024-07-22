@@ -6,14 +6,16 @@ require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 $grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
 
 // Get grid by id.
-$grid = gm_get_grid( $grid_id );
+$grid = gm_get_grid( $grid_id, true );
 
+// Attributes.
+$attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
 ?>
 <form class="container-fluid gm-container metabox-holder pt-0 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
 	<div class="row">
 		<nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
-			<?php ppr( $grid ); ?>
+			<?php ppr( $attr ); ?>
 			<div id="gm-select-grid" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
@@ -30,10 +32,10 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'grid_style' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Select Grid Style',
+							'label'   => __( 'Select Grid Style', 'gridmaster' ),
 							'options' => gridmaster_grid_styles(),
-							'default' => 'default',
-						)
+						),
+						gm_field_value( 'grid_style', $attr )
 					);
 					?>
 					<div class="grid-demo-link-button hidden"></div>
@@ -44,10 +46,11 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'post_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Select Post Type',
+							'label'   => __( 'Select Post Type', 'gridmaster'),
 							'options' => gm_get_post_types(),
 							'default' => 'post',
-						)
+						),
+						gm_field_value( 'post_type', $attr )
 					);
 					?>
 
@@ -57,14 +60,15 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'post_type_selection' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Post Type Advanced Selection',
+							'label'   => __( 'Post Type Advanced Selection', 'gridmaster'),
 							'options' => array(
 								''     => __( 'None', 'gridmaster' ),
 								'auto' => __( 'Auto Select', 'gridmaster' ),
 							),
 							'default' => '',
 							'is_pro'  => true,
-						)
+						),
+						gm_field_value( 'post_type_selection', $attr )
 					);
 					?>
 
@@ -74,9 +78,10 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'posts_per_page' ),
 						array(
 							'type'    => 'number',
-							'label'   => 'Posts Per Page',
+							'label'   => __( 'Posts Per Page', 'gridmaster'),
 							'default' => 10,
-						)
+						),
+						gm_field_value( 'posts_per_page', $attr )
 					);
 					?>
 
@@ -88,24 +93,25 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'orderby' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Order By',
+							'label'   => __( 'Order By', 'gridmaster'),
 							'options' => array(
-								'date'           => 'Date',
-								'title'          => 'Title',
-								'rand'           => 'Random',
-								'comment_count'  => 'Comment Count',
-								'modified'       => 'Modified',
-								'ID'             => 'ID',
-								'author'         => 'Author',
-								'name'           => 'Name',
-								'type'           => 'Type',
-								'parent'         => 'Parent',
-								'menu_order'     => 'Menu Order',
-								'meta_value'     => 'Meta Value',
-								'meta_value_num' => 'Meta Value Number',
+								'date'           => __( 'Date', 'gridmaster'),
+								'title'          => __( 'Title', 'gridmaster'),
+								'rand'           => __( 'Random', 'gridmaster'),
+								'comment_count'  => __( 'Comment Count', 'gridmaster'),
+								'modified'       => __( 'Modified', 'gridmaster'),
+								'ID'             => __( 'ID', 'gridmaster'),
+								'author'         => __( 'Author', 'gridmaster'),
+								'name'           => __( 'Name', 'gridmaster'),
+								'type'           => __( 'Type', 'gridmaster'),
+								'parent'         => __( 'Parent', 'gridmaster'),
+								'menu_order'     => __( 'Menu Order', 'gridmaster'),
+								'meta_value'     => __( 'Meta Value', 'gridmaster'),
+								'meta_value_num' => __( 'Meta Value Number', 'gridmaster'),
 							),
 							'default' => 'date',
-						)
+						),
+						gm_field_value( 'orderby', $attr )
 					);
 					?>
 
@@ -115,13 +121,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'order' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Order',
+							'label'   => __( 'Order', 'gridmaster'),
 							'options' => array(
-								'DESC' => 'Descending',
-								'ASC'  => 'Ascending',
+								'DESC' => __( 'Descending', 'gridmaster'),
+								'ASC'  => __( 'Ascending', 'gridmaster'),
 							),
 							'default' => 'DESC',
-						)
+						),
+						gm_field_value( 'order', $attr )
 					);
 					?>
 
@@ -131,13 +138,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'content_from' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Show content from',
+							'label'   => __( 'Show content from', 'gridmaster'),
 							'options' => array(
-								'excerpt' => 'Post Excerpt',
-								'content' => 'Post Content',
+								'excerpt' => __( 'Post Excerpt', 'gridmaster'),
+								'content' => __( 'Post Content', 'gridmaster'),
 							),
 							'default' => 'excerpt',
-						)
+						),
+						gm_field_value( 'content_from', $attr )
 					);
 					?>
 
@@ -147,13 +155,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'excerpt_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Excerpt Type',
+							'label'   => __( 'Excerpt Type', 'gridmaster'),
 							'options' => array(
-								'words'      => 'Words',
-								'characters' => 'Characters',
+								'words'      => __( 'Words', 'gridmaster'),
+								'characters' => __( 'Characters', 'gridmaster'),
 							),
 							'default' => 'words',
-						)
+						),
+						gm_field_value( 'excerpt_type', $attr )
 					);
 					?>
 					
@@ -163,9 +172,10 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'excerpt_length' ),
 						array(
 							'type'    => 'number',
-							'label'   => 'Excerpt Length',
+							'label'   => __( 'Excerpt Length', 'gridmaster'),
 							'default' => 15,
-						)
+						),
+						gm_field_value( 'excerpt_length', $attr )
 					);
 					?>
 
@@ -175,13 +185,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'show_read_more' ),
 						array(
 							'type'    => 'radio',
-							'label'   => 'Show Read More',
+							'label'   => __( 'Show Read More', 'gridmaster'),
 							'options' => array(
 								'yes' => __( 'Yes', 'gridmaster' ),
 								'no'  => __( 'No', 'gridmaster' ),
 							),
 							'default' => 'yes',
-						)
+						),
+						gm_field_value( 'show_read_more', $attr )
 					);
 					?>
 
@@ -194,7 +205,8 @@ $grid = gm_get_grid( $grid_id );
 							'label'       => __( 'Read More Text', 'gridmaster' ),
 							'default'     => '',
 							'placeholder' => __( 'Read More', 'gridmaster' ),
-						)
+						),
+						gm_field_value( 'read_more_text', $attr )
 					);
 
 					// Grid Image Size
@@ -202,10 +214,11 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'grid_image_size' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Grid Image Size',
+							'label'   => __( 'Grid Image Size', 'gridmaster'),
 							'options' => gm_get_image_sizes(),
 							'default' => 'full',
-						)
+						),
+						gm_field_value( 'grid_image_size', $attr )
 					);
 					?>
 					<div class="show-if-grid_image_size-custom">
@@ -216,10 +229,11 @@ $grid = gm_get_grid( $grid_id );
 							gm_field_name( 'grid_image_width' ),
 							array(
 								'type'    => 'number',
-								'label'   => 'Image Width',
+								'label'   => __( 'Image Width', 'gridmaster'),
 								'default' => 350,
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'grid_image_width', $attr )
 						);
 						?>
 
@@ -229,10 +243,11 @@ $grid = gm_get_grid( $grid_id );
 							gm_field_name( 'grid_image_height' ),
 							array(
 								'type'    => 'number',
-								'label'   => 'Image Height',
+								'label'   => __( 'Image Height', 'gridmaster'),
 								'default' => 200,
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'grid_image_height', $attr )
 						);
 						?>
 					</div>
@@ -250,7 +265,8 @@ $grid = gm_get_grid( $grid_id );
 							),
 							'default' => 'no',
 							'is_pro'  => true,
-						)
+						),
+						gm_field_value( 'link_thumbnail', $attr )
 					);
 					?>
 
@@ -261,14 +277,15 @@ $grid = gm_get_grid( $grid_id );
 							gm_field_name( 'link_thumbnail_to' ),
 							array(
 								'type'    => 'select',
-								'label'   => 'Link Thumbnail To',
+								'label'   => __( 'Link Thumbnail To', 'gridmaster'),
 								'options' => array(
 									'post'  => __( 'Post Link', 'gridmaster' ),
 									'image' => __( 'Image Link', 'gridmaster' ),
 								),
 								'default' => 'post',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'link_thumbnail_to', $attr )
 						);
 						?>
 					</div>
@@ -280,9 +297,9 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'title_tag' ),
 						array(
 							'type'        => 'select',
-							'label'       => 'Heading Tag',
+							'label'       => __( 'Heading Tag', 'gridmaster' ),
 							'options'     => array(
-								''     => 'Select Tag',
+								''     => __( 'Select Tag', 'gridmaster' ),
 								'h1'   => 'H1',
 								'h2'   => 'H2',
 								'h3'   => 'H3',
@@ -295,8 +312,9 @@ $grid = gm_get_grid( $grid_id );
 							),
 							'default'     => '',
 							'is_pro'      => true,
-							'description' => 'Select the heading tag for the post title.',
-						)
+							'description' => __( 'Select the heading tag for the post title.', 'gridmaster' ),
+						),
+						gm_field_value( 'title_tag', $attr )
 					);
 
 					// Heading Font Size
@@ -304,7 +322,7 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'heading_font_size' ),
 						array(
 							'type'             => 'text',
-							'label'            => 'Heading Font Size',
+							'label'            => __( 'Heading Font Size', 'gridmaster' ),
 							'default'          => array(
 								'xs' => '16px',
 								'sm' => '18px',
@@ -314,8 +332,9 @@ $grid = gm_get_grid( $grid_id );
 							),
 							'is_pro'           => true,
 							'responsive_field' => true,
-							'description'      => 'Set the font size for the post title in different devices.',
-						)
+							'description'      => __( 'Set the font size for the post title in different devices.', 'gridmaster' ),
+						),
+						gm_field_value( 'heading_font_size', $attr )
 					);
 					?>
 
@@ -326,11 +345,12 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'grid_col_gap' ),
 						array(
 							'type'             => 'number',
-							'label'            => 'Column Gap',
+							'label'            => __( 'Column Gap', 'gridmaster' ),
 							'default'          => 30,
 							'is_pro'           => true,
 							'responsive_field' => true,
-						)
+						),
+						gm_field_value( 'grid_col_gap', $attr )
 					);
 
 					// Row Gap
@@ -338,11 +358,12 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'grid_row_gap' ),
 						array(
 							'type'             => 'number',
-							'label'            => 'Row Gap',
+							'label'            => __( 'Row Gap', 'gridmaster' ),
 							'default'          => 30,
 							'is_pro'           => true,
 							'responsive_field' => true,
-						)
+						),
+						gm_field_value( 'grid_row_gap', $attr )
 					);
 
 					// Item Per Row
@@ -350,7 +371,7 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'grid_item_per_row' ),
 						array(
 							'type'             => 'number',
-							'label'            => 'Item Per Row',
+							'label'            => __('Item Per Row', 'gridmaster'),
 							'default'          => array(
 								'xs' => 1,
 								'sm' => 2,
@@ -360,7 +381,8 @@ $grid = gm_get_grid( $grid_id );
 							),
 							'is_pro'           => true,
 							'responsive_field' => true,
-						)
+						),
+						gm_field_value( 'grid_item_per_row', $attr )
 					);
 					?>
 					<?php do_action( 'gridmaster_grid_settings_fields_after' ); ?>
@@ -389,7 +411,8 @@ $grid = gm_get_grid( $grid_id );
 								'no'  => __( 'No', 'gridmaster' ),
 							),
 							'default' => 'yes',
-						)
+						),
+						gm_field_value( 'show_filter', $attr )
 					);
 					?>
 
@@ -410,7 +433,8 @@ $grid = gm_get_grid( $grid_id );
 								)
 							),
 							'default' => 'default', // default
-						)
+						),
+						gm_field_value( 'filter_style', $attr )
 					);
 					?>
 					<div class="filter-demo-link-button hidden"></div>
@@ -421,13 +445,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'btn_all' ),
 						array(
 							'type'    => 'radio',
-							'label'   => 'Show All Button',
+							'label'   => __( 'Show All Button', 'gridmaster'),
 							'options' => array(
 								'yes' => __( 'Yes', 'gridmaster' ),
 								'no'  => __( 'No', 'gridmaster' ),
 							),
 							'default' => 'yes',
-						)
+						),
+						gm_field_value( 'btn_all', $attr )
 					);
 					?>
 
@@ -442,11 +467,12 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'taxonomy' ),
 						array(
 							'type'    => 'select',
-							'label'   => 'Select Taxonomy',
+							'label'   => __( 'Select Taxonomy', 'gridmaster'),
 							'options' => $taxonomy_options,
 							'default' => 'category', // category
 							'class'   => 'gm-select-taxonomy',
-						)
+						),
+						gm_field_value( 'taxonomy', $attr )
 					);
 					?>
 					<script>
@@ -464,7 +490,8 @@ $grid = gm_get_grid( $grid_id );
 							'placeholder' => __( 'Select Terms', 'gridmaster' ),
 							'options'     => $terms['category'],
 							'class'       => 'gm-select-term',
-						)
+						),
+						gm_field_value( 'terms', $attr )
 					);
 					?>
 					
@@ -474,13 +501,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'hide_empty' ),
 						array(
 							'type'    => 'radio',
-							'label'   => 'Hide Empty Terms',
+							'label'   => __( 'Hide Empty Terms', 'gridmaster'),
 							'options' => array(
 								'1' => __( 'Yes', 'gridmaster' ),
 								'0' => __( 'No', 'gridmaster' ),
 							),
 							'default' => '0',
-						)
+						),
+						gm_field_value( 'hide_empty', $attr )
 					);
 					?>
 
@@ -490,7 +518,7 @@ $grid = gm_get_grid( $grid_id );
 							gm_field_name( 'initial_term' ),
 							array(
 								'type'        => 'select',
-								'label'       => 'Initial Term on Page Load',
+								'label'       => __( 'Initial Term on Page Load', 'gridmaster'),
 								'options'     => array(
 									'-1'   => __( 'All - Default', 'gridmaster' ),
 									'auto' => __( 'Auto Select', 'gridmaster' ),
@@ -498,7 +526,8 @@ $grid = gm_get_grid( $grid_id );
 								'default'     => '-1',
 								'is_pro'      => true,
 								'description' => __( 'Select the initial term to be selected on page load.', 'gridmaster' ),
-							)
+							),
+							gm_field_value( 'initial_term', $attr )
 						);
 						?>
 
@@ -516,7 +545,8 @@ $grid = gm_get_grid( $grid_id );
 							'default'     => 'no',
 							'description' => __( 'Allow multiple selection of terms in the filter.', 'gridmaster' ),
 							'is_pro'      => true,
-						)
+						),
+						gm_field_value( 'multiple_select', $attr )
 					);
 					?>
 					<hr>
@@ -529,7 +559,8 @@ $grid = gm_get_grid( $grid_id );
 							'label'       => __( 'Add a Filter Heading?', 'gridmaster' ),
 							'default'     => '',
 							'placeholder' => __( 'Category', 'gridmaster' ),
-						)
+						),
+						gm_field_value( 'filter_heading', $attr )
 					);
 					?>
 
@@ -545,7 +576,8 @@ $grid = gm_get_grid( $grid_id );
 								'no'  => __( 'No', 'gridmaster' ),
 							),
 							'default' => 'no',
-						)
+						),
+						gm_field_value( 'toggle_filter_items', $attr )
 					);
 					?>
 
@@ -574,7 +606,8 @@ $grid = gm_get_grid( $grid_id );
 							),
 							'default' => '',
 							'is_pro'  => true,
-						)
+						),
+						gm_field_value( 'enable_slider', $attr )
 					);
 					?>
 
@@ -595,7 +628,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'is_pro'           => true,
 								'responsive_field' => true,
-							)
+							),
+							gm_field_value( 'slider_slidesToShow', $attr )
 						);
 
 						// slidesToScroll
@@ -613,7 +647,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'is_pro'           => true,
 								'responsive_field' => true,
-							)
+							),
+							gm_field_value( 'slider_slidesToScroll', $attr )
 						);
 
 						// arrows
@@ -628,7 +663,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '1',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_arrows', $attr )
 						);
 
 						// dots
@@ -643,7 +679,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_dots', $attr )
 						);
 
 						// autoplay
@@ -658,7 +695,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_autoplay', $attr )
 						);
 
 						// autoplaySpeed
@@ -669,7 +707,8 @@ $grid = gm_get_grid( $grid_id );
 								'label'   => __( 'Autoplay Speed', 'gridmaster' ),
 								'default' => 3000,
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_autoplaySpeed', $attr )
 						);
 
 						// pauseOnHover
@@ -684,7 +723,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_pauseOnHover', $attr )
 						);
 
 						// infinite
@@ -699,7 +739,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '1',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_infinite', $attr )
 						);
 
 						// centerMode
@@ -714,7 +755,8 @@ $grid = gm_get_grid( $grid_id );
 								),
 								'default' => '',
 								'is_pro'  => true,
-							)
+							),
+							gm_field_value( 'slider_centerMode', $attr )
 						);
 
 						?>
@@ -737,13 +779,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'pagination_type' ),
 						array(
 							'type'    => 'radio',
-							'label'   => 'Pagination Type',
+							'label'   => __( 'Pagination Type', 'gridmaster'),
 							'options' => array(
-								''          => 'Default',
-								'load_more' => 'Load More',
+								''          => __( 'Default', 'gridmaster'),
+								'load_more' => __( 'Load More', 'gridmaster'),
 							),
 							'default' => '',
-						)
+						),
+						gm_field_value( 'pagination_type', $attr )
 					);
 					?>
 
@@ -753,14 +796,15 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'infinite_scroll' ),
 						array(
 							'type'        => 'radio',
-							'label'       => 'Infinite Scroll',
+							'label'       => __( 'Infinite Scroll', 'gridmaster'),
 							'options'     => array(
 								'true'  => 'Yes',
 								'false' => 'No',
 							),
 							'default'     => 'no',
-							'description' => 'If pagination type is default, this option will be ignored.',
-						)
+							'description' => __( 'If pagination type is default, this option will be ignored.', 'gridmaster'),
+						),
+						gm_field_value( 'infinite_scroll', $attr )
 					);
 					?>
 
@@ -770,13 +814,14 @@ $grid = gm_get_grid( $grid_id );
 						gm_field_name( 'animation' ),
 						array(
 							'type'    => 'radio',
-							'label'   => 'Animation',
+							'label'   => __( 'Animation', 'gridmaster'),
 							'options' => array(
-								'true'  => 'Yes',
-								'false' => 'No',
+								'true'  => __( 'Yes', 'gridmaster'),
+								'false' => __( 'No', 'gridmaster'),
 							),
 							'default' => 'no',
-						)
+						),
+						gm_field_value( 'animation', $attr )
 					);
 					?>
 				</div>

@@ -80,8 +80,6 @@ class Ajax {
 		$grid_title = isset( $params['title'] ) ? sanitize_text_field( $params['title'] ) : 'Sample Grid #' . wp_generate_password( 8, false );
 		$grid_id    = isset( $params['id'] ) ? intval( $params['id'] ) : null;
 
-		print_r( $params );
-
 		// Grid Handler Class.
 		if ( ! class_exists( 'GridMaster\Grids' ) ) {
 			require_once GRIDMASTER_PATH . '/admin/Grids.php';
@@ -99,13 +97,36 @@ class Ajax {
 		}
 
 		// Save/Update to DB.
-		$grid_insert_id = GridMaster\Grids::init()->save( $data );
+		$grid_insert_id = Grids::init()->save( $data );
 
 		// Return json.
 		wp_send_json_success(
 			array(
 				'message' => __( 'Grid Saved Successfully', 'gridmaster' ),
-				'data'    => $settings,
+				'grid_id' => $grid_insert_id,
+			)
+		);
+	}
+
+	/**
+	 * List grids ajax handler
+	 *
+	 * @param  array $params Form data.
+	 */
+	function list_grids( $params ) {
+
+		// Grid Handler Class.
+		if ( ! class_exists( 'GridMaster\Grids' ) ) {
+			require_once GRIDMASTER_PATH . '/admin/Grids.php';
+		}
+
+		// Save/Update to DB.
+		$grids = Grids::init()->list();
+
+		// Return json.
+		wp_send_json_success(
+			array(
+				'grids' => $grids,
 			)
 		);
 	}
