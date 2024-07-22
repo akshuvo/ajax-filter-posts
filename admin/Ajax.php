@@ -1,12 +1,15 @@
 <?php
 namespace GridMaster;
 
+/**
+ * Ajax handler class.
+ */
 class Ajax {
 
 	/**
 	 * Class constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_action( 'wp_ajax_gridmaster_ajax', array( $this, 'register_ajax' ) );
 	}
 
@@ -26,7 +29,7 @@ class Ajax {
 			wp_send_json_error( __( 'Invalid action', 'gridmaster' ) );
 		}
 
-		// Include the admin functions
+		// Include the admin functions.
 		require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 
 		// Make method.
@@ -35,7 +38,7 @@ class Ajax {
 		// wp_send_json_error( __( 'Method doesn\'t exist', 'gridmaster' ) );
 		// }
 
-		// Call the ajax function
+		// Call the ajax function.
 		$response = $this->$method( $_REQUEST );
 
 		wp_die();
@@ -47,7 +50,7 @@ class Ajax {
 	 *
 	 * @param  array $params Form data.
 	 */
-	function save_settings( $params ) {
+	private function save_settings( $params ) {
 
 		// Get Data.
 		$data                               = isset( $params['gridmaster_options'] ) ? $params['gridmaster_options'] : array();
@@ -74,7 +77,7 @@ class Ajax {
 	 *
 	 * @param  array $params Form data.
 	 */
-	function save_grid( $params ) {
+	private function save_grid( $params ) {
 
 		// Get Data.
 		$grid_title = isset( $params['title'] ) ? sanitize_text_field( $params['title'] ) : 'Sample Grid #' . wp_generate_password( 8, false );
@@ -85,13 +88,29 @@ class Ajax {
 			require_once GRIDMASTER_PATH . '/admin/Grids.php';
 		}
 
+		// Ignorable params.
+		$ignored_params = array(
+			'title',
+			'action',
+			'gm-action',
+			'gm_nonce',
+			'_wp_http_referer',
+		);
+
+		// Unset params if ignorable.
+		foreach ( $ignored_params as $value ) {
+			if ( isset( $params[ $value ] ) ) {
+				unset( $params[ $value ] );
+			}
+		}
+
 		// DB data array.
 		$data = array(
 			'title'      => $grid_title,
 			'attributes' => $params,
 		);
 
-		// If has id
+		// If has id.
 		if ( $grid_id ) {
 			$data['id'] = $grid_id;
 		}
@@ -113,7 +132,7 @@ class Ajax {
 	 *
 	 * @param  array $params Form data.
 	 */
-	function list_grids( $params ) {
+	private function list_grids( $params ) {
 
 		// Grid Handler Class.
 		if ( ! class_exists( 'GridMaster\Grids' ) ) {
@@ -121,7 +140,7 @@ class Ajax {
 		}
 
 		// Save/Update to DB.
-		$grids = Grids::init()->list();
+		$grids = Grids::init()->list( $params );
 
 		// Return json.
 		wp_send_json_success(

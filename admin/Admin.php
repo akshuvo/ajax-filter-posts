@@ -1,22 +1,25 @@
 <?php
 namespace GridMaster;
 
+/**
+ * Admin handler class.
+ */
 class Admin {
 
 	/**
 	 * Class constructor
 	 */
-	function __construct() {
+	private function __construct() {
 		// Menu.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
 		// Admin scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
 
-		// Admin Footer Text
+		// Admin Footer Text.
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 9999 );
 
-		// Change version text
+		// Change version text.
 		add_filter( 'update_footer', array( $this, 'update_footer' ), 9999 );
 	}
 
@@ -34,9 +37,7 @@ class Admin {
 	}
 
 	/**
-	 * Admin menu
-	 *
-	 * @return void
+	 * Register admin menu
 	 */
 	public function admin_menu() {
 		$parent_slug = 'gridmaster';
@@ -48,33 +49,28 @@ class Admin {
 			array(
 				'title'  => __( 'Welcome', 'gridmaster' ),
 				'url'    => 'gridmaster',
-				'icon'   => 'dashicons dashicons-admin-home',
 				'path'   => '',
 				'target' => '',
 			),
-			// [
-			// 'title' => __( 'Templates', 'gridmaster' ),
-			// 'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
-			// 'icon'  => 'dashicons dashicons-layout',
-			// 'path' => 'templates',
-			// ],
+			array(
+				'title' => __( 'My Grids', 'gridmaster' ),
+				'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+				'path'  => 'my-grids',
+			),
 			array(
 				'title'  => __( 'Grid Builder', 'gridmaster' ),
 				'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
-				'icon'   => 'dashicons dashicons-schedule',
 				'path'   => 'build-grid',
 				'target' => '',
 			),
 			array(
-				'title'  => __( 'Settings', 'gridmaster' ),
-				'url'    => admin_url( 'admin.php?page=gridmaster&path=settings' ),
-				'icon'   => 'dashicons dashicons-admin-generic',
-				'path'   => 'settings',
-				'target' => '',
+				'title' => __( 'Settings', 'gridmaster' ),
+				'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
+				'path'  => 'settings',
 			),
 		);
 
-		// Submenus
+		// Add Submenus.
 		foreach ( $submenus as $tab ) {
 			add_submenu_page( $parent_slug, $tab['title'], $tab['title'], $capability, $tab['url'] );
 		}
@@ -83,7 +79,7 @@ class Admin {
 	/**
 	 * Admin Footer Text
 	 *
-	 * @return void
+	 * @param  string $text Footer text.
 	 */
 	public function admin_footer_text( $text ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -91,7 +87,7 @@ class Admin {
 		}
 
 		$current_screen = get_current_screen();
-		if ( $current_screen->id != 'toplevel_page_gridmaster' ) {
+		if ( 'toplevel_page_gridmaster' !== $current_screen->id ) {
 			return $text;
 		}
 		/* translators: %s: review url. */
@@ -103,7 +99,7 @@ class Admin {
 	/**
 	 * Change version text
 	 *
-	 * @return void
+	 * @param  string $text Footer text.
 	 */
 	public function update_footer( $text ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -111,16 +107,16 @@ class Admin {
 		}
 
 		$current_screen = get_current_screen();
-		if ( $current_screen->id != 'toplevel_page_gridmaster' ) {
+		if ( 'toplevel_page_gridmaster' !== $current_screen->id ) {
 			return $text;
 		}
 
 		$path = isset( $_GET['path'] ) ? sanitize_text_field( $_GET['path'] ) : '';
-		if ( $path != 'build-grid' ) {
+		if ( 'build-grid' !== $path ) {
 			return '';
 		}
 
-		// Live chat offer for pro users
+		// Live chat offer for pro users.
 		$text = sprintf(
 			/* translators: 1: live chat. 2: ticket url. */
 			__( 'Stuck somewhere? Need help? %1$s or %2$s', 'gridmaster' ),
@@ -133,14 +129,14 @@ class Admin {
 
 	/**
 	 * Plugin settings page
-	 *
-	 * @return void
 	 */
 	public function plugin_page() {
 		require_once GRIDMASTER_PATH . '/admin/views/admin.php';
 	}
 
-	// Enqueue scripts and styles.
+	/**
+	 * Enqueue scripts and styles.
+	 */
 	public function scripts() {
 
 		wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );

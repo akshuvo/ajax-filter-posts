@@ -59,7 +59,7 @@ $my_grids = GridMaster\Grids::init()->list();
 								<span class="dashicons dashicons-info-outline"></span>
 							</div>
 							<div class="gm-card-containt">
-								<h2><?php esc_html_e( 'No Grids Found', 'gridmaster' ); ?></h2>
+								<h2><?php esc_html_e( 'You didn\'t save any grid yet!', 'gridmaster' ); ?></h2>
 								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster&path=build-grid' ) ); ?>"><?php esc_html_e( 'Create Your First Grid', 'gridmaster' ); ?></a>
 							</div>
 						</div>

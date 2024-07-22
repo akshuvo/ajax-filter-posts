@@ -220,6 +220,11 @@ button.gm-btn:disabled {
     right: 20px;
 }
 
+.gm-response-bottom {
+    bottom: 42px;
+    top: unset;
+}
+
 .gm-ajax-response p {
     line-height: normal;
 }

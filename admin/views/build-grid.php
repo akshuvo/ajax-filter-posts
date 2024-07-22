@@ -1,5 +1,9 @@
 <?php
-// Include the admin functions
+/**
+ * Admin Menu: Build Grid.
+ */
+
+// Include the admin functions.
 require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 
 // Grid id.
@@ -208,7 +212,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_value( 'read_more_text', $attr )
 					);
 
-					// Grid Image Size
+					// Grid Image Size.
 					gridmaster_form_field(
 						gm_field_name( 'grid_image_size' ),
 						array(
@@ -291,7 +295,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
 					<hr>
 					<?php
-					// Heading Tag
+					// Heading Tag.
 					gridmaster_form_field(
 						gm_field_name( 'title_tag' ),
 						array(
@@ -316,7 +320,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_value( 'title_tag', $attr )
 					);
 
-					// Heading Font Size
+					// Heading Font Size.
 					gridmaster_form_field(
 						gm_field_name( 'heading_font_size' ),
 						array(
@@ -339,7 +343,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
 					<hr>
 					<?php
-					// Column Gap
+					// Column Gap.
 					gridmaster_form_field(
 						gm_field_name( 'grid_col_gap' ),
 						array(
@@ -352,7 +356,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_value( 'grid_col_gap', $attr )
 					);
 
-					// Row Gap
+					// Row Gap.
 					gridmaster_form_field(
 						gm_field_name( 'grid_row_gap' ),
 						array(
@@ -365,7 +369,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_value( 'grid_row_gap', $attr )
 					);
 
-					// Item Per Row
+					// Item Per Row.
 					gridmaster_form_field(
 						gm_field_name( 'grid_item_per_row' ),
 						array(
@@ -431,7 +435,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 									'style-4' => __( 'Style 4 (New)', 'gridmaster' ),
 								)
 							),
-							'default' => 'default', // default
+							'default' => 'default',
 						),
 						gm_field_value( 'filter_style', $attr )
 					);
@@ -468,7 +472,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							'type'    => 'select',
 							'label'   => __( 'Select Taxonomy', 'gridmaster' ),
 							'options' => $taxonomy_options,
-							'default' => 'category', // category
+							'default' => 'category',
 							'class'   => 'gm-select-taxonomy',
 						),
 						gm_field_value( 'taxonomy', $attr )
@@ -480,6 +484,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					</script>
 
 					<?php
+					// Terms.
 					gridmaster_form_field(
 						gm_field_name( 'terms' ),
 						array(
@@ -492,10 +497,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						),
 						gm_field_value( 'terms', $attr )
 					);
-					?>
-					
-					<!-- hide_empty -->
-					<?php
+
+					// Hide empty terms.
 					gridmaster_form_field(
 						gm_field_name( 'hide_empty' ),
 						array(
@@ -509,29 +512,25 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						),
 						gm_field_value( 'hide_empty', $attr )
 					);
-					?>
 
-					<!-- // Initial Term on Page Load -->
-					<?php
-						gridmaster_form_field(
-							gm_field_name( 'initial_term' ),
-							array(
-								'type'        => 'select',
-								'label'       => __( 'Initial Term on Page Load', 'gridmaster' ),
-								'options'     => array(
-									'-1'   => __( 'All - Default', 'gridmaster' ),
-									'auto' => __( 'Auto Select', 'gridmaster' ),
-								),
-								'default'     => '-1',
-								'is_pro'      => true,
-								'description' => __( 'Select the initial term to be selected on page load.', 'gridmaster' ),
+					// Initial Term on Page Load.
+					gridmaster_form_field(
+						gm_field_name( 'initial_term' ),
+						array(
+							'type'        => 'select',
+							'label'       => __( 'Initial Term on Page Load', 'gridmaster' ),
+							'options'     => array(
+								'-1'   => __( 'All - Default', 'gridmaster' ),
+								'auto' => __( 'Auto Select', 'gridmaster' ),
 							),
-							gm_field_value( 'initial_term', $attr )
-						);
-						?>
+							'default'     => '-1',
+							'is_pro'      => true,
+							'description' => __( 'Select the initial term to be selected on page load.', 'gridmaster' ),
+						),
+						gm_field_value( 'initial_term', $attr )
+					);
 
-					<!-- Allow Multiple Selection -->
-					<?php
+					// Allow Multiple Selection.
 					gridmaster_form_field(
 						gm_field_name( 'multiple_select' ),
 						array(
@@ -549,8 +548,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					);
 					?>
 					<hr>
-					<!-- Filter Heading -->
 					<?php
+					// Filter Heading.
 					gridmaster_form_field(
 						gm_field_name( 'filter_heading' ),
 						array(
@@ -561,10 +560,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						),
 						gm_field_value( 'filter_heading', $attr )
 					);
-					?>
 
-					<!-- Toggle Filter Items -->
-					<?php
+					// Toggle Filter Items.
 					gridmaster_form_field(
 						gm_field_name( 'toggle_filter_items' ),
 						array(
@@ -584,6 +581,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			</div>
 			<!-- Filter Options -->
 
+			<!-- Slider Options -->
 			<div id="gm-select-slider" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Slider Options', 'gridmaster' ); ?></h2>
@@ -592,8 +590,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
-
 					<?php
+					// Enable slider.
 					gridmaster_form_field(
 						gm_field_name( 'enable_slider' ),
 						array(
@@ -612,7 +610,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
 					<div class="show-if-enable_slider-yes">
 						<?php
-						// slidesToShow
+						// slidesToShow.
 						gridmaster_form_field(
 							gm_field_name( 'slider_slidesToShow' ),
 							array(
@@ -631,7 +629,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_slidesToShow', $attr )
 						);
 
-						// slidesToScroll
+						// slidesToScroll.
 						gridmaster_form_field(
 							gm_field_name( 'slider_slidesToScroll' ),
 							array(
@@ -650,7 +648,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_slidesToScroll', $attr )
 						);
 
-						// arrows
+						// arrows.
 						gridmaster_form_field(
 							gm_field_name( 'slider_arrows' ),
 							array(
@@ -666,7 +664,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_arrows', $attr )
 						);
 
-						// dots
+						// dots.
 						gridmaster_form_field(
 							gm_field_name( 'slider_dots' ),
 							array(
@@ -682,7 +680,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_dots', $attr )
 						);
 
-						// autoplay
+						// autoplay.
 						gridmaster_form_field(
 							gm_field_name( 'slider_autoplay' ),
 							array(
@@ -698,7 +696,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_autoplay', $attr )
 						);
 
-						// autoplaySpeed
+						// autoplaySpeed.
 						gridmaster_form_field(
 							gm_field_name( 'slider_autoplaySpeed' ),
 							array(
@@ -710,7 +708,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_autoplaySpeed', $attr )
 						);
 
-						// pauseOnHover
+						// pauseOnHover.
 						gridmaster_form_field(
 							gm_field_name( 'slider_pauseOnHover' ),
 							array(
@@ -726,7 +724,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_pauseOnHover', $attr )
 						);
 
-						// infinite
+						// infinite.
 						gridmaster_form_field(
 							gm_field_name( 'slider_infinite' ),
 							array(
@@ -742,7 +740,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_value( 'slider_infinite', $attr )
 						);
 
-						// centerMode
+						// centerMode.
 						gridmaster_form_field(
 							gm_field_name( 'slider_centerMode' ),
 							array(
@@ -763,6 +761,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					
 				</div>
 			</div>
+			<!-- ./Slider Options -->
 			
 			<div id="gm-select-pagination" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
@@ -772,8 +771,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
-					<!-- pagination_type -->
 					<?php
+					// Pagination type.
 					gridmaster_form_field(
 						gm_field_name( 'pagination_type' ),
 						array(
@@ -787,10 +786,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						),
 						gm_field_value( 'pagination_type', $attr )
 					);
-					?>
 
-					<!-- infinite_scroll -->
-					<?php
+					// Infinite scroll.
 					gridmaster_form_field(
 						gm_field_name( 'infinite_scroll' ),
 						array(
@@ -805,10 +802,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						),
 						gm_field_value( 'infinite_scroll', $attr )
 					);
-					?>
 
-					<!-- animation -->
-					<?php
+					// Scroll animation.
 					gridmaster_form_field(
 						gm_field_name( 'animation' ),
 						array(
@@ -830,8 +825,6 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		</nav>
 
 		<main class="pt-3 gm-right-sidebar col-md-9 ms-sm-auto col-lg-9 ">
-			<?php // echo do_shortcode("[gridmaster]"); ?>
-
 			<!-- Grid Preview  -->
 			<div class="gm-iframe-postbox postbox gm-slide-toggle-- ">
 				<div class="postbox-header">
@@ -878,7 +871,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							<div class="asr-loader">
 								<div class="lds-dual-ring"></div>
 							</div>
-							<iframe id="gm-iframe" src="<?php echo esc_url( home_url( '/' ) . '?gm_shortcode_preview=1&shortcode=' . urlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+							<iframe id="gm-iframe" src="<?php echo esc_url( home_url( '/' ) . '?gm_shortcode_preview=1&shortcode=' . rawurlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
 						</div>
 					</div>
 				</div>
@@ -887,7 +880,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		</main>
 	</div>
 
-	<div class="gm-ajax-response"></div>
+	<div class="gm-ajax-response gm-response-bottom"></div>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $grid_id ); ?>">
 	<input class="gm-ignore-field" type="hidden" name="action" value="gridmaster_ajax">
 	<input class="gm-ignore-field" type="hidden" name="gm-action" value="save_grid">
@@ -906,8 +899,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 					<div class="gm-save-overlay">
 						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
 					</div>
-					<?php $grid_id_copy = $grid_id ? $grid_id : '#'; ?>
-					<input type="text" value="<?php esc_attr_e( '[gridmaster id="' . $grid_id_copy . '"]', 'gridmaster' ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
+					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id_copy . '"]' : '[gridmaster id="#"]'; ?>
+					<input type="text" value="<?php echo esc_attr( $grid_id_copy ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
 
@@ -1011,25 +1004,27 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		iframe.parentNode.classList.remove('loading')
 	})
 
-	// // Save the shortcode
-	// jQuery(document).ready(function($) {
-	// 	$('#gm-shortcode-generator').on('submit', function(e) {
-	// 		e.preventDefault();
-	// 		var data = $(this).serialize();
-	// 		$.ajax({
-	// 			url: ajaxurl,
-	// 			type: 'post',
-	// 			data: data,
-	// 			success: function(response) {
-	// 				if( response.success ) {
-	// 					alert('Shortcode saved successfully');
-	// 				} else {
-	// 					alert('Failed to save shortcode');
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-	// });
+	// Save the shortcode
+	jQuery( document ).on( 'gm-ajax-success-save_grid', ( e, data ) => {
+		console.log(data)
+		const gridId = data.grid_id;
+		if( gridId ) {
+			// Update grid id.
+			jQuery( '[data-grid-id]' ).attr( 'data-grid-id', gridId );
+
+			// Update shortcode.
+			jQuery( '.gm-saved-code' ).val( `[gridmaster id="${gridId}"]` );
+
+			// Update form id field.
+			jQuery( 'input[name="id"]' ).val( gridId );
+
+			// Update URL
+			// if( window.location.search ){ // TODO: if has id=
+				history.pushState(null, null, window.location.search + '&id=' + gridId );
+			// }
+		}
+
+	})
 
 </script>
 <style>
@@ -1053,5 +1048,4 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		color: #3c434a;
 		font-size: inherit;
 	}
-
 </style>

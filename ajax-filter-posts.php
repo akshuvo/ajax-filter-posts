@@ -25,7 +25,7 @@ final class GridMasterPlugin {
 	 * Class construcotr
 	 */
 	private function __construct() {
-		// Define constants
+		// Define constants.
 		$this->define_constants();
 
 		// Enqueue scripts and styles.
@@ -33,13 +33,13 @@ final class GridMasterPlugin {
 
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 
-		// Plugin init
+		// Plugin init.
 		add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
 
-		// Action link
+		// Action link.
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'action_links' ) );
 
-		// Admin Functions
+		// Admin Functions.
 		if ( is_admin() ) {
 			$this->admin_init();
 		}
@@ -60,8 +60,6 @@ final class GridMasterPlugin {
 
 	/**
 	 * Define the required plugin constants
-	 *
-	 * @return void
 	 */
 	public function define_constants() {
 		define( 'GRIDMASTER_VERSION', '3.4.8' );
@@ -72,14 +70,16 @@ final class GridMasterPlugin {
 		define( 'GRIDMASTER_PRO_LINK', 'https://addonmaster.com/gridmaster/' );
 	}
 
-	// Admin Functions
+	/**
+	 * Admin Functions
+	 */
 	public function admin_init() {
 		if ( ! class_exists( 'GridMaster\Admin' ) ) {
 			require_once GRIDMASTER_PATH . '/admin/Admin.php';
 		}
 		$gridmaster = GridMaster\Admin::init();
 
-		// Ajax class
+		// Ajax class.
 		if ( ! class_exists( 'GridMaster\Ajax' ) ) {
 			require_once GRIDMASTER_PATH . '/admin/Ajax.php';
 		}
@@ -88,18 +88,16 @@ final class GridMasterPlugin {
 
 	/**
 	 * Initialize the plugin
-	 *
-	 * @return void
 	 */
 	public function init_plugin() {
 
-		// Load Localization
+		// Load Localization.
 		load_plugin_textdomain( 'gridmaster', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
-		// Include the functions.php
+		// Include the functions.php.
 		require_once GRIDMASTER_PATH . '/inc/functions.php';
 
-		// Load Shortcode Class
+		// Load Shortcode Class.
 		if ( ! class_exists( 'GridMaster\Shortcode' ) ) {
 			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
 		}
@@ -109,24 +107,20 @@ final class GridMasterPlugin {
 
 	/**
 	 * Do stuff upon plugin activation
-	 *
-	 * @return void
 	 */
 	public function activate() {
-		// Save timestamp for plugin activation
+		// Save timestamp for plugin activation.
 		update_option( 'gridmaster_activation_time', time() );
 	}
 
 	/**
 	 * Enqueue scripts and styles
-	 *
-	 * @return void
 	 */
 	public function scripts() {
 
 		wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
-		// Localization
+		// Localization.
 		wp_localize_script(
 			'gridmaster-frontend',
 			'asr_ajax_params',
@@ -144,12 +138,12 @@ final class GridMasterPlugin {
 	/**
 	 * Add action links
 	 *
-	 * @param  array $links
+	 * @param  array $links Action links.
 	 * @return array
 	 */
 	public function action_links( $links ) {
 		$links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=gridmaster' ) ) . '">' . __( 'Settings', 'gridmaster' ) . '</a>';
-		// Get GridMaster Pro
+		// Get GridMaster Pro.
 		if ( ! gridmaster_is_pro() ) {
 			$links[] = '<a href="' . gridmaster_website_url( 'gridmaster/free-vs-pro/' ) . '" target="_blank" style="color: #39b54a; font-weight: bold;">' . __( 'Get GridMaster Pro', 'gridmaster' ) . '</a>';
 		}
@@ -157,10 +151,10 @@ final class GridMasterPlugin {
 	}
 }
 
-// Initializes the main plugin
-function GridMasterPlugin() {
+// Initializes the main plugin.
+function grid_master_plugin() {
 	return GridMasterPlugin::init();
 }
 
-// run the plugin
-GridMasterPlugin();
+// run the plugin.
+grid_master_plugin();

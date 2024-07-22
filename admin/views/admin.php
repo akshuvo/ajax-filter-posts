@@ -1,4 +1,7 @@
 <?php
+/**
+ * Handles admin menus
+ */
 
 // Direct Access is not allowed.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -6,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get path.
-$get_path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : '';
+$get_path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore.
 
 // Grid id.
-$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; // phpcs:ignore.
 
 // Navigation Tabs.
 $nav_tabs = array(
@@ -80,9 +83,9 @@ $nav_tabs = array(
 						<span class="spinner"></span>
 						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
 						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill">
-                            <div class="gm-update-label"><?php esc_html_e( 'Update Grid', 'gridmaster' ); ?></div>
-                            <div class="gm-save-label"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></div>
-                        </button>
+							<div class="gm-update-label"><?php esc_html_e( 'Update Grid', 'gridmaster' ); ?></div>
+							<div class="gm-save-label"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></div>
+						</button>
 					</div>
 				</div>
 			<?php else : ?>
