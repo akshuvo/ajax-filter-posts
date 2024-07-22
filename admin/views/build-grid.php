@@ -15,7 +15,6 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 <form class="container-fluid gm-container metabox-holder pt-0 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
 	<div class="row">
 		<nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
-			<?php ppr( $attr ); ?>
 			<div id="gm-select-grid" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
@@ -46,7 +45,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'post_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Select Post Type', 'gridmaster'),
+							'label'   => __( 'Select Post Type', 'gridmaster' ),
 							'options' => gm_get_post_types(),
 							'default' => 'post',
 						),
@@ -60,7 +59,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'post_type_selection' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Post Type Advanced Selection', 'gridmaster'),
+							'label'   => __( 'Post Type Advanced Selection', 'gridmaster' ),
 							'options' => array(
 								''     => __( 'None', 'gridmaster' ),
 								'auto' => __( 'Auto Select', 'gridmaster' ),
@@ -78,7 +77,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'posts_per_page' ),
 						array(
 							'type'    => 'number',
-							'label'   => __( 'Posts Per Page', 'gridmaster'),
+							'label'   => __( 'Posts Per Page', 'gridmaster' ),
 							'default' => 10,
 						),
 						gm_field_value( 'posts_per_page', $attr )
@@ -93,21 +92,21 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'orderby' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Order By', 'gridmaster'),
+							'label'   => __( 'Order By', 'gridmaster' ),
 							'options' => array(
-								'date'           => __( 'Date', 'gridmaster'),
-								'title'          => __( 'Title', 'gridmaster'),
-								'rand'           => __( 'Random', 'gridmaster'),
-								'comment_count'  => __( 'Comment Count', 'gridmaster'),
-								'modified'       => __( 'Modified', 'gridmaster'),
-								'ID'             => __( 'ID', 'gridmaster'),
-								'author'         => __( 'Author', 'gridmaster'),
-								'name'           => __( 'Name', 'gridmaster'),
-								'type'           => __( 'Type', 'gridmaster'),
-								'parent'         => __( 'Parent', 'gridmaster'),
-								'menu_order'     => __( 'Menu Order', 'gridmaster'),
-								'meta_value'     => __( 'Meta Value', 'gridmaster'),
-								'meta_value_num' => __( 'Meta Value Number', 'gridmaster'),
+								'date'           => __( 'Date', 'gridmaster' ),
+								'title'          => __( 'Title', 'gridmaster' ),
+								'rand'           => __( 'Random', 'gridmaster' ),
+								'comment_count'  => __( 'Comment Count', 'gridmaster' ),
+								'modified'       => __( 'Modified', 'gridmaster' ),
+								'ID'             => __( 'ID', 'gridmaster' ),
+								'author'         => __( 'Author', 'gridmaster' ),
+								'name'           => __( 'Name', 'gridmaster' ),
+								'type'           => __( 'Type', 'gridmaster' ),
+								'parent'         => __( 'Parent', 'gridmaster' ),
+								'menu_order'     => __( 'Menu Order', 'gridmaster' ),
+								'meta_value'     => __( 'Meta Value', 'gridmaster' ),
+								'meta_value_num' => __( 'Meta Value Number', 'gridmaster' ),
 							),
 							'default' => 'date',
 						),
@@ -121,10 +120,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'order' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Order', 'gridmaster'),
+							'label'   => __( 'Order', 'gridmaster' ),
 							'options' => array(
-								'DESC' => __( 'Descending', 'gridmaster'),
-								'ASC'  => __( 'Ascending', 'gridmaster'),
+								'DESC' => __( 'Descending', 'gridmaster' ),
+								'ASC'  => __( 'Ascending', 'gridmaster' ),
 							),
 							'default' => 'DESC',
 						),
@@ -138,10 +137,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'content_from' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Show content from', 'gridmaster'),
+							'label'   => __( 'Show content from', 'gridmaster' ),
 							'options' => array(
-								'excerpt' => __( 'Post Excerpt', 'gridmaster'),
-								'content' => __( 'Post Content', 'gridmaster'),
+								'excerpt' => __( 'Post Excerpt', 'gridmaster' ),
+								'content' => __( 'Post Content', 'gridmaster' ),
 							),
 							'default' => 'excerpt',
 						),
@@ -155,10 +154,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'excerpt_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Excerpt Type', 'gridmaster'),
+							'label'   => __( 'Excerpt Type', 'gridmaster' ),
 							'options' => array(
-								'words'      => __( 'Words', 'gridmaster'),
-								'characters' => __( 'Characters', 'gridmaster'),
+								'words'      => __( 'Words', 'gridmaster' ),
+								'characters' => __( 'Characters', 'gridmaster' ),
 							),
 							'default' => 'words',
 						),
@@ -172,7 +171,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'excerpt_length' ),
 						array(
 							'type'    => 'number',
-							'label'   => __( 'Excerpt Length', 'gridmaster'),
+							'label'   => __( 'Excerpt Length', 'gridmaster' ),
 							'default' => 15,
 						),
 						gm_field_value( 'excerpt_length', $attr )
@@ -185,7 +184,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'show_read_more' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Show Read More', 'gridmaster'),
+							'label'   => __( 'Show Read More', 'gridmaster' ),
 							'options' => array(
 								'yes' => __( 'Yes', 'gridmaster' ),
 								'no'  => __( 'No', 'gridmaster' ),
@@ -214,7 +213,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_image_size' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Grid Image Size', 'gridmaster'),
+							'label'   => __( 'Grid Image Size', 'gridmaster' ),
 							'options' => gm_get_image_sizes(),
 							'default' => 'full',
 						),
@@ -229,7 +228,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'grid_image_width' ),
 							array(
 								'type'    => 'number',
-								'label'   => __( 'Image Width', 'gridmaster'),
+								'label'   => __( 'Image Width', 'gridmaster' ),
 								'default' => 350,
 								'is_pro'  => true,
 							),
@@ -243,7 +242,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'grid_image_height' ),
 							array(
 								'type'    => 'number',
-								'label'   => __( 'Image Height', 'gridmaster'),
+								'label'   => __( 'Image Height', 'gridmaster' ),
 								'default' => 200,
 								'is_pro'  => true,
 							),
@@ -277,7 +276,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'link_thumbnail_to' ),
 							array(
 								'type'    => 'select',
-								'label'   => __( 'Link Thumbnail To', 'gridmaster'),
+								'label'   => __( 'Link Thumbnail To', 'gridmaster' ),
 								'options' => array(
 									'post'  => __( 'Post Link', 'gridmaster' ),
 									'image' => __( 'Image Link', 'gridmaster' ),
@@ -371,7 +370,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_item_per_row' ),
 						array(
 							'type'             => 'number',
-							'label'            => __('Item Per Row', 'gridmaster'),
+							'label'            => __( 'Item Per Row', 'gridmaster' ),
 							'default'          => array(
 								'xs' => 1,
 								'sm' => 2,
@@ -445,7 +444,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'btn_all' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Show All Button', 'gridmaster'),
+							'label'   => __( 'Show All Button', 'gridmaster' ),
 							'options' => array(
 								'yes' => __( 'Yes', 'gridmaster' ),
 								'no'  => __( 'No', 'gridmaster' ),
@@ -467,7 +466,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'taxonomy' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Select Taxonomy', 'gridmaster'),
+							'label'   => __( 'Select Taxonomy', 'gridmaster' ),
 							'options' => $taxonomy_options,
 							'default' => 'category', // category
 							'class'   => 'gm-select-taxonomy',
@@ -501,7 +500,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'hide_empty' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Hide Empty Terms', 'gridmaster'),
+							'label'   => __( 'Hide Empty Terms', 'gridmaster' ),
 							'options' => array(
 								'1' => __( 'Yes', 'gridmaster' ),
 								'0' => __( 'No', 'gridmaster' ),
@@ -518,7 +517,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'initial_term' ),
 							array(
 								'type'        => 'select',
-								'label'       => __( 'Initial Term on Page Load', 'gridmaster'),
+								'label'       => __( 'Initial Term on Page Load', 'gridmaster' ),
 								'options'     => array(
 									'-1'   => __( 'All - Default', 'gridmaster' ),
 									'auto' => __( 'Auto Select', 'gridmaster' ),
@@ -779,10 +778,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'pagination_type' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Pagination Type', 'gridmaster'),
+							'label'   => __( 'Pagination Type', 'gridmaster' ),
 							'options' => array(
-								''          => __( 'Default', 'gridmaster'),
-								'load_more' => __( 'Load More', 'gridmaster'),
+								''          => __( 'Default', 'gridmaster' ),
+								'load_more' => __( 'Load More', 'gridmaster' ),
 							),
 							'default' => '',
 						),
@@ -796,13 +795,13 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'infinite_scroll' ),
 						array(
 							'type'        => 'radio',
-							'label'       => __( 'Infinite Scroll', 'gridmaster'),
+							'label'       => __( 'Infinite Scroll', 'gridmaster' ),
 							'options'     => array(
 								'true'  => 'Yes',
 								'false' => 'No',
 							),
 							'default'     => 'no',
-							'description' => __( 'If pagination type is default, this option will be ignored.', 'gridmaster'),
+							'description' => __( 'If pagination type is default, this option will be ignored.', 'gridmaster' ),
 						),
 						gm_field_value( 'infinite_scroll', $attr )
 					);
@@ -814,10 +813,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'animation' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Animation', 'gridmaster'),
+							'label'   => __( 'Animation', 'gridmaster' ),
 							'options' => array(
-								'true'  => __( 'Yes', 'gridmaster'),
-								'false' => __( 'No', 'gridmaster'),
+								'true'  => __( 'Yes', 'gridmaster' ),
+								'false' => __( 'No', 'gridmaster' ),
 							),
 							'default' => 'no',
 						),
@@ -903,8 +902,12 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'gridmaster' ); ?></h2>
 				<p class="desc"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
-				<div class="d-flex gm-copy-wrap gm-saved-code">
-					<input type="text" value="<?php esc_attr_e( '[gridmaster id="1"]', 'gridmaster' ); ?>" class="regular-text gm-copy-val" readonly>
+				<div class="d-flex gm-copy-wrap">
+					<div class="gm-save-overlay">
+						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+					</div>
+					<?php $grid_id_copy = $grid_id ? $grid_id : '#'; ?>
+					<input type="text" value="<?php esc_attr_e( '[gridmaster id="' . $grid_id_copy . '"]', 'gridmaster' ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
 

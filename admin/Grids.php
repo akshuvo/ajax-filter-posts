@@ -12,7 +12,6 @@ class Grids {
 	 * @var defaults
 	 */
 	public static $defaults = array(
-		'title'                 => 'Default',
 		'grid_style'            => 'default',
 		'post_type'             => 'post',
 		'post_type_selection'   => '',
@@ -172,6 +171,7 @@ class Grids {
 		// Defaults data.
 		if ( ! $id && $defaults ) {
 			$grid             = new \stdClass();
+			$grid->title      = sprintf( __( 'GridMaster #%s', 'gridmaster' ), wp_generate_password( 8, false ) );
 			$grid->attributes = self::$defaults;
 			return $grid;
 		}

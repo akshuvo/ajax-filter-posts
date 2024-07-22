@@ -102,7 +102,6 @@ jQuery(document).ready(function ($) {
 		let sliderOptions = {};
 
 
-
 		let shortCode = '[gridmaster';
 		jQuery.each($fields, function (i, field) {
 			let fieldName = field.name;
@@ -110,7 +109,7 @@ jQuery(document).ready(function ($) {
 			let $thisField = jQuery('#gm-shortcode-generator [name="' + fieldName + '"]');
 
 			// Ignore Fields
-			if ($thisField.hasClass('gm-ignore-field')) {
+			if (fieldName === 'title' || $thisField.hasClass('gm-ignore-field')) {
 				return;
 			}
 

@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Get path.
 $get_path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : '';
 
+// Grid id.
+$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+
 // Navigation Tabs.
 $nav_tabs = array(
 	array(
@@ -54,7 +57,7 @@ $nav_tabs = array(
 	),
 );
 ?>
-<div class="gridmaster-wrap <?php echo esc_attr( 'gm-page-' . $get_path ); ?>">
+<div class="gridmaster-wrap <?php echo esc_attr( 'gm-page-' . $get_path ); ?>" data-grid-id="<?php echo esc_attr( $grid_id ? 1 : 0 ); ?>">
 	<div class="gm-admin-header">
 		<div class="gm-admin-into">
 			<h2><span class="dashicons dashicons-forms me-2"></span> <?php esc_html_e( 'GridMaster', 'gridmaster' ); ?></h2>
@@ -64,21 +67,22 @@ $nav_tabs = array(
 		<div class="gm-admin-toolbar">
 			<?php
 			if ( 'build-grid' === $get_path ) :
-				// Grid id.
-				$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
 
 				// Get grid.
-				$grid = gm_get_grid( $grid_id );
+				$grid = gm_get_grid( $grid_id, true );
 
 				// Grid title.
-				$grid_title = isset( $grid->title ) ? $grid->title : '';
+				$grid_title = isset( $grid->title ) ? $grid->title : __( 'Sample Grid #', 'gridmaster' );
 				?>
 				<div class="nav-tab">
-					<input class="gm-grid-title" type="text" name="title" form="gm-shortcode-generator" value="<?php echo esc_attr( $grid_title ); ?>">
+					<input class="gm-ignore-field gm-grid-title" type="text" name="title" form="gm-shortcode-generator" value="<?php echo esc_attr( $grid_title ); ?>" placeholder="<?php esc_attr_e( 'Enter grid title', 'gridmaster' ); ?>">
 					<div class="d-flex gap-1">
 						<span class="spinner"></span>
 						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'gridmaster' ); ?></button>
-						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill">
+                            <div class="gm-update-label"><?php esc_html_e( 'Update Grid', 'gridmaster' ); ?></div>
+                            <div class="gm-save-label"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></div>
+                        </button>
 					</div>
 				</div>
 			<?php else : ?>
