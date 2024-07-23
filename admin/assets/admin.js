@@ -109,7 +109,7 @@ jQuery(document).ready(function ($) {
 			let $thisField = jQuery('#gm-shortcode-generator [name="' + fieldName + '"]');
 
 			// Ignore Fields
-			if (fieldName === 'title' || $thisField.hasClass('gm-ignore-field')) {
+			if (fieldName === 'id' || fieldName === 'title' || $thisField.hasClass('gm-ignore-field')) {
 				return;
 			}
 
@@ -180,8 +180,6 @@ jQuery(document).ready(function ($) {
 
 		});
 
-		// console.log(sliderOptions);
-
 		// Slider Options
 		shortCode += ' slider_args=\'' + JSON.stringify(sliderOptions) + '\'';
 
@@ -190,7 +188,7 @@ jQuery(document).ready(function ($) {
 
 		// Update Shortcode
 		jQuery(".gm-copy-inp").val(shortCode);
-
+		console.log(shortCode);
 		jQuery(".gm-iframe-wrap").addClass('loading');
 
 		// Update Preview

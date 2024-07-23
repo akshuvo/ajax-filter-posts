@@ -85,7 +85,7 @@ $nav_tabs = array(
 						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill">
 							<div class="gm-update-label"><?php esc_html_e( 'Update Grid', 'gridmaster' ); ?></div>
 							<div class="gm-save-label"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></div>
-                            <span class="unsaved-alert gm-tooltip gm-tooltip-end-bottom" title="<?php esc_html_e( 'You have some unsaved changes.', 'gridmaster' ); ?>"></span>
+							<span class="unsaved-alert gm-tooltip gm-tooltip-end-bottom" title="<?php esc_html_e( 'You have some unsaved changes.', 'gridmaster' ); ?>"></span>
 						</button>
 					</div>
 				</div>

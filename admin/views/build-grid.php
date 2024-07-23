@@ -990,7 +990,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 	// Window load event
 	window.addEventListener("load", (event) => {
 		// Trigger Post Type change
-		// postTypeSelect.dispatchEvent(new Event('change', {bubbles:true}));
+		postTypeSelect.dispatchEvent(new Event('change', {bubbles:true}));
 
 		// Trigger Taxonomy change
 		jQuery('#taxonomy').trigger('change');

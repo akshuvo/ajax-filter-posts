@@ -79,43 +79,70 @@ class Shortcode {
 			echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
+		// Default attributes.
+		$default_atts = array(
+			'post_type'           => 'post',
+			'posts_per_page'      => 9,
+			'orderby'             => 'menu_order date', // Display posts sorted by ‘menu_order’ with a fallback to post ‘date’.
+			'order'               => 'DESC',
+			'tax_query'           => array(),
+			'meta_query'          => array(),
+			'title_length'        => 50,
+			'content_from'        => 'excerpt',
+			'excerpt_type'        => 'words',
+			'excerpt_length'      => 15,
+			'show_read_more'      => 'yes',
+			'read_more_text'      => '',
+			// START OLD ATTRIBUTES.
+			'show_filter'         => 'yes',
+			'btn_all'             => 'yes',
+			// 'initial'            => "-1",
+			'cat'                 => '',
+			'paginate'            => 'no',
+			'hide_empty'          => 0,
+			'pagination_type'     => '',
+			'infinite_scroll'     => '',
+			'animation'           => '',
+			// END OLD ATTRIBUTES.
+			'grid_style'          => 'default', // master ID
+			'grid_id'             => 'gm-' . wp_generate_password( 8, false ), // grid ID.
+			'taxonomy'            => 'category',
+			'terms'               => '',
+			'grid_image_size'     => 'full',
+			'filter_style'        => 'default',
+			'filter_heading'      => '',
+			'toggle_filter_items' => '',
+			'id'                  => 0,
+		);
+
+		// Shortcode attributes.
 		$atts = shortcode_atts(
-			array(
-				'post_type'           => 'post',
-				'posts_per_page'      => 9,
-				'orderby'             => 'menu_order date', // Display posts sorted by ‘menu_order’ with a fallback to post ‘date’.
-				'order'               => 'DESC',
-				'tax_query'           => array(),
-				'meta_query'          => array(),
-				'title_length'        => 50,
-				'content_from'        => 'excerpt',
-				'excerpt_type'        => 'words',
-				'excerpt_length'      => 15,
-				'show_read_more'      => 'yes',
-				'read_more_text'      => '',
-				// START OLD ATTRIBUTES.
-				'show_filter'         => 'yes',
-				'btn_all'             => 'yes',
-				// 'initial'            => "-1",
-				'cat'                 => '',
-				'paginate'            => 'no',
-				'hide_empty'          => 0,
-				'pagination_type'     => '',
-				'infinite_scroll'     => '',
-				'animation'           => '',
-				// END OLD ATTRIBUTES.
-				'grid_style'          => 'default', // master ID
-				'grid_id'             => 'gm-' . wp_generate_password( 8, false ), // grid ID.
-				'taxonomy'            => 'category',
-				'terms'               => '',
-				'grid_image_size'     => 'full',
-				'filter_style'        => 'default',
-				'filter_heading'      => '',
-				'toggle_filter_items' => '',
-			),
+			$default_atts,
 			$atts,
 			'gridmaster'
 		);
+
+		// If id is set then get args from the database and render the grid.
+		// Otherwise render the grid from the shortcode attributes.
+
+		// Grid ID.
+		$grid_id = intval( $atts['id'] ) ? intval( $atts['id'] ) : null;
+
+		// Get Grid.
+		if ( $grid_id ) {
+			$get_grid = gm_get_grid( $grid_id );
+
+			ppr( $get_grid->attributes );
+
+			if ( $get_grid ) {
+
+				// $atts = $get_grid->attributes;
+				$atts = wp_parse_args( $atts, $get_grid->attributes );
+
+				// Keep the old way for now.
+				$atts['grid_id'] = 'gm-' . $grid_id;
+			}
+		}
 
 		// Grid Style.
 		$grid_style = $atts['grid_style'];
@@ -128,12 +155,6 @@ class Shortcode {
 		);
 
 		extract( $atts );
-
-		// Grid ID.
-		$grid_id = $atts['grid_id'];
-
-		// If id is set then get args from the database and render the grid
-		// Otherwise render the grid from the shortcode attributes
 
 		// Pagination
 		$pagination_type = $atts['pagination_type'];
@@ -218,14 +239,23 @@ class Shortcode {
 
 					<div class="gm-single-filter">
 						<?php
-						// Texonomy arguments
+						// Taxonomy includes.
+						$include = isset( $atts['cat'] ) && ! empty( isset( $atts['cat'] ) ) ? $atts['cat'] : array(); // Default is ['cat], old way.
+
+						// Terms, new way.
+						if ( isset( $atts['terms'] ) && ! empty( $atts['terms'] ) ) {
+							$include = $atts['terms'];
+						}
+
+						// Texonomy arguments.
 						$tax_args = array(
 							'hide_empty' => $atts['hide_empty'],
 							'taxonomy'   => $atts['taxonomy'],
-							'include'    => $atts['terms'] ? $atts['terms'] : $atts['cat'],
+							'include'    => $include,
+							// 'include'    => $atts['terms'] ? $atts['terms'] : $atts['cat'],
 						);
 
-						// If not pro
+						// If not pro.
 						if ( ! gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && ! empty( $tax_args['include'] ) ) {
 							if ( current_user_can( 'manage_options' ) ) {
 								/* translators: %s: upgrade url */
@@ -234,9 +264,8 @@ class Shortcode {
 							return;
 						}
 
-						// Filter arguments
+						// Filter arguments.
 						$filter_args = array(
-							// 'atts' => $atts,
 							'tax_args'     => $tax_args,
 							'grid_id'      => $atts['grid_id'],
 							'btn_all'      => $atts['btn_all'],

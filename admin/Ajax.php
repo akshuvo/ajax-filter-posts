@@ -90,6 +90,7 @@ class Ajax {
 
 		// Ignorable params.
 		$ignored_params = array(
+			'id',
 			'title',
 			'action',
 			'gm-action',
