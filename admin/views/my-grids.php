@@ -25,30 +25,28 @@ $my_grids = GridMaster\Grids::init()->list();
 							<h2><?php esc_html_e( 'My Grids', 'gridmaster' ); ?></h2>
 						</div>
 						<div class="gm-grid-list-body">
-							<table class="wp-list-table widefat fixed striped table-view-list">
+							<table class="wp-list-table widefat striped table-view-list">
 								<thead>
 									<tr>
 										<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
 										<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
 									</tr>
 								</thead>
 								<tbody id="the-list">
-
-									
-									
+                                    <!-- Loads by JS -->
 								</tbody>
 							</table>
 							<form class="gm-ajax-form" id="gm-list-grids" action="" method="post">
-							  
-
+                                <div class="spinner-wrap text-center">
+                                    <span class="spinner"></span>
+                                </div>
 								<input type="hidden" name="action" value="gridmaster_ajax">
 								<input type="hidden" name="gm-action" value="list_grids">
 								<?php wp_nonce_field( 'gm-ajax-nonce', 'gm_nonce' ); ?>
-
-								<button type="submit">Load</button>
+								<!-- <button type="submit">Load</button> -->
 							</form>
 						</div>
 					</div>
@@ -74,27 +72,38 @@ $my_grids = GridMaster\Grids::init()->list();
 <script type="text/javascript">
 	jQuery( document ).on( 'gm-ajax-success-list_grids', ( e, data ) => {
 		console.log(data)
-		let template = wp.template( 'wp-grid_row' );
 		let output = '';
 
 		const grids = data.grids;
 		for (let i = 0; i < grids.length; i++) {
 			const grid = grids[i];
-			output += template( grid );
+            console.log(grid)
+			output += `
+            <tr>
+                <th>${grid.title}</th>
+                <th>
+                    <div class="d-flex gm-copy-wrap input-sheamless">
+                        <input type="text" value='[gridmaster id="${grid.id}"]' class="gm-copy-inp gm-copy-val" readonly>
+                        <button type="button" class="gm-copy-btn gm-tooltip" title="Copy Shortcode"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+                    </div>
+                </th>
+                <th>${grid.attributes.post_type}</th>
+                <th>${grid.attributes.taxonomy}</th>
+                <th>
+                    <div class="action-btns">
+                        <a href="admin.php?page=gridmaster&path=build-grid&id=${grid.id}" class="button gm-tooltip" title="Edit"><span class="m-0 dashicons dashicons-edit"></span></a>
+                        <button type="button" class="button gm-tooltip" title="Duplicate"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+                        <button type="button" class="button gm-tooltip" title="Delete"><span class="m-0 dashicons dashicons-trash"></span></button>
+                    </div>
+                </th>
+            </tr>
+            `;
 			
 		}
 
-		console.log(output)
+        jQuery( '#the-list' ).html( output );
+
+	
 
 	})
-</script>
-
-<script id="tmpl-wp-grid_row" type="text/html">
-	<tr>
-		<th scope="col">{{ title }}</th>
-		<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
-		<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-		<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
-		<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
-	</tr>
 </script>

@@ -894,12 +894,12 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			<div class="gm-modal-content">
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'gridmaster' ); ?></h2>
-				<p class="desc"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
 				<div class="d-flex gm-copy-wrap">
 					<div class="gm-save-overlay">
 						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
 					</div>
-					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id_copy . '"]' : '[gridmaster id="#"]'; ?>
+					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id . '"]' : '[gridmaster id="#"]'; ?>
 					<input type="text" value="<?php echo esc_attr( $grid_id_copy ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
@@ -1006,7 +1006,6 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
 	// Save the shortcode
 	jQuery( document ).on( 'gm-ajax-success-save_grid', ( e, data ) => {
-		console.log(data)
 		const gridId = data.grid_id;
 		if( gridId ) {
 			// Update grid id.
@@ -1022,6 +1021,9 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			// if( window.location.search ){ // TODO: if has id=
 				history.pushState(null, null, window.location.search + '&id=' + gridId );
 			// }
+
+			// Data need save
+			dataNeedSave(0)
 		}
 
 	})

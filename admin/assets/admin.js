@@ -190,13 +190,15 @@ jQuery(document).ready(function ($) {
 
 		// Update Shortcode
 		jQuery(".gm-copy-inp").val(shortCode);
-		console.log(shortCode);
 
 		jQuery(".gm-iframe-wrap").addClass('loading');
 
 		// Update Preview
 		//?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) )
 		jQuery("#gm-iframe").attr('src', gridmaster_params.home_url + '?gm_shortcode_preview=1&shortcode=' + encodeURIComponent(shortCode));
+
+		// Data need save
+		dataNeedSave(1);
 	});
 
 	// Copy Shortcode
@@ -240,7 +242,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Trigger on load.
-	jQuery( '#grid_style' ).change();
+	jQuery('#grid_style').change();
 
 	// Change Image Size
 	jQuery(document).on('change', '.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]', function (e) {
@@ -255,7 +257,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Trigger on load.
-	jQuery( '.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]' ).change();
+	jQuery('.gridmaster-input-wrapper select, .gridmaster-input-wrapper input[type="radio"]').change();
 
 	// Change Image Size
 	jQuery(document).on('change', '[name="link_thumbnail"]', function (e) {
@@ -265,7 +267,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Trigger on load.
-	jQuery( '[name="link_thumbnail"]' ).change();
+	jQuery('[name="link_thumbnail"]').change();
 
 	// Submit form button
 	jQuery(document).on('click', '.gm-save-grid', function (e) {
@@ -319,7 +321,7 @@ jQuery(document).ready(function ($) {
 					$form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>' + response.data.message + '</p></div>');
 				}
 
-				jQuery( document ).trigger( 'gm-ajax-success-' + gmAction, [ response.data ] )
+				jQuery(document).trigger('gm-ajax-success-' + gmAction, [response.data])
 
 			},
 			error: function (response) {
@@ -345,9 +347,22 @@ jQuery(document).ready(function ($) {
 		});
 	});
 
+	// Auto submit
+	jQuery('#gm-list-grids').submit();
+
+	// Window Load
+	jQuery(window).load(() => {
+		dataNeedSave(0);
+	})
+
 	// Block Pro Features
 	if (!gridmaster_params.has_pro) {
 		jQuery('.gm-pro-inp-disable input').attr('disabled', 'disabled');
 	}
 
 });
+
+// Data Need Save on Build grid
+const dataNeedSave = (save = 1) => {
+	jQuery('.gm-page-build-grid').attr('data-need-save', save);
+}
