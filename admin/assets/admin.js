@@ -280,6 +280,7 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		let $form = jQuery(this);
 		let $data = $form.serialize();
+		// let $data = new FormData( this );
 
 		// Disable Button
 		$form.find('[type="submit"]').attr('disabled', 'disabled');
@@ -298,6 +299,11 @@ jQuery(document).ready(function ($) {
 			clearTimeout(noticeTimeout);
 		}
 
+		// Append terms.
+		// $data += '&terms=50,49'; 
+
+		console.log($data)
+
 		// License Form Submit
 		// jQuery('.lmfwppt-license-submit-btn').trigger('click');
 
@@ -306,7 +312,11 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			url: ajaxurl,
 			data: $data,
+			// contentType : false,
+			// processData : false,
+			// cache       : true,
 			dataType: 'json',
+			
 			success: function (response) {
 
 				// Enable Button

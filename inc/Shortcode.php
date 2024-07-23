@@ -115,18 +115,11 @@ class Shortcode {
 			'id'                  => 0,
 		);
 
-		// Shortcode attributes.
-		$atts = shortcode_atts(
-			$default_atts,
-			$atts,
-			'gridmaster'
-		);
-
 		// If id is set then get args from the database and render the grid.
 		// Otherwise render the grid from the shortcode attributes.
 
 		// Grid ID.
-		$grid_id = intval( $atts['id'] ) ? intval( $atts['id'] ) : null;
+		$grid_id = isset( $atts['id'] ) ? intval( $atts['id'] ) : null;
 
 		// Get Grid.
 		if ( $grid_id ) {
@@ -143,6 +136,13 @@ class Shortcode {
 				$atts['grid_id'] = 'gm-' . $grid_id;
 			}
 		}
+
+		// Shortcode attributes.
+		$atts = shortcode_atts(
+			$default_atts,
+			$atts,
+			'gridmaster'
+		);
 
 		// Grid Style.
 		$grid_style = $atts['grid_style'];
