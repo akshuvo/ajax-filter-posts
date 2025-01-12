@@ -76,7 +76,7 @@ class Shortcode {
 		// Check if GridMaster Pro is not installed and current user is admin.
 		if ( ! gridmaster_is_pro() && current_user_can( 'manage_options' ) && isset( $atts['post_type_selection'] ) && $atts['post_type_selection'] == 'auto' ) {
 			/* translators: %s: upgrade url */
-			echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature.', 'ajax-filter-posts'  ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		// Default attributes.
@@ -257,7 +257,7 @@ class Shortcode {
 						if ( ! gridmaster_is_pro() && $tax_args['taxonomy'] != 'category' && ! empty( $tax_args['include'] ) ) {
 							if ( current_user_can( 'manage_options' ) ) {
 								/* translators: %s: upgrade url */
-								echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'gridmaster' ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo '<div class="gm-admin-notice">' . sprintf( __( '<strong>Admin Notice:</strong> You need to upgrade to <a href="%s" target="_blank">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms.', 'ajax-filter-posts'  ), esc_url( GRIDMASTER_PRO_LINK ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
 							return;
 						}
@@ -612,7 +612,7 @@ class Shortcode {
 			if ( $pagination_type == 'load_more' ) {
 
 				if ( $paginate_links && $dataPaged < $query->max_num_pages ) {
-					echo '<button type="button" data-paged="' . esc_attr( $dataPaged ) . '" data-next="' . esc_attr( $dataNext ) . '" class="' . esc_attr( $classes ) . '">' . esc_html__( 'Load More', 'gridmaster' ) . '</button>';
+					echo '<button type="button" data-paged="' . esc_attr( $dataPaged ) . '" data-next="' . esc_attr( $dataNext ) . '" class="' . esc_attr( $classes ) . '">' . esc_html__( 'Load More', 'ajax-filter-posts'  ) . '</button>';
 				}
 			} else {
 
@@ -627,7 +627,7 @@ class Shortcode {
 
 			<?php
 		else :
-			echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'gridmaster' ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'ajax-filter-posts'  ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		endif;
 		wp_reset_query();
 
@@ -659,7 +659,7 @@ class Shortcode {
 		if ( ! $this->locate_template( $templates, true, false, $args ) ) {
 			if ( gridmaster_get_settings( 'debug-mode' ) == 'yes' ) {
 				/* translators: %s: template file */
-				printf( __( 'Template file not found: %s <br>', 'gridmaster' ), esc_html( $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				printf( __( 'Template file not found: %s <br>', 'ajax-filter-posts'  ), esc_html( $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			return false;
 		}

@@ -21,12 +21,12 @@ class Ajax {
 	public function register_ajax() {
 		$nonce = isset( $_REQUEST['gm_nonce'] ) ? sanitize_text_field( $_REQUEST['gm_nonce'] ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'gm-ajax-nonce' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'gridmaster' ) );
+			wp_send_json_error( __( 'Invalid nonce', 'ajax-filter-posts'  ) );
 		}
 
 		$action = isset( $_REQUEST['gm-action'] ) ? sanitize_title( $_REQUEST['gm-action'] ) : '';
 		if ( ! $action ) {
-			wp_send_json_error( __( 'Invalid action', 'gridmaster' ) );
+			wp_send_json_error( __( 'Invalid action', 'ajax-filter-posts'  ) );
 		}
 
 		// Include the admin functions.
@@ -35,7 +35,7 @@ class Ajax {
 		// Make method.
 		$method = str_replace( '-', '_', $action );
 		// if ( ! method_exists( $method ) ) {
-		// wp_send_json_error( __( 'Method doesn\'t exist', 'gridmaster' ) );
+		// wp_send_json_error( __( 'Method doesn\'t exist', 'ajax-filter-posts'  ) );
 		// }
 
 		// Call the ajax function.
@@ -66,7 +66,7 @@ class Ajax {
 		// Return json.
 		wp_send_json_success(
 			array(
-				'message' => __( 'Settings Saved Successfully', 'gridmaster' ),
+				'message' => __( 'Settings Saved Successfully', 'ajax-filter-posts'  ),
 				'data'    => $settings,
 			)
 		);
@@ -122,7 +122,7 @@ class Ajax {
 		// Return json.
 		wp_send_json_success(
 			array(
-				'message' => __( 'Grid Saved Successfully', 'gridmaster' ),
+				'message' => __( 'Grid Saved Successfully', 'ajax-filter-posts'  ),
 				'grid_id' => $grid_insert_id,
 			)
 		);

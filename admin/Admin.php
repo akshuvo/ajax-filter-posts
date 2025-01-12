@@ -43,28 +43,28 @@ class Admin {
 		$parent_slug = 'gridmaster';
 		$capability  = 'manage_options';
 
-		add_menu_page( __( 'GridMaster', 'gridmaster' ), __( 'GridMaster', 'gridmaster' ), $capability, $parent_slug, array( $this, 'plugin_page' ), 'dashicons-forms', 110 );
+		add_menu_page( __( 'GridMaster', 'ajax-filter-posts'  ), __( 'GridMaster', 'ajax-filter-posts'  ), $capability, $parent_slug, array( $this, 'plugin_page' ), 'dashicons-forms', 110 );
 
 		$submenus = array(
 			array(
-				'title'  => __( 'Welcome', 'gridmaster' ),
+				'title'  => __( 'Welcome', 'ajax-filter-posts'  ),
 				'url'    => 'gridmaster',
 				'path'   => '',
 				'target' => '',
 			),
 			array(
-				'title' => __( 'My Grids', 'gridmaster' ),
+				'title' => __( 'My Grids', 'ajax-filter-posts'  ),
 				'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
 				'path'  => 'my-grids',
 			),
 			array(
-				'title'  => __( 'Grid Builder', 'gridmaster' ),
+				'title'  => __( 'Grid Builder', 'ajax-filter-posts'  ),
 				'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
 				'path'   => 'build-grid',
 				'target' => '',
 			),
 			array(
-				'title' => __( 'Settings', 'gridmaster' ),
+				'title' => __( 'Settings', 'ajax-filter-posts'  ),
 				'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
 				'path'  => 'settings',
 			),
@@ -91,7 +91,7 @@ class Admin {
 			return $text;
 		}
 		/* translators: %s: review url. */
-		$text = sprintf( __( 'If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!', 'gridmaster' ), '<a href="https://wordpress.org/support/plugin/ajax-filter-posts/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>' );
+		$text = sprintf( __( 'If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!', 'ajax-filter-posts'  ), '<a href="https://wordpress.org/support/plugin/ajax-filter-posts/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>' );
 
 		return $text;
 	}
@@ -119,9 +119,9 @@ class Admin {
 		// Live chat offer for pro users.
 		$text = sprintf(
 			/* translators: 1: live chat. 2: ticket url. */
-			__( 'Stuck somewhere? Need help? %1$s or %2$s', 'gridmaster' ),
-			'<a href="' . gridmaster_website_url( 'live-chat/' ) . '" target="_blank">' . __( 'Live chat(Pro only)', 'gridmaster' ) . '</a>',
-			'<a href="' . gridmaster_website_url( 'submit-a-ticket/' ) . '" target="_blank">' . __( 'Submit a ticket', 'gridmaster' ) . '</a>'
+			__( 'Stuck somewhere? Need help? %1$s or %2$s', 'ajax-filter-posts'  ),
+			'<a href="' . gridmaster_website_url( 'live-chat/' ) . '" target="_blank">' . __( 'Live chat(Pro only)', 'ajax-filter-posts'  ) . '</a>',
+			'<a href="' . gridmaster_website_url( 'submit-a-ticket/' ) . '" target="_blank">' . __( 'Submit a ticket', 'ajax-filter-posts'  ) . '</a>'
 		);
 
 		return $text;

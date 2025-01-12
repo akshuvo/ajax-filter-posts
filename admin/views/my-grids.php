@@ -22,17 +22,17 @@ $my_grids = GridMaster\Grids::init()->list();
 				<?php if ( ! empty( $my_grids ) ) : ?>
 					<div class="gm-grid-list">
 						<div class="gm-grid-list-header">
-							<h2><?php esc_html_e( 'My Grids', 'gridmaster' ); ?></h2>
+							<h2><?php esc_html_e( 'My Grids', 'ajax-filter-posts'  ); ?></h2>
 						</div>
 						<div class="gm-grid-list-body">
 							<table class="wp-list-table widefat striped table-view-list">
 								<thead>
 									<tr>
-										<th scope="col"><?php esc_html_e( 'Title', 'gridmaster' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Shortcode', 'gridmaster' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Post Type', 'gridmaster' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Taxonomy', 'gridmaster' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Actions', 'gridmaster' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Title', 'ajax-filter-posts'  ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Shortcode', 'ajax-filter-posts'  ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Post Type', 'ajax-filter-posts'  ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Taxonomy', 'ajax-filter-posts'  ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Actions', 'ajax-filter-posts'  ); ?></th>
 									</tr>
 								</thead>
 								<tbody id="the-list">
@@ -57,8 +57,8 @@ $my_grids = GridMaster\Grids::init()->list();
 								<span class="dashicons dashicons-info-outline"></span>
 							</div>
 							<div class="gm-card-containt">
-								<h2><?php esc_html_e( 'You didn\'t save any grid yet!', 'gridmaster' ); ?></h2>
-								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster&path=build-grid' ) ); ?>"><?php esc_html_e( 'Create Your First Grid', 'gridmaster' ); ?></a>
+								<h2><?php esc_html_e( 'You didn\'t save any grid yet!', 'ajax-filter-posts'  ); ?></h2>
+								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster&path=build-grid' ) ); ?>"><?php esc_html_e( 'Create Your First Grid', 'ajax-filter-posts'  ); ?></a>
 							</div>
 						</div>
 					</div>

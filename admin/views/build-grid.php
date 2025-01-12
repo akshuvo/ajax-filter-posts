@@ -21,7 +21,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		<nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
 			<div id="gm-select-grid" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
-					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'gridmaster' ); ?></h2>
+					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
 						<span class="dashicons dashicons-arrow-down">
 					</div>
@@ -35,7 +35,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_style' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Select Grid Style', 'gridmaster' ),
+							'label'   => __( 'Select Grid Style', 'ajax-filter-posts'  ),
 							'options' => gridmaster_grid_styles(),
 						),
 						gm_field_value( 'grid_style', $attr )
@@ -49,7 +49,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'post_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Select Post Type', 'gridmaster' ),
+							'label'   => __( 'Select Post Type', 'ajax-filter-posts'  ),
 							'options' => gm_get_post_types(),
 							'default' => 'post',
 						),
@@ -63,10 +63,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'post_type_selection' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Post Type Advanced Selection', 'gridmaster' ),
+							'label'   => __( 'Post Type Advanced Selection', 'ajax-filter-posts'  ),
 							'options' => array(
-								''     => __( 'None', 'gridmaster' ),
-								'auto' => __( 'Auto Select', 'gridmaster' ),
+								''     => __( 'None', 'ajax-filter-posts'  ),
+								'auto' => __( 'Auto Select', 'ajax-filter-posts'  ),
 							),
 							'default' => '',
 							'is_pro'  => true,
@@ -81,7 +81,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'posts_per_page' ),
 						array(
 							'type'    => 'number',
-							'label'   => __( 'Posts Per Page', 'gridmaster' ),
+							'label'   => __( 'Posts Per Page', 'ajax-filter-posts'  ),
 							'default' => 10,
 						),
 						gm_field_value( 'posts_per_page', $attr )
@@ -96,21 +96,21 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'orderby' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Order By', 'gridmaster' ),
+							'label'   => __( 'Order By', 'ajax-filter-posts'  ),
 							'options' => array(
-								'date'           => __( 'Date', 'gridmaster' ),
-								'title'          => __( 'Title', 'gridmaster' ),
-								'rand'           => __( 'Random', 'gridmaster' ),
-								'comment_count'  => __( 'Comment Count', 'gridmaster' ),
-								'modified'       => __( 'Modified', 'gridmaster' ),
-								'ID'             => __( 'ID', 'gridmaster' ),
-								'author'         => __( 'Author', 'gridmaster' ),
-								'name'           => __( 'Name', 'gridmaster' ),
-								'type'           => __( 'Type', 'gridmaster' ),
-								'parent'         => __( 'Parent', 'gridmaster' ),
-								'menu_order'     => __( 'Menu Order', 'gridmaster' ),
-								'meta_value'     => __( 'Meta Value', 'gridmaster' ),
-								'meta_value_num' => __( 'Meta Value Number', 'gridmaster' ),
+								'date'           => __( 'Date', 'ajax-filter-posts'  ),
+								'title'          => __( 'Title', 'ajax-filter-posts'  ),
+								'rand'           => __( 'Random', 'ajax-filter-posts'  ),
+								'comment_count'  => __( 'Comment Count', 'ajax-filter-posts'  ),
+								'modified'       => __( 'Modified', 'ajax-filter-posts'  ),
+								'ID'             => __( 'ID', 'ajax-filter-posts'  ),
+								'author'         => __( 'Author', 'ajax-filter-posts'  ),
+								'name'           => __( 'Name', 'ajax-filter-posts'  ),
+								'type'           => __( 'Type', 'ajax-filter-posts'  ),
+								'parent'         => __( 'Parent', 'ajax-filter-posts'  ),
+								'menu_order'     => __( 'Menu Order', 'ajax-filter-posts'  ),
+								'meta_value'     => __( 'Meta Value', 'ajax-filter-posts'  ),
+								'meta_value_num' => __( 'Meta Value Number', 'ajax-filter-posts'  ),
 							),
 							'default' => 'date',
 						),
@@ -124,10 +124,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'order' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Order', 'gridmaster' ),
+							'label'   => __( 'Order', 'ajax-filter-posts'  ),
 							'options' => array(
-								'DESC' => __( 'Descending', 'gridmaster' ),
-								'ASC'  => __( 'Ascending', 'gridmaster' ),
+								'DESC' => __( 'Descending', 'ajax-filter-posts'  ),
+								'ASC'  => __( 'Ascending', 'ajax-filter-posts'  ),
 							),
 							'default' => 'DESC',
 						),
@@ -141,10 +141,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'content_from' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Show content from', 'gridmaster' ),
+							'label'   => __( 'Show content from', 'ajax-filter-posts'  ),
 							'options' => array(
-								'excerpt' => __( 'Post Excerpt', 'gridmaster' ),
-								'content' => __( 'Post Content', 'gridmaster' ),
+								'excerpt' => __( 'Post Excerpt', 'ajax-filter-posts'  ),
+								'content' => __( 'Post Content', 'ajax-filter-posts'  ),
 							),
 							'default' => 'excerpt',
 						),
@@ -158,10 +158,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'excerpt_type' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Excerpt Type', 'gridmaster' ),
+							'label'   => __( 'Excerpt Type', 'ajax-filter-posts'  ),
 							'options' => array(
-								'words'      => __( 'Words', 'gridmaster' ),
-								'characters' => __( 'Characters', 'gridmaster' ),
+								'words'      => __( 'Words', 'ajax-filter-posts'  ),
+								'characters' => __( 'Characters', 'ajax-filter-posts'  ),
 							),
 							'default' => 'words',
 						),
@@ -175,7 +175,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'excerpt_length' ),
 						array(
 							'type'    => 'number',
-							'label'   => __( 'Excerpt Length', 'gridmaster' ),
+							'label'   => __( 'Excerpt Length', 'ajax-filter-posts'  ),
 							'default' => 15,
 						),
 						gm_field_value( 'excerpt_length', $attr )
@@ -188,10 +188,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'show_read_more' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Show Read More', 'gridmaster' ),
+							'label'   => __( 'Show Read More', 'ajax-filter-posts'  ),
 							'options' => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'yes',
 						),
@@ -205,9 +205,9 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'read_more_text' ),
 						array(
 							'type'        => 'text',
-							'label'       => __( 'Read More Text', 'gridmaster' ),
+							'label'       => __( 'Read More Text', 'ajax-filter-posts'  ),
 							'default'     => '',
-							'placeholder' => __( 'Read More', 'gridmaster' ),
+							'placeholder' => __( 'Read More', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'read_more_text', $attr )
 					);
@@ -217,7 +217,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_image_size' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Grid Image Size', 'gridmaster' ),
+							'label'   => __( 'Grid Image Size', 'ajax-filter-posts'  ),
 							'options' => gm_get_image_sizes(),
 							'default' => 'full',
 						),
@@ -232,7 +232,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'grid_image_width' ),
 							array(
 								'type'    => 'number',
-								'label'   => __( 'Image Width', 'gridmaster' ),
+								'label'   => __( 'Image Width', 'ajax-filter-posts'  ),
 								'default' => 350,
 								'is_pro'  => true,
 							),
@@ -246,7 +246,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'grid_image_height' ),
 							array(
 								'type'    => 'number',
-								'label'   => __( 'Image Height', 'gridmaster' ),
+								'label'   => __( 'Image Height', 'ajax-filter-posts'  ),
 								'default' => 200,
 								'is_pro'  => true,
 							),
@@ -261,10 +261,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'link_thumbnail' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Apply Link on Thumbnail', 'gridmaster' ),
+							'label'   => __( 'Apply Link on Thumbnail', 'ajax-filter-posts'  ),
 							'options' => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'no',
 							'is_pro'  => true,
@@ -280,10 +280,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'link_thumbnail_to' ),
 							array(
 								'type'    => 'select',
-								'label'   => __( 'Link Thumbnail To', 'gridmaster' ),
+								'label'   => __( 'Link Thumbnail To', 'ajax-filter-posts'  ),
 								'options' => array(
-									'post'  => __( 'Post Link', 'gridmaster' ),
-									'image' => __( 'Image Link', 'gridmaster' ),
+									'post'  => __( 'Post Link', 'ajax-filter-posts'  ),
+									'image' => __( 'Image Link', 'ajax-filter-posts'  ),
 								),
 								'default' => 'post',
 								'is_pro'  => true,
@@ -300,9 +300,9 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'title_tag' ),
 						array(
 							'type'        => 'select',
-							'label'       => __( 'Heading Tag', 'gridmaster' ),
+							'label'       => __( 'Heading Tag', 'ajax-filter-posts'  ),
 							'options'     => array(
-								''     => __( 'Select Tag', 'gridmaster' ),
+								''     => __( 'Select Tag', 'ajax-filter-posts'  ),
 								'h1'   => 'H1',
 								'h2'   => 'H2',
 								'h3'   => 'H3',
@@ -315,7 +315,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							),
 							'default'     => '',
 							'is_pro'      => true,
-							'description' => __( 'Select the heading tag for the post title.', 'gridmaster' ),
+							'description' => __( 'Select the heading tag for the post title.', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'title_tag', $attr )
 					);
@@ -325,7 +325,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'heading_font_size' ),
 						array(
 							'type'             => 'text',
-							'label'            => __( 'Heading Font Size', 'gridmaster' ),
+							'label'            => __( 'Heading Font Size', 'ajax-filter-posts'  ),
 							'default'          => array(
 								'xs' => '16px',
 								'sm' => '18px',
@@ -335,7 +335,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							),
 							'is_pro'           => true,
 							'responsive_field' => true,
-							'description'      => __( 'Set the font size for the post title in different devices.', 'gridmaster' ),
+							'description'      => __( 'Set the font size for the post title in different devices.', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'heading_font_size', $attr )
 					);
@@ -348,7 +348,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_col_gap' ),
 						array(
 							'type'             => 'number',
-							'label'            => __( 'Column Gap', 'gridmaster' ),
+							'label'            => __( 'Column Gap', 'ajax-filter-posts'  ),
 							'default'          => 30,
 							'is_pro'           => true,
 							'responsive_field' => true,
@@ -361,7 +361,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_row_gap' ),
 						array(
 							'type'             => 'number',
-							'label'            => __( 'Row Gap', 'gridmaster' ),
+							'label'            => __( 'Row Gap', 'ajax-filter-posts'  ),
 							'default'          => 30,
 							'is_pro'           => true,
 							'responsive_field' => true,
@@ -374,7 +374,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'grid_item_per_row' ),
 						array(
 							'type'             => 'number',
-							'label'            => __( 'Item Per Row', 'gridmaster' ),
+							'label'            => __( 'Item Per Row', 'ajax-filter-posts'  ),
 							'default'          => array(
 								'xs' => 1,
 								'sm' => 2,
@@ -395,7 +395,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			<!-- Filter Options -->
 			<div id="gm-select-filter" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
-					<h2 class="hndle"><?php esc_html_e( 'Filter Options', 'gridmaster' ); ?></h2>
+					<h2 class="hndle"><?php esc_html_e( 'Filter Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
 						<span class="dashicons dashicons-arrow-down">
 					</div>
@@ -410,8 +410,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							'type'    => 'radio',
 							'label'   => 'Show Filter',
 							'options' => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'yes',
 						),
@@ -425,14 +425,14 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'filter_style' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Filter Style', 'gridmaster' ),
+							'label'   => __( 'Filter Style', 'ajax-filter-posts'  ),
 							'options' => apply_filters(
 								'gridmaster_filter_styles',
 								array(
-									'default' => __( 'Style 1 (Default)', 'gridmaster' ),
-									'style-2' => __( 'Style 2 (New)', 'gridmaster' ),
-									'style-3' => __( 'Style 3 (New)', 'gridmaster' ),
-									'style-4' => __( 'Style 4 (New)', 'gridmaster' ),
+									'default' => __( 'Style 1 (Default)', 'ajax-filter-posts'  ),
+									'style-2' => __( 'Style 2 (New)', 'ajax-filter-posts'  ),
+									'style-3' => __( 'Style 3 (New)', 'ajax-filter-posts'  ),
+									'style-4' => __( 'Style 4 (New)', 'ajax-filter-posts'  ),
 								)
 							),
 							'default' => 'default',
@@ -448,10 +448,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'btn_all' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Show All Button', 'gridmaster' ),
+							'label'   => __( 'Show All Button', 'ajax-filter-posts'  ),
 							'options' => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'yes',
 						),
@@ -470,7 +470,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'taxonomy' ),
 						array(
 							'type'    => 'select',
-							'label'   => __( 'Select Taxonomy', 'gridmaster' ),
+							'label'   => __( 'Select Taxonomy', 'ajax-filter-posts'  ),
 							'options' => $taxonomy_options,
 							'default' => 'category',
 							'class'   => 'gm-select-taxonomy',
@@ -490,8 +490,8 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						array(
 							'id'          => 'terms',
 							'type'        => 'checkbox-list',
-							'label'       => __( 'Select Terms', 'gridmaster' ),
-							'placeholder' => __( 'Select Terms', 'gridmaster' ),
+							'label'       => __( 'Select Terms', 'ajax-filter-posts'  ),
+							'placeholder' => __( 'Select Terms', 'ajax-filter-posts'  ),
 							'options'     => $terms['category'],
 							'class'       => 'gm-select-term',
 						),
@@ -503,10 +503,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'hide_empty' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Hide Empty Terms', 'gridmaster' ),
+							'label'   => __( 'Hide Empty Terms', 'ajax-filter-posts'  ),
 							'options' => array(
-								'1' => __( 'Yes', 'gridmaster' ),
-								'0' => __( 'No', 'gridmaster' ),
+								'1' => __( 'Yes', 'ajax-filter-posts'  ),
+								'0' => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => '0',
 						),
@@ -518,14 +518,14 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'initial_term' ),
 						array(
 							'type'        => 'select',
-							'label'       => __( 'Initial Term on Page Load', 'gridmaster' ),
+							'label'       => __( 'Initial Term on Page Load', 'ajax-filter-posts'  ),
 							'options'     => array(
-								'-1'   => __( 'All - Default', 'gridmaster' ),
-								'auto' => __( 'Auto Select', 'gridmaster' ),
+								'-1'   => __( 'All - Default', 'ajax-filter-posts'  ),
+								'auto' => __( 'Auto Select', 'ajax-filter-posts'  ),
 							),
 							'default'     => '-1',
 							'is_pro'      => true,
-							'description' => __( 'Select the initial term to be selected on page load.', 'gridmaster' ),
+							'description' => __( 'Select the initial term to be selected on page load.', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'initial_term', $attr )
 					);
@@ -535,13 +535,13 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'multiple_select' ),
 						array(
 							'type'        => 'radio',
-							'label'       => __( 'Allow Multiple Select', 'gridmaster' ),
+							'label'       => __( 'Allow Multiple Select', 'ajax-filter-posts'  ),
 							'options'     => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default'     => 'no',
-							'description' => __( 'Allow multiple selection of terms in the filter.', 'gridmaster' ),
+							'description' => __( 'Allow multiple selection of terms in the filter.', 'ajax-filter-posts'  ),
 							'is_pro'      => true,
 						),
 						gm_field_value( 'multiple_select', $attr )
@@ -554,9 +554,9 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'filter_heading' ),
 						array(
 							'type'        => 'text',
-							'label'       => __( 'Add a Filter Heading?', 'gridmaster' ),
+							'label'       => __( 'Add a Filter Heading?', 'ajax-filter-posts'  ),
 							'default'     => '',
-							'placeholder' => __( 'Category', 'gridmaster' ),
+							'placeholder' => __( 'Category', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'filter_heading', $attr )
 					);
@@ -566,10 +566,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'toggle_filter_items' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Toggle Filter Items', 'gridmaster' ),
+							'label'   => __( 'Toggle Filter Items', 'ajax-filter-posts'  ),
 							'options' => array(
-								'yes' => __( 'Yes', 'gridmaster' ),
-								'no'  => __( 'No', 'gridmaster' ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
+								'no'  => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'no',
 						),
@@ -584,7 +584,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			<!-- Slider Options -->
 			<div id="gm-select-slider" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
-					<h2 class="hndle"><?php esc_html_e( 'Slider Options', 'gridmaster' ); ?></h2>
+					<h2 class="hndle"><?php esc_html_e( 'Slider Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
 						<span class="dashicons dashicons-arrow-down">
 					</div>
@@ -596,10 +596,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'enable_slider' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Enable Slider', 'gridmaster' ),
+							'label'   => __( 'Enable Slider', 'ajax-filter-posts'  ),
 							'options' => array(
-								''    => __( 'No', 'gridmaster' ),
-								'yes' => __( 'Yes', 'gridmaster' ),
+								''    => __( 'No', 'ajax-filter-posts'  ),
+								'yes' => __( 'Yes', 'ajax-filter-posts'  ),
 							),
 							'default' => '',
 							'is_pro'  => true,
@@ -615,7 +615,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_slidesToShow' ),
 							array(
 								'type'             => 'number',
-								'label'            => __( 'Slides to Show', 'gridmaster' ),
+								'label'            => __( 'Slides to Show', 'ajax-filter-posts'  ),
 								'default'          => array(
 									'xs' => 1,
 									'sm' => 2,
@@ -634,7 +634,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_slidesToScroll' ),
 							array(
 								'type'             => 'number',
-								'label'            => __( 'Slides to Scroll', 'gridmaster' ),
+								'label'            => __( 'Slides to Scroll', 'ajax-filter-posts'  ),
 								'default'          => array(
 									'xs' => 1,
 									'sm' => 1,
@@ -653,10 +653,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_arrows' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Show Prev/Next Arrows', 'gridmaster' ),
+								'label'   => __( 'Show Prev/Next Arrows', 'ajax-filter-posts'  ),
 								'options' => array(
-									'0' => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									'0' => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '1',
 								'is_pro'  => true,
@@ -669,10 +669,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_dots' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Show Dots', 'gridmaster' ),
+								'label'   => __( 'Show Dots', 'ajax-filter-posts'  ),
 								'options' => array(
-									''  => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									''  => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '',
 								'is_pro'  => true,
@@ -685,10 +685,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_autoplay' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Enable Autoplay', 'gridmaster' ),
+								'label'   => __( 'Enable Autoplay', 'ajax-filter-posts'  ),
 								'options' => array(
-									''  => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									''  => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '',
 								'is_pro'  => true,
@@ -701,7 +701,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_autoplaySpeed' ),
 							array(
 								'type'    => 'number',
-								'label'   => __( 'Autoplay Speed', 'gridmaster' ),
+								'label'   => __( 'Autoplay Speed', 'ajax-filter-posts'  ),
 								'default' => 3000,
 								'is_pro'  => true,
 							),
@@ -713,10 +713,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_pauseOnHover' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Pause Autoplay on Hover', 'gridmaster' ),
+								'label'   => __( 'Pause Autoplay on Hover', 'ajax-filter-posts'  ),
 								'options' => array(
-									''  => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									''  => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '',
 								'is_pro'  => true,
@@ -729,10 +729,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_infinite' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Infinite loop sliding', 'gridmaster' ),
+								'label'   => __( 'Infinite loop sliding', 'ajax-filter-posts'  ),
 								'options' => array(
-									'0' => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									'0' => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '1',
 								'is_pro'  => true,
@@ -745,10 +745,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							gm_field_name( 'slider_centerMode' ),
 							array(
 								'type'    => 'radio',
-								'label'   => __( 'Enable Center View', 'gridmaster' ),
+								'label'   => __( 'Enable Center View', 'ajax-filter-posts'  ),
 								'options' => array(
-									''  => __( 'No', 'gridmaster' ),
-									'1' => __( 'Yes', 'gridmaster' ),
+									''  => __( 'No', 'ajax-filter-posts'  ),
+									'1' => __( 'Yes', 'ajax-filter-posts'  ),
 								),
 								'default' => '',
 								'is_pro'  => true,
@@ -765,7 +765,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			
 			<div id="gm-select-pagination" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
-					<h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'gridmaster' ); ?></h2>
+					<h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
 						<span class="dashicons dashicons-arrow-down">
 					</div>
@@ -777,10 +777,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'pagination_type' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Pagination Type', 'gridmaster' ),
+							'label'   => __( 'Pagination Type', 'ajax-filter-posts'  ),
 							'options' => array(
-								''          => __( 'Default', 'gridmaster' ),
-								'load_more' => __( 'Load More', 'gridmaster' ),
+								''          => __( 'Default', 'ajax-filter-posts'  ),
+								'load_more' => __( 'Load More', 'ajax-filter-posts'  ),
 							),
 							'default' => '',
 						),
@@ -792,13 +792,13 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'infinite_scroll' ),
 						array(
 							'type'        => 'radio',
-							'label'       => __( 'Infinite Scroll', 'gridmaster' ),
+							'label'       => __( 'Infinite Scroll', 'ajax-filter-posts'  ),
 							'options'     => array(
 								'true'  => 'Yes',
 								'false' => 'No',
 							),
 							'default'     => 'no',
-							'description' => __( 'If pagination type is default, this option will be ignored.', 'gridmaster' ),
+							'description' => __( 'If pagination type is default, this option will be ignored.', 'ajax-filter-posts'  ),
 						),
 						gm_field_value( 'infinite_scroll', $attr )
 					);
@@ -808,10 +808,10 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						gm_field_name( 'animation' ),
 						array(
 							'type'    => 'radio',
-							'label'   => __( 'Animation', 'gridmaster' ),
+							'label'   => __( 'Animation', 'ajax-filter-posts'  ),
 							'options' => array(
-								'true'  => __( 'Yes', 'gridmaster' ),
-								'false' => __( 'No', 'gridmaster' ),
+								'true'  => __( 'Yes', 'ajax-filter-posts'  ),
+								'false' => __( 'No', 'ajax-filter-posts'  ),
 							),
 							'default' => 'no',
 						),
@@ -828,7 +828,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 			<!-- Grid Preview  -->
 			<div class="gm-iframe-postbox postbox gm-slide-toggle-- ">
 				<div class="postbox-header">
-					<h2 class="hndle"><?php esc_html_e( 'Preview', 'gridmaster' ); ?></h2>
+					<h2 class="hndle"><?php esc_html_e( 'Preview', 'ajax-filter-posts'  ); ?></h2>
 					<div class="preview-action-buttons">
 						<div class="gridmaster-responsive-fields-devices px-2">
 						<?php
@@ -845,17 +845,17 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 						</div>
 						<div class="align-items-center d-flex preview-scale px-2">
 												   
-							<div id="gm-responsive-bar-scale__minus" class="gm-tooltip" title="<?php esc_attr_e( 'Scale Down', 'gridmaster' ); ?>">
+							<div id="gm-responsive-bar-scale__minus" class="gm-tooltip" title="<?php esc_attr_e( 'Scale Down', 'ajax-filter-posts'  ); ?>">
 								<span class="dashicons dashicons-minus"></span>
 							</div>
 							<div id="gm-responsive-bar-scale__value-wrapper">
 								<input class="skip-reload hidden" id="gm-preview-scale-input" type="number" min="50" max="120" step="10" value="100" readonly/>
 								<span id="gm-responsive-bar-scale__value">100</span>%
 							</div>
-							<div id="gm-responsive-bar-scale__plus" class="gm-tooltip" title="<?php esc_attr_e( 'Scale Up', 'gridmaster' ); ?>">
+							<div id="gm-responsive-bar-scale__plus" class="gm-tooltip" title="<?php esc_attr_e( 'Scale Up', 'ajax-filter-posts'  ); ?>">
 								<span class="dashicons dashicons-plus-alt2"></span>
 							</div>
-							<div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e( 'Reset Scale', 'gridmaster' ); ?>">
+							<div id="gm-responsive-bar-scale__reset" class="gm-tooltip" title="<?php esc_attr_e( 'Reset Scale', 'ajax-filter-posts'  ); ?>">
 								<span class="dashicons dashicons-undo"></span>
 							</div>
 				
@@ -893,21 +893,21 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 		<div class="gm-modal-body">
 			<div class="gm-modal-content">
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
-				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'gridmaster' ); ?></h2>
-				<p class="description"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'gridmaster' ); ?></p>
+				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'ajax-filter-posts'  ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'ajax-filter-posts'  ); ?></p>
 				<div class="d-flex gm-copy-wrap">
 					<div class="gm-save-overlay">
-						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'gridmaster' ); ?></button>
+						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'ajax-filter-posts'  ); ?></button>
 					</div>
 					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id . '"]' : '[gridmaster id="#"]'; ?>
 					<input type="text" value="<?php echo esc_attr( $grid_id_copy ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
-					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'ajax-filter-posts'  ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
 
-				<h2 class="mb-0"><?php esc_html_e( 'Or below one', 'gridmaster' ); ?></h2>
+				<h2 class="mb-0"><?php esc_html_e( 'Or below one', 'ajax-filter-posts'  ); ?></h2>
 				<div class="d-flex gm-copy-wrap">
 					<input type="text" value="[gridmaster]" class="regular-text gm-copy-inp gm-copy-val" readonly>
-					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'gridmaster' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'ajax-filter-posts'  ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
 				</div>
 
 			</div>

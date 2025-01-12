@@ -3,7 +3,7 @@
 // Template review array
 $templates_preivew = array(
 	array(
-		'name'          => __( 'Template 1', 'gridmaster' ),
+		'name'          => __( 'Template 1', 'ajax-filter-posts'  ),
 		'id'            => 'template-1',
 		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
 		'pagination_id' => '',
@@ -13,7 +13,7 @@ $templates_preivew = array(
 		'query'         => '',
 	),
 	array(
-		'name'          => __( 'Template 2', 'gridmaster' ),
+		'name'          => __( 'Template 2', 'ajax-filter-posts'  ),
 		'id'            => 'template-2',
 		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
 		'pagination_id' => '',
@@ -23,7 +23,7 @@ $templates_preivew = array(
 		'query'         => '',
 	),
 	array(
-		'name'          => __( 'Template 3', 'gridmaster' ),
+		'name'          => __( 'Template 3', 'ajax-filter-posts'  ),
 		'id'            => 'template-2',
 		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
 		'pagination_id' => '',
@@ -33,7 +33,7 @@ $templates_preivew = array(
 		'query'         => '',
 	),
 	array(
-		'name'          => __( 'Template 4', 'gridmaster' ),
+		'name'          => __( 'Template 4', 'ajax-filter-posts'  ),
 		'id'            => 'template-2',
 		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
 		'pagination_id' => '',
@@ -43,7 +43,7 @@ $templates_preivew = array(
 		'query'         => '',
 	),
 	array(
-		'name'          => __( 'Template 5', 'gridmaster' ),
+		'name'          => __( 'Template 5', 'ajax-filter-posts'  ),
 		'id'            => 'template-2',
 		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
 		'pagination_id' => '',

@@ -41,9 +41,9 @@ function gridmaster_form_field( $key = '', $args = array(), $value = null ) {
 
 	if ( $args['required'] ) {
 		$args['class'][] = 'validate-required';
-		$required        = '&nbsp;<abbr class="required" title="' . esc_attr__( 'required', 'gridmaster' ) . '">*</abbr>';
+		$required        = '&nbsp;<abbr class="required" title="' . esc_attr__( 'required', 'ajax-filter-posts'  ) . '">*</abbr>';
 	} else {
-		$required = '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'gridmaster' ) . ')</span>';
+		$required = '&nbsp;<span class="optional">(' . esc_html__( 'optional', 'ajax-filter-posts'  ) . ')</span>';
 	}
 
 	// If is_pro is true, add pro class.
@@ -145,7 +145,7 @@ function gridmaster_form_field( $key = '', $args = array(), $value = null ) {
 					if ( '' === $option_key ) {
 						// If we have a blank option, select2 needs a placeholder.
 						if ( empty( $args['placeholder'] ) ) {
-							$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'gridmaster' );
+							$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'ajax-filter-posts'  );
 						}
 						$custom_attributes[] = 'data-allow_clear="true"';
 					}
@@ -316,9 +316,9 @@ function gm_get_taxonomies( $raw = false ) {
 
 	// Add Extra Options.
 	if ( ! $raw ) {
-		$options['-']    = esc_html__( 'Select Taxonomy', 'gridmaster' );
-		$pro_text        = __( ' (Available in Pro)', 'gridmaster' );
-		$options['auto'] = esc_html__( 'Auto Select', 'gridmaster' ) . $pro_text;
+		$options['-']    = esc_html__( 'Select Taxonomy', 'ajax-filter-posts'  );
+		$pro_text        = __( ' (Available in Pro)', 'ajax-filter-posts'  );
+		$options['auto'] = esc_html__( 'Auto Select', 'ajax-filter-posts'  ) . $pro_text;
 	}
 
 	foreach ( $taxonomies as $taxonomy ) {
@@ -349,7 +349,7 @@ function gm_get_taxonomy_terms( $taxonomy ) {
 	);
 	$options = array();
 
-	// $options['-'] = esc_html__( 'Select Term', 'gridmaster' );
+	// $options['-'] = esc_html__( 'Select Term', 'ajax-filter-posts'  );
 	foreach ( $terms as $term ) {
 		$options[ $term->term_id ] = $term->name;
 	}
@@ -388,10 +388,10 @@ function gm_get_image_sizes() {
 	}
 
 	// Full size.
-	$image_sizes['full'] = __( 'Full', 'gridmaster' );
+	$image_sizes['full'] = __( 'Full', 'ajax-filter-posts'  );
 
 	// Custom size.
-	$image_sizes['custom'] = __( 'Custom', 'gridmaster' );
+	$image_sizes['custom'] = __( 'Custom', 'ajax-filter-posts'  );
 
 	return $image_sizes;
 }

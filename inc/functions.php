@@ -25,31 +25,31 @@ function gm_get_breakpoints() {
 	// All values are in pixels and are used for media queries up to the next breakpoint.
 	return array(
 		'xs' => array(
-			'label'   => __( 'Extra Small', 'gridmaster' ),
+			'label'   => __( 'Extra Small', 'ajax-filter-posts'  ),
 			'value'   => '320',
 			'default' => false,
 			'icon'    => 'dashicons dashicons-smartphone',
 		),
 		'sm' => array(
-			'label'   => __( 'Small', 'gridmaster' ),
+			'label'   => __( 'Small', 'ajax-filter-posts'  ),
 			'value'   => '768',
 			'default' => false,
 			'icon'    => 'dashicons dashicons-smartphone',
 		),
 		'md' => array(
-			'label'   => __( 'Medium', 'gridmaster' ),
+			'label'   => __( 'Medium', 'ajax-filter-posts'  ),
 			'value'   => '992',
 			'default' => false,
 			'icon'    => 'dashicons dashicons-tablet',
 		),
 		'lg' => array(
-			'label'   => __( 'Large', 'gridmaster' ),
+			'label'   => __( 'Large', 'ajax-filter-posts'  ),
 			'value'   => '1200',
 			'default' => true,
 			'icon'    => 'dashicons dashicons-laptop',
 		),
 		'xl' => array(
-			'label'   => __( 'Extra Large', 'gridmaster' ),
+			'label'   => __( 'Extra Large', 'ajax-filter-posts'  ),
 			'value'   => '1600',
 			'default' => false,
 			'icon'    => 'dashicons dashicons-desktop',
@@ -135,7 +135,7 @@ function gridmaster_read_more_link( $link_text = '' ) {
 	if ( ! empty( $read_more_text ) ) {
 		$link_text = $read_more_text;
 	} elseif ( empty( $link_text ) ) {
-		$link_text = __( 'Read More', 'gridmaster' );
+		$link_text = __( 'Read More', 'ajax-filter-posts'  );
 	}
 
 	$output  = '<div class="gm_read_more">';
@@ -161,20 +161,20 @@ function gridmaster_grid_styles() {
 add_filter( 'gridmaster_grid_styles', 'gridmaster_grid_pro_styles', 9 );
 function gridmaster_grid_pro_styles( $styles ) {
 
-	$pro_text   = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
+	$pro_text   = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'ajax-filter-posts'  );
 	$pro_styles = apply_filters(
 		'gridmaster_grid_pro_styles',
 		array(
-			'pro-style-1'  => __( 'Pro Style 1', 'gridmaster' ) . $pro_text,
-			'pro-style-2'  => __( 'Pro Style 2', 'gridmaster' ) . $pro_text,
-			'pro-style-3'  => __( 'Pro Style 3', 'gridmaster' ) . $pro_text,
-			'pro-style-4'  => __( 'Pro Style 4', 'gridmaster' ) . $pro_text,
-			'pro-style-5'  => __( 'Pro Style 5', 'gridmaster' ) . $pro_text,
-			'pro-style-6'  => __( 'Pro Style 6', 'gridmaster' ) . $pro_text,
-			'pro-style-7'  => __( 'Pro Style 7', 'gridmaster' ) . $pro_text,
-			'pro-style-8'  => __( 'Pro Style 8', 'gridmaster' ) . $pro_text,
-			'pro-style-9'  => __( 'Pro Style 9', 'gridmaster' ) . $pro_text,
-			'pro-style-10' => __( 'Pro Style 10', 'gridmaster' ) . $pro_text,
+			'pro-style-1'  => __( 'Pro Style 1', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-2'  => __( 'Pro Style 2', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-3'  => __( 'Pro Style 3', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-4'  => __( 'Pro Style 4', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-5'  => __( 'Pro Style 5', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-6'  => __( 'Pro Style 6', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-7'  => __( 'Pro Style 7', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-8'  => __( 'Pro Style 8', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-9'  => __( 'Pro Style 9', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-style-10' => __( 'Pro Style 10', 'ajax-filter-posts'  ) . $pro_text,
 		)
 	);
 	return array_merge( $styles, $pro_styles );
@@ -182,12 +182,12 @@ function gridmaster_grid_pro_styles( $styles ) {
 // Filter Pro  Styles
 add_filter( 'gridmaster_filter_styles', 'gridmaster_filter_pro_styles', 9 );
 function gridmaster_filter_pro_styles( $styles ) {
-	$pro_text   = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'gridmaster' );
+	$pro_text   = gridmaster_is_pro() ? '' : __( ' (Available in Pro)', 'ajax-filter-posts'  );
 	$pro_styles = apply_filters(
 		'gridmaster_grid_pro_styles',
 		array(
-			'pro-filter-1' => __( 'Pro Filter 1', 'gridmaster' ) . $pro_text,
-			'pro-filter-2' => __( 'Pro Filter 2', 'gridmaster' ) . $pro_text,
+			'pro-filter-1' => __( 'Pro Filter 1', 'ajax-filter-posts'  ) . $pro_text,
+			'pro-filter-2' => __( 'Pro Filter 2', 'ajax-filter-posts'  ) . $pro_text,
 		)
 	);
 	return array_merge( $styles, $pro_styles );
@@ -209,7 +209,7 @@ function gridmaster_get_the_date( $format = '' ) {
 	$date   = get_the_date( $format );
 	$title  = sprintf(
 		/* translators: %s: post date */
-		esc_html_x( 'Posted on %s', 'post date', 'gridmaster' ),
+		esc_html_x( 'Posted on %s', 'post date', 'ajax-filter-posts'  ),
 		esc_html( $date )
 	);
 	return '<span title="' . $title . '" class="gm-post-date">' . $date . '</span>';
@@ -255,7 +255,7 @@ function gridmaster_posted_by() {
 
 	$title = sprintf(
 		/* translators: %s: post author */
-		esc_html_x( 'Posted by %s', 'post author', 'gridmaster' ),
+		esc_html_x( 'Posted by %s', 'post author', 'ajax-filter-posts'  ),
 		esc_html( $author )
 	);
 
@@ -280,7 +280,7 @@ function gridmaster_comments_number( $args = array() ) {
 		// Number text
 		$comment_text = sprintf(
 			/* translators: 1: comment number, 2: title. */
-			esc_html( _nx( '%1$s Comment', '%1$s Comments', $comment_number, 'comments title', 'gridmaster' ) ),
+			esc_html( _nx( '%1$s Comment', '%1$s Comments', $comment_number, 'comments title', 'ajax-filter-posts'  ) ),
 			number_format_i18n( $comment_number )
 		);
 
@@ -329,7 +329,7 @@ function gm_taxonomy_item_all( $args = array() ) {
 	if ( $args['btn_all'] != 'no' ) : ?>
 		<div class="gm-taxonomy-item gm-taxonomy-all">
 			<input type="<?php echo esc_attr( $input_type ); ?>" name="<?php echo esc_attr( $input_name ); ?>" id="<?php echo esc_attr( $input_id ); ?>" value="-1" />
-			<label class="asr_texonomy" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html__( 'All', 'gridmaster' ); ?></label>
+			<label class="asr_texonomy" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html__( 'All', 'ajax-filter-posts'  ); ?></label>
 		</div>
 		<?php
 	endif;

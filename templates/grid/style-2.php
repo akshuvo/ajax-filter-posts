@@ -6,7 +6,7 @@
 		<div class="am_cont">
             <?php echo gridmaster_get_post_title(); // phpcs:ignore ?>
             <?php echo gridmaster_the_content(); // phpcs:ignore ?>
-            <?php echo gridmaster_read_more_link( __('Read More', 'gridmaster') ); // phpcs:ignore ?>
+            <?php echo gridmaster_read_more_link( __('Read More', 'ajax-filter-posts' ) ); // phpcs:ignore ?>
 		</div>
 	</div>
 </div>
