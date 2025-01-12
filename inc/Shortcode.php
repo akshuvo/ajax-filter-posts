@@ -709,6 +709,12 @@ class Shortcode {
 	public function init_hook() {
 		// Shortcode for frontend
 		if ( isset( $_GET['gm_shortcode_preview'] ) && $_GET['gm_shortcode_preview'] == 1 ) {
+			// Verify the nonce
+  // Verify the nonce
+	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'gm_shortcode_preview_nonce' ) ) {
+		wp_die( esc_html__( 'Invalid request. Nonce verification failed.', 'gridmaster' ) );
+}
+
 			// Disable admin bar
 			add_filter( 'show_admin_bar', '__return_false' );
 

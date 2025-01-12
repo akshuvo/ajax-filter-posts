@@ -15,6 +15,8 @@ $grid = gm_get_grid( $grid_id, true );
 // Attributes.
 $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 
+// Nonce.
+$nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 ?>
 <form class="container-fluid gm-container metabox-holder pt-0 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
 	<div class="row">
@@ -871,7 +873,7 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 							<div class="asr-loader">
 								<div class="lds-dual-ring"></div>
 							</div>
-							<iframe id="gm-iframe" src="<?php echo esc_url( home_url( '/' ) . '?gm_shortcode_preview=1&shortcode=' . rawurlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
+							<iframe id="gm-iframe" data-nonce="<?php echo esc_attr( $nonce ); ?>" src="<?php echo esc_url( home_url( '/' ) . '?gm_shortcode_preview=1&_wpnonce=' . $nonce . '&shortcode=' . rawurlencode( '[gridmaster]' ) ); ?>" frameborder="0"></iframe>
 						</div>
 					</div>
 				</div>

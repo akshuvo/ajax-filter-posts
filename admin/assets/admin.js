@@ -188,15 +188,16 @@ jQuery(document).ready(function ($) {
 
 		// Update Shortcode
 		jQuery(".gm-copy-inp").val(shortCode);
-		console.log(shortCode);
 		jQuery(".gm-iframe-wrap").addClass('loading');
 
 		// Update Preview
-		//?gm_shortcode_preview=1&shortcode='.urlencode( '[gridmaster]' ) )
-		jQuery("#gm-iframe").attr('src', gridmaster_params.home_url + '?gm_shortcode_preview=1&shortcode=' + encodeURIComponent(shortCode));
+		const iframeEl = jQuery('#gm-iframe');
+		const nonce = iframeEl.attr('data-nonce');
+		iframeEl.attr('src', gridmaster_params.home_url + '?gm_shortcode_preview=1&_wpnonce=' + nonce + '&shortcode=' + encodeURIComponent(shortCode));
 
 		// Data need save
 		dataNeedSave(1);
+
 	});
 
 	// Copy Shortcode
@@ -316,7 +317,7 @@ jQuery(document).ready(function ($) {
 			// processData : false,
 			// cache       : true,
 			dataType: 'json',
-			
+
 			success: function (response) {
 
 				// Enable Button
