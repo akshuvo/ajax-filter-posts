@@ -1,0 +1,898 @@
+# Copyright (C) 2025 AddonMaster
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Grid Master - Post Grid Solution with Ajax Filter 3.4.13\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajax-filter-posts\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-01-12T21:54:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: ajax-filter-posts\n"
+
+#. Plugin Name of the plugin
+#: ajax-filter-posts.php
+msgid "Post Grid Master - Post Grid Solution with Ajax Filter"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: ajax-filter-posts.php
+msgid "http://addonmaster.com"
+msgstr ""
+
+#. Description of the plugin
+#: ajax-filter-posts.php
+msgid "GridMaster is a powerful post filter plugin that allows you create stunning, customizable post grids on your website with its robust support for all post types and taxonomies, versatile pagination options including infinite scroll, and a suite of pre-built grid and filter styles."
+msgstr ""
+
+#. Author of the plugin
+#: ajax-filter-posts.php
+msgid "AddonMaster"
+msgstr ""
+
+#. Author URI of the plugin
+#: ajax-filter-posts.php
+msgid "https://addonmaster.com/gridmaster/"
+msgstr ""
+
+#: admin/admin-functions.php:44
+msgid "required"
+msgstr ""
+
+#: admin/admin-functions.php:46
+msgid "optional"
+msgstr ""
+
+#: admin/admin-functions.php:148
+msgid "Choose an option"
+msgstr ""
+
+#: admin/admin-functions.php:319
+#: admin/views/build-grid.php:475
+msgid "Select Taxonomy"
+msgstr ""
+
+#: admin/admin-functions.php:320
+#: inc/functions.php:164
+#: inc/functions.php:185
+msgid " (Available in Pro)"
+msgstr ""
+
+#: admin/admin-functions.php:321
+#: admin/views/build-grid.php:71
+#: admin/views/build-grid.php:526
+msgid "Auto Select"
+msgstr ""
+
+#: admin/admin-functions.php:391
+msgid "Full"
+msgstr ""
+
+#: admin/admin-functions.php:394
+msgid "Custom"
+msgstr ""
+
+#: admin/Admin.php:46
+#: admin/views/admin.php:66
+msgid "GridMaster"
+msgstr ""
+
+#: admin/Admin.php:50
+#: admin/views/admin.php:20
+msgid "Welcome"
+msgstr ""
+
+#: admin/Admin.php:56
+#: admin/views/admin.php:27
+#: admin/views/my-grids.php:25
+msgid "My Grids"
+msgstr ""
+
+#: admin/Admin.php:61
+#: admin/views/admin.php:41
+msgid "Grid Builder"
+msgstr ""
+
+#: admin/Admin.php:67
+#: admin/views/admin.php:48
+#: ajax-filter-posts.php:143
+msgid "Settings"
+msgstr ""
+
+#. translators: %s: review url.
+#: admin/Admin.php:94
+msgid "If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!"
+msgstr ""
+
+#. translators: 1: live chat. 2: ticket url.
+#: admin/Admin.php:122
+msgid "Stuck somewhere? Need help? %1$s or %2$s"
+msgstr ""
+
+#: admin/Admin.php:123
+msgid "Live chat(Pro only)"
+msgstr ""
+
+#: admin/Admin.php:124
+msgid "Submit a ticket"
+msgstr ""
+
+#: admin/Ajax.php:24
+msgid "Invalid nonce"
+msgstr ""
+
+#: admin/Ajax.php:29
+msgid "Invalid action"
+msgstr ""
+
+#: admin/Ajax.php:69
+msgid "Settings Saved Successfully"
+msgstr ""
+
+#: admin/Ajax.php:125
+msgid "Grid Saved Successfully"
+msgstr ""
+
+#. translators: %s: random words
+#: admin/Grids.php:175
+msgid "GridMaster #%s"
+msgstr ""
+
+#: admin/views/admin.php:55
+msgid "Free vs Pro"
+msgstr ""
+
+#: admin/views/admin.php:67
+msgid "Your ultimate tool for crafting visually stunning, customizable, and user-friendly post grids with ease."
+msgstr ""
+
+#: admin/views/admin.php:78
+msgid "Sample Grid #"
+msgstr ""
+
+#: admin/views/admin.php:81
+msgid "Enter grid title"
+msgstr ""
+
+#: admin/views/admin.php:84
+msgid "Embed"
+msgstr ""
+
+#: admin/views/admin.php:86
+msgid "Update Grid"
+msgstr ""
+
+#: admin/views/admin.php:87
+#: admin/views/build-grid.php:902
+msgid "Save Grid"
+msgstr ""
+
+#: admin/views/admin.php:88
+msgid "You have some unsaved changes."
+msgstr ""
+
+#: admin/views/build-grid.php:26
+msgid "Grid Options"
+msgstr ""
+
+#: admin/views/build-grid.php:40
+msgid "Select Grid Style"
+msgstr ""
+
+#: admin/views/build-grid.php:54
+msgid "Select Post Type"
+msgstr ""
+
+#: admin/views/build-grid.php:68
+msgid "Post Type Advanced Selection"
+msgstr ""
+
+#: admin/views/build-grid.php:70
+msgid "None"
+msgstr ""
+
+#: admin/views/build-grid.php:86
+msgid "Posts Per Page"
+msgstr ""
+
+#: admin/views/build-grid.php:101
+msgid "Order By"
+msgstr ""
+
+#: admin/views/build-grid.php:103
+msgid "Date"
+msgstr ""
+
+#: admin/views/build-grid.php:104
+#: admin/views/my-grids.php:31
+msgid "Title"
+msgstr ""
+
+#: admin/views/build-grid.php:105
+msgid "Random"
+msgstr ""
+
+#: admin/views/build-grid.php:106
+msgid "Comment Count"
+msgstr ""
+
+#: admin/views/build-grid.php:107
+msgid "Modified"
+msgstr ""
+
+#: admin/views/build-grid.php:108
+msgid "ID"
+msgstr ""
+
+#: admin/views/build-grid.php:109
+msgid "Author"
+msgstr ""
+
+#: admin/views/build-grid.php:110
+msgid "Name"
+msgstr ""
+
+#: admin/views/build-grid.php:111
+msgid "Type"
+msgstr ""
+
+#: admin/views/build-grid.php:112
+msgid "Parent"
+msgstr ""
+
+#: admin/views/build-grid.php:113
+msgid "Menu Order"
+msgstr ""
+
+#: admin/views/build-grid.php:114
+msgid "Meta Value"
+msgstr ""
+
+#: admin/views/build-grid.php:115
+msgid "Meta Value Number"
+msgstr ""
+
+#: admin/views/build-grid.php:129
+msgid "Order"
+msgstr ""
+
+#: admin/views/build-grid.php:131
+msgid "Descending"
+msgstr ""
+
+#: admin/views/build-grid.php:132
+msgid "Ascending"
+msgstr ""
+
+#: admin/views/build-grid.php:146
+msgid "Show content from"
+msgstr ""
+
+#: admin/views/build-grid.php:148
+msgid "Post Excerpt"
+msgstr ""
+
+#: admin/views/build-grid.php:149
+msgid "Post Content"
+msgstr ""
+
+#: admin/views/build-grid.php:163
+msgid "Excerpt Type"
+msgstr ""
+
+#: admin/views/build-grid.php:165
+msgid "Words"
+msgstr ""
+
+#: admin/views/build-grid.php:166
+msgid "Characters"
+msgstr ""
+
+#: admin/views/build-grid.php:180
+msgid "Excerpt Length"
+msgstr ""
+
+#: admin/views/build-grid.php:193
+msgid "Show Read More"
+msgstr ""
+
+#: admin/views/build-grid.php:195
+#: admin/views/build-grid.php:268
+#: admin/views/build-grid.php:415
+#: admin/views/build-grid.php:455
+#: admin/views/build-grid.php:510
+#: admin/views/build-grid.php:542
+#: admin/views/build-grid.php:573
+#: admin/views/build-grid.php:604
+#: admin/views/build-grid.php:661
+#: admin/views/build-grid.php:677
+#: admin/views/build-grid.php:693
+#: admin/views/build-grid.php:721
+#: admin/views/build-grid.php:737
+#: admin/views/build-grid.php:753
+#: admin/views/build-grid.php:815
+msgid "Yes"
+msgstr ""
+
+#: admin/views/build-grid.php:196
+#: admin/views/build-grid.php:269
+#: admin/views/build-grid.php:416
+#: admin/views/build-grid.php:456
+#: admin/views/build-grid.php:511
+#: admin/views/build-grid.php:543
+#: admin/views/build-grid.php:574
+#: admin/views/build-grid.php:603
+#: admin/views/build-grid.php:660
+#: admin/views/build-grid.php:676
+#: admin/views/build-grid.php:692
+#: admin/views/build-grid.php:720
+#: admin/views/build-grid.php:736
+#: admin/views/build-grid.php:752
+#: admin/views/build-grid.php:816
+msgid "No"
+msgstr ""
+
+#: admin/views/build-grid.php:210
+msgid "Read More Text"
+msgstr ""
+
+#: admin/views/build-grid.php:212
+#: inc/functions.php:138
+#: templates/grid/default.php:9
+#: templates/grid/style-2.php:9
+#: templates/grid/style-3.php:18
+msgid "Read More"
+msgstr ""
+
+#: admin/views/build-grid.php:222
+msgid "Grid Image Size"
+msgstr ""
+
+#: admin/views/build-grid.php:237
+msgid "Image Width"
+msgstr ""
+
+#: admin/views/build-grid.php:251
+msgid "Image Height"
+msgstr ""
+
+#: admin/views/build-grid.php:266
+msgid "Apply Link on Thumbnail"
+msgstr ""
+
+#: admin/views/build-grid.php:285
+msgid "Link Thumbnail To"
+msgstr ""
+
+#: admin/views/build-grid.php:287
+msgid "Post Link"
+msgstr ""
+
+#: admin/views/build-grid.php:288
+msgid "Image Link"
+msgstr ""
+
+#: admin/views/build-grid.php:305
+msgid "Heading Tag"
+msgstr ""
+
+#: admin/views/build-grid.php:307
+msgid "Select Tag"
+msgstr ""
+
+#: admin/views/build-grid.php:320
+msgid "Select the heading tag for the post title."
+msgstr ""
+
+#: admin/views/build-grid.php:330
+msgid "Heading Font Size"
+msgstr ""
+
+#: admin/views/build-grid.php:340
+msgid "Set the font size for the post title in different devices."
+msgstr ""
+
+#: admin/views/build-grid.php:353
+msgid "Column Gap"
+msgstr ""
+
+#: admin/views/build-grid.php:366
+msgid "Row Gap"
+msgstr ""
+
+#: admin/views/build-grid.php:379
+msgid "Item Per Row"
+msgstr ""
+
+#: admin/views/build-grid.php:400
+msgid "Filter Options"
+msgstr ""
+
+#: admin/views/build-grid.php:430
+msgid "Filter Style"
+msgstr ""
+
+#: admin/views/build-grid.php:434
+#: inc/functions.php:153
+msgid "Style 1 (Default)"
+msgstr ""
+
+#: admin/views/build-grid.php:435
+#: inc/functions.php:154
+msgid "Style 2 (New)"
+msgstr ""
+
+#: admin/views/build-grid.php:436
+#: inc/functions.php:155
+msgid "Style 3 (New)"
+msgstr ""
+
+#: admin/views/build-grid.php:437
+msgid "Style 4 (New)"
+msgstr ""
+
+#: admin/views/build-grid.php:453
+msgid "Show All Button"
+msgstr ""
+
+#: admin/views/build-grid.php:495
+#: admin/views/build-grid.php:496
+msgid "Select Terms"
+msgstr ""
+
+#: admin/views/build-grid.php:508
+msgid "Hide Empty Terms"
+msgstr ""
+
+#: admin/views/build-grid.php:523
+msgid "Initial Term on Page Load"
+msgstr ""
+
+#: admin/views/build-grid.php:525
+msgid "All - Default"
+msgstr ""
+
+#: admin/views/build-grid.php:530
+msgid "Select the initial term to be selected on page load."
+msgstr ""
+
+#: admin/views/build-grid.php:540
+msgid "Allow Multiple Select"
+msgstr ""
+
+#: admin/views/build-grid.php:546
+msgid "Allow multiple selection of terms in the filter."
+msgstr ""
+
+#: admin/views/build-grid.php:559
+msgid "Add a Filter Heading?"
+msgstr ""
+
+#: admin/views/build-grid.php:561
+msgid "Category"
+msgstr ""
+
+#: admin/views/build-grid.php:571
+msgid "Toggle Filter Items"
+msgstr ""
+
+#: admin/views/build-grid.php:589
+msgid "Slider Options"
+msgstr ""
+
+#: admin/views/build-grid.php:601
+msgid "Enable Slider"
+msgstr ""
+
+#: admin/views/build-grid.php:620
+msgid "Slides to Show"
+msgstr ""
+
+#: admin/views/build-grid.php:639
+msgid "Slides to Scroll"
+msgstr ""
+
+#: admin/views/build-grid.php:658
+msgid "Show Prev/Next Arrows"
+msgstr ""
+
+#: admin/views/build-grid.php:674
+msgid "Show Dots"
+msgstr ""
+
+#: admin/views/build-grid.php:690
+msgid "Enable Autoplay"
+msgstr ""
+
+#: admin/views/build-grid.php:706
+msgid "Autoplay Speed"
+msgstr ""
+
+#: admin/views/build-grid.php:718
+msgid "Pause Autoplay on Hover"
+msgstr ""
+
+#: admin/views/build-grid.php:734
+msgid "Infinite loop sliding"
+msgstr ""
+
+#: admin/views/build-grid.php:750
+msgid "Enable Center View"
+msgstr ""
+
+#: admin/views/build-grid.php:770
+msgid "Pagination Options"
+msgstr ""
+
+#: admin/views/build-grid.php:782
+msgid "Pagination Type"
+msgstr ""
+
+#: admin/views/build-grid.php:784
+msgid "Default"
+msgstr ""
+
+#: admin/views/build-grid.php:785
+#: inc/Shortcode.php:615
+msgid "Load More"
+msgstr ""
+
+#: admin/views/build-grid.php:797
+msgid "Infinite Scroll"
+msgstr ""
+
+#: admin/views/build-grid.php:803
+msgid "If pagination type is default, this option will be ignored."
+msgstr ""
+
+#: admin/views/build-grid.php:813
+msgid "Animation"
+msgstr ""
+
+#: admin/views/build-grid.php:833
+msgid "Preview"
+msgstr ""
+
+#: admin/views/build-grid.php:850
+msgid "Scale Down"
+msgstr ""
+
+#: admin/views/build-grid.php:857
+msgid "Scale Up"
+msgstr ""
+
+#: admin/views/build-grid.php:860
+msgid "Reset Scale"
+msgstr ""
+
+#: admin/views/build-grid.php:898
+msgid "Embed Shortcode"
+msgstr ""
+
+#: admin/views/build-grid.php:899
+msgid "Copy the shortcode below and paste it into your post, page, or text widget content."
+msgstr ""
+
+#: admin/views/build-grid.php:906
+#: admin/views/build-grid.php:912
+msgid "Copy Shortcode"
+msgstr ""
+
+#: admin/views/build-grid.php:909
+msgid "Or below one"
+msgstr ""
+
+#: admin/views/my-grids.php:32
+msgid "Shortcode"
+msgstr ""
+
+#: admin/views/my-grids.php:33
+msgid "Post Type"
+msgstr ""
+
+#: admin/views/my-grids.php:34
+msgid "Taxonomy"
+msgstr ""
+
+#: admin/views/my-grids.php:35
+msgid "Actions"
+msgstr ""
+
+#: admin/views/my-grids.php:60
+msgid "You didn't save any grid yet!"
+msgstr ""
+
+#: admin/views/my-grids.php:61
+msgid "Create Your First Grid"
+msgstr ""
+
+#: admin/views/settings.php:16
+msgid "Debug Mode"
+msgstr ""
+
+#: admin/views/settings.php:22
+msgid "Enable debug mode to see the notices generated by the plugin."
+msgstr ""
+
+#: admin/views/settings.php:34
+msgid "Disable Nonce Check"
+msgstr ""
+
+#: admin/views/settings.php:40
+msgid "Disable if you are facing any issues with the nonce check."
+msgstr ""
+
+#: admin/views/settings.php:54
+msgid "Disable Icon & Color Options on Taxonomies"
+msgstr ""
+
+#: admin/views/settings.php:55
+msgid "Disable icon and color options from Taxonomies."
+msgstr ""
+
+#: admin/views/settings.php:69
+msgid "License Activation"
+msgstr ""
+
+#: admin/views/settings.php:70
+msgid "Enter your license key to activate GridMaster Pro."
+msgstr ""
+
+#: admin/views/settings.php:83
+msgid "Save Changes"
+msgstr ""
+
+#: admin/views/templates.php:6
+msgid "Template 1"
+msgstr ""
+
+#: admin/views/templates.php:16
+msgid "Template 2"
+msgstr ""
+
+#: admin/views/templates.php:26
+msgid "Template 3"
+msgstr ""
+
+#: admin/views/templates.php:36
+msgid "Template 4"
+msgstr ""
+
+#: admin/views/templates.php:46
+msgid "Template 5"
+msgstr ""
+
+#: admin/views/welcome.php:12
+msgid "Custom Post Type & Taxonomy"
+msgstr ""
+
+#: admin/views/welcome.php:13
+msgid "With GridMaster, effortlessly display any custom post types and taxonomies on your post grid."
+msgstr ""
+
+#: admin/views/welcome.php:25
+msgid "Pre-Built Grid and Filter Styles"
+msgstr ""
+
+#: admin/views/welcome.php:26
+msgid "GridMaster features various pre-designed grid and filter styles for a quick, stylish setup. No custom design needed."
+msgstr ""
+
+#: admin/views/welcome.php:38
+msgid "Versatile Pagination Options"
+msgstr ""
+
+#: admin/views/welcome.php:39
+msgid "GridMaster offers a variety of pagination options to help you display your content in the most effective way."
+msgstr ""
+
+#: admin/views/welcome.php:48
+msgid "Build Your First Grid"
+msgstr ""
+
+#: admin/views/welcome.php:52
+msgid "Why GridMaster is Different?"
+msgstr ""
+
+#: admin/views/welcome.php:64
+msgid "Seamless Efficiency with Clean Code"
+msgstr ""
+
+#: admin/views/welcome.php:65
+msgid "GridMaster is built with clean, well-organized code to ensure seamless efficiency and performance."
+msgstr ""
+
+#: admin/views/welcome.php:77
+msgid "Frontend-Backend Code Balance"
+msgstr ""
+
+#: admin/views/welcome.php:78
+msgid "We don't clutter your frontend with backend code. GridMaster maintains a lean codebase for optimal site performance."
+msgstr ""
+
+#: admin/views/welcome.php:90
+msgid "Customizable with Shortcode Builder"
+msgstr ""
+
+#: admin/views/welcome.php:91
+msgid "Shortcode Builder lets you place post grids anywhere on your site. Plus, build your custom theme with GridMaster with ease."
+msgstr ""
+
+#: admin/views/welcome.php:103
+msgid "Works with Any Theme"
+msgstr ""
+
+#: admin/views/welcome.php:104
+msgid "GridMaster is compatible with any WordPress theme. No need to change your theme to use GridMaster."
+msgstr ""
+
+#: admin/views/welcome.php:116
+msgid "Essential Features at No Cost"
+msgstr ""
+
+#: admin/views/welcome.php:117
+msgid "GridMaster comes packed with nearly all necessary features as part of its free package, ensuring exceptional value."
+msgstr ""
+
+#: admin/views/welcome.php:124
+msgid "Still Not Convinced?"
+msgstr ""
+
+#: admin/views/welcome.php:125
+msgid "Check Out the Pro Version"
+msgstr ""
+
+#: admin/views/welcome.php:134
+msgid "Encounter a Puzzle? Raise a Support Ticket"
+msgstr ""
+
+#: admin/views/welcome.php:135
+msgid "Should you need guidance or assistance, don't hesitate to create a support ticket. Our team is ready to solve your GridMaster mysteries."
+msgstr ""
+
+#: admin/views/welcome.php:137
+msgid "Support Forum"
+msgstr ""
+
+#: admin/views/welcome.php:138
+msgid "Submit a Ticket"
+msgstr ""
+
+#: admin/views/welcome.php:139
+msgid "Documentation"
+msgstr ""
+
+#: admin/views/welcome.php:145
+msgid "GridMaster Pro? Access Instant Support!"
+msgstr ""
+
+#: admin/views/welcome.php:146
+msgid "As a GridMaster Pro user, take advantage of our Live Chat feature for immediate help and assistance."
+msgstr ""
+
+#: admin/views/welcome.php:148
+msgid "Live Chat"
+msgstr ""
+
+#: ajax-filter-posts.php:146
+msgid "Get GridMaster Pro"
+msgstr ""
+
+#: inc/functions.php:28
+msgid "Extra Small"
+msgstr ""
+
+#: inc/functions.php:34
+msgid "Small"
+msgstr ""
+
+#: inc/functions.php:40
+msgid "Medium"
+msgstr ""
+
+#: inc/functions.php:46
+msgid "Large"
+msgstr ""
+
+#: inc/functions.php:52
+msgid "Extra Large"
+msgstr ""
+
+#: inc/functions.php:168
+msgid "Pro Style 1"
+msgstr ""
+
+#: inc/functions.php:169
+msgid "Pro Style 2"
+msgstr ""
+
+#: inc/functions.php:170
+msgid "Pro Style 3"
+msgstr ""
+
+#: inc/functions.php:171
+msgid "Pro Style 4"
+msgstr ""
+
+#: inc/functions.php:172
+msgid "Pro Style 5"
+msgstr ""
+
+#: inc/functions.php:173
+msgid "Pro Style 6"
+msgstr ""
+
+#: inc/functions.php:174
+msgid "Pro Style 7"
+msgstr ""
+
+#: inc/functions.php:175
+msgid "Pro Style 8"
+msgstr ""
+
+#: inc/functions.php:176
+msgid "Pro Style 9"
+msgstr ""
+
+#: inc/functions.php:177
+msgid "Pro Style 10"
+msgstr ""
+
+#: inc/functions.php:189
+msgid "Pro Filter 1"
+msgstr ""
+
+#: inc/functions.php:190
+msgid "Pro Filter 2"
+msgstr ""
+
+#. translators: %s: post date
+#: inc/functions.php:212
+msgctxt "post date"
+msgid "Posted on %s"
+msgstr ""
+
+#. translators: %s: post author
+#: inc/functions.php:258
+msgctxt "post author"
+msgid "Posted by %s"
+msgstr ""
+
+#. translators: 1: comment number, 2: title.
+#: inc/functions.php:283
+msgctxt "comments title"
+msgid "%1$s Comment"
+msgid_plural "%1$s Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/functions.php:332
+msgid "All"
+msgstr ""
+
+#. translators: %s: upgrade url
+#: inc/Shortcode.php:79
+msgid "<strong>Admin Notice:</strong> You need to upgrade to <a href=\"%s\" target=\"_blank\">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature."
+msgstr ""
+
+#. translators: %s: upgrade url
+#: inc/Shortcode.php:260
+msgid "<strong>Admin Notice:</strong> You need to upgrade to <a href=\"%s\" target=\"_blank\">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms."
+msgstr ""
+
+#: inc/Shortcode.php:630
+msgid "No posts found"
+msgstr ""
+
+#. translators: %s: template file
+#: inc/Shortcode.php:662
+msgid "Template file not found: %s <br>"
+msgstr ""
+
+#: templates/grid/style-3.php:11
+msgid "on"
+msgstr ""
