@@ -218,7 +218,8 @@ If you need any custom feature, please let us know. We will try to add the featu
 = 3.4.13 =
 - Fixed: Security issues
 - Compatible with WordPress 6.7.1
-
+- Text Domain: 'ajax-filter-posts' from 'gridmaster'.
+- Fixed: Plugin Check (PCP) issues.
 
 
 = 3.4.9 =
