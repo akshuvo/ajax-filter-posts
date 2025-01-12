@@ -215,6 +215,12 @@ If you need any custom feature, please let us know. We will try to add the featu
 
 == Changelog ==
 
+= 3.4.13 =
+- Fixed: Security issues
+- Compatible with WordPress 6.7.1
+
+
+
 = 3.4.9 =
 * July 02, 2024
 - Fixed: Security issues
