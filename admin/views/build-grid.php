@@ -897,14 +897,14 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'ajax-filter-posts'  ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'ajax-filter-posts'  ); ?></p>
-				<div class="d-flex gm-copy-wrap">
+				<!-- <div class="d-flex gm-copy-wrap">
 					<div class="gm-save-overlay">
 						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'ajax-filter-posts'  ); ?></button>
 					</div>
 					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id . '"]' : '[gridmaster id="#"]'; ?>
 					<input type="text" value="<?php echo esc_attr( $grid_id_copy ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'ajax-filter-posts'  ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
-				</div>
+				</div> -->
 
 				<h2 class="mb-0"><?php esc_html_e( 'Or below one', 'ajax-filter-posts'  ); ?></h2>
 				<div class="d-flex gm-copy-wrap">
