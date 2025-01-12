@@ -125,8 +125,6 @@ class Shortcode {
 		if ( $grid_id ) {
 			$get_grid = gm_get_grid( $grid_id );
 
-			// ppr( $get_grid->attributes );
-
 			if ( $get_grid ) {
 
 				// $atts = $get_grid->attributes;
