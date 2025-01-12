@@ -125,7 +125,7 @@ class Shortcode {
 		if ( $grid_id ) {
 			$get_grid = gm_get_grid( $grid_id );
 
-			ppr( $get_grid->attributes );
+			// ppr( $get_grid->attributes );
 
 			if ( $get_grid ) {
 
@@ -535,7 +535,7 @@ class Shortcode {
 		$dataPaged       = intval( $args['paged'] );
 
 		// Grid Style
-		$grid_style = sanitize_text_field( $args['grid_style'] );
+		$grid_style = sanitize_file_name( $args['grid_style'] );
 
 		// Tax Query
 		if ( $args['has_tax_query'] ) { // Already has tax query so add it to query args
@@ -650,7 +650,7 @@ class Shortcode {
 	 * @return void
 	 */
 	function get_template_part( $slug, $name = '', $args = array() ) {
-
+		$slug			= sanitize_file_name( $slug );
 		$templates = array();
 		if ( ! empty( $name ) ) {
 			$templates[] = "{$name}/{$slug}.php";
