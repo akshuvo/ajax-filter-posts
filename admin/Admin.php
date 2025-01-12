@@ -111,7 +111,7 @@ class Admin {
 			return $text;
 		}
 
-		$path = isset( $_GET['path'] ) ? sanitize_text_field( $_GET['path'] ) : '';
+		$path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( 'build-grid' !== $path ) {
 			return '';
 		}

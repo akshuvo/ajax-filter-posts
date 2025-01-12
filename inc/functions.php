@@ -150,9 +150,9 @@ function gridmaster_grid_styles() {
 	return apply_filters(
 		'gridmaster_grid_styles',
 		array(
-			'default' => __( 'Style 1 (Default)' ),
-			'style-2' => __( 'Style 2 (New)' ),
-			'style-3' => __( 'Style 3 (New)' ),
+			'default' => __( 'Style 1 (Default)', 'ajax-filter-posts' ),
+			'style-2' => __( 'Style 2 (New)', 'ajax-filter-posts' ),
+			'style-3' => __( 'Style 3 (New)', 'ajax-filter-posts' ),
 		)
 	);
 }

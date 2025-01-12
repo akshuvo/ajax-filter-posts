@@ -7,7 +7,7 @@
 require_once GRIDMASTER_PATH . '/admin/admin-functions.php';
 
 // Grid id.
-$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+$grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 // Get grid by id.
 $grid = gm_get_grid( $grid_id, true );

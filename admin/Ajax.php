@@ -19,12 +19,12 @@ class Ajax {
 	 * @return void
 	 */
 	public function register_ajax() {
-		$nonce = isset( $_REQUEST['gm_nonce'] ) ? sanitize_text_field( $_REQUEST['gm_nonce'] ) : '';
+		$nonce = isset( $_REQUEST['gm_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['gm_nonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'gm-ajax-nonce' ) ) {
 			wp_send_json_error( __( 'Invalid nonce', 'ajax-filter-posts'  ) );
 		}
 
-		$action = isset( $_REQUEST['gm-action'] ) ? sanitize_title( $_REQUEST['gm-action'] ) : '';
+		$action = isset( $_REQUEST['gm-action'] ) ? sanitize_title( wp_unslash( $_REQUEST['gm-action'] ) ) : '';
 		if ( ! $action ) {
 			wp_send_json_error( __( 'Invalid action', 'ajax-filter-posts'  ) );
 		}

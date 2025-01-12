@@ -171,6 +171,7 @@ class Grids {
 		// Defaults data.
 		if ( ! $id && $defaults ) {
 			$grid             = new \stdClass();
+			/* translators: %s: random words */
 			$grid->title      = sprintf( __( 'GridMaster #%s', 'ajax-filter-posts'  ), wp_generate_password( 8, false ) );
 			$grid->attributes = self::$defaults;
 			return $grid;

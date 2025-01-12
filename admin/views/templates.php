@@ -62,7 +62,7 @@ $templates_preivew = array(
 		<div class="col-md-4 mb-4">
 			<div class="gridmaster-template-card">
 				<div class="template-card-thumbnail">
-					<img src="<?php echo esc_url( $template['thumbnail'] ); ?>">
+					<img src="<?php echo esc_url( $template['thumbnail'] ); ?>"> <?php // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage	?>
 					<?php if ( $template['is_pro'] == 'yes' ) { ?>
 						<div class="template-badge pro">Pro</div>
 					<?php } else { ?>

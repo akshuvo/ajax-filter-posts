@@ -346,7 +346,7 @@ class Shortcode {
 	function am_post_grid_load_posts_ajax_functions() {
 		// Verify nonce
 		if ( gridmaster_get_settings( 'disable-nonce-check' ) != 'yes' ) {
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'asr_ajax_nonce' ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'asr_ajax_nonce' ) ) {
 				die( 'Permission Denied. Please disable nonce check from settings.' );
 			}
 		}
@@ -368,7 +368,7 @@ class Shortcode {
 
 		// Current Page
 		if ( isset( $_POST['paged'] ) ) {
-			$data['paged'] = sanitize_text_field( $_POST['paged'] );
+			$data['paged'] = sanitize_text_field( wp_unslash( $_POST['paged'] ) );
 		}
 
 		// Selected Category: Older way
@@ -381,7 +381,7 @@ class Shortcode {
 		// Tax Input: Skip old way, Proceed New way
 		$taxInput = array();
 		if ( isset( $_POST['taxInput'] ) ) {
-			parse_str( $_POST['taxInput'], $taxInput );
+			parse_str( wp_unslash( $_POST['taxInput'] ), $taxInput );
 		}
 		if ( ! empty( $taxInput ) ) {
 			$data = array_merge( $data, $taxInput );
@@ -629,7 +629,7 @@ class Shortcode {
 		else :
 			echo '<div class="gm-no-posts-found">' . apply_filters( 'gridmaster-no-posts-found', esc_html__( 'No posts found', 'ajax-filter-posts'  ) ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		endif;
-		wp_reset_query();
+		wp_reset_postdata();
 
 		// Wrap close when infinity load
 		echo ( $pagination_type == 'load_more' ) ? '</div>' : '';
@@ -712,7 +712,7 @@ class Shortcode {
 			// Disable admin bar
 			add_filter( 'show_admin_bar', '__return_false' );
 
-			$shortcode = isset( $_GET['shortcode'] ) ? $_GET['shortcode'] : '';
+			$shortcode = isset( $_GET['shortcode'] ) ? wp_unslash( $_GET['shortcode'] ) : '';
 			// Remove BackSlash
 			$shortcode = wp_unslash( $shortcode );
 			// Sanitize
