@@ -125,8 +125,8 @@ function gridmaster_read_more_link( $link_text = '' ) {
 
 	// Shortcode atts
 	$args           = apply_filters( 'gridmaster_get_render_grid_args', array() );
-	$show_read_more = isset( $args['show_read_more'] ) ? $args['show_read_more'] : 'yes';
-	$read_more_text = isset( $args['read_more_text'] ) ? $args['read_more_text'] : '';
+	$show_read_more = isset( $args['show_read_more'] ) ? esc_html( $args['show_read_more'] ) : 'yes';
+	$read_more_text = isset( $args['read_more_text'] ) ? esc_html( $args['read_more_text'] ) : '';
 
 	if ( $show_read_more == 'no' ) {
 		return;
