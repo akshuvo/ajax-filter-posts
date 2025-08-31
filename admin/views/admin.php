@@ -23,13 +23,13 @@ $nav_tabs = array(
 		'path'   => '',
 		'target' => '',
 	),
-	array(
-		'title'  => __( 'My Grids', 'ajax-filter-posts'  ),
-		'url'    => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-		'icon'   => 'dashicons dashicons-layout',
-		'path'   => 'my-grids',
-		'target' => '',
-	),
+	// array(
+	// 	'title'  => __( 'My Grids', 'ajax-filter-posts'  ),
+	// 	'url'    => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+	// 	'icon'   => 'dashicons dashicons-layout',
+	// 	'path'   => 'my-grids',
+	// 	'target' => '',
+	// ),
 	// [
 	// 'title' => __( 'Templates', 'ajax-filter-posts'  ),
 	// 'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
@@ -82,11 +82,11 @@ $nav_tabs = array(
 					<div class="d-flex gap-1">
 						<span class="spinner"></span>
 						<button type="button" class="gm-btn gm-btn-has-icon gm-toggle-modal" data-modal-id="gm-embed-modal"><span class="dashicons dashicons-editor-code"></span> <?php esc_html_e( 'Embed', 'ajax-filter-posts'  ); ?></button>
-						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill">
+						<!-- <button type="submit" class="gm-save-grid gm-btn gm-btn-fill">
 							<div class="gm-update-label"><?php esc_html_e( 'Update Grid', 'ajax-filter-posts'  ); ?></div>
 							<div class="gm-save-label"><?php esc_html_e( 'Save Grid', 'ajax-filter-posts'  ); ?></div>
 							<span class="unsaved-alert gm-tooltip gm-tooltip-end-bottom" title="<?php esc_html_e( 'You have some unsaved changes.', 'ajax-filter-posts'  ); ?>"></span>
-						</button>
+						</button> -->
 					</div>
 				</div>
 			<?php else : ?>

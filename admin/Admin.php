@@ -52,11 +52,11 @@ class Admin {
 				'path'   => '',
 				'target' => '',
 			),
-			array(
-				'title' => __( 'My Grids', 'ajax-filter-posts'  ),
-				'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-				'path'  => 'my-grids',
-			),
+			// array(
+			// 	'title' => __( 'My Grids', 'ajax-filter-posts'  ),
+			// 	'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
+			// 	'path'  => 'my-grids',
+			// ),
 			array(
 				'title'  => __( 'Grid Builder', 'ajax-filter-posts'  ),
 				'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
