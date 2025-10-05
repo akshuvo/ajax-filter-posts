@@ -4,7 +4,7 @@
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster
  * Author URI:   https://addonmaster.com/gridmaster/
- * Version:			3.4.14
+ * Version:			3.4.15
  * Description:  GridMaster is a powerful post filter plugin that allows you create stunning, customizable post grids on your website with its robust support for all post types and taxonomies, versatile pagination options including infinite scroll, and a suite of pre-built grid and filter styles.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -154,26 +154,25 @@ function grid_master_plugin() {
 	return GridMasterPlugin::init();
 }
 
+// run the plugin.
+grid_master_plugin();
+
+
 /**
  * Initialize the plugin tracker
  *
  * @return void
  */
-function appsero_init_tracker_ajax_filter_posts() {
+function grid_master_appsero_init_tracker_ajax_filter_posts() {
 
-    if ( ! class_exists( 'Appsero\Client' ) ) {
-      require_once __DIR__ . '/appsero/src/Client.php';
-    }
+	if ( ! class_exists( 'Appsero\Client' ) ) {
+		require_once __DIR__ . '/appsero/src/Client.php';
+	}
 
-    $client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'GridMaster', __FILE__ );
+	$client = new Appsero\Client( 'dc1dc5f0-8c32-4208-b217-b8b1a1a0b85f', 'Post Grid Master', __FILE__ );
 
-    // Active insights
-    $client->insights()->init();
-
+	// Active insights
+	$client->insights()->init();
 }
 
-appsero_init_tracker_ajax_filter_posts();
-
-
-// run the plugin.
-grid_master_plugin();
+grid_master_appsero_init_tracker_ajax_filter_posts();

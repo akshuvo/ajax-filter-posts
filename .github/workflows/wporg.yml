@@ -77,7 +77,7 @@ jobs:
       env:
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-        SLUG: 'simple-sales-tax'
+        SLUG: 'ajax-filter-posts'
         ASSETS_DIR: .wordpress
 
     # After the deploy, we also want to create a zip and upload it to the release on Github. We don't want
