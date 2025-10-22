@@ -1,6 +1,6 @@
 {
   "name": "post-grid-master",
-  "version": "3.4.15",
+  "version": "3.4.17",
   "description": "Create post grid layout with taxonomy filter, ajax pagination, load more button, infinite scroll, custom post type and many more.",
   "main": "index.js",
   "scripts": {

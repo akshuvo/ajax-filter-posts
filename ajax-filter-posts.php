@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:  Post Grid Master - Post Grid Solution with Ajax Filter
+ * Plugin Name:  Post Grid Master — Post Grids & AJAX Filters
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster
  * Author URI:   https://addonmaster.com/gridmaster/
- * Version:			3.4.16
+ * Version:			3.4.17
  * Description:  GridMaster is a powerful post filter plugin that allows you create stunning, customizable post grids on your website with its robust support for all post types and taxonomies, versatile pagination options including infinite scroll, and a suite of pre-built grid and filter styles.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -63,7 +63,7 @@ final class GridMasterPlugin {
      * @return void
      */
     public function define_constants() {
-        define( 'GRIDMASTER_VERSION', '3.4.16' );
+        define( 'GRIDMASTER_VERSION', '3.4.17' );
         define( 'GRIDMASTER_FILE', __FILE__ );
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );
