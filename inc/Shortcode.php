@@ -55,6 +55,15 @@ class Shortcode {
 		// Grid Style
 		$grid_style = $args['grid_style'];
 
+		// Get Style from post type "gm_grid_style" Gutenberg post content if $grid_style is integer
+		if ( is_numeric( $grid_style ) ) {
+			$style_post = get_post( intval( $grid_style ) );
+			if ( $style_post && $style_post->post_type === 'gm_grid_style' ) {
+				var_dump( 'Find: get the content' );
+				var_dump( get_the_content( null, false, $style_post ) );
+			}
+		}
+
 		// Enqueue Styles
 		if ( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/assets/css/' . $grid_style . '.css' ) ) {
 			wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/css/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );

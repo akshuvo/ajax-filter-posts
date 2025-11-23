@@ -43,7 +43,13 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 						gm_field_value( 'grid_style', $attr )
 					);
 					?>
-					<div class="grid-demo-link-button hidden"></div>
+					<div class="grid-demo-link-buttons">
+						<a href="<?php echo admin_url( 'post-new.php?post_type=gm_grid_style&classic-editor__forget' ); ?>" class="align-items-center button button-secondary d-inline-flex" target="_blank">
+							<span class="dashicons dashicons-plus-alt2"></span>
+							<?php esc_html_e( 'Create Style', 'ajax-filter-posts'  ); ?>
+						</a>
+						<div class="grid-demo-link-button hidden"></div>
+					</div>
 
 					<!-- Select Post Type -->
 					<?php

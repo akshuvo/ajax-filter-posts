@@ -409,3 +409,39 @@ function cptui_register_my_cpts_gm_grid_style() {
 }
 
 add_action( 'init', 'cptui_register_my_cpts_gm_grid_style' );
+
+// Grid Pro Styles
+add_filter( 'gridmaster_grid_styles', 'gridmaster_grid_custom_styles', 8 );
+function gridmaster_grid_custom_styles( $styles ) {
+	// TODO: Apply cache for performance
+	// Delete cache on post save/delete hook
+
+	// Try to get from cache
+	// $custom_styles = wp_cache_get( 'gm_custom_grid_styles' );
+	$custom_styles = false;
+
+	// Get custom grid styles
+	if ( false === $custom_styles ) {
+		$custom_styles = array();
+
+		// Get custom grid styles
+		$get_styles = get_posts( array(
+			'post_type'      => 'gm_grid_style',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+		) );
+
+		// Prepare styles
+		if( !empty( $get_styles ) ) {
+			foreach ( $get_styles as $style ) {
+				$custom_styles[ ' ' . $style->ID ] = $style->post_title; // Add space before ID to avoid numeric key issue. Will be trimmed when used.
+			}
+
+			// Set cache
+			// wp_cache_set( 'gm_custom_grid_styles', $custom_styles ); // Uncomment to enable caching
+		}
+		
+	}
+
+	return array_merge( $styles, $custom_styles );
+}

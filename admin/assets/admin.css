@@ -695,3 +695,8 @@ div[class^="show-if-"] {
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
 }
+
+.grid-demo-link-buttons {
+    display: flex;
+    gap: 10px;
+}

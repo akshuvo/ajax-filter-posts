@@ -176,6 +176,4 @@ class Admin {
 			wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.min.css', array(), GRIDMASTER_VERSION );
 		}
 	}
-
-	
 }
