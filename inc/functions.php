@@ -334,3 +334,78 @@ function gm_taxonomy_item_all( $args = array() ) {
 		<?php
 	endif;
 }
+
+
+function cptui_register_my_cpts_gm_grid_style() {
+
+	/**
+	 * Post Type: Grid Styles.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Grid Styles", "astra" ),
+		"singular_name" => esc_html__( "Grid Style", "astra" ),
+		"menu_name" => esc_html__( "Grid Styles", "astra" ),
+		"all_items" => esc_html__( "All Grid Styles", "astra" ),
+		"add_new" => esc_html__( "Add new", "astra" ),
+		"add_new_item" => esc_html__( "Add new Grid Style", "astra" ),
+		"edit_item" => esc_html__( "Edit Grid Style", "astra" ),
+		"new_item" => esc_html__( "New Grid Style", "astra" ),
+		"view_item" => esc_html__( "View Grid Style", "astra" ),
+		"view_items" => esc_html__( "View Grid Styles", "astra" ),
+		"search_items" => esc_html__( "Search Grid Styles", "astra" ),
+		"not_found" => esc_html__( "No Grid Styles found", "astra" ),
+		"not_found_in_trash" => esc_html__( "No Grid Styles found in trash", "astra" ),
+		"parent" => esc_html__( "Parent Grid Style:", "astra" ),
+		"featured_image" => esc_html__( "Featured image for this Grid Style", "astra" ),
+		"set_featured_image" => esc_html__( "Set featured image for this Grid Style", "astra" ),
+		"remove_featured_image" => esc_html__( "Remove featured image for this Grid Style", "astra" ),
+		"use_featured_image" => esc_html__( "Use as featured image for this Grid Style", "astra" ),
+		"archives" => esc_html__( "Grid Style archives", "astra" ),
+		"insert_into_item" => esc_html__( "Insert into Grid Style", "astra" ),
+		"uploaded_to_this_item" => esc_html__( "Upload to this Grid Style", "astra" ),
+		"filter_items_list" => esc_html__( "Filter Grid Styles list", "astra" ),
+		"items_list_navigation" => esc_html__( "Grid Styles list navigation", "astra" ),
+		"items_list" => esc_html__( "Grid Styles list", "astra" ),
+		"attributes" => esc_html__( "Grid Styles attributes", "astra" ),
+		"name_admin_bar" => esc_html__( "Grid Style", "astra" ),
+		"item_published" => esc_html__( "Grid Style published", "astra" ),
+		"item_published_privately" => esc_html__( "Grid Style published privately.", "astra" ),
+		"item_reverted_to_draft" => esc_html__( "Grid Style reverted to draft.", "astra" ),
+		"item_trashed" => esc_html__( "Grid Style trashed.", "astra" ),
+		"item_scheduled" => esc_html__( "Grid Style scheduled", "astra" ),
+		"item_updated" => esc_html__( "Grid Style updated.", "astra" ),
+		"template_name" => esc_html__( "Single Grid Style: Grid Style", "astra" ),
+		"parent_item_colon" => esc_html__( "Parent Grid Style:", "astra" ),
+	];
+
+	$args = [
+		"label" => esc_html__( "Grid Styles", "astra" ),
+		"labels" => $labels,
+		"description" => "",
+		"public" => true,
+		"publicly_queryable" => false,
+		"show_ui" => true,
+		"show_in_rest" => true,
+		"rest_base" => "",
+		"rest_controller_class" => "WP_REST_Posts_Controller",
+		"rest_namespace" => "wp/v2",
+		"has_archive" => false,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"delete_with_user" => false,
+		"exclude_from_search" => true,
+		"capability_type" => "post",
+		"map_meta_cap" => true,
+		"hierarchical" => false,
+		"can_export" => false,
+		"rewrite" => false,
+		"query_var" => false,
+		"supports" => [ "title", "editor" ],
+		"show_in_graphql" => false,
+	];
+
+	register_post_type( "gm_grid_style", $args );
+}
+
+add_action( 'init', 'cptui_register_my_cpts_gm_grid_style' );

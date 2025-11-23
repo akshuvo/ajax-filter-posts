@@ -395,3 +395,5 @@ function gm_get_image_sizes() {
 
 	return $image_sizes;
 }
+
+
