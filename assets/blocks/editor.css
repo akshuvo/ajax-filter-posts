@@ -1,0 +1,18 @@
+.gm-grid-editor-preview {
+	border: 1px solid #dcdcde;
+	padding: 16px;
+}
+
+.gm-grid-placeholder,
+.gm-field-placeholder {
+	background: #f6f7f7;
+	border: 1px dashed #c3c4c7;
+	color: #1d2327;
+	padding: 16px;
+}
+
+.gm-field-placeholder {
+	border-radius: 3px;
+	font-size: 13px;
+	font-weight: 600;
+}

@@ -55,15 +55,6 @@ class Shortcode {
 		// Grid Style
 		$grid_style = $args['grid_style'];
 
-		// Get Style from post type "gm_grid_style" Gutenberg post content if $grid_style is integer
-		if ( is_numeric( $grid_style ) ) {
-			$style_post = get_post( intval( $grid_style ) );
-			if ( $style_post && $style_post->post_type === 'gm_grid_style' ) {
-				var_dump( 'Find: get the content' );
-				var_dump( get_the_content( null, false, $style_post ) );
-			}
-		}
-
 		// Enqueue Styles
 		if ( defined( 'GRIDMASTER_PRO_PATH' ) && file_exists( GRIDMASTER_PRO_PATH . '/assets/css/' . $grid_style . '.css' ) ) {
 			wp_enqueue_style( 'gridmaster-frontends-' . $grid_style, GRIDMASTER_PRO_ASSETS_URL . '/css/' . $grid_style . '.css', array(), GRIDMASTER_VERSION );
@@ -122,6 +113,7 @@ class Shortcode {
 			'filter_heading'      => '',
 			'toggle_filter_items' => '',
 			'id'                  => 0,
+			'template_id'         => 0,
 		);
 
 		// If id is set then get args from the database and render the grid.
@@ -150,6 +142,11 @@ class Shortcode {
 			$atts,
 			'gridmaster'
 		);
+
+		if ( ! empty( $atts['template_id'] ) ) {
+			$atts['grid_id'] = 'gm-template-' . absint( $atts['template_id'] );
+			return Renderer::render( $atts );
+		}
 
 		// Grid Style.
 		$grid_style = $atts['grid_style'];
@@ -372,6 +369,28 @@ class Shortcode {
 		}
 
 		$argsArray = isset( $_POST['argsArray'] ) ? wp_unslash( $_POST['argsArray'] ) : array();
+
+		if ( ! empty( $argsArray['template_id'] ) ) {
+			$data = array_merge( Renderer::normalize_args( $argsArray ), $data );
+
+			if ( isset( $_POST['paged'] ) ) {
+				$data['paged'] = sanitize_text_field( wp_unslash( $_POST['paged'] ) );
+			}
+
+			$taxInput = array();
+			if ( isset( $_POST['taxInput'] ) ) {
+				parse_str( wp_unslash( $_POST['taxInput'] ), $taxInput );
+			}
+			if ( ! empty( $taxInput ) ) {
+				$data = array_merge( $data, $taxInput );
+			}
+
+			$data['ajax'] = true;
+
+			echo Renderer::render_posts( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			die();
+		}
+
 		// Merge Json Data
 		$data = array_merge( $this->get_args_from_atts( $argsArray ), $data );
 

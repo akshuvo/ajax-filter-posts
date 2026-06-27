@@ -31,7 +31,7 @@ $nav_tabs = array(
 		'target' => '',
 	),
 	array(
-		'title' => __( 'Templates', 'ajax-filter-posts'  ),
+		'title' => __( 'Gutenberg Templates', 'ajax-filter-posts'  ),
 		'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
 		'icon'  => 'dashicons dashicons-layout',
 		'path' => 'templates',

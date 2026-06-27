@@ -96,6 +96,23 @@ final class GridMasterPlugin {
 		// Include the functions.php.
 		require_once GRIDMASTER_PATH . '/inc/functions.php';
 
+		require_once GRIDMASTER_PATH . '/inc/Query_Builder.php';
+		require_once GRIDMASTER_PATH . '/inc/Template_Renderer.php';
+		require_once GRIDMASTER_PATH . '/inc/Renderer.php';
+		require_once GRIDMASTER_PATH . '/inc/Blocks.php';
+		new GridMaster\Blocks();
+
+		require_once GRIDMASTER_PATH . '/inc/Elementor.php';
+		new GridMaster\Elementor();
+
+		require_once GRIDMASTER_PATH . '/inc/Widget.php';
+		add_action(
+			'widgets_init',
+			function () {
+				register_widget( 'GridMaster\Widget' );
+			}
+		);
+
 		// Load Shortcode Class.
 		if ( ! class_exists( 'GridMaster\Shortcode' ) ) {
 			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
@@ -130,7 +147,7 @@ final class GridMasterPlugin {
 			)
 		);
 
-		wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.min.css', array(), GRIDMASTER_VERSION );
+		wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.css', array(), GRIDMASTER_VERSION );
 	}
 
 	/**

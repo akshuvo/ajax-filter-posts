@@ -1,166 +1,94 @@
 <?php
+/**
+ * Admin Menu: Gutenberg grid templates.
+ */
 
-// Template review array
-$templates_preivew = array(
-	array(
-		'name'          => __( 'Template 1', 'ajax-filter-posts'  ),
-		'id'            => 'template-1',
-		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
-		'pagination_id' => '',
-		'filter_id'     => '',
-		'is_pro'        => 'no',
-		'preview_link'  => '',
-		'query'         => '',
-	),
-	array(
-		'name'          => __( 'Template 2', 'ajax-filter-posts'  ),
-		'id'            => 'template-2',
-		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
-		'pagination_id' => '',
-		'filter_id'     => '',
-		'is_pro'        => 'no',
-		'preview_link'  => '',
-		'query'         => '',
-	),
-	array(
-		'name'          => __( 'Template 3', 'ajax-filter-posts'  ),
-		'id'            => 'template-2',
-		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
-		'pagination_id' => '',
-		'filter_id'     => '',
-		'is_pro'        => 'no',
-		'preview_link'  => '',
-		'query'         => '',
-	),
-	array(
-		'name'          => __( 'Template 4', 'ajax-filter-posts'  ),
-		'id'            => 'template-2',
-		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
-		'pagination_id' => '',
-		'filter_id'     => '',
-		'is_pro'        => 'yes',
-		'preview_link'  => '',
-		'query'         => '',
-	),
-	array(
-		'name'          => __( 'Template 5', 'ajax-filter-posts'  ),
-		'id'            => 'template-2',
-		'thumbnail'     => GRIDMASTER_URL . '/admin/assets/tmpl-imgs/template-1.png',
-		'pagination_id' => '',
-		'filter_id'     => '',
-		'is_pro'        => 'yes',
-		'preview_link'  => '',
-		'query'         => '',
-	),
-); ?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-<div class="gridmaster-wrap cogm-welcome-ntainer">
+$templates = get_posts(
+	array(
+		'post_type'      => array( 'gm_grid_template', 'gm_grid_style' ),
+		'post_status'    => array( 'publish', 'draft' ),
+		'posts_per_page' => -1,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	)
+);
+
+$new_template_url = admin_url( 'post-new.php?post_type=gm_grid_template' );
+?>
+
+<div class="gridmaster-wrap">
 	<div class="container-fluid pt-0 pt-3 gm-container">
-		<div class="row gridmaster-template-view">
+		<div class="gm-grid-list">
+			<div class="gm-grid-list-header d-flex" style="justify-content: space-between; align-items: center;">
+				<div>
+					<h2><?php esc_html_e( 'Gutenberg Grid Templates', 'ajax-filter-posts' ); ?></h2>
+					<p><?php esc_html_e( 'Create reusable post grid designs once, then choose them from Gutenberg, Elementor, or any builder that supports shortcodes.', 'ajax-filter-posts' ); ?></p>
+				</div>
+				<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( $new_template_url ); ?>">
+					<span class="dashicons dashicons-plus-alt2"></span>
+					<?php esc_html_e( 'Create Template', 'ajax-filter-posts' ); ?>
+				</a>
+			</div>
 
-		<?php foreach ( $templates_preivew as $template ) : ?>
-		<div class="col-md-4 mb-4">
-			<div class="gridmaster-template-card">
-				<div class="template-card-thumbnail">
-					<img src="<?php echo esc_url( $template['thumbnail'] ); ?>"> <?php // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage	?>
-					<?php if ( $template['is_pro'] == 'yes' ) { ?>
-						<div class="template-badge pro">Pro</div>
-					<?php } else { ?>
-						
-					<?php } ?>    
-
-					<div class="template-card-info">
-						<div class="template-card-actions">
-							<a href="#" class="btn gm-bttn btn-primary">Preview</a>
-							<?php
-							if ( $template['is_pro'] == 'yes' ) {
-								?>
-									<a href="#" class="btn gm-bttn btn-primary bttn-pro">Upgrade to pro!</a>
-								<?php } else { ?>
-									<a href="#" class="btn gm-bttn btn-primary">Use This Template</a>
-							<?php } ?>
-						</div>
-						<div class="template-card-title">
-							<h3><?php echo esc_html( $template['name'] ); ?></h3>
+			<div class="gm-grid-list-body">
+				<?php if ( empty( $templates ) ) : ?>
+					<div class="gm-card text-center">
+						<div class="gm-card-details">
+							<div class="gm-icon"><span class="dashicons dashicons-layout"></span></div>
+							<div class="gm-card-containt">
+								<h2><?php esc_html_e( 'No Gutenberg templates yet.', 'ajax-filter-posts' ); ?></h2>
+								<p><?php esc_html_e( 'Start with a post card layout using the GridMaster field blocks, then insert it from your page builder.', 'ajax-filter-posts' ); ?></p>
+								<a class="gm-btn gm-btn-fill" href="<?php echo esc_url( $new_template_url ); ?>"><?php esc_html_e( 'Create Your First Template', 'ajax-filter-posts' ); ?></a>
+							</div>
 						</div>
 					</div>
-				</div>
+				<?php else : ?>
+					<table class="wp-list-table widefat striped table-view-list">
+						<thead>
+							<tr>
+								<th scope="col"><?php esc_html_e( 'Template', 'ajax-filter-posts' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Status', 'ajax-filter-posts' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Shortcode', 'ajax-filter-posts' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Use In Builders', 'ajax-filter-posts' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Actions', 'ajax-filter-posts' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ( $templates as $template ) : ?>
+								<?php $shortcode = '[gridmaster template_id="' . absint( $template->ID ) . '"]'; ?>
+								<tr>
+									<th>
+										<strong><?php echo esc_html( get_the_title( $template ) ); ?></strong>
+										<div class="row-actions">
+											<span><?php echo esc_html( $template->post_type ); ?></span>
+										</div>
+									</th>
+									<td><?php echo esc_html( get_post_status_object( $template->post_status )->label ); ?></td>
+									<td>
+										<div class="d-flex gm-copy-wrap input-sheamless">
+											<input type="text" value="<?php echo esc_attr( $shortcode ); ?>" class="gm-copy-inp gm-copy-val" readonly>
+											<button type="button" class="gm-copy-btn gm-tooltip button" title="<?php esc_attr_e( 'Copy Shortcode', 'ajax-filter-posts' ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
+										</div>
+									</td>
+									<td>
+										<?php esc_html_e( 'Gutenberg block, Elementor widget, WordPress widget, shortcode widget, HTML widget.', 'ajax-filter-posts' ); ?>
+									</td>
+									<td>
+										<div class="action-btns">
+											<a href="<?php echo esc_url( get_edit_post_link( $template->ID ) ); ?>" class="button gm-tooltip" title="<?php esc_attr_e( 'Edit in Gutenberg', 'ajax-filter-posts' ); ?>"><span class="m-0 dashicons dashicons-edit"></span></a>
+											<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=gm_grid_template' ) ); ?>" class="button gm-tooltip" title="<?php esc_attr_e( 'Create New Template', 'ajax-filter-posts' ); ?>"><span class="m-0 dashicons dashicons-plus-alt2"></span></a>
+										</div>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
 			</div>
-		</div>
-		<?php endforeach; ?>
 		</div>
 	</div>
 </div>
-
-
-<style>
-.gm-bttn {
-	background: #fff;
-	border: 1px solid;
-	display: inline-block;
-	padding: 10px 16px;
-	border-radius: 6px;
-	text-decoration: none;
-}
-.gridmaster-template-view img {
-	width: 100%;
-	border-radius: 8px;
-	min-height: 340px;
-	object-fit: cover;
-}
-.gridmaster-template-card {
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	position: relative;
-}
-.template-card-info {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	background: rgb(233 235 255 / 70%);
-	top: 0;
-	left: 0;
-	z-index: 100;
-	transition: all 200ms;
-	opacity: 0;
-}
-.gridmaster-template-card:hover .template-card-info{
-	opacity: 1;
-	transition: all 200ms;
-}
-.template-badge.pro {
-	background: #000;
-	color: #fff;
-	padding: 8px 32px;
-	font-size: 16px;
-	border-radius: 4px;
-	position: absolute;
-	top: 8px;
-	right: 8px;
-	z-index: 999;
-} 
-.template-card-title {
-	position: absolute;
-	bottom: 8px;
-}
-.template-card-actions {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	text-align: center;
-}
-
-.template-card-actions .gm-bttn {
-	background: #413ec5;
-	color: #fff;
-	border-radius: 0px;
-}
-.template-card-actions .gm-bttn.bttn-pro {
-	background: linear-gradient(90deg, rgba(31, 17, 206, 1) 0%, rgba(153, 29, 107, 1) 100%);
-}
-
-</style>

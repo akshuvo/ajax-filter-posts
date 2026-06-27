@@ -58,6 +58,11 @@ class Admin {
 				'path'  => 'my-grids',
 			),
 			array(
+				'title' => __( 'Gutenberg Templates', 'ajax-filter-posts'  ),
+				'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
+				'path'  => 'templates',
+			),
+			array(
 				'title'  => __( 'Grid Builder', 'ajax-filter-posts'  ),
 				'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
 				'path'   => 'build-grid',
