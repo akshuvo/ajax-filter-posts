@@ -617,9 +617,8 @@ body.gm-focus-mode #wpcontent {
 }
 
 .gm-card-canvas-hint {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+	width: 100%;
+	text-align: center;
 	font-size: 12px;
 	color: var(--gm-secondary);
 	margin-bottom: 16px;
@@ -1572,11 +1571,21 @@ body.gm-focus-mode #wpcontent {
 }
 
 /* Style Gutenberg's actual drop target; never display guides at invalid positions. */
+body.gridmaster_page_gridmaster-builder.gm-builder-dragging {
+	position: fixed;
+	top: var(--gm-drag-body-top);
+	left: var(--gm-drag-body-left);
+	width: var(--gm-drag-body-width);
+	height: var(--gm-drag-body-height);
+}
 .gm-drop-guidance {
-	min-height: 18px;
+	height: 18px;
 	margin-top: 4px;
 	line-height: 18px;
 	color: #505b6b;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .gm-card-canvas-paper [data-gm-drop-target="true"] {
 	outline: 2px dashed #2271b1;
@@ -1615,4 +1624,13 @@ body.gridmaster_page_gridmaster-builder .is-horizontal > .block-editor-block-lis
 body.gridmaster_page_gridmaster-builder .block-editor-block-popover__drop-zone-foreground {
 	background: rgba(34, 113, 177, 0.08) !important;
 	outline: 2px solid #2271b1;
+}
+/* Gutenberg remounts these at each new target. Avoid replaying their entrance
+ * animation during a drag; leave the positioning popover's transform intact. */
+.gm-card-block-tools.block-editor-block-tools--is-dragging .block-editor-block-list__insertion-point-indicator,
+.gm-card-block-tools.block-editor-block-tools--is-dragging .block-editor-block-popover__drop-zone-foreground {
+	opacity: 1 !important;
+	transform: none !important;
+	animation: none !important;
+	transition: none !important;
 }

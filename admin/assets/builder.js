@@ -4,7 +4,7 @@
 ( function ( wp ) {
 	'use strict';
 
-	const { createElement: el, useState, useEffect, useRef, useCallback, Fragment } = wp.element;
+	const { createElement: el, useState, useEffect, useLayoutEffect, useRef, useCallback, Fragment } = wp.element;
 	const { render } = wp.element;
 	const { parse, serialize, createBlock } = wp.blocks;
 	const { useDispatch, useSelect } = wp.data;
@@ -289,21 +289,13 @@
 		);
 	}
 
-	/**
-	 * Card Canvas Stage: contains quick-add bar, helper text, and Gutenberg canvas.
-	 */
-	function CardCanvasStage( props ) {
-		const { isPro } = props;
-		const { insertBlock } = useDispatch( 'core/block-editor' );
-		const registry = wp.data.useRegistry();
-		const paperRef = useRef( null );
-		const { rootBlocks, selectedClientId, isDraggingBlocks, dropRootId, dropTargetName, hasDropPosition, isDropContainerEmpty } = useSelect( ( select ) => {
+	/** Keep frequent insertion-point updates separate from the canvas tree. */
+	function DropGuidance( { paperRef } ) {
+		const { isDraggingBlocks, dropRootId, dropTargetName, hasDropPosition, isDropContainerEmpty } = useSelect( ( select ) => {
 			const be = select( 'core/block-editor' );
 			const point = be.getBlockInsertionPoint();
 			const targetName = point?.rootClientId ? be.getBlockName( point.rootClientId ) : null;
 			return {
-				rootBlocks: be.getBlocks(),
-				selectedClientId: be.getSelectedBlockClientId(),
 				isDraggingBlocks: be.isDraggingBlocks(),
 				dropRootId: point?.rootClientId,
 				dropTargetName: targetName ? wp.blocks.getBlockType( targetName )?.title : __( 'Canvas', 'ajax-filter-posts' ),
@@ -318,6 +310,49 @@
 			target?.setAttribute( 'data-gm-drop-target', 'true' );
 			return () => target?.removeAttribute( 'data-gm-drop-target' );
 		}, [ isDraggingBlocks, hasDropPosition, dropRootId ] );
+
+		useLayoutEffect( () => {
+			if ( ! isDraggingBlocks ) return;
+			// A short canvas has no scroll container, so Gutenberg otherwise scrolls
+			// the admin page. Freeze that page without changing the canvas geometry.
+			const { scrollX, scrollY } = window;
+			const body = document.body;
+			const bounds = body.getBoundingClientRect();
+			body.style.setProperty( '--gm-drag-body-top', bounds.top + 'px' );
+			body.style.setProperty( '--gm-drag-body-left', bounds.left + 'px' );
+			body.style.setProperty( '--gm-drag-body-width', bounds.width + 'px' );
+			body.style.setProperty( '--gm-drag-body-height', bounds.height + 'px' );
+			body.classList.add( 'gm-builder-dragging' );
+			return () => {
+				body.classList.remove( 'gm-builder-dragging' );
+				[ 'top', 'left', 'width', 'height' ].forEach( ( dimension ) => body.style.removeProperty( '--gm-drag-body-' + dimension ) );
+				window.scrollTo( scrollX, scrollY );
+			};
+		}, [ isDraggingBlocks ] );
+
+		return el( 'div', { className: 'gm-drop-guidance', role: 'status', 'aria-live': 'polite' },
+			isDraggingBlocks
+				? ( hasDropPosition
+					? wp.i18n.sprintf( isDropContainerEmpty
+						? __( 'Drop inside the highlighted %s.', 'ajax-filter-posts' )
+						: __( 'Drop at the blue line in %s.', 'ajax-filter-posts' ), dropTargetName )
+					: __( 'Move over the card to find a drop position.', 'ajax-filter-posts' ) )
+				: __( 'Drag by the block handle; follow the blue drop line.', 'ajax-filter-posts' )
+		);
+	}
+
+	/**
+	 * Card Canvas Stage: contains quick-add bar, helper text, and Gutenberg canvas.
+	 */
+	function CardCanvasStage( props ) {
+		const { isPro } = props;
+		const { insertBlock } = useDispatch( 'core/block-editor' );
+		const registry = wp.data.useRegistry();
+		const paperRef = useRef( null );
+		const { rootBlocks, selectedClientId } = useSelect( ( select ) => {
+			const be = select( 'core/block-editor' );
+			return { rootBlocks: be.getBlocks(), selectedClientId: be.getSelectedBlockClientId() };
+		} );
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const moreBtnRef = useRef( null );
@@ -428,15 +463,7 @@
 						el( 'span', { className: 'dashicons dashicons-info-outline', 'aria-hidden': true } ),
 						' ', __( 'Design one card. It repeats for every matching post.', 'ajax-filter-posts' )
 					),
-					el( 'div', { className: 'gm-drop-guidance', role: 'status', 'aria-live': 'polite' },
-						isDraggingBlocks
-							? ( hasDropPosition
-								? wp.i18n.sprintf( isDropContainerEmpty
-									? __( 'Drop inside the highlighted %s.', 'ajax-filter-posts' )
-									: __( 'Drop at the blue line in %s.', 'ajax-filter-posts' ), dropTargetName )
-								: __( 'Move over the card to find a drop position.', 'ajax-filter-posts' ) )
-							: __( 'Drag by the block handle; follow the blue drop line.', 'ajax-filter-posts' )
-					)
+					el( DropGuidance, { paperRef: paperRef } )
 				),
 				el(
 					'div',
