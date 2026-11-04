@@ -75,6 +75,8 @@ Given unauthorized users, malformed blocks/styles/meta keys or a private definit
 
 ## Backward compatibility, tests and evidence
 
+Builder follow-up evidence (2026-11-05): standalone core block registration, nested Group/field insertion and block Undo/Redo across tabs were checked for R03; searchable taxonomy inclusion/exclusion now uses the normalized stored query for R05/R06; authenticated interactive draft previews, mobile viewport behavior, pagination identities and empty/error retry states were checked for R09. Dirty/error handling and a viewport-bounded shell improve R14/R18, but autosave recovery, locks, conflicts and whole-definition revision restoration are still incomplete. The [testing record](../testing.md#builder-follow-up-verification--2026-11-05) distinguishes executed process/browser checks from untested requirements. These results are partial acceptance evidence, not completion of the PRD or release approval.
+
 Preserve original row bytes, dates and IDs, old builder/renderer, documented hooks/priorities and theme-template behavior through a scoped legacy adapter. Changing historical shortcode overrides is opt-in. New API contracts are separate; legacy hooks do not become global v2 mutation hooks. Required automated/manual matrix, fixtures and migration restore tests: [testing](../gridmaster-2.0/testing.md), [migration](../gridmaster-2.0/migration.md), [milestones](../gridmaster-2.0/implementation-plan.md).
 
 Observed planning evidence only: source/branch inspection, read-only table schema/count (0 saved rows, 1 experimental template record), native browser legacy builder with real preview, and documentation validation. No new builder, migration, Free-only activation scenario, security exploit or performance test has passed yet.

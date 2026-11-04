@@ -187,6 +187,7 @@
 		}
 
 		initInfiniteScroll() {
+			if ( this.infiniteObserver ) this.infiniteObserver.disconnect();
 			const infiniteEl = this.container.querySelector( '.gm-pagination-infinite' );
 			if ( ! infiniteEl || ! ( 'IntersectionObserver' in window ) ) return;
 
@@ -211,7 +212,9 @@
 			}
 
 			this.activeAbortController = new AbortController();
+			const controller = this.activeAbortController;
 			this.isLoading = true;
+			this.container.querySelector( '.gm-request-error' )?.remove();
 
 			this.setLoadingState( true, append );
 
@@ -244,8 +247,15 @@
 				body: JSON.stringify( payload ),
 				signal: this.activeAbortController.signal,
 			} )
-				.then( ( res ) => res.json() )
+				.then( async ( res ) => {
+					const data = await res.json();
+					if ( ! res.ok || ! data || ! data.html ) {
+						throw new Error( data?.message || window.gridmasterV2?.errorText || 'Could not load posts. Please retry.' );
+					}
+					return data;
+				} )
 				.then( ( data ) => {
+					if ( controller.signal.aborted || controller !== this.activeAbortController ) return;
 					this.isLoading = false;
 					this.setLoadingState( false, append );
 
@@ -269,7 +279,7 @@
 							if ( newItems.length > 0 ) {
 								newItems.forEach( ( item ) => this.itemsContainer.appendChild( item ) );
 							} else {
-								const noRes = temp.querySelector( '.gm-no-results' );
+								const noRes = temp.querySelector( '.gm-no-results, .gm-empty-results' );
 								this.itemsContainer.innerHTML = noRes ? noRes.outerHTML : '<div class="gm-no-results"><p>No posts found.</p></div>';
 							}
 						}
@@ -291,10 +301,20 @@
 					}
 				} )
 				.catch( ( err ) => {
-					if ( err.name !== 'AbortError' ) {
+					if ( err.name !== 'AbortError' && controller === this.activeAbortController ) {
 						this.isLoading = false;
 						this.setLoadingState( false, append );
-						console.error( 'GridMaster fetch error:', err );
+						const error = document.createElement( 'div' );
+						error.className = 'gm-request-error';
+						error.setAttribute( 'role', 'alert' );
+						const message = document.createElement( 'span' );
+						message.textContent = err.message;
+						const retry = document.createElement( 'button' );
+						retry.type = 'button';
+						retry.textContent = window.gridmasterV2?.retryText || 'Retry';
+						retry.addEventListener( 'click', () => this.fetchResults( append ) );
+						error.append( message, retry );
+						this.container.appendChild( error );
 					}
 				} );
 		}
@@ -310,12 +330,21 @@
 						loadBtn.classList.add( 'gm-loading-spinner' );
 						const loadText = loadBtn.getAttribute( 'data-loading-text' );
 						const textSpan = loadBtn.querySelector( '.gm-btn-text' );
-						if ( textSpan && loadText ) textSpan.textContent = loadText;
+							if ( textSpan && loadText ) {
+								loadBtn.dataset.originalText = textSpan.textContent;
+								textSpan.textContent = loadText;
+							}
 					}
 				}
 			} else {
 				this.container.classList.remove( 'gm-loading' );
 				this.itemsContainer.style.opacity = '1';
+				const loadBtn = this.container.querySelector( '.gm-btn-load-more' );
+				if ( loadBtn ) {
+					loadBtn.classList.remove( 'gm-loading-spinner' );
+					const text = loadBtn.querySelector( '.gm-btn-text' );
+					if ( text && loadBtn.dataset.originalText ) text.textContent = loadBtn.dataset.originalText;
+				}
 			}
 		}
 	}

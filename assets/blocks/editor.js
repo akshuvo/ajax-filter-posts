@@ -6,7 +6,7 @@
 	const { createElement: el, Fragment } = wp.element;
 	const { InspectorControls, useBlockProps, InnerBlocks } = wp.blockEditor;
 	const { PanelBody, TextControl, SelectControl, ToggleControl, RangeControl } = wp.components;
-	const __ = wp.i18n.__;
+	const { __, sprintf } = wp.i18n;
 
 	const blockData = window.gridmasterBlockData || {};
 	const grids = blockData.grids || [ { label: __( 'Select a Grid', 'ajax-filter-posts' ), value: 0 } ];
@@ -163,6 +163,7 @@
 					blockProps,
 					el( InnerBlocks, {
 						allowedBlocks: ALLOWED_CARD_BLOCKS,
+						templateLock: window.gridmasterBuilderData ? false : undefined,
 						template: [
 							[ 'gridmaster/featured-image', { size: 'medium_large' } ],
 							[ 'gridmaster/title', { tagName: 'h3' } ],

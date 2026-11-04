@@ -177,7 +177,7 @@ class Admin {
 			wp_enqueue_style( 'gridmaster-blocks-editor', GRIDMASTER_ASSETS . 'blocks/editor.css', array( 'wp-components', 'wp-block-library' ), GRIDMASTER_VERSION );
 
 			$builder_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
-			wp_enqueue_script( 'gridmaster-builder-app', GRIDMASTER_URL . '/admin/assets/builder.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-block-library' ), $builder_ver, true );
+			wp_enqueue_script( 'gridmaster-builder-app', GRIDMASTER_URL . '/admin/assets/builder.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-block-library', 'wp-compose' ), $builder_ver, true );
 			wp_enqueue_style( 'gridmaster-builder-css', GRIDMASTER_URL . '/admin/assets/builder.css', array( 'wp-components' ), $builder_ver );
 			wp_enqueue_style( 'gridmaster-frontend-v2', GRIDMASTER_ASSETS . 'css/frontend-v2.css', array(), GRIDMASTER_VERSION );
 		}

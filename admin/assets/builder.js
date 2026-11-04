@@ -11,13 +11,13 @@
 	const {
 		BlockEditorProvider,
 		BlockList,
+		BlockTools,
 		WritingFlow,
 		ObserveTyping,
 		BlockInspector,
 	} = wp.blockEditor;
 	const {
 		Button,
-		ButtonGroup,
 		TextControl,
 		SelectControl,
 		RangeControl,
@@ -32,6 +32,29 @@
 	const __ = wp.i18n.__;
 
 	const initData = window.gridmasterBuilderData || {};
+	// The standalone shell must register core blocks as well as load their script.
+	if ( wp.blockLibrary && ! wp.blocks.getBlockType( 'core/group' ) ) {
+		wp.blockLibrary.registerCoreBlocks();
+	}
+
+	const escapeHtml = ( value ) => String( value ).replace( /[&<>"']/g, ( char ) => ( {
+		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+	} )[ char ] );
+	const scriptJson = ( value ) => JSON.stringify( value ).replace( /</g, '\\u003c' );
+	const previewRuntime = {
+		restUrl: initData.restUrl, nonce: initData.nonce,
+		errorText: __( 'Could not load posts. Please retry.', 'ajax-filter-posts' ),
+		retryText: __( 'Retry', 'ajax-filter-posts' ),
+	};
+	const readApiResponse = async ( response ) => {
+		const data = await response.json();
+		if ( ! response.ok ) {
+			throw new Error( data.code === 'rest_cookie_invalid_nonce' || response.status === 401
+				? __( 'Your session expired. Your edits are still here. Sign in in another tab, then retry.', 'ajax-filter-posts' )
+				: ( data.message || __( 'The request failed. Please retry.', 'ajax-filter-posts' ) ) );
+		}
+		return data;
+	};
 
 	/**
 	 * Safe copy to clipboard with fallback for non-HTTPS / restricted permissions.
@@ -45,8 +68,9 @@
 
 	function fallbackCopy( text ) {
 		return new Promise( ( resolve, reject ) => {
+			const previousFocus = document.activeElement;
+			const textArea = document.createElement( 'textarea' );
 			try {
-				const textArea = document.createElement( 'textarea' );
 				textArea.value = text;
 				textArea.style.position = 'fixed';
 				textArea.style.top = '-9999px';
@@ -56,7 +80,6 @@
 				textArea.focus();
 				textArea.select();
 				const successful = document.execCommand( 'copy' );
-				document.body.removeChild( textArea );
 				if ( successful ) {
 					resolve();
 				} else {
@@ -64,6 +87,9 @@
 				}
 			} catch ( err ) {
 				reject( err );
+			} finally {
+				textArea.remove();
+				previousFocus?.focus();
 			}
 		} );
 	}
@@ -129,6 +155,7 @@
 					'div',
 					{ className: 'gm-popover-search' },
 					el( TextControl, {
+						label: __( 'Search blocks', 'ajax-filter-posts' ),
 						placeholder: __( 'Search post blocks...', 'ajax-filter-posts' ),
 						value: searchTerm,
 						onChange: setSearchTerm,
@@ -152,6 +179,7 @@
 												key: b.name,
 												type: 'button',
 												className: 'gm-popover-item-btn' + ( b.isPro ? ' is-pro' : '' ),
+												disabled: b.isPro && ! isPro,
 												onClick: () => {
 													onSelectBlock( b.name, b.attrs );
 													onClose();
@@ -217,9 +245,11 @@
 				Fragment,
 				{ key: block.clientId },
 				el(
-					'div',
+					'button',
 					{
+						type: 'button',
 						className: 'gm-list-view-item' + ( isSelected ? ' is-selected' : '' ),
+						'aria-pressed': isSelected,
 						style: { paddingLeft: 12 + depth * 16 + 'px' },
 						onClick: () => selectBlock( block.clientId ),
 					},
@@ -265,21 +295,46 @@
 	function CardCanvasStage( props ) {
 		const { isPro } = props;
 		const { insertBlock } = useDispatch( 'core/block-editor' );
-		const { rootBlocks, selectedClientId } = useSelect( ( select ) => {
+		const registry = wp.data.useRegistry();
+		const paperRef = useRef( null );
+		const { rootBlocks, selectedClientId, isDraggingBlocks, dropRootId, dropTargetName, hasDropPosition, isDropContainerEmpty } = useSelect( ( select ) => {
 			const be = select( 'core/block-editor' );
+			const point = be.getBlockInsertionPoint();
+			const targetName = point?.rootClientId ? be.getBlockName( point.rootClientId ) : null;
 			return {
 				rootBlocks: be.getBlocks(),
 				selectedClientId: be.getSelectedBlockClientId(),
+				isDraggingBlocks: be.isDraggingBlocks(),
+				dropRootId: point?.rootClientId,
+				dropTargetName: targetName ? wp.blocks.getBlockType( targetName )?.title : __( 'Canvas', 'ajax-filter-posts' ),
+				hasDropPosition: be.isBlockInsertionPointVisible(),
+				isDropContainerEmpty: be.getBlockCount( point?.rootClientId ) === 0,
 			};
 		} );
+
+		useEffect( () => {
+			if ( ! isDraggingBlocks || ! hasDropPosition || ! dropRootId ) return;
+			const target = paperRef.current?.querySelector( '[data-block="' + CSS.escape( dropRootId ) + '"]' );
+			target?.setAttribute( 'data-gm-drop-target', 'true' );
+			return () => target?.removeAttribute( 'data-gm-drop-target' );
+		}, [ isDraggingBlocks, hasDropPosition, dropRootId ] );
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const moreBtnRef = useRef( null );
 
 		const addBlock = ( blockName, defaultAttributes = {} ) => {
 			const newBlock = createBlock( blockName, defaultAttributes );
+			const editor = registry.select( 'core/block-editor' );
 			if ( selectedClientId ) {
-				insertBlock( newBlock, undefined, selectedClientId );
+				// Leaf fields cannot contain children. Insert their next sibling instead.
+				const selected = editor.getBlock( selectedClientId );
+				const isContainer = [ 'gridmaster/card', 'core/group', 'core/columns', 'core/column' ].includes( selected?.name );
+				if ( isContainer && editor.canInsertBlockType( blockName, selectedClientId ) ) {
+					insertBlock( newBlock, undefined, selectedClientId );
+				} else {
+					const parent = editor.getBlockRootClientId( selectedClientId );
+					insertBlock( newBlock, editor.getBlockIndex( selectedClientId ) + 1, parent );
+				}
 			} else if ( rootBlocks.length > 0 && rootBlocks[ 0 ].name === 'gridmaster/card' ) {
 				insertBlock( newBlock, undefined, rootBlocks[ 0 ].clientId );
 			} else {
@@ -369,17 +424,27 @@
 				el(
 					'div',
 					{ className: 'gm-card-canvas-hint' },
-					el( 'span', { className: 'dashicons dashicons-info-outline' } ),
-					' ',
-					__( 'Design one card. It repeats for every matching post.', 'ajax-filter-posts' )
+					el( 'div', null,
+						el( 'span', { className: 'dashicons dashicons-info-outline', 'aria-hidden': true } ),
+						' ', __( 'Design one card. It repeats for every matching post.', 'ajax-filter-posts' )
+					),
+					el( 'div', { className: 'gm-drop-guidance', role: 'status', 'aria-live': 'polite' },
+						isDraggingBlocks
+							? ( hasDropPosition
+								? wp.i18n.sprintf( isDropContainerEmpty
+									? __( 'Drop inside the highlighted %s.', 'ajax-filter-posts' )
+									: __( 'Drop at the blue line in %s.', 'ajax-filter-posts' ), dropTargetName )
+								: __( 'Move over the card to find a drop position.', 'ajax-filter-posts' ) )
+							: __( 'Drag by the block handle; follow the blue drop line.', 'ajax-filter-posts' )
+					)
 				),
 				el(
 					'div',
-					{ className: 'gm-card-canvas-paper' },
+					{ className: 'gm-card-canvas-paper', ref: paperRef },
 					el(
-						WritingFlow,
-						null,
-						el( ObserveTyping, null, el( BlockList, null ) )
+						BlockTools,
+						{ className: 'gm-card-block-tools' },
+						el( WritingFlow, null, el( ObserveTyping, null, el( BlockList, null ) ) )
 					)
 				)
 			)
@@ -482,7 +547,7 @@
 								{ className: 'gm-control-field' },
 								el( RangeControl, {
 									label: __( 'Padding (px)', 'ajax-filter-posts' ),
-									value: parseInt( cardAttrs.padding, 10 ) || 20,
+									value: Number.isFinite( parseInt( cardAttrs.padding, 10 ) ) ? parseInt( cardAttrs.padding, 10 ) : 20,
 									min: 0,
 									max: 60,
 									onChange: ( val ) => updateCardAttr( 'padding', val + 'px' ),
@@ -493,7 +558,7 @@
 								{ className: 'gm-control-field' },
 								el( RangeControl, {
 									label: __( 'Corner Radius (px)', 'ajax-filter-posts' ),
-									value: parseInt( cardAttrs.borderRadius, 10 ) || 8,
+									value: Number.isFinite( parseInt( cardAttrs.borderRadius, 10 ) ) ? parseInt( cardAttrs.borderRadius, 10 ) : 8,
 									min: 0,
 									max: 32,
 									onChange: ( val ) => updateCardAttr( 'borderRadius', val + 'px' ),
@@ -548,43 +613,54 @@
 		const [ previewDevice, setPreviewDevice ] = useState( 'desktop' ); // 'desktop' (100%), 'tablet' (768px), 'mobile' (375px)
 		const [ isFetching, setIsFetching ] = useState( false );
 		const [ previewHtml, setPreviewHtml ] = useState( '' );
+		const [ previewError, setPreviewError ] = useState( null );
+		const [ previewDraft, setPreviewDraft ] = useState( null );
+		const [ viewportWidth, setViewportWidth ] = useState( 0 );
 		const [ isOutOfDate, setIsOutOfDate ] = useState( false );
 		const iframeRef = useRef( null );
 		const lastFetchedFingerprintRef = useRef( '' );
+		const requestRef = useRef( null );
 
 		const getFingerprint = useCallback( () => {
 			return JSON.stringify( { title, config, blocks: serialize( blocks ) } );
 		}, [ title, config, blocks ] );
 
 		const loadPreview = useCallback( () => {
+			requestRef.current?.abort();
+			const controller = new AbortController();
+			requestRef.current = controller;
 			setIsFetching( true );
+			setPreviewError( null );
 			const currentFingerprint = getFingerprint();
 			const blockMarkup = serialize( blocks );
+			const draft = { config, block_content: blockMarkup, id: gridId };
 
 			fetch( initData.restUrl + 'preview', {
 				method: 'POST',
+				signal: controller.signal,
 				headers: {
 					'Content-Type': 'application/json',
 					'X-WP-Nonce': initData.nonce,
 				},
-				body: JSON.stringify( {
-					config: config,
-					block_content: blockMarkup,
-					id: gridId,
-				} ),
+				body: JSON.stringify( draft ),
 			} )
-				.then( ( r ) => r.json() )
+				.then( readApiResponse )
 				.then( ( data ) => {
+					if ( controller.signal.aborted ) return;
 					setIsFetching( false );
 					if ( data && data.html ) {
 						setPreviewHtml( data.html );
+						setPreviewDraft( draft );
 						lastFetchedFingerprintRef.current = currentFingerprint;
 						setIsOutOfDate( false );
+					} else {
+						setPreviewError( __( 'The preview response was empty. Please retry.', 'ajax-filter-posts' ) );
 					}
 				} )
 				.catch( ( err ) => {
+					if ( err.name === 'AbortError' ) return;
 					setIsFetching( false );
-					console.error( 'Preview fetch error:', err );
+					setPreviewError( err.message );
 				} );
 		}, [ config, blocks, gridId, getFingerprint ] );
 
@@ -592,6 +668,15 @@
 			if ( isOpen ) {
 				loadPreview();
 			}
+			return () => requestRef.current?.abort();
+		}, [ isOpen ] );
+
+		useEffect( () => {
+			const frame = iframeRef.current;
+			if ( ! frame ) return;
+			const observer = new ResizeObserver( () => setViewportWidth( frame.clientWidth ) );
+			observer.observe( frame );
+			return () => observer.disconnect();
 		}, [ isOpen ] );
 
 		// Check if out of date
@@ -606,27 +691,26 @@
 			if ( iframeRef.current && previewHtml ) {
 				const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document;
 				if ( iframeDoc ) {
-					const previewData = {
-						id: gridId,
-						config: config,
-						block_content: serialize( blocks ),
-					};
+					const previewData = previewDraft;
 
 					const docContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>${title || 'Preview'}</title>
+	<title>${escapeHtml( title || 'Preview' )}</title>
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
+	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
 	<style>
 		body {
 			margin: 0;
 			padding: 24px 16px;
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-			background: #f8fafc;
+			background: #ffffff;
 			color: #1e1e1e;
 		}
+		.gm-preview-embedded-container > .gm-v2-grid { margin: 0; }
+		@media (max-width: 480px) { body { padding: 20px 16px; } }
 	</style>
 </head>
 <body>
@@ -634,7 +718,8 @@
 		${previewHtml}
 	</div>
 	<script>
-		window.__gm_preview_data = ${JSON.stringify( previewData )};
+		window.__gm_preview_data = ${scriptJson( previewData )};
+		window.gridmasterV2 = ${scriptJson( previewRuntime )};
 	</script>
 	<script src="${initData.frontendJsUrl || ''}"></script>
 </body>
@@ -644,14 +729,14 @@
 					iframeDoc.close();
 				}
 			}
-		}, [ previewHtml, previewDevice ] );
+		}, [ previewHtml, previewDraft ] );
 
 		if ( ! isOpen ) return null;
 
 		const deviceDimensions = {
-			desktop: { width: '100%', label: __( 'Desktop (100%)', 'ajax-filter-posts' ), icon: 'desktop' },
-			tablet: { width: '768px', label: __( 'Tablet (768px)', 'ajax-filter-posts' ), icon: 'tablet' },
-			mobile: { width: '375px', label: __( 'Mobile (375px)', 'ajax-filter-posts' ), icon: 'smartphone' },
+			desktop: { width: '100%', label: __( 'Desktop', 'ajax-filter-posts' ), icon: 'desktop' },
+			tablet: { width: '768px', label: __( 'Tablet', 'ajax-filter-posts' ), icon: 'tablet' },
+			mobile: { width: '375px', label: __( 'Mobile', 'ajax-filter-posts' ), icon: 'smartphone' },
 		};
 
 		const handleOpenNewTab = () => {
@@ -660,18 +745,15 @@
 				alert( __( 'Popup blocked by browser. Please allow popups for this site.', 'ajax-filter-posts' ) );
 				return;
 			}
-			const previewData = {
-				id: gridId,
-				config: config,
-				block_content: serialize( blocks ),
-			};
+			const previewData = previewDraft;
 			const docContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>${title || 'GridMaster Preview'}</title>
+	<title>${escapeHtml( title || 'GridMaster Preview' )}</title>
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
+	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
 	<style>
 		body {
 			margin: 0;
@@ -694,7 +776,8 @@
 		${previewHtml}
 	</div>
 	<script>
-		window.__gm_preview_data = ${JSON.stringify( previewData )};
+		window.__gm_preview_data = ${scriptJson( previewData )};
+		window.gridmasterV2 = ${scriptJson( previewRuntime )};
 	</script>
 	<script src="${initData.frontendJsUrl || ''}"></script>
 </body>
@@ -704,10 +787,62 @@
 			previewWin.document.close();
 		};
 
+		const previewControls = el(
+			'div',
+			{ className: 'gm-preview-toolbar' },
+			el(
+				'div',
+				{ className: 'gm-device-switcher', role: 'group', 'aria-label': __( 'Preview device', 'ajax-filter-posts' ) },
+				[ 'desktop', 'tablet', 'mobile' ].map( ( dev ) =>
+					el(
+						Button,
+						{
+							key: dev,
+							onClick: () => setPreviewDevice( dev ),
+							className: 'gm-device-btn',
+							'aria-pressed': previewDevice === dev,
+						},
+						el( 'span', { className: 'dashicons dashicons-' + deviceDimensions[ dev ].icon } ),
+						' ' + deviceDimensions[ dev ].label
+					)
+				)
+			),
+			el(
+				'div',
+				{ className: 'gm-preview-toolbar-actions' },
+				el(
+					Button,
+					{
+						onClick: loadPreview,
+						disabled: isFetching,
+						className: 'gm-refresh-preview-btn',
+						label: __( 'Refresh preview', 'ajax-filter-posts' ),
+					},
+					el( 'span', { className: 'dashicons dashicons-update' } ),
+					el( 'span', { className: 'gm-preview-action-label' }, __( 'Refresh', 'ajax-filter-posts' ) )
+				),
+				el(
+					Button,
+					{
+						onClick: handleOpenNewTab,
+						className: 'gm-open-tab-btn',
+						label: __( 'Open preview in new tab', 'ajax-filter-posts' ),
+						disabled: ! previewHtml || isFetching,
+					},
+					el( 'span', { className: 'dashicons dashicons-external' } ),
+					el( 'span', { className: 'gm-preview-action-label' }, __( 'Open in new tab', 'ajax-filter-posts' ) )
+				)
+			)
+		);
+
 		return el(
 			Modal,
 			{
-				title: ( title || __( 'Grid', 'ajax-filter-posts' ) ) + ' — ' + __( 'Live Preview', 'ajax-filter-posts' ),
+				title: el( 'span', { className: 'gm-preview-heading' },
+					el( 'span', { className: 'gm-preview-heading-title' }, __( 'Live preview', 'ajax-filter-posts' ) ),
+					el( 'span', { className: 'gm-preview-heading-grid' }, title || __( 'Untitled grid', 'ajax-filter-posts' ) )
+				),
+				headerActions: previewControls,
 				onRequestClose: onClose,
 				className: 'gm-preview-modal-dialog',
 			},
@@ -715,59 +850,8 @@
 				'div',
 				{ className: 'gm-preview-dialog-inner' },
 
-				// Viewport Control Toolbar
-				el(
-					'div',
-					{ className: 'gm-preview-toolbar' },
-					el(
-						ButtonGroup,
-						{ className: 'gm-device-switcher' },
-						[ 'desktop', 'tablet', 'mobile' ].map( ( dev ) =>
-							el(
-								Button,
-								{
-									key: dev,
-									isPrimary: previewDevice === dev,
-									isSecondary: previewDevice !== dev,
-									isSmall: true,
-									onClick: () => setPreviewDevice( dev ),
-									className: 'gm-device-btn',
-								},
-								el( 'span', { className: 'dashicons dashicons-' + deviceDimensions[ dev ].icon } ),
-								' ' + deviceDimensions[ dev ].label
-							)
-						)
-					),
-					el(
-						'div',
-						{ className: 'gm-preview-toolbar-actions' },
-						el(
-							Button,
-							{
-								isSecondary: true,
-								isSmall: true,
-								onClick: loadPreview,
-								disabled: isFetching,
-								className: 'gm-refresh-preview-btn',
-							},
-							el( 'span', { className: 'dashicons dashicons-update' } ),
-							' ' + __( 'Refresh', 'ajax-filter-posts' )
-						),
-						el(
-							Button,
-							{
-								isSecondary: true,
-								isSmall: true,
-								onClick: handleOpenNewTab,
-								className: 'gm-open-tab-btn',
-							},
-							el( 'span', { className: 'dashicons dashicons-external' } ),
-							' ' + __( 'Open in New Tab', 'ajax-filter-posts' )
-						)
-					)
-				),
-
 				// Out of date warning banner
+				previewError && el( Notice, { status: 'error', isDismissible: false }, previewError ),
 				isOutOfDate &&
 					el(
 						'div',
@@ -796,8 +880,14 @@
 						el( 'iframe', {
 							ref: iframeRef,
 							className: 'gm-preview-iframe',
-							title: 'Grid Preview',
+							title: __( 'Grid preview', 'ajax-filter-posts' ),
 						} )
+					)
+				),
+				el( 'div', { className: 'gm-preview-footer' },
+					el( 'span', { className: 'gm-preview-footer-note' }, __( 'Showing current editor settings.', 'ajax-filter-posts' ) ),
+					el( 'span', { className: 'gm-preview-viewport-size', title: __( 'Preview viewport width', 'ajax-filter-posts' ) },
+						viewportWidth ? viewportWidth + ' px' : ''
 					)
 				)
 			)
@@ -809,6 +899,44 @@
 	 */
 	function ContentTab( props ) {
 		const { config, updateConfigSection, metadata } = props;
+		const clauses = Array.isArray( config.query?.tax_query ) ? config.query.tax_query : [];
+		const clause = clauses[ 0 ] || {};
+		const [ taxonomy, setTaxonomy ] = useState( clause.taxonomy || '' );
+		const [ operator, setOperator ] = useState( clause.operator || 'IN' );
+		const [ termSearch, setTermSearch ] = useState( '' );
+		const [ terms, setTerms ] = useState( [] );
+		const [ termsError, setTermsError ] = useState( '' );
+		const [ termsLoading, setTermsLoading ] = useState( false );
+		const termLabels = useRef( {} );
+		useEffect( () => {
+			if ( ! taxonomy ) { setTerms( [] ); return; }
+			const controller = new AbortController();
+			setTermsLoading( true );
+			setTermsError( '' );
+			const timer = setTimeout( () => {
+				fetch( initData.restUrl + 'meta-data?taxonomy=' + encodeURIComponent( taxonomy ) + '&term_search=' + encodeURIComponent( termSearch ), {
+					headers: { 'X-WP-Nonce': initData.nonce }, signal: controller.signal,
+				} ).then( readApiResponse ).then( ( data ) => {
+					if ( controller.signal.aborted ) return;
+					const loaded = data.taxonomies?.find( ( item ) => item.name === taxonomy )?.terms || [];
+					loaded.forEach( ( term ) => { termLabels.current[ term.id ] = term.name; } );
+					setTerms( loaded );
+					setTermsLoading( false );
+				} ).catch( ( error ) => {
+					if ( error.name === 'AbortError' ) return;
+					setTermsError( error.message );
+					setTermsLoading( false );
+				} );
+			}, 200 );
+			return () => { clearTimeout( timer ); controller.abort(); };
+		}, [ taxonomy, termSearch ] );
+		const selectedTerms = ( Array.isArray( clause.terms ) ? clause.terms : ( clause.terms ? [ clause.terms ] : [] ) ).map( Number );
+		const setTermsRestriction = ( nextTerms, match = operator ) => {
+			const next = clauses.slice();
+			if ( nextTerms.length || next.length > 1 ) next[ 0 ] = { ...clause, taxonomy, terms: nextTerms, operator: match };
+			else next.length = 0;
+			updateConfigSection( 'query', 'tax_query', next );
+		};
 
 		return el(
 			'div',
@@ -845,13 +973,41 @@
 				),
 				el( SelectControl, {
 					label: __( 'Filter by Taxonomy Source', 'ajax-filter-posts' ),
-					value: config.query?.taxonomy || '',
+					value: taxonomy,
+					disabled: selectedTerms.length > 0,
 					options: [
 						{ label: __( 'All (No initial filter)', 'ajax-filter-posts' ), value: '' },
 						...( metadata.taxonomies || [] ).map( ( t ) => ( { label: t.label, value: t.name } ) ),
 					],
-					onChange: ( val ) => updateConfigSection( 'query', 'taxonomy', val ),
-				} )
+					onChange: ( val ) => { setTaxonomy( val ); setTermSearch( '' ); },
+					help: selectedTerms.length ? __( 'Remove selected terms before changing the source.', 'ajax-filter-posts' ) : undefined,
+				} ),
+				taxonomy && el( Fragment, null,
+					el( SelectControl, {
+						label: __( 'Match selected terms', 'ajax-filter-posts' ),
+						value: operator,
+						options: [
+							{ label: __( 'Include any selected term', 'ajax-filter-posts' ), value: 'IN' },
+							{ label: __( 'Exclude selected terms', 'ajax-filter-posts' ), value: 'NOT IN' },
+							{ label: __( 'Include all selected terms', 'ajax-filter-posts' ), value: 'AND' },
+						],
+						onChange: ( value ) => { setOperator( value ); setTermsRestriction( selectedTerms, value ); },
+					} ),
+					el( wp.components.ComboboxControl, {
+						label: __( 'Add a term', 'ajax-filter-posts' ), value: null,
+						options: terms.filter( ( term ) => ! selectedTerms.includes( term.id ) ).map( ( term ) => ( { label: term.name + ' (#' + term.id + ')', value: String( term.id ) } ) ),
+						onFilterValueChange: setTermSearch,
+						onChange: ( value ) => { if ( value ) setTermsRestriction( [ ...selectedTerms, Number( value ) ] ); },
+						help: termsLoading ? __( 'Loading terms…', 'ajax-filter-posts' ) : __( 'Type to search. Visitor filters keep these base restrictions.', 'ajax-filter-posts' ),
+					} ),
+					termsError && el( Notice, { status: 'error', isDismissible: false }, termsError ),
+					el( 'div', { className: 'gm-selected-terms' }, selectedTerms.map( ( id ) => el( Button, {
+						key: id, isSecondary: true, isSmall: true,
+						onClick: () => setTermsRestriction( selectedTerms.filter( ( value ) => value !== id ) ),
+						'aria-label': __( 'Remove term', 'ajax-filter-posts' ) + ' ' + ( termLabels.current[ id ] || id ),
+					}, ( termLabels.current[ id ] || '#' + id ) + ' ×' ) ) )
+				),
+				clauses.length > 1 && el( 'p', null, __( 'Additional saved taxonomy restrictions are also applied.', 'ajax-filter-posts' ) )
 			),
 			el(
 				'div',
@@ -985,6 +1141,7 @@
 											key: f.id,
 											type: 'button',
 											className: 'gm-facet-picker-item' + ( f.isPro ? ' is-pro' : '' ),
+											disabled: f.isPro && ! isPro,
 											onClick: () => addFacet( f.id ),
 										},
 										el( 'span', { className: 'dashicons dashicons-' + f.icon } ),
@@ -1412,16 +1569,8 @@
 			setIsInspectorOpen,
 			isFocusMode,
 			setIsFocusMode,
+			history,
 		} = props;
-
-		const { undo, redo } = useDispatch( 'core/editor' ) || {};
-		const { canUndo, canRedo } = useSelect( ( select ) => {
-			const ed = select( 'core/editor' );
-			return {
-				canUndo: typeof ed?.hasEditorUndo === 'function' ? ed.hasEditorUndo() : false,
-				canRedo: typeof ed?.hasEditorRedo === 'function' ? ed.hasEditorRedo() : false,
-			};
-		} );
 
 		return el(
 			'div',
@@ -1430,20 +1579,20 @@
 			// Undo / Redo (Card tab only)
 			activeTab === 'card' &&
 				el(
-					ButtonGroup,
-					{ className: 'gm-history-group' },
+					'div',
+					{ className: 'gm-history-group', role: 'group', 'aria-label': __( 'Edit history', 'ajax-filter-posts' ) },
 					el( Button, {
 						icon: 'undo',
 						isSmall: true,
-						disabled: ! canUndo,
-						onClick: () => undo && undo(),
+						disabled: ! history.hasUndo,
+						onClick: history.undo,
 						label: __( 'Undo', 'ajax-filter-posts' ),
 					} ),
 					el( Button, {
 						icon: 'redo',
 						isSmall: true,
-						disabled: ! canRedo,
-						onClick: () => redo && redo(),
+						disabled: ! history.hasRedo,
+						onClick: history.redo,
 						label: __( 'Redo', 'ajax-filter-posts' ),
 					} )
 				),
@@ -1456,6 +1605,7 @@
 					className: 'gm-tool-btn' + ( isListViewOpen ? ' is-active' : '' ),
 					onClick: () => setIsListViewOpen( ! isListViewOpen ),
 					label: __( 'Toggle List View', 'ajax-filter-posts' ),
+					'aria-pressed': isListViewOpen,
 				} ),
 
 			// Focus Mode Toggle (Always visible)
@@ -1465,6 +1615,7 @@
 				className: 'gm-tool-btn' + ( isFocusMode ? ' is-active' : '' ),
 				onClick: () => setIsFocusMode( ! isFocusMode ),
 				label: isFocusMode ? __( 'Exit Focus Mode', 'ajax-filter-posts' ) : __( 'Enter Focus Mode', 'ajax-filter-posts' ),
+				'aria-pressed': isFocusMode,
 			} ),
 
 			// Inspector Toggle (Card tab only)
@@ -1475,6 +1626,7 @@
 					className: 'gm-tool-btn' + ( isInspectorOpen ? ' is-active' : '' ),
 					onClick: () => setIsInspectorOpen( ! isInspectorOpen ),
 					label: __( 'Toggle Settings Panel', 'ajax-filter-posts' ),
+					'aria-pressed': isInspectorOpen,
 				} )
 		);
 	}
@@ -1488,20 +1640,28 @@
 		const [ editingTitleVal, setEditingTitleVal ] = useState( initData.title || __( 'Untitled Grid', 'ajax-filter-posts' ) );
 		const [ isRenaming, setIsRenaming ] = useState( false );
 		const [ config, setConfig ] = useState( initData.config || {} );
-		const [ blocks, setBlocks ] = useState( () => parse( initData.block_content || '' ) );
+		const initialBlocks = useRef( null );
+		if ( ! initialBlocks.current ) initialBlocks.current = parse( initData.block_content || '' );
+		const history = wp.compose.useStateWithHistory( initialBlocks.current );
+		const blocks = history.value;
 		const [ activeTab, setActiveTab ] = useState( 'card' ); // 'card', 'content', 'filters', 'pagination', 'layout'
 
 		// Panel toggles
 		const [ isListViewOpen, setIsListViewOpen ] = useState( false );
 		const [ isInspectorOpen, setIsInspectorOpen ] = useState( true );
+		const isNarrow = wp.compose.useMediaQuery( '(max-width: 1100px)' );
+		useEffect( () => {
+			if ( isNarrow ) {
+				setIsInspectorOpen( false );
+				setIsListViewOpen( false );
+			}
+		}, [ isNarrow ] );
 		const [ isFocusMode, setIsFocusMode ] = useState( () => {
-			return localStorage.getItem( 'gm_builder_focus_mode' ) === 'true';
+			try { return localStorage.getItem( 'gm_builder_focus_mode' ) === 'true'; } catch ( e ) { return false; }
 		} );
 
 		// Shortcode copied status
 		const [ isCopied, setIsCopied ] = useState( false );
-		const [ showShortcodePopover, setShowShortcodePopover ] = useState( false );
-		const shortcodeBtnRef = useRef( null );
 
 		// Save state
 		const [ isSaving, setIsSaving ] = useState( false );
@@ -1513,12 +1673,11 @@
 		const previewBtnRef = useRef( null );
 
 		// Snapshot for dirty tracking (initialized with parsed and serialized blocks for exact whitespace matching)
-		const initialParsedBlocks = parse( initData.block_content || '' );
 		const [ savedSnapshot, setSavedSnapshot ] = useState( () =>
 			JSON.stringify( {
 				title: initData.title || __( 'Untitled Grid', 'ajax-filter-posts' ),
 				config: initData.config || {},
-				blocks: serialize( initialParsedBlocks ),
+				blocks: serialize( initialBlocks.current ),
 			} )
 		);
 
@@ -1537,7 +1696,28 @@
 			} else {
 				document.body.classList.remove( 'gm-focus-mode' );
 			}
-			localStorage.setItem( 'gm_builder_focus_mode', isFocusMode ? 'true' : 'false' );
+			try { localStorage.setItem( 'gm_builder_focus_mode', isFocusMode ? 'true' : 'false' ); } catch ( e ) { /* Optional preference storage. */ }
+		}, [ isFocusMode ] );
+
+		// Account for WordPress notices above the shell instead of pushing panels below the viewport.
+		useEffect( () => {
+			const root = document.getElementById( 'gridmaster-builder-root' );
+			let frame;
+			const update = () => {
+				cancelAnimationFrame( frame );
+				frame = requestAnimationFrame( () => {
+					root.style.setProperty( '--gm-workspace-top', Math.max( 0, root.getBoundingClientRect().top ) + 'px' );
+				} );
+			};
+			update();
+			window.addEventListener( 'resize', update );
+			window.addEventListener( 'scroll', update, { passive: true } );
+			const observer = new ResizeObserver( update );
+			observer.observe( root.parentElement );
+			return () => {
+				cancelAnimationFrame( frame ); observer.disconnect();
+				window.removeEventListener( 'resize', update ); window.removeEventListener( 'scroll', update );
+			};
 		}, [ isFocusMode ] );
 
 		// Beforeunload session protection
@@ -1576,7 +1756,7 @@
 				},
 				body: JSON.stringify( payload ),
 			} )
-				.then( ( r ) => r.json() )
+				.then( readApiResponse )
 				.then( ( data ) => {
 					setIsSaving( false );
 					if ( data && data.id ) {
@@ -1646,11 +1826,7 @@
 		let saveStatusIcon = 'yes';
 		let saveStatusClass = 'is-saved';
 
-		if ( ! gridId ) {
-			saveStatusText = __( 'Save grid', 'ajax-filter-posts' );
-			saveStatusIcon = 'edit';
-			saveStatusClass = 'is-new';
-		} else if ( isSaving ) {
+		if ( isSaving ) {
 			saveStatusText = __( 'Saving…', 'ajax-filter-posts' );
 			saveStatusIcon = 'update';
 			saveStatusClass = 'is-saving';
@@ -1658,6 +1834,10 @@
 			saveStatusText = __( 'Save failed', 'ajax-filter-posts' );
 			saveStatusIcon = 'warning';
 			saveStatusClass = 'is-error';
+		} else if ( ! gridId ) {
+			saveStatusText = __( 'Not saved yet', 'ajax-filter-posts' );
+			saveStatusIcon = 'edit';
+			saveStatusClass = 'is-new';
 		} else if ( isDirty ) {
 			saveStatusText = __( 'Unsaved changes', 'ajax-filter-posts' );
 			saveStatusIcon = 'marker';
@@ -1668,12 +1848,26 @@
 			BlockEditorProvider,
 			{
 				value: blocks,
-				onInput: ( newBlocks ) => setBlocks( newBlocks ),
-				onChange: ( newBlocks ) => setBlocks( newBlocks ),
+				settings: { templateLock: blocks.length === 1 && blocks[ 0 ].name === 'gridmaster/card' ? 'all' : false },
+				onInput: ( newBlocks ) => history.setValue( newBlocks, true ),
+				onChange: ( newBlocks ) => history.setValue( newBlocks, false ),
 			},
 			el(
 				'div',
-				{ className: 'gm-builder-workspace' },
+				{
+					className: 'gm-builder-workspace',
+					onKeyDown: ( event ) => {
+						if ( ( event.metaKey || event.ctrlKey ) && event.key.toLowerCase() === 'z' &&
+							! event.altKey && ! /^(INPUT|TEXTAREA|SELECT)$/.test( event.target.tagName ) ) {
+							event.preventDefault();
+							if ( event.shiftKey ) history.redo(); else history.undo();
+						}
+						if ( event.key === 'Escape' ) {
+							setIsInspectorOpen( false );
+							setIsListViewOpen( false );
+						}
+					},
+				},
 
 				// ==========================================
 				// ROW 1: Identity & Primary Actions
@@ -1738,7 +1932,7 @@
 						// Save Status Readout
 						el(
 							'div',
-							{ className: 'gm-save-status-readout ' + saveStatusClass },
+							{ className: 'gm-save-status-readout ' + saveStatusClass, role: 'status', 'aria-live': 'polite' },
 							isSaving
 								? el( Spinner )
 								: el( 'span', { className: 'dashicons dashicons-' + saveStatusIcon } ),
@@ -1765,7 +1959,7 @@
 						gridId
 							? el(
 									'div',
-									{ className: 'gm-shortcode-wrap', ref: shortcodeBtnRef },
+									{ className: 'gm-shortcode-wrap' },
 									el(
 										Button,
 										{
@@ -1773,23 +1967,11 @@
 											isSmall: true,
 											className: 'gm-copy-shortcode-btn' + ( isCopied ? ' is-copied' : '' ),
 											onClick: handleCopyShortcode,
-											onMouseEnter: () => setShowShortcodePopover( true ),
-											onMouseLeave: () => setShowShortcodePopover( false ),
+											title: `[gridmaster id="${gridId}"]`,
 										},
 										el( 'span', { className: 'dashicons ' + ( isCopied ? 'dashicons-yes' : 'dashicons-clipboard' ) } ),
 										' ' + ( isCopied ? __( 'Copied!', 'ajax-filter-posts' ) : __( 'Copy shortcode', 'ajax-filter-posts' ) )
-									),
-									showShortcodePopover &&
-										el(
-											Popover,
-											{
-												className: 'gm-shortcode-popover',
-												onClose: () => setShowShortcodePopover( false ),
-												position: 'bottom center',
-												noArrow: false,
-											},
-											el( 'code', null, `[gridmaster id="${gridId}"]` )
-										)
+									)
 							  )
 							: null,
 
@@ -1812,11 +1994,11 @@
 							{
 								isPrimary: true,
 								onClick: handleSave,
-								disabled: isSaving,
+								disabled: isSaving || ( !! gridId && ! isDirty && ! saveError ),
 								className: 'gm-primary-save-btn',
 							},
 							isSaving && el( Spinner ),
-							' ' + ( gridId ? ( isDirty ? __( 'Save changes', 'ajax-filter-posts' ) : __( 'Saved', 'ajax-filter-posts' ) ) : __( 'Save grid', 'ajax-filter-posts' ) )
+							' ' + ( isSaving ? __( 'Saving…', 'ajax-filter-posts' ) : ( gridId ? ( isDirty ? __( 'Save changes', 'ajax-filter-posts' ) : __( 'Saved', 'ajax-filter-posts' ) ) : __( 'Save grid', 'ajax-filter-posts' ) ) )
 						)
 					)
 				),
@@ -1845,9 +2027,24 @@
 									key: tab.id,
 									type: 'button',
 									role: 'tab',
+									id: 'gm-tab-' + tab.id,
+									'aria-controls': 'gm-builder-panel',
+									tabIndex: activeTab === tab.id ? 0 : -1,
 									'aria-selected': activeTab === tab.id,
 									className: 'gm-tab-nav-btn' + ( activeTab === tab.id ? ' is-active' : '' ),
 									onClick: () => setActiveTab( tab.id ),
+									onKeyDown: ( event ) => {
+										const tabs = Array.from( event.currentTarget.parentNode.querySelectorAll( '[role="tab"]' ) );
+										let index = tabs.indexOf( event.currentTarget );
+										if ( event.key === 'ArrowRight' ) index = ( index + 1 ) % tabs.length;
+										else if ( event.key === 'ArrowLeft' ) index = ( index + tabs.length - 1 ) % tabs.length;
+										else if ( event.key === 'Home' ) index = 0;
+										else if ( event.key === 'End' ) index = tabs.length - 1;
+										else return;
+										event.preventDefault();
+										tabs[ index ].click();
+										tabs[ index ].focus();
+									},
 								},
 								el( 'span', { className: 'dashicons dashicons-' + tab.icon } ),
 								el( 'span', { className: 'gm-tab-label' }, tab.label )
@@ -1859,11 +2056,18 @@
 					el( ContextualEditorTools, {
 						activeTab: activeTab,
 						isListViewOpen: isListViewOpen,
-						setIsListViewOpen: setIsListViewOpen,
+						setIsListViewOpen: ( open ) => {
+							setIsListViewOpen( open );
+							if ( isNarrow && open ) setIsInspectorOpen( false );
+						},
 						isInspectorOpen: isInspectorOpen,
-						setIsInspectorOpen: setIsInspectorOpen,
+						setIsInspectorOpen: ( open ) => {
+							setIsInspectorOpen( open );
+							if ( isNarrow && open ) setIsListViewOpen( false );
+						},
 						isFocusMode: isFocusMode,
 						setIsFocusMode: setIsFocusMode,
+						history: history,
 					} )
 				),
 
@@ -1889,7 +2093,7 @@
 				// ==========================================
 				el(
 					'div',
-					{ className: 'gm-workspace-bounded-body' },
+					{ className: 'gm-workspace-bounded-body', id: 'gm-builder-panel', role: 'tabpanel', 'aria-labelledby': 'gm-tab-' + activeTab },
 
 					// Tab 1: Card Studio (Display toggled to preserve Gutenberg history & state)
 					el(
@@ -1898,6 +2102,11 @@
 							className: 'gm-card-studio-container',
 							style: { display: activeTab === 'card' ? 'flex' : 'none' },
 						},
+						isNarrow && ( isListViewOpen || isInspectorOpen ) && el( 'button', {
+							type: 'button', className: 'gm-panel-backdrop',
+							'aria-label': __( 'Close editor panel', 'ajax-filter-posts' ),
+							onClick: () => { setIsListViewOpen( false ); setIsInspectorOpen( false ); },
+						} ),
 
 						// Left Drawer / Panel: List View
 						isListViewOpen &&

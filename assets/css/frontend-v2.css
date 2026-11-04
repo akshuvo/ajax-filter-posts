@@ -351,3 +351,16 @@
 	border-color: rgba(37, 99, 235, 0.2);
 	border-top-color: #2563eb;
 }
+
+.gm-v2-grid .gm-request-error {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-block: 16px;
+	padding: 12px;
+	border: 1px solid #cc1818;
+	border-radius: 4px;
+	color: #8a2424;
+	background: #fff;
+}

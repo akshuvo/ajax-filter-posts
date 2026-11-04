@@ -42,6 +42,7 @@ $initial_data = array(
 	'adminUrl'       => admin_url( 'admin.php?page=gridmaster' ),
 	'isPro'          => defined( 'GRIDMASTER_PRO_VERSION' ),
 	'frontendCssUrl' => esc_url_raw( GRIDMASTER_ASSETS . 'css/frontend-v2.css' ),
+	'coreCssUrl'     => esc_url_raw( includes_url( 'css/dist/block-library/style.min.css' ) ),
 	'frontendJsUrl'  => esc_url_raw( GRIDMASTER_ASSETS . 'js/frontend-v2.js' ),
 	'metadata'       => array(
 		'post_types' => $formatted_pts,
@@ -60,8 +61,10 @@ $initial_data = array(
 
 <script>
 // Zero-FOUC synchronous focus mode initialization for maximum efficiency
-if ( localStorage.getItem( 'gm_builder_focus_mode' ) === 'true' ) {
-	document.body.classList.add( 'gm-focus-mode' );
-}
+try {
+	if ( localStorage.getItem( 'gm_builder_focus_mode' ) === 'true' ) {
+		document.body.classList.add( 'gm-focus-mode' );
+	}
+} catch ( e ) { /* Preference storage is optional. */ }
 window.gridmasterBuilderData = <?php echo wp_json_encode( $initial_data ); ?>;
 </script>

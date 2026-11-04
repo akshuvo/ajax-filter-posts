@@ -1,5 +1,11 @@
 # Free integration surfaces
 
+## Builder follow-up contract — 2026-11-05
+
+The administrator-only `GET gridmaster/v2/meta-data` accepts optional `taxonomy` and `term_search` parameters for the Content tab. It returns the existing metadata shape, restricted to public taxonomies; term searches are capped at 200 characters and 100 returned terms. The editor stores inclusion/exclusion in the existing `query.tax_query` clauses (`IN`, `NOT IN`, `AND`), rather than a presentation-only `query.taxonomy` value. Additional saved clauses remain intact.
+
+Preview documents receive `gridmasterV2.restUrl` and the REST nonce as well as the exact rendered `__gm_preview_data` draft. Preview cards supply `data-post-id`, matching frontend append deduplication. Runtime localization adds optional `errorText` and `retryText` strings. Failed results requests preserve the current cards and expose Retry; no hook or legacy selector contract changes.
+
 The Free repository owns this public rendering contract. Pro-specific implementation and service details belong in Pro. Source: [bootstrap](../ajax-filter-posts.php), [shortcode](../inc/Shortcode.php), [helpers](../inc/functions.php), [builder](../admin/views/build-grid.php), and [frontend JS](../assets/frontend.js).
 
 ## Hooks and priorities

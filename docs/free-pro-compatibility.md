@@ -1,5 +1,9 @@
 # Free/Pro compatibility and ownership
 
+## Builder follow-up assessment — 2026-11-05
+
+Inspected Free `05e43f9` and Pro `4820a0a` on `feature/gutenberg-grid-builder-v2`. The follow-up changes Free-owned editor state/layout, searchable public taxonomy metadata, authenticated draft preview documents and v2 request failure handling. Existing grid/query/facet/block shapes and extension hooks are preserved; no companion source change is required. Free-only and paired process tests passed, including 23 draft-preview assertions in each configuration; paired browser checks covered editing and base taxonomy filtering. This does not certify all premium providers or activation/deactivation states. See [testing evidence and limits](testing.md#builder-follow-up-verification--2026-11-05).
+
 Free and Pro are separate Git/release units. This document is the public-side contract; premium implementation belongs in [Pro's own documentation](https://github.com/akshuvo/gridmaster-pro/blob/main/docs/free-pro-compatibility.md) (access may be restricted). Keep this file useful without that access. Do not copy Pro source, license internals, or private requirements here.
 
 ## Responsibility and change routing

@@ -451,6 +451,10 @@ class Grids_Controller extends \WP_REST_Controller {
 	 * Returns post types and taxonomies for builder selectors.
 	 */
 	public function get_builder_metadata( $request ) {
+		$selected_taxonomy = $request->get_param( 'taxonomy' );
+		$selected_taxonomy = is_string( $selected_taxonomy ) ? sanitize_key( $selected_taxonomy ) : '';
+		$term_search = $request->get_param( 'term_search' );
+		$term_search = is_string( $term_search ) ? substr( sanitize_text_field( $term_search ), 0, 200 ) : '';
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 		$formatted_pts = array();
 		foreach ( $post_types as $pt ) {
@@ -466,10 +470,14 @@ class Grids_Controller extends \WP_REST_Controller {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$formatted_tax = array();
 		foreach ( $taxonomies as $tax ) {
+			if ( $selected_taxonomy && $tax->name !== $selected_taxonomy ) {
+				continue;
+			}
 			$terms = get_terms( array(
 				'taxonomy'   => $tax->name,
 				'hide_empty' => false,
 				'number'     => 100,
+				'search'     => $term_search,
 			) );
 
 			$term_list = array();

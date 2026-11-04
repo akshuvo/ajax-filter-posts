@@ -1,5 +1,22 @@
 # Free testing and quality standards
 
+## Builder follow-up verification — 2026-11-05
+
+Drop-guide follow-up: the standalone canvas now mounts Gutenberg `BlockTools`, which renders its actual insertion indicators and floating block toolbar. Real browser drags verified a visible blue indicator, the active card/Group outline and destination guidance. A Title reordered between card siblings, then moved into a nested Group; Undo restored the previous nesting. Target highlights cleared on drag end, and no console warnings/errors appeared. Test edits were discarded. The single existing root Card is locked in the standalone shell while its child list remains editable; no block serialization or frontend rendering contract changes.
+
+The preview title, device controls, actions and Close now share the native Modal header via `headerActions` on desktop. At 1280×800 the single 72px header increases iframe height from 533px to 602px (69px reclaimed). At 1024px controls remain in one row; narrower screens wrap without hiding Close or adding outer vertical scrolling. JavaScript syntax and whitespace checks passed.
+
+Preview modal visual correction: the native WordPress header and children now use normal flex flow, without the duplicated header margin/padding or 500px frame minimum. Browser checks at a 1280×800 host confirmed no outer content/stage vertical overflow; only the iframe content scrolls vertically. Tablet/mobile iframe widths were exactly 768/375px, and the same three filtered results survived each device switch. A 375×812 host used a full-screen modal with reachable Close/actions/footer and no page overflow. Preview shell styling does not alter saved columns/card styles. A pre-existing invalid `core/group` serialization warning on saved grid #2 is separate from this layout correction.
+
+The current standalone builder follow-up was checked on WordPress 7.1.4, PHP CLI 8.4.11 and Chrome 156, against Free `05e43f9` plus working-tree changes and Pro `4820a0a`. This record does not certify the minimum supported runtime or the complete redesign.
+
+- `php tests/gm2-storage/run.php`: 83 assertions passed.
+- `wp eval-file tests/gm2-storage/test_v2_redesign.php`: 78 assertions passed with Pro; 72 passed with `--skip-plugins=gridmaster-pro`.
+- `wp eval-file tests/gm2-storage/test_builder_preview.php`: 23 assertions passed in each of those configurations. The [new regression script](../tests/gm2-storage/test_builder_preview.php) removes its own posts/category/grid in `finally`; it checks draft pagination and card identities, retained unsaved markup, no persistent preview writes, real empty results, searchable terms and rejected anonymous draft access. Run it only against a disposable development site. Local WP-CLI required PHP's `mysqli.default_socket` setting to point at the site's Local MySQL socket.
+- Browser checks: consecutive field insertion, Group with nested Title, Undo/Redo across tab switches, saved taxonomy inclusion and zero card padding/radius. Preview filtering returned 200 and retained draft settings; a forced 403 preserved results and recovered through Retry. Layouts at 1440, 1280, 1024, 782 and 375 CSS pixels had no page overflow, kept Save reachable and bounded the editor to the viewport.
+
+Minimum WordPress/PHP, actual activation-order/deactivation browser runs, full premium facets/templates, automatic recovery, edit locking and revision restoration remain unverified. Process-level `--skip-plugins` checks do not certify those lifecycle scenarios. A pre-existing Elementor deprecation notice is separate from these results.
+
 No automated application test suite was found in this repository at the inspection baseline (2026-11-04). Select checks by affected behavior, and distinguish executed results from recommended checks.
 
 ## Applicable local checks

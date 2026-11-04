@@ -164,7 +164,7 @@ class Grid_Renderer {
 						$post_id   = get_the_ID();
 						$post_type = get_post_type();
 						?>
-						<article class="gm-grid-item gm-post-<?php echo esc_attr( $post_id ); ?>">
+						<article class="gm-grid-item gm-post-<?php echo esc_attr( $post_id ); ?>" data-post-id="<?php echo esc_attr( $post_id ); ?>">
 							<?php
 							foreach ( $parsed_blocks as $parsed_block ) {
 								echo self::render_block_with_context( $parsed_block, $post_id, $post_type, $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -194,7 +194,6 @@ class Grid_Renderer {
 			?>
 		</div>
 		<?php
-		unset( $rendering_grids[ $grid_id ] );
 		return ob_get_clean();
 	}
 
@@ -262,6 +261,8 @@ class Grid_Renderer {
 			array(
 				'restUrl' => esc_url_raw( rest_url( 'gridmaster/v2/' ) ),
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
+					'errorText' => __( 'Could not load posts. Please retry.', 'ajax-filter-posts' ),
+					'retryText' => __( 'Retry', 'ajax-filter-posts' ),
 			)
 		);
 
