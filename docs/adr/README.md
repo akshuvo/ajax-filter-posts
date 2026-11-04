@@ -9,6 +9,7 @@ For retrospective records, describe observed source and explicitly mark original
 ## Index
 
 - [0001 — Existing extension boundary](0001-existing-extension-boundary.md): Proposed retrospective record; maintainer review pending.
+- [0002 — Guarded WordPress.org releases](0002-guarded-wordpress-releases.md): Proposed; implemented for the requested release task.
 
 Other possible records, only when a real decision is needed: storage migration/lifecycle, public-AJAX security policy and a reproducible asset pipeline. Current observations and unapproved follow-ups are in the architecture and ideas docs; do not create one ADR per function.
 

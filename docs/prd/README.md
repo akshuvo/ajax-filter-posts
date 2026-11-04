@@ -8,7 +8,7 @@ Suggested lifecycle: Draft → Approved (maintainer decision) → Implemented �
 
 ## Index
 
-No feature PRDs yet. Add numbered records here as they are created.
+- [0001 — Safe WordPress.org releases](0001-safe-wordpress-releases.md): implemented; local verification passed, live evidence pending.
 
 ## Template
 

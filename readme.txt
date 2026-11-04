@@ -2,9 +2,9 @@
 Contributors: mdshuvo, addonmaster
 Tags: post grid, ajax filter, infinite scroll, pagination, taxonomy filter
 Requires at least: 5.8
-Tested up to: 6.8.3
+Tested up to: 7.1.4
 Requires PHP: 7.4
-Stable tag: 3.4.17
+Stable tag: 3.4.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -169,6 +169,11 @@ Email [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for custom reque
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.18 =
+- Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
+- Updated: WordPress compatibility metadata to 7.1.4.
+
 
 
 = 3.4.14 =

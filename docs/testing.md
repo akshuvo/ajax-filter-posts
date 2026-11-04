@@ -14,6 +14,10 @@ find . -type f -name '*.php' -not -path './.git/*' -not -path './vendor/*' -not 
 
 Free has no installed PHPCS executable on this host. If a configured runner and WPCS are available in the development environment, inspect `phpcs -i`, then run `phpcs --standard=.phpcs.xml.dist <changed-php-files>` from Free's root. The existing ruleset's text-domain property lists `gridmaster`/`default`, while Free's plugin uses `ajax-filter-posts`; record this mismatch instead of changing strings to satisfy it or claiming a clean baseline. Toolchain/ruleset correction is separate work. `npm test` intentionally exits 1 with “no test specified”; it provides no regression coverage.
 
+## Release automation checks
+
+The [release runbook](release.md) documents Python failure tests, actionlint/shellcheck, package PHP lint, recursive SHA-256 manifests, real SVN dry staging, disposable WordPress ZIP activation/rendering and independent SVN/ZIP/browser publication checks. Run `python3 -B -m unittest discover -s tests -p 'test_release.py' -v` for the release tests. They do not establish full application or premium compatibility. The smoke runner uses an isolated database and deletes only its own generated fixture database.
+
 ## Manual baseline: Free alone and shared flows
 
 Use an isolated WordPress development site and disposable fixtures: enough published posts for at least three pages, draft/private posts, empty and populated terms, a custom post type with a custom taxonomy, images/missing images, and distinct administrator/lower-privilege/logged-out sessions. Record WordPress/PHP/theme/browser, both plugin commits/versions, license-service mode and nonce setting. Tests that change settings/data belong on that fixture site.

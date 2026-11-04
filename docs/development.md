@@ -39,9 +39,9 @@ Readable JS and minified runtime JS are both tracked. There is **no verified bui
 
 ## Deployment boundaries
 
-[demoServerPush.yml](../.github/workflows/demoServerPush.yml) deploys pushes to `main` by FTP. [wporg.yml](../.github/workflows/wporg.yml) runs on release events of type `released`, deploys to WordPress.org through 10up's action, generates a ZIP and uploads it to the release. The optional npm build step is commented out. No checked-in `.distignore` was found; packaging of newly added docs/skills should be reviewed before a future release. Workflow configuration does not prove credentials or successful deployment.
+[demoServerPush.yml](../.github/workflows/demoServerPush.yml) deploys pushes to `main` by FTP. [wporg.yml](../.github/workflows/wporg.yml) validates PRs, pushes to `dev` and manual dispatches without publishing. Only a published non-prerelease GitHub release deploys its exact tag commit to WordPress.org through the guarded [release script](../scripts/release.py). It builds a deterministic ZIP, gates recursive content/deletions before SVN commit, verifies exported SVN and both published ZIPs, and uploads evidence. Runtime files follow an explicit inventory; docs, agents and development tools are excluded. No npm build step is needed for checked-in assets.
 
-Do not use pushes/releases as verification commands. Publishing, commits, branch pushes and PR creation require explicit task authorization. Release packaging and toolchain improvements are follow-up proposals in [ideas](ideas/README.md), not changes introduced here.
+Follow the [release runbook](release.md) for secrets, version preparation, dry runs, publishing/monitoring with CLI, Chrome verification and recovery. Commits, pushes, publication and PR creation require task authorization. After a failed production attempt, obtain approval before another attempt. Pro remains a separate release unit.
 
 ## Documentation ownership
 

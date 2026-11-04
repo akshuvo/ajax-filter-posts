@@ -19,6 +19,6 @@ This repository owns the WordPress plugin bootstrapped by `ajax-filter-posts.php
 5. Validate and unslash request input, check capabilities for privileged operations separately from nonces, escape output for its context, and use prepared SQL or WordPress database helpers. Existing security gaps are not patterns to copy; see testing notes.
 6. Run appropriate checks and manual scenarios, including Free alone and Free + Pro when shared behavior changes. Report commands/results and untested cases honestly. Do not use the placeholder npm test as proof of coverage.
 7. Update affected docs, PRD acceptance evidence, and compatibility notes when important behavior changes. Keep proprietary Pro internals in Pro.
-8. Do not commit, push, publish, or open a PR unless requested. Deployment branches and release events have side effects; see development notes.
+8. Do not commit, push, publish, or open a PR unless requested. Deployment branches and release events have side effects; see [development](docs/development.md) and the [release runbook](docs/release.md). For authorized releases, use the guarded workflow and recursive manifest checks; never overwrite tags or bypass deletion gates. After a failed production attempt, obtain approval before another attempt.
 
 Repository-local workflows: `.agents/skills/gm-free-feature/`, `.agents/skills/gm-free-bugfix/`, and `.agents/skills/gm-free-review/`.
