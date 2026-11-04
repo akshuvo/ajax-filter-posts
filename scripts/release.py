@@ -324,7 +324,8 @@ def verify(output, attempts=1):
             require(info.get('version') == release_version, 'WordPress.org listing has not updated')
             tested = re.search(r'^Tested up to:\s*(\S+)',
                                (output / SLUG / 'readme.txt').read_text(), re.M).group(1)
-            require(info.get('tested') == tested, 'WordPress.org Tested up to has not updated')
+            require(str(info.get('tested', '')).split('.')[:2] == tested.split('.')[:2],
+                    'WordPress.org Tested up to has not updated')
             error = None
             break
         except Exception as exc:

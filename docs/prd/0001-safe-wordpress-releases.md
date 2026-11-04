@@ -27,4 +27,4 @@ Free release tooling only; source baseline `87e01bb`, Pro clean `main` inspected
 
 Local: 15 release tests pass, including disposable SVN acceptance/tampering checks; 45 package/ZIP paths and hashes match; revision-pinned production SVN staging passes with no commit; all 25 packaged PHP files parse on PHP 8.4.11. Disposable MySQL 8.4 / WordPress 7.1.4: ZIP install, activation, all three shortcode aliases, Appsero, deactivation/reactivation pass. Docker daemon unavailable; a separate temporary MySQL instance was used. CLI extraction initially exceeded PHP's default 128 MB limit; the committed smoke runner explicitly uses 512 MB.
 
-Live release evidence is recorded in the runbook or linked Actions evidence after execution. Plugin Check/full UI/AJAX matrix are not release-tooling coverage claims.
+Live release evidence is recorded in the runbook or linked Actions evidence after execution. Plugin Check 2.1.0 was run on candidate and baseline; existing runtime findings are outside this packaging change. The compatibility header format was corrected to major.minor (7.1), while the runtime smoke test uses 7.1.4. Full UI/AJAX matrix coverage is not claimed.

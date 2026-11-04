@@ -3,7 +3,7 @@
 Contributors: mdshuvo, addonmaster, mdashikul  
 Tags: post grid, ajax filter, infinite scroll, pagination, filter  
 Requires at least: 5.8  
-Tested up to: 7.1.4  
+Tested up to: 7.1  
 Requires PHP: 7.4  
 Stable tag: 3.4.18
 License: GPLv2 or later  
@@ -157,7 +157,7 @@ Upgrade to **Post Grid Master Pro** to unlock more advanced tools and layout fle
 
 = 3.4.18 =
 - Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
-- Updated: WordPress compatibility metadata to 7.1.4.
+- Updated: WordPress compatibility metadata to 7.1.
 
 
 = 3.4.9 - July 02, 2024 =

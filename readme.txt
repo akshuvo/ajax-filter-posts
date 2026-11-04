@@ -2,7 +2,7 @@
 Contributors: mdshuvo, addonmaster
 Tags: post grid, ajax filter, infinite scroll, pagination, taxonomy filter
 Requires at least: 5.8
-Tested up to: 7.1.4
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 3.4.18
 License: GPLv2 or later
@@ -172,7 +172,7 @@ Email [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for custom reque
 
 = 3.4.18 =
 - Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
-- Updated: WordPress compatibility metadata to 7.1.4.
+- Updated: WordPress compatibility metadata to 7.1.
 
 
 

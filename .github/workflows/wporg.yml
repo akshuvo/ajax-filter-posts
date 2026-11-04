@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: write
     env:
-      RELEASE_DIR: ${{ github.workspace }}/../gridmaster-release
+      RELEASE_DIR: /tmp/gridmaster-release-${{ github.run_id }}-${{ github.run_attempt }}
       RELEASE_TAG: ${{ github.event.release.tag_name }}
     steps:
       - name: Check out exact release tag (or validation commit)
