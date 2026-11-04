@@ -8,7 +8,7 @@ Suggested lifecycle: Draft → Approved (maintainer decision) → Implemented �
 
 ## Index
 
-- [0001 — Safe WordPress.org releases](0001-safe-wordpress-releases.md): implemented; local verification passed, live evidence pending.
+- [0001 — Safe WordPress.org releases](0001-safe-wordpress-releases.md): verified for release-tooling acceptance; 3.4.18 published and independently checked.
 
 ## Template
 

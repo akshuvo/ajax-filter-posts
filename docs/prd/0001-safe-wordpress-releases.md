@@ -1,6 +1,6 @@
 # 0001 — Safe WordPress.org releases
 
-- Status: Implemented; local verification passed; live verification pending
+- Status: Verified for the specified release-tooling acceptance checks
 - Owner / approval authority: repository maintainer, through the attached release automation task
 - Date: 2026-11-04
 - Related: [release runbook](../release.md), [investigation](../release-investigation.md), [ADR 0002](../adr/0002-guarded-wordpress-releases.md)
@@ -27,4 +27,4 @@ Free release tooling only; source baseline `87e01bb`, Pro clean `main` inspected
 
 Local: 15 release tests pass, including disposable SVN acceptance/tampering checks; 45 package/ZIP paths and hashes match; revision-pinned production SVN staging passes with no commit; all 25 packaged PHP files parse on PHP 8.4.11. Disposable MySQL 8.4 / WordPress 7.1.4: ZIP install, activation, all three shortcode aliases, Appsero, deactivation/reactivation pass. Docker daemon unavailable; a separate temporary MySQL instance was used. CLI extraction initially exceeded PHP's default 128 MB limit; the committed smoke runner explicitly uses 512 MB.
 
-Live release evidence is recorded in the runbook or linked Actions evidence after execution. Plugin Check 2.1.0 was run on candidate and baseline; existing runtime findings are outside this packaging change. The compatibility header format was corrected to major.minor (7.1), while the runtime smoke test uses 7.1.4. Full UI/AJAX matrix coverage is not claimed.
+Live release 3.4.18 is verified: [production run](https://github.com/akshuvo/ajax-filter-posts/actions/runs/41744968218), SVN r3782835; local package, exported trunk/tag and both downloadable ZIPs match all 45 paths/hashes. All 12 listing assets are unchanged. Chrome verified release/Actions/listing/version/download information, with a temporary main-page cache delay. Full evidence is in the runbook. Plugin Check 2.1.0 was run on candidate and baseline; existing runtime findings are outside this packaging change. The compatibility header format was corrected to major.minor (7.1), while the runtime smoke test uses 7.1.4. Full UI/AJAX matrix coverage is not claimed.
