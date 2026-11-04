@@ -45,35 +45,17 @@ class Admin {
 
 		add_menu_page( __( 'GridMaster', 'ajax-filter-posts'  ), __( 'GridMaster', 'ajax-filter-posts'  ), $capability, $parent_slug, array( $this, 'plugin_page' ), 'dashicons-forms', 110 );
 
-		$submenus = array(
-			array(
-				'title'  => __( 'Welcome', 'ajax-filter-posts'  ),
-				'url'    => 'gridmaster',
-				'path'   => '',
-				'target' => '',
-			),
-			// array(
-			// 	'title' => __( 'My Grids', 'ajax-filter-posts'  ),
-			// 	'url'   => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-			// 	'path'  => 'my-grids',
-			// ),
-			array(
-				'title'  => __( 'Grid Builder', 'ajax-filter-posts'  ),
-				'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
-				'path'   => 'build-grid',
-				'target' => '',
-			),
-			array(
-				'title' => __( 'Settings', 'ajax-filter-posts'  ),
-				'url'   => admin_url( 'admin.php?page=gridmaster&path=settings' ),
-				'path'  => 'settings',
-			),
-		);
+		add_submenu_page( $parent_slug, __( 'All Grids', 'ajax-filter-posts' ), __( 'All Grids', 'ajax-filter-posts' ), $capability, $parent_slug, array( $this, 'plugin_page' ) );
+		add_submenu_page( $parent_slug, __( 'Add New Grid', 'ajax-filter-posts' ), __( 'Add New Grid', 'ajax-filter-posts' ), $capability, 'gridmaster-builder', array( $this, 'builder_page' ) );
+		add_submenu_page( $parent_slug, __( 'Legacy Builder', 'ajax-filter-posts' ), __( 'Legacy Builder', 'ajax-filter-posts' ), $capability, admin_url( 'admin.php?page=gridmaster&path=build-grid' ) );
+		add_submenu_page( $parent_slug, __( 'Settings', 'ajax-filter-posts' ), __( 'Settings', 'ajax-filter-posts' ), $capability, admin_url( 'admin.php?page=gridmaster&path=settings' ) );
+	}
 
-		// Add Submenus.
-		foreach ( $submenus as $tab ) {
-			add_submenu_page( $parent_slug, $tab['title'], $tab['title'], $capability, $tab['url'] );
-		}
+	/**
+	 * Gutenberg builder page
+	 */
+	public function builder_page() {
+		require_once GRIDMASTER_PATH . '/admin/views/builder.php';
 	}
 
 	/**
@@ -174,6 +156,30 @@ class Admin {
 
 		if ( ! defined( 'GRIDMASTER_PRO_VERSION' ) ) {
 			wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.min.css', array(), GRIDMASTER_VERSION );
+		}
+
+		$screen = get_current_screen();
+		if ( $screen && false !== strpos( $screen->id, 'gridmaster-builder' ) ) {
+			wp_enqueue_script( 'wp-blocks' );
+			wp_enqueue_script( 'wp-element' );
+			wp_enqueue_script( 'wp-block-editor' );
+			wp_enqueue_script( 'wp-components' );
+			wp_enqueue_script( 'wp-data' );
+			wp_enqueue_script( 'wp-i18n' );
+			wp_enqueue_script( 'wp-editor' );
+			wp_enqueue_script( 'wp-block-library' );
+			wp_enqueue_style( 'wp-block-editor' );
+			wp_enqueue_style( 'wp-components' );
+			wp_enqueue_style( 'wp-block-library' );
+			wp_enqueue_style( 'wp-block-library-theme' );
+
+			wp_enqueue_script( 'gridmaster-blocks-editor', GRIDMASTER_ASSETS . 'blocks/editor.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-block-library' ), GRIDMASTER_VERSION, true );
+			wp_enqueue_style( 'gridmaster-blocks-editor', GRIDMASTER_ASSETS . 'blocks/editor.css', array( 'wp-components', 'wp-block-library' ), GRIDMASTER_VERSION );
+
+			$builder_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
+			wp_enqueue_script( 'gridmaster-builder-app', GRIDMASTER_URL . '/admin/assets/builder.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-block-library' ), $builder_ver, true );
+			wp_enqueue_style( 'gridmaster-builder-css', GRIDMASTER_URL . '/admin/assets/builder.css', array( 'wp-components' ), $builder_ver );
+			wp_enqueue_style( 'gridmaster-frontend-v2', GRIDMASTER_ASSETS . 'css/frontend-v2.css', array(), GRIDMASTER_VERSION );
 		}
 	}
 }

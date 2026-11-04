@@ -9,6 +9,7 @@ Suggested lifecycle: Draft → Approved (maintainer decision) → Implemented �
 ## Index
 
 - [0001 — Safe WordPress.org releases](0001-safe-wordpress-releases.md): verified for release-tooling acceptance; 3.4.18 published and independently checked.
+- [0002 — Gutenberg saved-grid builder](0002-gutenberg-grid-builder-v2.md): Draft; initial Free + Pro redesign architecture/requirements for review, no feature implementation.
 
 ## Template
 

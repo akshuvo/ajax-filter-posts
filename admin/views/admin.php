@@ -17,28 +17,21 @@ $grid_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; // phpcs:ignore.
 // Navigation Tabs.
 $nav_tabs = array(
 	array(
-		'title'  => __( 'Welcome', 'ajax-filter-posts'  ),
+		'title'  => __( 'All Grids', 'ajax-filter-posts'  ),
 		'url'    => admin_url( 'admin.php?page=gridmaster' ),
-		'icon'   => 'dashicons dashicons-admin-home',
+		'icon'   => 'dashicons dashicons-grid-view',
 		'path'   => '',
 		'target' => '',
 	),
-	// array(
-	// 	'title'  => __( 'My Grids', 'ajax-filter-posts'  ),
-	// 	'url'    => admin_url( 'admin.php?page=gridmaster&path=my-grids' ),
-	// 	'icon'   => 'dashicons dashicons-layout',
-	// 	'path'   => 'my-grids',
-	// 	'target' => '',
-	// ),
-	// [
-	// 'title' => __( 'Templates', 'ajax-filter-posts'  ),
-	// 'url'   => admin_url( 'admin.php?page=gridmaster&path=templates' ),
-	// 'icon'  => 'dashicons dashicons-layout',
-	// 'path' => 'templates',
-	// 'target' => '',
-	// ],
 	array(
-		'title'  => __( 'Grid Builder', 'ajax-filter-posts'  ),
+		'title'  => __( 'Add New Grid', 'ajax-filter-posts'  ),
+		'url'    => admin_url( 'admin.php?page=gridmaster-builder' ),
+		'icon'   => 'dashicons dashicons-plus-alt2',
+		'path'   => 'gridmaster-builder',
+		'target' => '',
+	),
+	array(
+		'title'  => __( 'Legacy Builder', 'ajax-filter-posts'  ),
 		'url'    => admin_url( 'admin.php?page=gridmaster&path=build-grid' ),
 		'icon'   => 'dashicons dashicons-schedule',
 		'path'   => 'build-grid',
@@ -118,10 +111,8 @@ $nav_tabs = array(
 				$file_path = GRIDMASTER_PATH . '/admin/views/support.php';
 				break;
 			case 'my-grids':
-				$file_path = GRIDMASTER_PATH . '/admin/views/my-grids.php';
-				break;
 			default:
-				$file_path = GRIDMASTER_PATH . '/admin/views/welcome.php';
+				$file_path = GRIDMASTER_PATH . '/admin/views/my-grids.php';
 				break;
 		}
 

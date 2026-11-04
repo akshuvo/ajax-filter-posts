@@ -45,3 +45,7 @@ Frontend preview registers only for a non-admin request with `manage_options`. `
 Runtime loads `assets/frontend.min.js`, `assets/css/frontend.min.css`, `admin/assets/admin.min.js`, `admin/assets/admin.css`, and the Free-only admin premium-block stylesheet. Readable source counterparts are tracked, along with style-specific CSS. No reproducible minification/build command is checked in. [Development](development.md) describes tools and deployment triggers.
 
 There are local sanitization/escaping/nonce checks, but this is not a security audit. Public AJAX accepts client attributes and taxonomy input; title tags are interpolated by `gridmaster_get_post_title()`, and filtered/template HTML is trusted at several output points. Privilege, type, output-context, and expensive-query checks belong in any affected implementation review. [Testing](testing.md) distinguishes current behavior from desired security expectations.
+
+## Proposed GridMaster 2.0 design
+
+The [initial redesign package](gridmaster-2.0/README.md) records new proposals dated 2026-11-04. It does not replace the observed runtime contracts above or certify a new version pair; no redesign feature is implemented by those documents.

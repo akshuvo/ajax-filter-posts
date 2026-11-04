@@ -10,8 +10,11 @@ For retrospective records, describe observed source and explicitly mark original
 
 - [0001 — Existing extension boundary](0001-existing-extension-boundary.md): Proposed retrospective record; maintainer review pending.
 - [0002 — Guarded WordPress.org releases](0002-guarded-wordpress-releases.md): Proposed; implemented for the requested release task.
+- [0003 — Stable table IDs and private definition storage](0003-saved-grid-definition-storage.md): Proposed.
+- [0004 — Native Gutenberg card builder](0004-native-gutenberg-card-builder.md): Proposed.
+- [0005 — Versioned extension contract](0005-versioned-extension-contract.md): Proposed.
 
-Other possible records, only when a real decision is needed: storage migration/lifecycle, public-AJAX security policy and a reproducible asset pipeline. Current observations and unapproved follow-ups are in the architecture and ideas docs; do not create one ADR per function.
+Further architectural decisions should add a new numbered record only when needed; current observed behavior remains separate from the proposed redesign.
 
 ## Template
 

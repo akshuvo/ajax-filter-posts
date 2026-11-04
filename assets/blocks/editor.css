@@ -1,0 +1,62 @@
+/**
+ * GridMaster 2.0 — Block Editor Styles
+ */
+.gm-editor-embed-block {
+	padding: 24px;
+	border: 2px dashed #93c5fd;
+	border-radius: 8px;
+	background: #eff6ff;
+	text-align: center;
+}
+.gm-embed-placeholder .dashicons {
+	font-size: 32px;
+	width: 32px;
+	height: 32px;
+	color: #3b82f6;
+	display: block;
+	margin: 0 auto 8px;
+}
+.gm-editor-card {
+	transition: box-shadow 0.2s ease, border-color 0.2s ease;
+	position: relative;
+	min-height: 120px;
+}
+.gm-editor-card:hover {
+	border-color: #3b82f6 !important;
+}
+.gm-editor-field {
+	margin-bottom: 12px;
+}
+.gm-placeholder-img {
+	background: #f3f4f6;
+	border: 1px dashed #d1d5db;
+	border-radius: 6px;
+	height: 160px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #9ca3af;
+	font-size: 14px;
+}
+.gm-placeholder-img .dashicons {
+	font-size: 20px;
+	margin-right: 6px;
+}
+.gm-editor-btn {
+	display: inline-block;
+	background: #2563eb;
+	color: #ffffff;
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+}
+.gm-editor-term-badge {
+	display: inline-block;
+	background: #e0e7ff;
+	color: #3730a3;
+	padding: 3px 8px;
+	border-radius: 9999px;
+	font-size: 12px;
+	font-weight: 500;
+}

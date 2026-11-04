@@ -64,6 +64,8 @@ final class GridMasterPlugin {
      */
     public function define_constants() {
         define( 'GRIDMASTER_VERSION', '3.4.18' );
+        define( 'GRIDMASTER_V2_CAPABLE', true );
+        define( 'GRIDMASTER_V2_VERSION', '2.0.0' );
         define( 'GRIDMASTER_FILE', __FILE__ );
         define( 'GRIDMASTER_PATH', __DIR__ );
         define( 'GRIDMASTER_URL', plugins_url( '', GRIDMASTER_FILE ) );
@@ -92,6 +94,44 @@ final class GridMasterPlugin {
 	 */
 	public function init_plugin() {
 
+		// Storage and CPT.
+		require_once GRIDMASTER_PATH . '/inc/Storage/Layout_CPT.php';
+		require_once GRIDMASTER_PATH . '/inc/Storage/Grid_Repository.php';
+		new \GridMaster\Storage\Layout_CPT();
+
+		// Migration check.
+		require_once GRIDMASTER_PATH . '/admin/DB_Migration.php';
+
+		// Facets & Filters.
+		require_once GRIDMASTER_PATH . '/inc/Facets/Facet_Handler_Interface.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Filter_Registry.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Taxonomy_Tabs.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Taxonomy_Dropdown.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Taxonomy_Checkbox.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Taxonomy_Radio.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Search_Input.php';
+		require_once GRIDMASTER_PATH . '/inc/Facets/Handlers/Reset_Button.php';
+
+		// Pagination.
+		require_once GRIDMASTER_PATH . '/inc/Pagination/Pagination_Registry.php';
+
+		// Query and Renderer Engines.
+		require_once GRIDMASTER_PATH . '/inc/Engine/Query_Builder.php';
+		require_once GRIDMASTER_PATH . '/inc/Engine/Grid_Renderer.php';
+
+		// Gutenberg Blocks.
+		require_once GRIDMASTER_PATH . '/inc/Blocks.php';
+		new \GridMaster\Blocks();
+
+		// Migration Engine.
+		require_once GRIDMASTER_PATH . '/inc/Migration/Legacy_Migrator.php';
+
+		// REST API Controller.
+		require_once GRIDMASTER_PATH . '/inc/REST/Grids_Controller.php';
+		add_action( 'rest_api_init', function () {
+			$controller = new \GridMaster\REST\Grids_Controller();
+			$controller->register_routes();
+		} );
 
 		// Include the functions.php.
 		require_once GRIDMASTER_PATH . '/inc/functions.php';
@@ -109,6 +149,10 @@ final class GridMasterPlugin {
 	public function activate() {
 		// Save timestamp for plugin activation.
 		update_option( 'gridmaster_activation_time', time() );
+
+		// Run DB migration on activation.
+		require_once GRIDMASTER_PATH . '/admin/DB_Migration.php';
+		\GridMaster\DB_Migration::migrate();
 	}
 
 	/**

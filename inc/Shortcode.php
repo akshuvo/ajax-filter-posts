@@ -126,6 +126,16 @@ class Shortcode {
 			$get_grid = gm_get_grid( $grid_id );
 
 			if ( $get_grid ) {
+				// Route modern v2 grids to the GridMaster 2.0 rendering engine (ONLY if not rolled back to legacy).
+				$is_v2 = ( isset( $get_grid->migration_status ) && in_array( $get_grid->migration_status, array( 'converted', 'new_builder' ), true ) )
+					|| ( isset( $get_grid->schema_version ) && $get_grid->schema_version >= 2 && 'legacy' !== $get_grid->migration_status );
+
+				if ( $is_v2 ) {
+					if ( ! class_exists( 'GridMaster\Engine\Grid_Renderer' ) ) {
+						require_once GRIDMASTER_PATH . '/inc/Engine/Grid_Renderer.php';
+					}
+					return \GridMaster\Engine\Grid_Renderer::render_grid( $grid_id );
+				}
 
 				// $atts = $get_grid->attributes;
 				$atts = wp_parse_args( $atts, $get_grid->attributes );

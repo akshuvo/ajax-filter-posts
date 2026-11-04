@@ -42,3 +42,7 @@ Follow [testing](testing.md): Free alone, both active, both activation orders, F
 ## Documentation maintenance
 
 Each repository has its own `AGENTS.md`, implementation docs, skills, ADR/PRD indexes and ideas. Maintain Free's public API here and reference it from Pro. Keep only the relevant compatibility summary in both; do not duplicate architecture documents. Cross-repository links use repository URLs so independent checkouts work; if a branch moves, update links with the corresponding change. Discovery branch names describe the baseline, not a mandate for future branches.
+
+## Proposed GridMaster 2.0 design
+
+The [initial redesign package](gridmaster-2.0/README.md) records new proposals dated 2026-11-04. It does not replace the observed runtime contracts above or certify a new version pair; no redesign feature is implemented by those documents.

@@ -48,3 +48,7 @@ Template overrides use `<active stylesheet directory>/gridmaster/templates/` and
 The bootstrap initializes bundled [Appsero](../appsero/src/Client.php) Insights. [Insights](../appsero/src/Insights.php) registers opt-in/opt-out admin handlers, deactivation feedback, activation/deactivation hooks, weekly scheduling, and tracking callbacks. `appsero_endpoint` filters the default `https://api.appsero.com` endpoint. Do not assume telemetry is always sent merely because the client is initialized; consent/tracking logic is in the bundled client. Live service behavior was not exercised. Avoid copying site identifiers, credentials, or private Pro data into public docs.
 
 Related: [compatibility and ownership](free-pro-compatibility.md).
+
+## Proposed GridMaster 2.0 design
+
+The [initial redesign package](gridmaster-2.0/README.md) records new proposals dated 2026-11-04. It does not replace the observed runtime contracts above or certify a new version pair; no redesign feature is implemented by those documents.
