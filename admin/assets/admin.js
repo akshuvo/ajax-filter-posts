@@ -20,10 +20,14 @@ jQuery(document).ready(function ($) {
 
 	// Device Panel Toggle
 	jQuery(document).on('click', '.gridmaster-responsive-fields-selected-devices', function (e) {
+		const $parent = jQuery(this).parent();
+		const isOpen = $parent.hasClass('open');
 		// Close All Panels
 		closeAllPanels();
-		// Toggle Current Panel
-		jQuery(this).parent().toggleClass('open').find('.gridmaster-responsive-fields-devices').slideToggle('fast');
+		// Open if was not already open
+		if (!isOpen) {
+			$parent.addClass('open').find('.gridmaster-responsive-fields-devices').slideDown('fast');
+		}
 	});
 
 	// Select Device
@@ -285,12 +289,14 @@ jQuery(document).ready(function ($) {
 
 		// Disable Button
 		$form.find('[type="submit"]').attr('disabled', 'disabled');
+		jQuery('.gm-save-grid, [form="' + $form.attr('id') + '"]').attr('disabled', 'disabled');
 
 		// Action Value
 		const gmAction = $form.find('[name="gm-action"]').val();
 
 		// Spinner
 		$form.find('.spinner').addClass('is-active');
+		jQuery('.gm-legacy-header .spinner, .gm-admin-toolbar .spinner').addClass('is-active');
 
 		// Ajax Response 
 		$form.find('.gm-ajax-response').html('');
@@ -343,8 +349,13 @@ jQuery(document).ready(function ($) {
 
 			},
 			complete: function (response) {
+				// Enable Button
+				$form.find('[type="submit"]').removeAttr('disabled');
+				jQuery('.gm-save-grid, [form="' + $form.attr('id') + '"]').removeAttr('disabled');
+
 				// Spinner
 				$form.find('.spinner').removeClass('is-active');
+				jQuery('.gm-legacy-header .spinner, .gm-admin-toolbar .spinner').removeClass('is-active');
 				jQuery(document).trigger('wp-updates-notice-added');
 
 				// Hide Notice after 5 seconds
@@ -360,9 +371,15 @@ jQuery(document).ready(function ($) {
 	jQuery('#gm-list-grids').submit();
 
 	// Window Load
-	jQuery(window).load(() => {
+	jQuery(window).on('load', function () {
 		dataNeedSave(0);
-	})
+	});
+
+	// Dismiss blocker modal in legacy builder
+	jQuery(document).on('click', '.gm-dismiss-blocker', function (e) {
+		e.preventDefault();
+		jQuery('#gm-legacy-blocker-modal').fadeOut('fast');
+	});
 
 	// Block Pro Features
 	if (!gridmaster_params.has_pro) {

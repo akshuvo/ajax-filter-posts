@@ -28,14 +28,15 @@ class Legacy_Migrator {
 
 		// 1. Build Query Config
 		$post_type      = ! empty( $attrs['post_type'] ) ? sanitize_key( $attrs['post_type'] ) : 'post';
-		$posts_per_page = ! empty( $attrs['posts_per_page'] ) ? absint( $attrs['posts_per_page'] ) : 9;
+		$posts_per_page = isset( $attrs['posts_per_page'] ) && '' !== $attrs['posts_per_page'] ? absint( $attrs['posts_per_page'] ) : 10;
 		$orderby        = ! empty( $attrs['orderby'] ) ? sanitize_key( $attrs['orderby'] ) : 'date';
 		$order          = ! empty( $attrs['order'] ) ? strtoupper( sanitize_key( $attrs['order'] ) ) : 'DESC';
 		$taxonomy       = ! empty( $attrs['taxonomy'] ) ? sanitize_key( $attrs['taxonomy'] ) : 'category';
 
 		$tax_query = array();
-		if ( ! empty( $attrs['terms'] ) ) {
-			$terms = is_array( $attrs['terms'] ) ? $attrs['terms'] : explode( ',', $attrs['terms'] );
+		$raw_terms = ! empty( $attrs['terms'] ) ? $attrs['terms'] : ( ! empty( $attrs['cat'] ) ? $attrs['cat'] : array() );
+		if ( ! empty( $raw_terms ) ) {
+			$terms = is_array( $raw_terms ) ? $raw_terms : explode( ',', $raw_terms );
 			$terms = array_filter( array_map( 'absint', $terms ) );
 			if ( ! empty( $terms ) ) {
 				$tax_query[] = array(
@@ -46,6 +47,8 @@ class Legacy_Migrator {
 			}
 		}
 
+		$hide_empty = ! empty( $attrs['hide_empty'] ) && ( '1' === (string) $attrs['hide_empty'] || 'yes' === (string) $attrs['hide_empty'] );
+
 		$query_config = array(
 			'post_type'      => $post_type,
 			'posts_per_page' => $posts_per_page,
@@ -54,7 +57,7 @@ class Legacy_Migrator {
 			'tax_query'      => $tax_query,
 			'author'         => '',
 			'search'         => '',
-			'hide_empty'     => true,
+			'hide_empty'     => $hide_empty,
 		);
 
 		// 2. Build Facets Config
@@ -62,7 +65,7 @@ class Legacy_Migrator {
 		if ( ! empty( $attrs['show_filter'] ) && 'yes' === $attrs['show_filter'] ) {
 			$filter_style = ! empty( $attrs['filter_style'] ) ? $attrs['filter_style'] : 'default';
 			$facet_type   = 'taxonomy-tabs';
-			if ( 'dropdown' === $filter_style ) {
+			if ( 'dropdown' === $filter_style || 'style-4' === $filter_style ) {
 				$facet_type = 'taxonomy-dropdown';
 			}
 
@@ -95,7 +98,7 @@ class Legacy_Migrator {
 			'end_text'       => __( 'No more posts', 'ajax-filter-posts' ),
 		);
 
-		// 4. Build Responsive Columns and Gaps
+		// 4. Build Responsive Columns, Gaps, and Layout Type (Grid vs Carousel/Slider)
 		$columns = array(
 			'xs' => 1,
 			'sm' => 2,
@@ -122,7 +125,10 @@ class Legacy_Migrator {
 			$row_gap = is_array( $attrs['grid_row_gap'] ) && isset( $attrs['grid_row_gap']['lg'] ) ? absint( $attrs['grid_row_gap']['lg'] ) : absint( $attrs['grid_row_gap'] );
 		}
 
+		$is_slider = ! empty( $attrs['enable_slider'] ) && 'yes' === $attrs['enable_slider'];
+
 		$layout_config = array(
+			'type'       => $is_slider ? 'slider' : 'grid',
 			'columns'    => $columns,
 			'col_gap'    => $col_gap ? $col_gap : 30,
 			'row_gap'    => $row_gap ? $row_gap : 30,
@@ -133,6 +139,29 @@ class Legacy_Migrator {
 				'box_shadow'    => '0 1px 3px rgba(0,0,0,0.1)',
 			),
 		);
+
+		// Map carousel/slider parameters when enable_slider is yes
+		if ( $is_slider ) {
+			$slider_slides = $columns;
+			if ( ! empty( $attrs['slider_slidesToShow'] ) && is_array( $attrs['slider_slidesToShow'] ) ) {
+				foreach ( array( 'xs', 'sm', 'md', 'lg', 'xl' ) as $bp ) {
+					if ( isset( $attrs['slider_slidesToShow'][ $bp ] ) ) {
+						$slider_slides[ $bp ] = max( 1, absint( $attrs['slider_slidesToShow'][ $bp ] ) );
+					}
+				}
+			}
+
+			$layout_config['slider'] = array(
+				'slides_to_show' => $slider_slides,
+				'arrows'         => ! isset( $attrs['slider_arrows'] ) || ( '0' !== (string) $attrs['slider_arrows'] && 'no' !== (string) $attrs['slider_arrows'] ),
+				'dots'           => ! empty( $attrs['slider_dots'] ) && ( '1' === (string) $attrs['slider_dots'] || 'yes' === (string) $attrs['slider_dots'] ),
+				'infinite'       => ! isset( $attrs['slider_infinite'] ) || ( '0' !== (string) $attrs['slider_infinite'] && 'no' !== (string) $attrs['slider_infinite'] ),
+				'autoplay'       => ! empty( $attrs['slider_autoplay'] ) && ( '1' === (string) $attrs['slider_autoplay'] || 'yes' === (string) $attrs['slider_autoplay'] ),
+				'autoplay_speed' => ! empty( $attrs['slider_autoplaySpeed'] ) ? absint( $attrs['slider_autoplaySpeed'] ) : 3000,
+				'pause_on_hover' => ! empty( $attrs['slider_pauseOnHover'] ) && ( '1' === (string) $attrs['slider_pauseOnHover'] || 'yes' === (string) $attrs['slider_pauseOnHover'] ),
+				'gap'            => $col_gap ? $col_gap : 24,
+			);
+		}
 
 		// 5. Build Gutenberg Card Block Tree
 		$grid_style    = ! empty( $attrs['grid_style'] ) ? $attrs['grid_style'] : 'default';
@@ -182,40 +211,70 @@ class Legacy_Migrator {
 	 * @return string Gutenberg block HTML.
 	 */
 	public static function get_template_for_legacy_style( $style, $attrs = array() ) {
-		$excerpt_len = ! empty( $attrs['excerpt_length'] ) ? absint( $attrs['excerpt_length'] ) : 20;
-		$btn_text    = ! empty( $attrs['read_more_text'] ) ? sanitize_text_field( $attrs['read_more_text'] ) : __( 'Read More', 'ajax-filter-posts' );
+		$excerpt_len    = ! empty( $attrs['excerpt_length'] ) ? absint( $attrs['excerpt_length'] ) : 20;
+		$btn_text       = ! empty( $attrs['read_more_text'] ) ? sanitize_text_field( $attrs['read_more_text'] ) : __( 'Read More', 'ajax-filter-posts' );
+		$show_read_more = ! isset( $attrs['show_read_more'] ) || 'no' !== $attrs['show_read_more'];
+		$title_tag      = ! empty( $attrs['title_tag'] ) ? sanitize_key( $attrs['title_tag'] ) : 'h3';
+		$img_size       = ! empty( $attrs['grid_image_size'] ) ? sanitize_key( $attrs['grid_image_size'] ) : 'medium_large';
+		$link_thumb     = ! empty( $attrs['link_thumbnail'] ) && 'yes' === $attrs['link_thumbnail'];
 
-		if ( 'style-1' === $style ) {
-			return '<!-- wp:gridmaster/card {"borderRadius":"12px","padding":"0px","backgroundColor":"#ffffff","boxShadow":"0 4px 12px rgba(0,0,0,0.08)"} -->' .
-				'<!-- wp:gridmaster/featured-image {"size":"medium_large","aspectRatio":"4/3","borderRadius":"12px 12px 0 0"} /-->' .
-				'<!-- wp:core/group {"style":{"spacing":{"padding":{"top":"16px","bottom":"20px","left":"20px","right":"20px"}}}} -->' .
-				'<!-- wp:gridmaster/post-terms {"taxonomy":"category"} /-->' .
-				'<!-- wp:gridmaster/title {"tagName":"h3","fontSize":"18px","isLink":true} /-->' .
-				'<!-- wp:gridmaster/post-date {"format":"M d, Y"} /-->' .
+		$title_font_size = '20px';
+		if ( ! empty( $attrs['heading_font_size'] ) ) {
+			if ( is_array( $attrs['heading_font_size'] ) && ! empty( $attrs['heading_font_size']['lg'] ) ) {
+				$title_font_size = sanitize_text_field( $attrs['heading_font_size']['lg'] );
+			} elseif ( is_string( $attrs['heading_font_size'] ) ) {
+				$title_font_size = sanitize_text_field( $attrs['heading_font_size'] );
+			}
+		}
+
+		$read_more_block = $show_read_more ? '<!-- wp:gridmaster/read-more {"text":"' . esc_js( $btn_text ) . '"} /-->' : '';
+		$thumb_link_attr = $link_thumb ? ',"isLink":true' : '';
+
+		// 1. Horizontal style (Legacy Style 2: media left, content right)
+		if ( 'style-2' === $style ) {
+			return '<!-- wp:gridmaster/card {"layoutMode":"horizontal","mediaWidth":"35%","borderRadius":"8px","padding":"16px","backgroundColor":"#ffffff","boxShadow":"0 1px 3px rgba(0,0,0,0.1)"} -->' .
+				'<!-- wp:gridmaster/featured-image {"size":"' . esc_attr( $img_size ) . '","aspectRatio":"4/3","borderRadius":"6px"' . $thumb_link_attr . '} /-->' .
+				'<!-- wp:core/group {"style":{"spacing":{"padding":{"top":"0px","bottom":"0px","left":"16px","right":"0px"}}}} -->' .
+				'<!-- wp:gridmaster/title {"tagName":"' . esc_attr( $title_tag ) . '","fontSize":"' . esc_attr( $title_font_size ) . '","isLink":true} /-->' .
 				'<!-- wp:gridmaster/excerpt {"length":' . $excerpt_len . '} /-->' .
-				'<!-- wp:gridmaster/read-more {"text":"' . esc_js( $btn_text ) . '"} /-->' .
+				$read_more_block .
 				'<!-- /wp:core/group -->' .
 				'<!-- /wp:gridmaster/card -->';
 		}
 
-		if ( 'style-2' === $style || 'style-3' === $style ) {
-			return '<!-- wp:gridmaster/card {"borderRadius":"8px","padding":"24px","backgroundColor":"#ffffff","boxShadow":"0 2px 8px rgba(0,0,0,0.06)"} -->' .
+		// 2. Style 3 (Category on top, with date and title)
+		if ( 'style-3' === $style ) {
+			return '<!-- wp:gridmaster/card {"borderRadius":"8px","padding":"20px","backgroundColor":"#ffffff","boxShadow":"0 1px 3px rgba(0,0,0,0.1)"} -->' .
+				'<!-- wp:gridmaster/featured-image {"size":"' . esc_attr( $img_size ) . '","aspectRatio":"16/9","borderRadius":"6px"' . $thumb_link_attr . '} /-->' .
 				'<!-- wp:gridmaster/post-terms {"taxonomy":"category"} /-->' .
-				'<!-- wp:gridmaster/title {"tagName":"h3","fontSize":"22px","isLink":true} /-->' .
-				'<!-- wp:gridmaster/featured-image {"size":"medium_large","aspectRatio":"16/9","borderRadius":"6px"} /-->' .
-				'<!-- wp:gridmaster/post-date {"format":"F j, Y"} /-->' .
+				'<!-- wp:gridmaster/post-date {"format":"M d, Y"} /-->' .
+				'<!-- wp:gridmaster/title {"tagName":"' . esc_attr( $title_tag ) . '","fontSize":"' . esc_attr( $title_font_size ) . '","isLink":true} /-->' .
 				'<!-- wp:gridmaster/excerpt {"length":' . $excerpt_len . '} /-->' .
-				'<!-- wp:gridmaster/read-more {"text":"' . esc_js( $btn_text ) . '"} /-->' .
+				$read_more_block .
 				'<!-- /wp:gridmaster/card -->';
 		}
 
-		// Default style template
+		// 3. Style 1 (Badge on image card layout)
+		if ( 'style-1' === $style ) {
+			return '<!-- wp:gridmaster/card {"borderRadius":"12px","padding":"0px","backgroundColor":"#ffffff","boxShadow":"0 4px 12px rgba(0,0,0,0.08)"} -->' .
+				'<!-- wp:gridmaster/featured-image {"size":"' . esc_attr( $img_size ) . '","aspectRatio":"4/3","borderRadius":"12px 12px 0 0"' . $thumb_link_attr . '} /-->' .
+				'<!-- wp:core/group {"style":{"spacing":{"padding":{"top":"16px","bottom":"20px","left":"20px","right":"20px"}}}} -->' .
+				'<!-- wp:gridmaster/post-terms {"taxonomy":"category"} /-->' .
+				'<!-- wp:gridmaster/title {"tagName":"' . esc_attr( $title_tag ) . '","fontSize":"' . esc_attr( $title_font_size ) . '","isLink":true} /-->' .
+				'<!-- wp:gridmaster/post-date {"format":"M d, Y"} /-->' .
+				'<!-- wp:gridmaster/excerpt {"length":' . $excerpt_len . '} /-->' .
+				$read_more_block .
+				'<!-- /wp:core/group -->' .
+				'<!-- /wp:gridmaster/card -->';
+		}
+
+		// 4. Default style template (matches legacy default.php: image -> title -> excerpt -> read more)
 		return '<!-- wp:gridmaster/card {"borderRadius":"8px","padding":"20px","backgroundColor":"#ffffff","boxShadow":"0 1px 3px rgba(0,0,0,0.1)"} -->' .
-			'<!-- wp:gridmaster/featured-image {"size":"medium_large","aspectRatio":"16/9","borderRadius":"6px"} /-->' .
-			'<!-- wp:gridmaster/title {"tagName":"h3","fontSize":"20px","isLink":true} /-->' .
+			'<!-- wp:gridmaster/featured-image {"size":"' . esc_attr( $img_size ) . '","aspectRatio":"16/9","borderRadius":"6px"' . $thumb_link_attr . '} /-->' .
+			'<!-- wp:gridmaster/title {"tagName":"' . esc_attr( $title_tag ) . '","fontSize":"' . esc_attr( $title_font_size ) . '","isLink":true} /-->' .
 			'<!-- wp:gridmaster/post-date {"format":"F j, Y"} /-->' .
 			'<!-- wp:gridmaster/excerpt {"length":' . $excerpt_len . '} /-->' .
-			'<!-- wp:gridmaster/read-more {"text":"' . esc_js( $btn_text ) . '"} /-->' .
+			$read_more_block .
 			'<!-- /wp:gridmaster/card -->';
 	}
 }

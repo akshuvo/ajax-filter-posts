@@ -313,6 +313,59 @@ class V2_Test_Runner {
 			$date_res = Grid_Renderer::render_block_with_context( $date_block, $target_post->ID, $target_post->post_type, 1 );
 			$this->assert( strpos( $date_res, 'font-size:15px' ) !== false, 'Post date renders custom font size' );
 			$this->assert( strpos( $date_res, 'color:#10b981' ) !== false, 'Post date renders custom color' );
+
+			// Responsive font size & unit selection tests
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( '24px' ) === '24px', 'Sanitizes px font size' );
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( '1.5rem' ) === '1.5rem', 'Sanitizes rem font size' );
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( '1.25em' ) === '1.25em', 'Sanitizes em font size' );
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( '3.2vw' ) === '3.2vw', 'Sanitizes vw font size' );
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( '18' ) === '18px', 'Bare number defaults to px' );
+			$this->assert( \GridMaster\Blocks::sanitize_font_size( 'evil; expression()' ) === '', 'Rejects malicious font size input' );
+
+			$rfs_css = \GridMaster\Blocks::get_font_size_css( array(
+				'fontSize'       => '1.75rem',
+				'fontSizeTablet' => '1.25rem',
+				'fontSizeMobile' => '1rem',
+			) );
+			$this->assert( strpos( $rfs_css['style'], 'font-size:1.75rem;' ) !== false, 'RFS helper emits desktop size with rem unit' );
+			$this->assert( strpos( $rfs_css['style'], '--gm-fs-tablet:1.25rem;' ) !== false, 'RFS helper emits tablet CSS variable' );
+			$this->assert( strpos( $rfs_css['style'], '--gm-fs-mobile:1rem;' ) !== false, 'RFS helper emits mobile CSS variable' );
+			$this->assert( strpos( $rfs_css['class'], 'gm-fs-tablet' ) !== false && strpos( $rfs_css['class'], 'gm-fs-mobile' ) !== false, 'RFS helper sets responsive classes' );
+
+			// Title with responsive font sizes
+			$title_rfs_block = array(
+				'blockName'   => 'gridmaster/title',
+				'attrs'       => array(
+					'tagName'        => 'h2',
+					'fontSize'       => '28px',
+					'fontSizeTablet' => '22px',
+					'fontSizeMobile' => '18px',
+				),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$title_rfs_res = Grid_Renderer::render_block_with_context( $title_rfs_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $title_rfs_res, 'font-size:28px' ) !== false, 'Title renders desktop font size' );
+			$this->assert( strpos( $title_rfs_res, '--gm-fs-tablet:22px' ) !== false, 'Title renders tablet font size variable' );
+			$this->assert( strpos( $title_rfs_res, '--gm-fs-mobile:18px' ) !== false, 'Title renders mobile font size variable' );
+			$this->assert( strpos( $title_rfs_res, 'gm-fs-tablet' ) !== false && strpos( $title_rfs_res, 'gm-fs-mobile' ) !== false, 'Title includes responsive classes' );
+
+			// Read More with responsive font sizes
+			$rm_rfs_block = array(
+				'blockName'   => 'gridmaster/read-more',
+				'attrs'       => array(
+					'text'           => 'Read Story',
+					'fontSize'       => '14px',
+					'fontSizeTablet' => '13px',
+					'fontSizeMobile' => '12px',
+				),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$rm_rfs_res = Grid_Renderer::render_block_with_context( $rm_rfs_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $rm_rfs_res, 'font-size:14px' ) !== false, 'Read more renders desktop font size' );
+			$this->assert( strpos( $rm_rfs_res, '--gm-fs-tablet:13px' ) !== false, 'Read more renders tablet font size' );
+			$this->assert( strpos( $rm_rfs_res, '--gm-fs-mobile:12px' ) !== false, 'Read more renders mobile font size' );
 		}
 	}
 

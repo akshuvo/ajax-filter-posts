@@ -187,7 +187,7 @@ final class GridMasterPlugin {
 		$links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=gridmaster' ) ) . '">' . __( 'Settings', 'ajax-filter-posts'  ) . '</a>';
 		// Get GridMaster Pro.
 		if ( ! gridmaster_is_pro() ) {
-			$links[] = '<a href="' . gridmaster_website_url( 'gridmaster/free-vs-pro/' ) . '" target="_blank" style="color: #39b54a; font-weight: bold;">' . __( 'Get GridMaster Pro', 'ajax-filter-posts'  ) . '</a>';
+			$links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=gridmaster&path=free-vs-pro' ) ) . '" style="color: #4f46e5; font-weight: bold;">' . __( 'Upgrade to Pro', 'ajax-filter-posts'  ) . '</a>';
 		}
 		return $links;
 	}

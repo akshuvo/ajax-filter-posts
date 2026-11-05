@@ -270,3 +270,469 @@
 	text-decoration: underline;
 	color: #135e96;
 }
+
+/* ========================================================
+   Responsive Font Size Control (Device + Unit Architecture)
+   ======================================================== */
+.gm-responsive-font-size-control {
+	margin-bottom: 18px;
+	padding: 12px 14px;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.gm-responsive-font-size-control:hover {
+	border-color: #cbd5e1;
+}
+
+/* Header: Label (never wraps) + Device Switcher */
+.gm-rfs-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+.gm-rfs-label {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #1e1e1e;
+	white-space: nowrap;
+	margin: 0;
+	line-height: 1.2;
+}
+
+/* Device Switcher Segmented Control */
+.gm-rfs-devices {
+	display: inline-flex;
+	align-items: center;
+	background: #f1f5f9;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 2px;
+	gap: 2px;
+}
+.gm-rfs-device-btn {
+	position: relative;
+	width: 26px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #64748b;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.gm-rfs-device-btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+}
+.gm-rfs-device-btn:hover {
+	color: #0f172a;
+	background: rgba(255, 255, 255, 0.6);
+}
+.gm-rfs-device-btn.is-active {
+	background: #ffffff;
+	color: #0f172a;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+	font-weight: 600;
+}
+.gm-rfs-device-btn.is-active:hover {
+	background: #ffffff;
+	color: #0f172a;
+}
+.gm-rfs-device-btn:focus-visible {
+	outline: 2px solid #2563eb;
+	outline-offset: 1px;
+}
+/* Indicator dot when device has a custom override */
+.gm-rfs-override-dot {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #2563eb;
+	box-shadow: 0 0 0 1px #ffffff;
+}
+
+/* Toolbar: Segmented Unit Pills (left) + Numeric Input & Reset (right) */
+.gm-rfs-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+.gm-rfs-units {
+	display: inline-flex;
+	align-items: center;
+	background: #f1f5f9;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 2px;
+	gap: 1px;
+}
+.gm-rfs-unit-btn {
+	border: none;
+	background: transparent;
+	color: #64748b;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.3px;
+	padding: 3px 6px;
+	border-radius: 4px;
+	cursor: pointer;
+	line-height: 1.2;
+	transition: all 0.15s ease;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.gm-rfs-unit-btn:hover {
+	color: #0f172a;
+}
+.gm-rfs-unit-btn.is-active {
+	background: #ffffff;
+	color: #0f172a;
+	font-weight: 700;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.gm-rfs-unit-btn:focus-visible {
+	outline: 2px solid #2563eb;
+	outline-offset: -1px;
+}
+
+/* Numeric input + reset button group */
+.gm-rfs-input-group {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+.gm-rfs-input-wrapper {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+.gm-rfs-number-input {
+	width: 60px;
+	height: 26px;
+	border: 1px solid #cbd5e1 !important;
+	border-radius: 5px !important;
+	padding: 2px 22px 2px 6px !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	color: #0f172a !important;
+	background: #ffffff !important;
+	text-align: right;
+	transition: all 0.15s ease !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+}
+.gm-rfs-number-input:hover {
+	border-color: #94a3b8 !important;
+}
+.gm-rfs-number-input:focus {
+	border-color: #2563eb !important;
+	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+	outline: none !important;
+}
+.gm-rfs-number-input::placeholder {
+	color: #94a3b8;
+	font-weight: 400;
+}
+.gm-rfs-number-input::-webkit-outer-spin-button,
+.gm-rfs-number-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+.gm-rfs-number-input[type="number"] {
+	-moz-appearance: textfield;
+}
+.gm-rfs-input-unit-label {
+	position: absolute;
+	right: 6px;
+	font-size: 10px;
+	font-weight: 600;
+	color: #94a3b8;
+	text-transform: lowercase;
+	pointer-events: none;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.gm-rfs-reset-btn {
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #94a3b8;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.gm-rfs-reset-btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+}
+.gm-rfs-reset-btn:hover {
+	color: #ef4444;
+	background: #fef2f2;
+}
+.gm-rfs-reset-btn:focus-visible {
+	outline: 2px solid #ef4444;
+	outline-offset: 1px;
+}
+
+/* Full-width custom-styled slider */
+.gm-rfs-slider-wrap {
+	width: 100%;
+	margin: 6px 0;
+	display: flex;
+	align-items: center;
+}
+.gm-rfs-range-slider {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 6px;
+	border-radius: 9999px;
+	background: linear-gradient(to right, #2563eb 0%, #2563eb var(--gm-rfs-progress, 0%), #e2e8f0 var(--gm-rfs-progress, 0%), #e2e8f0 100%);
+	outline: none;
+	margin: 4px 0;
+	cursor: pointer;
+	border: none !important;
+	padding: 0 !important;
+}
+.gm-rfs-range-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 2px solid #2563eb;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.gm-rfs-range-slider::-webkit-slider-thumb:hover {
+	transform: scale(1.15);
+	box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+}
+.gm-rfs-range-slider::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 2px solid #2563eb;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+}
+.gm-rfs-range-slider::-moz-range-track {
+	height: 6px;
+	border-radius: 9999px;
+	background: #e2e8f0;
+	border: none;
+}
+.gm-rfs-range-slider:focus-visible {
+	outline: 2px solid #2563eb;
+	outline-offset: 2px;
+}
+
+/* Status Footnotes (Inheritance / Custom Override) */
+.gm-rfs-status {
+	margin-top: 8px;
+	padding: 5px 8px;
+	border-radius: 6px;
+	font-size: 11px;
+	line-height: 1.35;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.gm-rfs-status--inherited {
+	background: #f8fafc;
+	border: 1px dashed #cbd5e1;
+	color: #64748b;
+}
+.gm-rfs-status--inherited .dashicons {
+	font-size: 12px;
+	width: 12px;
+	height: 12px;
+	color: #94a3b8;
+}
+.gm-rfs-status--inherited strong {
+	color: #0f172a;
+	font-weight: 600;
+}
+.gm-rfs-status--custom {
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1e40af;
+	justify-content: space-between;
+}
+.gm-rfs-status-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #2563eb;
+	display: inline-block;
+	flex-shrink: 0;
+}
+.gm-rfs-status-clear-btn {
+	border: none;
+	background: transparent;
+	color: #2563eb;
+	font-size: 11px;
+	font-weight: 600;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0;
+	margin-left: auto;
+}
+.gm-rfs-status-clear-btn:hover {
+	color: #1d4ed8;
+}
+
+/* ========================================================
+   Modern Compact Color Picker Control
+   ======================================================== */
+.gm-editor-color-field {
+	margin-bottom: 16px;
+}
+.gm-color-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+.gm-color-label {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #1e1e1e;
+	margin: 0;
+	white-space: nowrap;
+}
+.gm-color-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+.gm-color-swatch-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 3px 8px 3px 4px;
+	background: #ffffff;
+	border: 1px solid #cbd5e1;
+	border-radius: 9999px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.gm-color-swatch-btn:hover {
+	border-color: #94a3b8;
+	background: #f8fafc;
+}
+.gm-color-swatch-btn:focus-visible {
+	outline: 2px solid #2563eb;
+	outline-offset: 1px;
+}
+.gm-color-swatch-circle {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	display: inline-block;
+	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.gm-color-swatch-btn.is-empty .gm-color-swatch-circle {
+	background: repeating-conic-gradient(#e2e8f0 0% 25%, #ffffff 0% 50%) 50% / 8px 8px !important;
+}
+.gm-color-code {
+	font-size: 11px;
+	font-weight: 500;
+	color: #475569;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.gm-color-clear-btn {
+	width: 22px;
+	height: 22px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #94a3b8;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+.gm-color-clear-btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+}
+.gm-color-clear-btn:hover {
+	color: #ef4444;
+	background: #fef2f2;
+}
+.gm-color-popover .components-popover__content {
+	border-radius: 8px !important;
+	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+	border: 1px solid #e2e8f0 !important;
+	overflow: hidden;
+}
+.gm-color-popover-content {
+	padding: 12px;
+	width: 260px;
+	background: #ffffff;
+}
+.gm-color-popover-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1e1e1e;
+	margin-bottom: 10px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #f1f5f9;
+}
+.gm-color-popover-close-btn {
+	border: none;
+	background: transparent;
+	color: #94a3b8;
+	cursor: pointer;
+	padding: 2px;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.gm-color-popover-close-btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+.gm-color-popover-close-btn:hover {
+	color: #0f172a;
+	background: #f1f5f9;
+}

@@ -49,6 +49,7 @@ class Admin {
 		add_submenu_page( $parent_slug, __( 'Add New Grid', 'ajax-filter-posts' ), __( 'Add New Grid', 'ajax-filter-posts' ), $capability, 'gridmaster-builder', array( $this, 'builder_page' ) );
 		add_submenu_page( $parent_slug, __( 'Legacy Builder', 'ajax-filter-posts' ), __( 'Legacy Builder', 'ajax-filter-posts' ), $capability, admin_url( 'admin.php?page=gridmaster&path=build-grid' ) );
 		add_submenu_page( $parent_slug, __( 'Settings', 'ajax-filter-posts' ), __( 'Settings', 'ajax-filter-posts' ), $capability, admin_url( 'admin.php?page=gridmaster&path=settings' ) );
+		add_submenu_page( $parent_slug, __( 'Free vs Pro', 'ajax-filter-posts' ), __( 'Free vs Pro', 'ajax-filter-posts' ), $capability, admin_url( 'admin.php?page=gridmaster&path=free-vs-pro' ) );
 	}
 
 	/**
@@ -120,8 +121,9 @@ class Admin {
 	 * Enqueue scripts and styles.
 	 */
 	public function scripts() {
+		$admin_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
 
-		wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+		wp_enqueue_script( 'gridmaster-admin-script', GRIDMASTER_URL . '/admin/assets/admin.min.js', array( 'jquery' ), $admin_ver, true );
 		wp_localize_script(
 			'gridmaster-admin-script',
 			'gridmaster_params',
@@ -152,7 +154,7 @@ class Admin {
 		);
 
 		wp_enqueue_style( 'bootstrap-grid', GRIDMASTER_URL . '/admin/assets/bootstrap-grid.min.css', array(), GRIDMASTER_VERSION );
-		wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), GRIDMASTER_VERSION );
+		wp_enqueue_style( 'gridmaster-admin-style', GRIDMASTER_URL . '/admin/assets/admin.css', array(), $admin_ver );
 
 		if ( ! defined( 'GRIDMASTER_PRO_VERSION' ) ) {
 			wp_enqueue_style( 'gridmaster-admin-pro-block-style', GRIDMASTER_URL . '/admin/assets/block-pro-admin.min.css', array(), GRIDMASTER_VERSION );

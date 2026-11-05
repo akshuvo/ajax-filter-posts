@@ -80,18 +80,22 @@ class Blocks {
 			'title'          => array(
 				'callback'   => 'render_title',
 				'attributes' => array(
-					'tagName'  => array( 'type' => 'string', 'default' => 'h3' ),
-					'isLink'   => array( 'type' => 'boolean', 'default' => true ),
-					'fontSize' => array( 'type' => 'string', 'default' => '' ),
-					'color'    => array( 'type' => 'string', 'default' => '' ),
+					'tagName'        => array( 'type' => 'string', 'default' => 'h3' ),
+					'isLink'         => array( 'type' => 'boolean', 'default' => true ),
+					'fontSize'       => array( 'type' => 'string', 'default' => '20px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
+					'color'          => array( 'type' => 'string', 'default' => '' ),
 				),
 			),
 			'excerpt'        => array(
 				'callback'   => 'render_excerpt',
 				'attributes' => array(
-					'length'   => array( 'type' => 'number', 'default' => 20 ),
-					'fontSize' => array( 'type' => 'string', 'default' => '' ),
-					'color'    => array( 'type' => 'string', 'default' => '' ),
+					'length'         => array( 'type' => 'number', 'default' => 20 ),
+					'fontSize'       => array( 'type' => 'string', 'default' => '14px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
+					'color'          => array( 'type' => 'string', 'default' => '' ),
 				),
 			),
 			'read-more'      => array(
@@ -102,14 +106,19 @@ class Blocks {
 					'textColor'       => array( 'type' => 'string', 'default' => '' ),
 					'borderRadius'    => array( 'type' => 'string', 'default' => '' ),
 					'padding'         => array( 'type' => 'string', 'default' => '' ),
+					'fontSize'        => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeTablet'  => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile'  => array( 'type' => 'string', 'default' => '' ),
 				),
 			),
 			'post-date'      => array(
 				'callback'   => 'render_post_date',
 				'attributes' => array(
-					'format'   => array( 'type' => 'string', 'default' => '' ),
-					'fontSize' => array( 'type' => 'string', 'default' => '' ),
-					'color'    => array( 'type' => 'string', 'default' => '' ),
+					'format'         => array( 'type' => 'string', 'default' => '' ),
+					'fontSize'       => array( 'type' => 'string', 'default' => '13px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
+					'color'          => array( 'type' => 'string', 'default' => '' ),
 				),
 			),
 			'post-author'    => array(
@@ -142,6 +151,8 @@ class Blocks {
 					'suffix'         => array( 'type' => 'string', 'default' => 'min read' ),
 					'showIcon'       => array( 'type' => 'boolean', 'default' => true ),
 					'fontSize'       => array( 'type' => 'string', 'default' => '13px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
 					'color'          => array( 'type' => 'string', 'default' => '#6b7280' ),
 				),
 			),
@@ -163,6 +174,8 @@ class Blocks {
 					'onlyIfModified' => array( 'type' => 'boolean', 'default' => true ),
 					'minHoursDiff'   => array( 'type' => 'number', 'default' => 24 ),
 					'fontSize'       => array( 'type' => 'string', 'default' => '13px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
 					'color'          => array( 'type' => 'string', 'default' => '#6b7280' ),
 				),
 			),
@@ -194,6 +207,8 @@ class Blocks {
 					'backgroundColor' => array( 'type' => 'string', 'default' => '#ef4444' ),
 					'textColor'       => array( 'type' => 'string', 'default' => '#ffffff' ),
 					'fontSize'        => array( 'type' => 'string', 'default' => '11px' ),
+					'fontSizeTablet'  => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile'  => array( 'type' => 'string', 'default' => '' ),
 					'borderRadius'    => array( 'type' => 'string', 'default' => '9999px' ),
 					'padding'         => array( 'type' => 'string', 'default' => '3px 8px' ),
 				),
@@ -297,6 +312,72 @@ class Blocks {
 			return absint( $block->context['postId'] );
 		}
 		return get_the_ID();
+	}
+
+	/**
+	 * Sanitizes a CSS font-size value to a number plus an allowed unit.
+	 *
+	 * Bare numbers are treated as pixels. Anything else (keywords, calc(), injected CSS) is rejected.
+	 *
+	 * @param mixed $value Raw attribute value.
+	 * @return string Sanitized value such as "18px" or "1.25rem", or an empty string.
+	 */
+	public static function sanitize_font_size( $value ) {
+		if ( ! is_string( $value ) && ! is_numeric( $value ) ) {
+			return '';
+		}
+
+		$value = strtolower( trim( (string) $value ) );
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( is_numeric( $value ) ) {
+			$value .= 'px';
+		}
+
+		return preg_match( '/^(?:\d+(?:\.\d+)?|\.\d+)(?:px|em|rem|vw)$/', $value ) ? $value : '';
+	}
+
+	/**
+	 * Builds inline font-size CSS for the fontSize / fontSizeTablet / fontSizeMobile attributes.
+	 *
+	 * The desktop size is emitted as a normal inline `font-size`. Tablet and mobile sizes are
+	 * exposed as custom properties and applied by the `.gm-fs-tablet` / `.gm-fs-mobile` media
+	 * queries in frontend-v2.css. Empty tablet/mobile values inherit from the larger screen.
+	 *
+	 * @param array  $attributes Block attributes.
+	 * @param string $fallback   Desktop size to use when the attribute is empty.
+	 * @return array{style: string, class: string} Style declarations (with trailing semicolons) and classes.
+	 */
+	public static function get_font_size_css( $attributes, $fallback = '' ) {
+		$desktop = self::sanitize_font_size( isset( $attributes['fontSize'] ) ? $attributes['fontSize'] : '' );
+		$tablet  = self::sanitize_font_size( isset( $attributes['fontSizeTablet'] ) ? $attributes['fontSizeTablet'] : '' );
+		$mobile  = self::sanitize_font_size( isset( $attributes['fontSizeMobile'] ) ? $attributes['fontSizeMobile'] : '' );
+
+		if ( '' === $desktop ) {
+			$desktop = self::sanitize_font_size( $fallback );
+		}
+
+		$style   = '';
+		$classes = array();
+
+		if ( '' !== $desktop ) {
+			$style .= 'font-size:' . $desktop . ';';
+		}
+		if ( '' !== $tablet ) {
+			$style    .= '--gm-fs-tablet:' . $tablet . ';';
+			$classes[] = 'gm-fs-tablet';
+		}
+		if ( '' !== $mobile ) {
+			$style    .= '--gm-fs-mobile:' . $mobile . ';';
+			$classes[] = 'gm-fs-mobile';
+		}
+
+		return array(
+			'style' => $style,
+			'class' => implode( ' ', $classes ),
+		);
 	}
 
 	/**
@@ -409,14 +490,13 @@ class Blocks {
 		$is_link = ! isset( $attributes['isLink'] ) || (bool) $attributes['isLink'];
 		$title   = get_the_title( $post_id );
 
-		$style_parts = array();
-		if ( ! empty( $attributes['fontSize'] ) ) {
-			$style_parts[] = 'font-size:' . esc_attr( $attributes['fontSize'] );
-		}
+		$font_css = self::get_font_size_css( $attributes );
+		$style    = $font_css['style'];
 		if ( ! empty( $attributes['color'] ) ) {
-			$style_parts[] = 'color:' . esc_attr( $attributes['color'] );
+			$style .= 'color:' . $attributes['color'] . ';';
 		}
-		$style_attr = ! empty( $style_parts ) ? ' style="' . implode( ';', $style_parts ) . '"' : '';
+		$style_attr = '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '';
+		$classes    = trim( 'gm-field gm-field-title ' . $font_css['class'] );
 
 		if ( $is_link ) {
 			$inner = sprintf( '<a href="%s">%s</a>', esc_url( get_permalink( $post_id ) ), esc_html( $title ) );
@@ -424,7 +504,7 @@ class Blocks {
 			$inner = esc_html( $title );
 		}
 
-		return sprintf( '<%1$s class="gm-field gm-field-title"%2$s>%3$s</%1$s>', $tag, $style_attr, $inner );
+		return sprintf( '<%1$s class="%2$s"%3$s>%4$s</%1$s>', $tag, esc_attr( $classes ), $style_attr, $inner );
 	}
 
 	/**
@@ -449,20 +529,18 @@ class Blocks {
 			$text = wp_strip_all_tags( $post->post_content );
 		}
 
-		$trimmed   = wp_trim_words( $text, $length, '&hellip;' );
-		$font_size = ! empty( $attributes['fontSize'] ) ? sanitize_text_field( $attributes['fontSize'] ) : '';
-		$color     = ! empty( $attributes['color'] ) ? sanitize_hex_color( $attributes['color'] ) : '';
+		$trimmed  = wp_trim_words( $text, $length, '&hellip;' );
+		$font_css = self::get_font_size_css( $attributes );
+		$color    = ! empty( $attributes['color'] ) ? sanitize_hex_color( $attributes['color'] ) : '';
 
-		$style = '';
-		if ( ! empty( $font_size ) ) {
-			$style .= 'font-size:' . esc_attr( $font_size ) . ';';
-		}
+		$style = $font_css['style'];
 		if ( ! empty( $color ) ) {
-			$style .= 'color:' . esc_attr( $color ) . ';';
+			$style .= 'color:' . $color . ';';
 		}
-		$style_attr = ! empty( $style ) ? ' style="' . $style . '"' : '';
+		$style_attr = ! empty( $style ) ? ' style="' . esc_attr( $style ) . '"' : '';
+		$classes    = trim( 'gm-field gm-field-excerpt ' . $font_css['class'] );
 
-		return '<div class="gm-field gm-field-excerpt"' . $style_attr . '><p>' . wp_kses_post( $trimmed ) . '</p></div>';
+		return '<div class="' . esc_attr( $classes ) . '"' . $style_attr . '><p>' . wp_kses_post( $trimmed ) . '</p></div>';
 	}
 
 	/**
@@ -480,8 +558,9 @@ class Blocks {
 		$text_color = ! empty( $attributes['textColor'] ) ? sanitize_text_field( $attributes['textColor'] ) : '';
 		$radius     = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '';
 		$padding    = ! empty( $attributes['padding'] ) ? sanitize_text_field( $attributes['padding'] ) : '';
+		$font_css   = self::get_font_size_css( $attributes );
 
-		$btn_style = '';
+		$btn_style = $font_css['style'];
 		if ( ! empty( $bg_color ) ) {
 			$btn_style .= 'background-color:' . esc_attr( $bg_color ) . ';';
 		}
@@ -495,11 +574,13 @@ class Blocks {
 			$btn_style .= 'padding:' . esc_attr( $padding ) . ';';
 		}
 
-		$style_attr = ! empty( $btn_style ) ? ' style="' . $btn_style . '"' : '';
+		$style_attr = ! empty( $btn_style ) ? ' style="' . esc_attr( $btn_style ) . '"' : '';
+		$btn_class  = trim( 'gm-btn gm-btn-read-more ' . $font_css['class'] );
 
 		return sprintf(
-			'<div class="gm-field gm-field-read-more"><a href="%s" class="gm-btn gm-btn-read-more"%s>%s</a></div>',
+			'<div class="gm-field gm-field-read-more"><a href="%s" class="%s"%s>%s</a></div>',
 			esc_url( $url ),
+			esc_attr( $btn_class ),
 			$style_attr,
 			esc_html( $text )
 		);
@@ -514,22 +595,20 @@ class Blocks {
 			return '';
 		}
 
-		$format    = ! empty( $attributes['format'] ) ? sanitize_text_field( $attributes['format'] ) : get_option( 'date_format' );
-		$date      = get_the_date( $format, $post_id );
-		$font_size = ! empty( $attributes['fontSize'] ) ? sanitize_text_field( $attributes['fontSize'] ) : '';
-		$color     = ! empty( $attributes['color'] ) ? sanitize_hex_color( $attributes['color'] ) : '';
+		$format   = ! empty( $attributes['format'] ) ? sanitize_text_field( $attributes['format'] ) : get_option( 'date_format' );
+		$date     = get_the_date( $format, $post_id );
+		$font_css = self::get_font_size_css( $attributes );
+		$color    = ! empty( $attributes['color'] ) ? sanitize_hex_color( $attributes['color'] ) : '';
 
-		$style = '';
-		if ( ! empty( $font_size ) ) {
-			$style .= 'font-size:' . esc_attr( $font_size ) . ';';
-		}
+		$style = $font_css['style'];
 		if ( ! empty( $color ) ) {
-			$style .= 'color:' . esc_attr( $color ) . ';';
+			$style .= 'color:' . $color . ';';
 		}
-		$style_attr = ! empty( $style ) ? ' style="' . $style . '"' : '';
+		$style_attr = ! empty( $style ) ? ' style="' . esc_attr( $style ) . '"' : '';
 
 		return sprintf(
-			'<div class="gm-field gm-field-date"%s><time datetime="%s">%s</time></div>',
+			'<div class="%s"%s><time datetime="%s">%s</time></div>',
+			esc_attr( trim( 'gm-field gm-field-date ' . $font_css['class'] ) ),
 			$style_attr,
 			esc_attr( get_the_date( 'c', $post_id ) ),
 			esc_html( $date )
@@ -663,19 +742,19 @@ class Blocks {
 		$suffix    = ! empty( $attributes['suffix'] ) ? ' ' . esc_html( $attributes['suffix'] ) : ' min read';
 		$show_icon = ! isset( $attributes['showIcon'] ) || (bool) $attributes['showIcon'];
 
-		$style_parts = array();
-		if ( ! empty( $attributes['fontSize'] ) ) {
-			$style_parts[] = 'font-size:' . esc_attr( $attributes['fontSize'] );
-		}
+		$font_css = self::get_font_size_css( $attributes );
+		$style    = $font_css['style'];
 		if ( ! empty( $attributes['color'] ) ) {
-			$style_parts[] = 'color:' . esc_attr( $attributes['color'] );
+			$style .= 'color:' . $attributes['color'] . ';';
 		}
-		$style_attr = ! empty( $style_parts ) ? ' style="' . implode( ';', $style_parts ) . '"' : '';
+		$style_attr = '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '';
+		$classes    = esc_attr( trim( 'gm-field gm-field-reading-time ' . $font_css['class'] ) );
 
 		$icon_html = $show_icon ? '<span class="gm-icon gm-icon-clock" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span> ' : '';
 
 		return sprintf(
-			'<div class="gm-field gm-field-reading-time"%s>%s<span class="gm-reading-time-text">%s%d%s</span></div>',
+			'<div class="%s"%s>%s<span class="gm-reading-time-text">%s%d%s</span></div>',
+			$classes,
 			$style_attr,
 			$icon_html,
 			$prefix,
@@ -743,17 +822,17 @@ class Blocks {
 		$prefix = ! empty( $attributes['prefix'] ) ? esc_html( $attributes['prefix'] ) . ' ' : '';
 		$date_formatted = get_the_modified_date( $format, $post_id );
 
-		$style_parts = array();
-		if ( ! empty( $attributes['fontSize'] ) ) {
-			$style_parts[] = 'font-size:' . esc_attr( $attributes['fontSize'] );
-		}
+		$font_css = self::get_font_size_css( $attributes );
+		$style    = $font_css['style'];
 		if ( ! empty( $attributes['color'] ) ) {
-			$style_parts[] = 'color:' . esc_attr( $attributes['color'] );
+			$style .= 'color:' . $attributes['color'] . ';';
 		}
-		$style_attr = ! empty( $style_parts ) ? ' style="' . implode( ';', $style_parts ) . '"' : '';
+		$style_attr = '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '';
+		$classes    = esc_attr( trim( 'gm-field gm-field-modified-date ' . $font_css['class'] ) );
 
 		return sprintf(
-			'<div class="gm-field gm-field-modified-date"%s><span class="gm-date-prefix">%s</span><time datetime="%s">%s</time></div>',
+			'<div class="%s"%s><span class="gm-date-prefix">%s</span><time datetime="%s">%s</time></div>',
+			$classes,
 			$style_attr,
 			$prefix,
 			esc_attr( get_the_modified_date( 'c', $post_id ) ),
@@ -894,22 +973,23 @@ class Blocks {
 
 		$bg      = ! empty( $attributes['backgroundColor'] ) ? sanitize_text_field( $attributes['backgroundColor'] ) : '#ef4444';
 		$color   = ! empty( $attributes['textColor'] ) ? sanitize_hex_color( $attributes['textColor'] ) : '#ffffff';
-		$font    = ! empty( $attributes['fontSize'] ) ? sanitize_text_field( $attributes['fontSize'] ) : '11px';
-		$radius  = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '9999px';
-		$padding = ! empty( $attributes['padding'] ) ? sanitize_text_field( $attributes['padding'] ) : '3px 8px';
+		$font_css = self::get_font_size_css( $attributes, '11px' );
+		$radius   = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '9999px';
+		$padding  = ! empty( $attributes['padding'] ) ? sanitize_text_field( $attributes['padding'] ) : '3px 8px';
 
 		$style = sprintf(
-			'background-color:%s;color:%s;font-size:%s;border-radius:%s;padding:%s;',
-			esc_attr( $bg ),
-			esc_attr( $color ),
-			esc_attr( $font ),
-			esc_attr( $radius ),
-			esc_attr( $padding )
+			'background-color:%s;color:%s;%sborder-radius:%s;padding:%s;',
+			$bg,
+			$color,
+			$font_css['style'],
+			$radius,
+			$padding
 		);
 
 		return sprintf(
-			'<div class="gm-field gm-field-badge"><span class="gm-badge-tag" style="%s">%s</span></div>',
-			$style,
+			'<div class="gm-field gm-field-badge"><span class="%s" style="%s">%s</span></div>',
+			esc_attr( trim( 'gm-badge-tag ' . $font_css['class'] ) ),
+			esc_attr( $style ),
 			esc_html( $label )
 		);
 	}

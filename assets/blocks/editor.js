@@ -5,9 +5,9 @@
 	'use strict';
 
 	const { registerBlockType } = wp.blocks;
-	const { createElement: el, Fragment, useState } = wp.element;
+	const { createElement: el, Fragment, useState, useEffect, useRef } = wp.element;
 	const { InspectorControls, useBlockProps, InnerBlocks } = wp.blockEditor;
-	const { PanelBody, TextControl, TextareaControl, SelectControl, ToggleControl, RangeControl, ColorPalette } = wp.components;
+	const { PanelBody, TextControl, TextareaControl, SelectControl, ToggleControl, RangeControl, ColorPalette, Button, Popover } = wp.components;
 	const { __, sprintf } = wp.i18n;
 
 	const blockData = window.gridmasterBlockData || {};
@@ -19,18 +19,417 @@
 		return Number.isFinite( num ) ? num : defaultVal;
 	};
 
-	// Helper: clean UI Color control with label and Gutenberg ColorPalette
-	const renderColorControl = ( label, value, onChange ) => {
+	// Modern, compact Color Control with circular swatch, clear trigger, and popover
+	const ColorControl = ( { label, value, onChange } ) => {
+		const [ isOpen, setIsOpen ] = useState( false );
+		const anchorRef = useRef( null );
+
 		return el(
 			'div',
-			{ className: 'components-base-control gm-editor-color-field', style: { marginBottom: '16px' } },
-			el( 'label', { className: 'components-base-control__label', style: { display: 'block', marginBottom: '8px', fontWeight: '500', fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }, label ),
-			el( ColorPalette, {
-				value: value,
-				onChange: ( val ) => onChange( val || '' ),
-			} )
+			{ className: 'components-base-control gm-editor-color-field' },
+			el(
+				'div',
+				{ className: 'gm-color-row' },
+				el( 'label', { className: 'gm-color-label' }, label ),
+				el(
+					'div',
+					{ className: 'gm-color-actions' },
+					el(
+						'button',
+						{
+							ref: anchorRef,
+							type: 'button',
+							className: 'gm-color-swatch-btn' + ( ! value ? ' is-empty' : '' ),
+							onClick: () => setIsOpen( ! isOpen ),
+							'aria-expanded': isOpen,
+							'aria-label': sprintf( __( 'Select %s', 'ajax-filter-posts' ), label ),
+							title: value || __( 'Select color', 'ajax-filter-posts' ),
+						},
+						el( 'span', {
+							className: 'gm-color-swatch-circle',
+							style: { backgroundColor: value || 'transparent' },
+						} ),
+						el( 'span', { className: 'gm-color-code' }, value ? value : __( 'Default', 'ajax-filter-posts' ) )
+					),
+					value &&
+						el(
+							'button',
+							{
+								type: 'button',
+								className: 'gm-color-clear-btn',
+								onClick: () => onChange( '' ),
+								title: __( 'Clear color (reset to default)', 'ajax-filter-posts' ),
+								'aria-label': __( 'Clear color', 'ajax-filter-posts' ),
+							},
+							el( 'span', { className: 'dashicons dashicons-no-alt' } )
+						)
+				)
+			),
+			isOpen &&
+				el(
+					Popover,
+					{
+						anchor: anchorRef.current,
+						onClose: () => setIsOpen( false ),
+						position: 'bottom right',
+						className: 'gm-color-popover',
+					},
+					el(
+						'div',
+						{ className: 'gm-color-popover-content' },
+						el(
+							'div',
+							{ className: 'gm-color-popover-title' },
+							el( 'span', null, label ),
+							el(
+								'button',
+								{
+									type: 'button',
+									className: 'gm-color-popover-close-btn',
+									onClick: () => setIsOpen( false ),
+									'aria-label': __( 'Close', 'ajax-filter-posts' ),
+								},
+								el( 'span', { className: 'dashicons dashicons-no-alt' } )
+							)
+						),
+						el( ColorPalette, {
+							value: value,
+							onChange: ( val ) => onChange( val || '' ),
+						} )
+					)
+				)
 		);
 	};
+
+	// Helper: clean UI Color control with label and Gutenberg ColorPalette
+	const renderColorControl = ( label, value, onChange ) => {
+		return el( ColorControl, { label, value, onChange } );
+	};
+
+	// ------------------------------------------
+	// Responsive font size (device + unit aware)
+	// ------------------------------------------
+
+	// Supported units: slider ranges plus an approximate px factor used when converting between units.
+	const FONT_SIZE_UNITS = {
+		px: { min: 8, max: 120, step: 1, factor: 1 },
+		em: { min: 0.5, max: 8, step: 0.05, factor: 16 },
+		rem: { min: 0.5, max: 8, step: 0.05, factor: 16 },
+		vw: { min: 0.5, max: 15, step: 0.1, factor: 14.4 },
+	};
+
+	// Breakpoints must stay in sync with the responsive font-size rules in assets/css/frontend-v2.css.
+	const RESPONSIVE_DEVICES = [
+		{ key: 'desktop', attr: 'fontSize', icon: 'desktop', label: __( 'Desktop', 'ajax-filter-posts' ) },
+		{ key: 'tablet', attr: 'fontSizeTablet', icon: 'tablet', label: __( 'Tablet (991px and below)', 'ajax-filter-posts' ) },
+		{ key: 'mobile', attr: 'fontSizeMobile', icon: 'smartphone', label: __( 'Mobile (767px and below)', 'ajax-filter-posts' ) },
+	];
+
+	// Shared attribute definitions for blocks that use ResponsiveFontSizeControl.
+	const responsiveFontSizeAttributes = ( desktopDefault ) => ( {
+		fontSize: { type: 'string', default: desktopDefault },
+		fontSizeTablet: { type: 'string', default: '' },
+		fontSizeMobile: { type: 'string', default: '' },
+	} );
+
+	// Helper: split a CSS size such as "1.25rem" into { num, unit }. Bare numbers are treated as px.
+	const parseCssSize = ( val ) => {
+		const match = /^\s*(\d*\.?\d+)\s*(px|em|rem|vw)?\s*$/i.exec( val === undefined || val === null ? '' : String( val ) );
+		if ( ! match ) {
+			return null;
+		}
+		return { num: parseFloat( match[ 1 ] ), unit: ( match[ 2 ] || 'px' ).toLowerCase() };
+	};
+
+	const roundToStep = ( num, step ) => {
+		const decimals = ( String( step ).split( '.' )[ 1 ] || '' ).length;
+		return parseFloat( ( Math.round( num / step ) * step ).toFixed( decimals ) );
+	};
+
+	// Helper: convert a parsed size into another unit (approximate for em/rem/vw).
+	const convertCssSize = ( parsed, toUnit ) => {
+		if ( ! parsed ) {
+			return undefined;
+		}
+		if ( parsed.unit === toUnit ) {
+			return parsed.num;
+		}
+		const from = FONT_SIZE_UNITS[ parsed.unit ] || FONT_SIZE_UNITS.px;
+		const to = FONT_SIZE_UNITS[ toUnit ] || FONT_SIZE_UNITS.px;
+		return roundToStep( ( parsed.num * from.factor ) / to.factor, to.step );
+	};
+
+	// Shared editor device, so every responsive control and the canvas preview switch together.
+	const editorDevice = { current: 'desktop', listeners: new Set() };
+	const setEditorDevice = ( device ) => {
+		editorDevice.current = device;
+		editorDevice.listeners.forEach( ( listener ) => listener( device ) );
+	};
+	const useEditorDevice = () => {
+		const [ device, setDevice ] = useState( editorDevice.current );
+		useEffect( () => {
+			editorDevice.listeners.add( setDevice );
+			setDevice( editorDevice.current );
+			return () => {
+				editorDevice.listeners.delete( setDevice );
+			};
+		}, [] );
+		return device;
+	};
+
+	// Helper: resolve the font size shown on a device, cascading mobile → tablet → desktop like the frontend.
+	const getResponsiveFontSize = ( attributes, device, fallback ) => {
+		let chain = [ 'fontSize' ];
+		if ( device === 'tablet' ) {
+			chain = [ 'fontSizeTablet', 'fontSize' ];
+		} else if ( device === 'mobile' ) {
+			chain = [ 'fontSizeMobile', 'fontSizeTablet', 'fontSize' ];
+		}
+		for ( let i = 0; i < chain.length; i++ ) {
+			if ( attributes[ chain[ i ] ] ) {
+				return attributes[ chain[ i ] ];
+			}
+		}
+		return fallback || undefined;
+	};
+
+	/**
+	 * Component: font size slider with a Desktop/Tablet/Mobile switcher and px/em/rem/vw unit selector.
+	 *
+	 * Stores values (number + unit) in `fontSize`, `fontSizeTablet` and `fontSizeMobile`.
+	 * Empty tablet/mobile values inherit from the next larger device.
+	 */
+	const ResponsiveFontSizeControl = ( { label, attributes, setAttributes, defaultValue = '', pxMin, pxMax } ) => {
+		const device = useEditorDevice();
+		const [ pendingUnits, setPendingUnits ] = useState( {} );
+
+		const activeDevice = RESPONSIVE_DEVICES.find( ( d ) => d.key === device ) || RESPONSIVE_DEVICES[ 0 ];
+		const parsedOwn = parseCssSize( attributes[ activeDevice.attr ] );
+		const isOverridden = Boolean( parsedOwn );
+
+		let inheritedValue = defaultValue;
+		if ( device === 'tablet' ) {
+			inheritedValue = getResponsiveFontSize( attributes, 'desktop', defaultValue );
+		} else if ( device === 'mobile' ) {
+			inheritedValue = getResponsiveFontSize( attributes, 'tablet', defaultValue );
+		}
+		const parsedInherited = parseCssSize( inheritedValue ) || { num: 16, unit: 'px' };
+
+		const unit = parsedOwn ? parsedOwn.unit : ( pendingUnits[ device ] || ( parsedInherited ? parsedInherited.unit : 'px' ) );
+		const unitConfig = FONT_SIZE_UNITS[ unit ] || FONT_SIZE_UNITS.px;
+		const min = 'px' === unit && pxMin ? pxMin : unitConfig.min;
+		const max = 'px' === unit && pxMax ? pxMax : unitConfig.max;
+		const clamp = ( num ) => Math.min( max, Math.max( min, num ) );
+
+		const setDeviceValue = ( next ) => setAttributes( { [ activeDevice.attr ]: next } );
+
+		const onReset = () => {
+			if ( 'desktop' === device ) {
+				setDeviceValue( defaultValue );
+			} else {
+				setDeviceValue( '' );
+			}
+			setPendingUnits( ( prev ) => {
+				const next = { ...prev };
+				delete next[ device ];
+				return next;
+			} );
+		};
+
+		const onSliderChange = ( e ) => {
+			const val = parseFloat( e.target.value );
+			if ( ! Number.isNaN( val ) ) {
+				setDeviceValue( val + unit );
+			}
+		};
+
+		const onInputChange = ( e ) => {
+			const val = e.target.value;
+			if ( val === '' ) {
+				onReset();
+				return;
+			}
+			const num = parseFloat( val );
+			if ( ! Number.isNaN( num ) ) {
+				setDeviceValue( num + unit );
+			}
+		};
+
+		const onUnitChange = ( nextUnit ) => {
+			if ( nextUnit === unit ) {
+				return;
+			}
+			if ( parsedOwn ) {
+				const nextConfig = FONT_SIZE_UNITS[ nextUnit ];
+				const nextMin = 'px' === nextUnit && pxMin ? pxMin : nextConfig.min;
+				const nextMax = 'px' === nextUnit && pxMax ? pxMax : nextConfig.max;
+				const converted = Math.min( nextMax, Math.max( nextMin, convertCssSize( parsedOwn, nextUnit ) ) );
+				setDeviceValue( converted + nextUnit );
+			} else {
+				setPendingUnits( Object.assign( {}, pendingUnits, { [ device ]: nextUnit } ) );
+			}
+		};
+
+		const currentNum = parsedOwn ? parsedOwn.num : convertCssSize( parsedInherited, unit );
+		const sliderValue = currentNum !== undefined ? clamp( currentNum ) : min;
+		const progressPercent = Math.max( 0, Math.min( 100, ( ( sliderValue - min ) / ( ( max - min ) || 1 ) ) * 100 ) );
+
+		const hasCustomValue = 'desktop' === device
+			? ( parsedOwn && parsedOwn.num !== parseCssSize( defaultValue )?.num )
+			: isOverridden;
+
+		return el(
+			'div',
+			{ className: 'gm-responsive-font-size-control' },
+
+			// 1. Header: Label (never wraps) + Device Switcher
+			el(
+				'div',
+				{ className: 'gm-rfs-header' },
+				el( 'label', { className: 'gm-rfs-label' }, label ),
+				el(
+					'div',
+					{ className: 'gm-rfs-devices', role: 'group', 'aria-label': __( 'Preview device', 'ajax-filter-posts' ) },
+					RESPONSIVE_DEVICES.map( ( d ) => {
+						const hasDeviceOverride = 'desktop' !== d.key && Boolean( attributes[ d.attr ] );
+						const isActive = device === d.key;
+						return el(
+							'button',
+							{
+								key: d.key,
+								type: 'button',
+								className: 'gm-rfs-device-btn' + ( isActive ? ' is-active' : '' ) + ( hasDeviceOverride ? ' has-override' : '' ),
+								onClick: () => setEditorDevice( d.key ),
+								title: d.label,
+								'aria-pressed': isActive,
+								'aria-label': d.label,
+							},
+							el( 'span', { className: 'dashicons dashicons-' + ( d.key === 'desktop' ? 'desktop' : ( d.key === 'tablet' ? 'tablet' : 'smartphone' ) ) } ),
+							hasDeviceOverride && el( 'span', { className: 'gm-rfs-override-dot', title: __( 'Custom override active', 'ajax-filter-posts' ) } )
+						);
+					} )
+				)
+			),
+
+			// 2. Toolbar: Units (left) + Number input & Reset (right)
+			el(
+				'div',
+				{ className: 'gm-rfs-toolbar' },
+				el(
+					'div',
+					{ className: 'gm-rfs-units', role: 'group', 'aria-label': __( 'Font size unit', 'ajax-filter-posts' ) },
+					[ 'px', 'rem', 'em', 'vw' ].map( ( u ) =>
+						el(
+							'button',
+							{
+								key: u,
+								type: 'button',
+								className: 'gm-rfs-unit-btn' + ( u === unit ? ' is-active' : '' ),
+								'aria-pressed': u === unit,
+								onClick: () => onUnitChange( u ),
+							},
+							u.toUpperCase()
+						)
+					)
+				),
+				el(
+					'div',
+					{ className: 'gm-rfs-input-group' },
+					el(
+						'div',
+						{ className: 'gm-rfs-input-wrapper' },
+						el( 'input', {
+							type: 'number',
+							className: 'gm-rfs-number-input',
+							value: parsedOwn ? parsedOwn.num : '',
+							placeholder: currentNum !== undefined ? String( currentNum ) : '',
+							min: min,
+							max: max,
+							step: unitConfig.step,
+							onChange: onInputChange,
+							'aria-label': sprintf( __( '%s value in %s', 'ajax-filter-posts' ), label, unit ),
+						} ),
+						el( 'span', { className: 'gm-rfs-input-unit-label' }, unit )
+					),
+					hasCustomValue &&
+						el(
+							'button',
+							{
+								type: 'button',
+								className: 'gm-rfs-reset-btn',
+								onClick: onReset,
+								title: 'desktop' === device ? __( 'Reset to default', 'ajax-filter-posts' ) : __( 'Reset to inherit', 'ajax-filter-posts' ),
+								'aria-label': __( 'Reset value', 'ajax-filter-posts' ),
+							},
+							el( 'span', { className: 'dashicons dashicons-image-rotate' } )
+						)
+				)
+			),
+
+			// 3. Slider: full-width, smooth, modern
+			el(
+				'div',
+				{ className: 'gm-rfs-slider-wrap' },
+				el( 'input', {
+					type: 'range',
+					className: 'gm-rfs-range-slider',
+					min: min,
+					max: max,
+					step: unitConfig.step,
+					value: sliderValue,
+					style: {
+						'--gm-rfs-progress': progressPercent + '%',
+					},
+					onChange: onSliderChange,
+					'aria-label': sprintf( __( '%s slider', 'ajax-filter-posts' ), label ),
+				} )
+			),
+
+			// 4. Inheritance / Override status badge
+			'desktop' !== device && (
+				! isOverridden
+					? el(
+							'div',
+							{ className: 'gm-rfs-status gm-rfs-status--inherited' },
+							el( 'span', { className: 'dashicons dashicons-arrow-down-alt2', 'aria-hidden': true } ),
+							el( 'span', null,
+								__( 'Inherits ', 'ajax-filter-posts' ),
+								el( 'strong', null, inheritedValue ),
+								__( ' from ', 'ajax-filter-posts' ),
+								el( 'strong', null, device === 'mobile' && attributes.fontSizeTablet ? __( 'Tablet', 'ajax-filter-posts' ) : __( 'Desktop', 'ajax-filter-posts' ) )
+							)
+					  )
+					: el(
+							'div',
+							{ className: 'gm-rfs-status gm-rfs-status--custom' },
+							el( 'span', { className: 'gm-rfs-status-dot' } ),
+							el( 'span', null,
+								sprintf( __( 'Custom %s size for %s', 'ajax-filter-posts' ), unit.toUpperCase(), activeDevice.label )
+							),
+							el(
+								'button',
+								{
+									type: 'button',
+									className: 'gm-rfs-status-clear-btn',
+									onClick: onReset,
+								},
+								__( 'Clear override', 'ajax-filter-posts' )
+							)
+					  )
+			)
+		);
+	};
+
+	// Allow Pro and add-ons to reuse the same responsive font size control.
+	window.gridmasterBlockControls = Object.assign( window.gridmasterBlockControls || {}, {
+		ResponsiveFontSizeControl,
+		responsiveFontSizeAttributes,
+		getResponsiveFontSize,
+		useEditorDevice,
+		setEditorDevice,
+		renderColorControl,
+		ColorControl,
+	} );
 
 	// Helper: Format a JavaScript Date according to PHP date() format string tokens
 	const formatPhpDate = ( formatStr, date = new Date( 2026, 10, 5, 14, 30 ) ) => {
@@ -672,15 +1071,18 @@
 		title: __( 'Post Title', 'ajax-filter-posts' ),
 		icon: 'heading',
 		category: 'theme',
-		attributes: {
-			tagName: { type: 'string', default: 'h3' },
-			fontSize: { type: 'string', default: '20px' },
-			color: { type: 'string', default: '' },
-			isLink: { type: 'boolean', default: true },
-		},
+		attributes: Object.assign(
+			{ tagName: { type: 'string', default: 'h3' } },
+			responsiveFontSizeAttributes( '20px' ),
+			{
+				color: { type: 'string', default: '' },
+				isLink: { type: 'boolean', default: true },
+			}
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-title' } );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -705,13 +1107,13 @@
 							],
 							onChange: function ( val ) { setAttributes( { tagName: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 20 ),
-							min: 12,
-							max: 64,
-							step: 1,
-							onChange: function ( val ) { setAttributes( { fontSize: val ? val + 'px' : '' } ); },
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '20px',
+							pxMin: 10,
+							pxMax: 96,
 						} ),
 						renderColorControl(
 							__( 'Text Color', 'ajax-filter-posts' ),
@@ -728,7 +1130,7 @@
 				el(
 					'div',
 					blockProps,
-					el( attributes.tagName, { style: { fontSize: attributes.fontSize, color: attributes.color || 'inherit', margin: 0 } }, __( 'Sample Post Title', 'ajax-filter-posts' ) )
+					el( attributes.tagName, { style: { fontSize: getResponsiveFontSize( attributes, device ), color: attributes.color || 'inherit', margin: 0 } }, __( 'Sample Post Title', 'ajax-filter-posts' ) )
 				)
 			);
 		},
@@ -743,14 +1145,15 @@
 		title: __( 'Post Excerpt', 'ajax-filter-posts' ),
 		icon: 'excerpt-view',
 		category: 'theme',
-		attributes: {
-			length: { type: 'number', default: 20 },
-			fontSize: { type: 'string', default: '14px' },
-			color: { type: 'string', default: '' },
-		},
+		attributes: Object.assign(
+			{ length: { type: 'number', default: 20 } },
+			responsiveFontSizeAttributes( '14px' ),
+			{ color: { type: 'string', default: '' } }
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-excerpt' } );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -768,12 +1171,13 @@
 							max: 100,
 							onChange: function ( val ) { setAttributes( { length: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 14 ),
-							min: 10,
-							max: 32,
-							onChange: ( val ) => setAttributes( { fontSize: val + 'px' } ),
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '14px',
+							pxMin: 10,
+							pxMax: 40,
 						} ),
 						renderColorControl(
 							__( 'Text Color', 'ajax-filter-posts' ),
@@ -785,7 +1189,7 @@
 				el(
 					'div',
 					blockProps,
-					el( 'p', { style: { color: attributes.color || '#6b7280', fontSize: attributes.fontSize || '14px', margin: 0 } }, __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...', 'ajax-filter-posts' ) )
+					el( 'p', { style: { color: attributes.color || '#6b7280', fontSize: getResponsiveFontSize( attributes, device, '14px' ), margin: 0 } }, __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...', 'ajax-filter-posts' ) )
 				)
 			);
 		},
@@ -800,16 +1204,20 @@
 		title: __( 'Read More Button', 'ajax-filter-posts' ),
 		icon: 'button',
 		category: 'theme',
-		attributes: {
-			text: { type: 'string', default: __( 'Read More', 'ajax-filter-posts' ) },
-			backgroundColor: { type: 'string', default: '' },
-			textColor: { type: 'string', default: '' },
-			borderRadius: { type: 'string', default: '' },
-			padding: { type: 'string', default: '' },
-		},
+		attributes: Object.assign(
+			{
+				text: { type: 'string', default: __( 'Read More', 'ajax-filter-posts' ) },
+				backgroundColor: { type: 'string', default: '' },
+				textColor: { type: 'string', default: '' },
+				borderRadius: { type: 'string', default: '' },
+				padding: { type: 'string', default: '' },
+			},
+			responsiveFontSizeAttributes( '14px' )
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-read-more' } );
+			const device = useEditorDevice();
 
 			const btnStyle = {
 				display: 'inline-flex',
@@ -820,7 +1228,7 @@
 				color: attributes.textColor || '#ffffff',
 				borderRadius: attributes.borderRadius || '6px',
 				fontWeight: '500',
-				fontSize: '14px',
+				fontSize: getResponsiveFontSize( attributes, device, '14px' ),
 				textDecoration: 'none',
 				lineHeight: '1.4',
 			};
@@ -838,6 +1246,14 @@
 							label: __( 'Button Text', 'ajax-filter-posts' ),
 							value: attributes.text,
 							onChange: function ( val ) { setAttributes( { text: val } ); },
+						} ),
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '14px',
+							pxMin: 10,
+							pxMax: 36,
 						} ),
 						el( RangeControl, {
 							label: __( 'Border Radius (px)', 'ajax-filter-posts' ),
@@ -876,15 +1292,16 @@
 		title: __( 'Post Date', 'ajax-filter-posts' ),
 		icon: 'calendar-alt',
 		category: 'theme',
-		attributes: {
-			format: { type: 'string', default: 'F j, Y' },
-			fontSize: { type: 'string', default: '13px' },
-			color: { type: 'string', default: '' },
-		},
+		attributes: Object.assign(
+			{ format: { type: 'string', default: 'F j, Y' } },
+			responsiveFontSizeAttributes( '13px' ),
+			{ color: { type: 'string', default: '' } }
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-date' } );
 			const formattedDate = formatPhpDate( attributes.format || 'F j, Y' );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -900,12 +1317,13 @@
 							value: attributes.format,
 							onChange: function ( val ) { setAttributes( { format: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 13 ),
-							min: 10,
-							max: 24,
-							onChange: ( val ) => setAttributes( { fontSize: val + 'px' } ),
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '13px',
+							pxMin: 9,
+							pxMax: 32,
 						} ),
 						renderColorControl(
 							__( 'Date Color', 'ajax-filter-posts' ),
@@ -917,7 +1335,7 @@
 				el(
 					'div',
 					blockProps,
-					el( 'span', { style: { fontSize: attributes.fontSize || '13px', color: attributes.color || '#9ca3af' } }, el( 'span', { className: 'dashicons dashicons-calendar-alt' } ), ' ' + ( formattedDate || 'November 5, 2026' ) )
+					el( 'span', { style: { fontSize: getResponsiveFontSize( attributes, device, '13px' ), color: attributes.color || '#9ca3af' } }, el( 'span', { className: 'dashicons dashicons-calendar-alt' } ), ' ' + ( formattedDate || 'November 5, 2026' ) )
 				)
 			);
 		},
@@ -1066,17 +1484,20 @@
 		title: __( 'Reading Time', 'ajax-filter-posts' ),
 		icon: 'clock',
 		category: 'theme',
-		attributes: {
-			wordsPerMinute: { type: 'number', default: 200 },
-			prefix: { type: 'string', default: '' },
-			suffix: { type: 'string', default: 'min read' },
-			showIcon: { type: 'boolean', default: true },
-			fontSize: { type: 'string', default: '13px' },
-			color: { type: 'string', default: '#6b7280' },
-		},
+		attributes: Object.assign(
+			{
+				wordsPerMinute: { type: 'number', default: 200 },
+				prefix: { type: 'string', default: '' },
+				suffix: { type: 'string', default: 'min read' },
+				showIcon: { type: 'boolean', default: true },
+			},
+			responsiveFontSizeAttributes( '13px' ),
+			{ color: { type: 'string', default: '#6b7280' } }
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-reading-time' } );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -1110,13 +1531,13 @@
 							checked: attributes.showIcon,
 							onChange: function ( val ) { setAttributes( { showIcon: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 13 ),
-							min: 10,
-							max: 32,
-							step: 1,
-							onChange: function ( val ) { setAttributes( { fontSize: val + 'px' } ); },
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '13px',
+							pxMin: 9,
+							pxMax: 32,
 						} ),
 						renderColorControl(
 							__( 'Text Color', 'ajax-filter-posts' ),
@@ -1130,7 +1551,7 @@
 					blockProps,
 					el(
 						'span',
-						{ style: { fontSize: attributes.fontSize, color: attributes.color, display: 'inline-flex', alignItems: 'center', gap: '4px' } },
+						{ style: { fontSize: getResponsiveFontSize( attributes, device ), color: attributes.color, display: 'inline-flex', alignItems: 'center', gap: '4px' } },
 						attributes.showIcon && el( 'span', { className: 'dashicons dashicons-clock' } ),
 						( attributes.prefix ? attributes.prefix + ' ' : '' ) + '5 ' + ( attributes.suffix || 'min read' )
 					)
@@ -1225,18 +1646,21 @@
 		title: __( 'Modified Date', 'ajax-filter-posts' ),
 		icon: 'update',
 		category: 'theme',
-		attributes: {
-			format: { type: 'string', default: 'F j, Y' },
-			prefix: { type: 'string', default: 'Updated on' },
-			onlyIfModified: { type: 'boolean', default: true },
-			minHoursDiff: { type: 'number', default: 24 },
-			fontSize: { type: 'string', default: '13px' },
-			color: { type: 'string', default: '#6b7280' },
-		},
+		attributes: Object.assign(
+			{
+				format: { type: 'string', default: 'F j, Y' },
+				prefix: { type: 'string', default: 'Updated on' },
+				onlyIfModified: { type: 'boolean', default: true },
+				minHoursDiff: { type: 'number', default: 24 },
+			},
+			responsiveFontSizeAttributes( '13px' ),
+			{ color: { type: 'string', default: '#6b7280' } }
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-modified-date' } );
 			const formattedDate = formatPhpDate( attributes.format || 'F j, Y' );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -1257,13 +1681,13 @@
 							value: attributes.format,
 							onChange: function ( val ) { setAttributes( { format: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 13 ),
-							min: 10,
-							max: 32,
-							step: 1,
-							onChange: function ( val ) { setAttributes( { fontSize: val + 'px' } ); },
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '13px',
+							pxMin: 9,
+							pxMax: 32,
 						} ),
 						renderColorControl(
 							__( 'Text Color', 'ajax-filter-posts' ),
@@ -1282,7 +1706,7 @@
 					blockProps,
 					el(
 						'span',
-						{ style: { fontSize: attributes.fontSize, color: attributes.color, display: 'inline-flex', alignItems: 'center', gap: '4px' } },
+						{ style: { fontSize: getResponsiveFontSize( attributes, device ), color: attributes.color, display: 'inline-flex', alignItems: 'center', gap: '4px' } },
 						el( 'span', { className: 'dashicons dashicons-update' } ),
 						( attributes.prefix ? attributes.prefix + ' ' : '' ) + ( formattedDate || 'November 5, 2026' )
 					)
@@ -1417,19 +1841,24 @@
 		title: __( 'Custom Badge', 'ajax-filter-posts' ),
 		icon: 'tag',
 		category: 'theme',
-		attributes: {
-			text: { type: 'string', default: 'Featured' },
-			badgeType: { type: 'string', default: 'static' },
-			metaKey: { type: 'string', default: '' },
-			backgroundColor: { type: 'string', default: '#ef4444' },
-			textColor: { type: 'string', default: '#ffffff' },
-			fontSize: { type: 'string', default: '11px' },
-			borderRadius: { type: 'string', default: '9999px' },
-			padding: { type: 'string', default: '3px 8px' },
-		},
+		attributes: Object.assign(
+			{
+				text: { type: 'string', default: 'Featured' },
+				badgeType: { type: 'string', default: 'static' },
+				metaKey: { type: 'string', default: '' },
+				backgroundColor: { type: 'string', default: '#ef4444' },
+				textColor: { type: 'string', default: '#ffffff' },
+			},
+			responsiveFontSizeAttributes( '11px' ),
+			{
+				borderRadius: { type: 'string', default: '9999px' },
+				padding: { type: 'string', default: '3px 8px' },
+			}
+		),
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
 			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-badge' } );
+			const device = useEditorDevice();
 
 			return el(
 				Fragment,
@@ -1459,13 +1888,13 @@
 							value: attributes.metaKey,
 							onChange: function ( val ) { setAttributes( { metaKey: val } ); },
 						} ),
-						el( RangeControl, {
-							label: __( 'Font Size (px)', 'ajax-filter-posts' ),
-							value: parsePx( attributes.fontSize, 11 ),
-							min: 9,
-							max: 24,
-							step: 1,
-							onChange: function ( val ) { setAttributes( { fontSize: val + 'px' } ); },
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '11px',
+							pxMin: 8,
+							pxMax: 32,
 						} ),
 						el( SelectControl, {
 							label: __( 'Corner Style', 'ajax-filter-posts' ),
@@ -1502,7 +1931,7 @@
 								background: attributes.backgroundColor,
 								color: attributes.textColor,
 								borderRadius: attributes.borderRadius,
-								fontSize: attributes.fontSize,
+								fontSize: getResponsiveFontSize( attributes, device, '11px' ),
 								fontWeight: 'bold',
 								lineHeight: '1',
 								textTransform: 'uppercase',
