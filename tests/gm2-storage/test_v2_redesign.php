@@ -60,6 +60,7 @@ class V2_Test_Runner {
 		$this->test_pro_extension_contract();
 		$this->test_multiple_grids_isolation();
 		$this->test_resilience_and_permissions();
+		$this->test_accessible_slider();
 
 		echo "\n=========================================================\n";
 		echo "Results: {$this->passes} passed, {$this->failures} failed\n";
@@ -186,6 +187,14 @@ class V2_Test_Runner {
 		$this->assert( $reg->is_registered( 'gridmaster/post-author' ), 'gridmaster/post-author is registered' );
 		$this->assert( $reg->is_registered( 'gridmaster/post-terms' ), 'gridmaster/post-terms is registered' );
 		$this->assert( $reg->is_registered( 'gridmaster/grid' ), 'gridmaster/grid embed block is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/reading-time' ), 'gridmaster/reading-time is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/author-avatar' ), 'gridmaster/author-avatar is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/modified-date' ), 'gridmaster/modified-date is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/post-format-icon' ), 'gridmaster/post-format-icon is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/social-share' ), 'gridmaster/social-share is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/badge' ), 'gridmaster/badge is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/shortcode' ), 'gridmaster/shortcode is registered' );
+		$this->assert( $reg->is_registered( 'gridmaster/html' ), 'gridmaster/html is registered' );
 
 		// Test block context rendering with a sample post
 		$posts = get_posts( array( 'post_type' => 'post', 'numberposts' => 5 ) );
@@ -207,6 +216,103 @@ class V2_Test_Runner {
 			$html = Grid_Renderer::render_block_with_context( $block, $target_post->ID, $target_post->post_type, 1 );
 			$this->assert( strpos( $html, get_the_title( $target_post->ID ) ) !== false, 'Title block renders correct contextual post title' );
 			$this->assert( strpos( $html, '<h2' ) !== false, 'Title block honors tagName attribute' );
+
+			// Test reading-time render
+			$rt_block = array(
+				'blockName'   => 'gridmaster/reading-time',
+				'attrs'       => array( 'suffix' => 'minutes to read' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$rt_html = Grid_Renderer::render_block_with_context( $rt_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $rt_html, 'gm-field-reading-time' ) !== false, 'Reading time block renders field container' );
+			$this->assert( strpos( $rt_html, 'minutes to read' ) !== false, 'Reading time block honors custom suffix attribute' );
+
+			// Test social-share render
+			$share_block = array(
+				'blockName'   => 'gridmaster/social-share',
+				'attrs'       => array(),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$share_html = Grid_Renderer::render_block_with_context( $share_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $share_html, 'gm-field-social-share' ) !== false, 'Social share block renders share container' );
+			$this->assert( strpos( $share_html, 'gm-share-twitter' ) !== false, 'Social share renders Twitter/X share button' );
+
+			// Test shortcode block render with {post_id} replacement
+			$sc_block = array(
+				'blockName'   => 'gridmaster/shortcode',
+				'attrs'       => array( 'shortcode' => 'Custom ID: {post_id}' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$sc_html = Grid_Renderer::render_block_with_context( $sc_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $sc_html, 'Custom ID: ' . $target_post->ID ) !== false, 'Shortcode block interpolates {post_id}' );
+
+			// Test HTML block render with dynamic tag interpolation
+			$html_block = array(
+				'blockName'   => 'gridmaster/html',
+				'attrs'       => array( 'content' => '<span class="test-tag" data-id="{id}">{title}</span>' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$html_res = Grid_Renderer::render_block_with_context( $html_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $html_res, 'data-id="' . $target_post->ID . '"' ) !== false, 'HTML block interpolates {id}' );
+			$this->assert( strpos( $html_res, get_the_title( $target_post->ID ) ) !== false, 'HTML block interpolates {title}' );
+
+			// Test core/html block render with dynamic tag replacement
+			$core_html_block = array(
+				'blockName'   => 'core/html',
+				'attrs'       => array(),
+				'innerBlocks' => array(),
+				'innerHTML'   => '<div class="core-box">{post_id}</div>',
+			);
+			$core_html_res = Grid_Renderer::render_block_with_context( $core_html_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $core_html_res, '<div class="core-box">' . $target_post->ID . '</div>' ) !== false, 'core/html replaces {post_id}' );
+
+			// Test card layout modes (horizontal, overlay)
+			$card_horiz = array(
+				'blockName'   => 'gridmaster/card',
+				'attrs'       => array( 'layoutMode' => 'horizontal', 'mediaWidth' => '40%' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$card_h_res = Grid_Renderer::render_block_with_context( $card_horiz, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $card_h_res, 'gm-card--horizontal' ) !== false, 'Card renders horizontal layout mode class' );
+			$this->assert( strpos( $card_h_res, '--gm-card-media-width:40%' ) !== false, 'Card renders custom media width css variable' );
+
+			$card_overlay = array(
+				'blockName'   => 'gridmaster/card',
+				'attrs'       => array( 'layoutMode' => 'overlay', 'minHeight' => '360px' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$card_o_res = Grid_Renderer::render_block_with_context( $card_overlay, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $card_o_res, 'gm-card--overlay' ) !== false, 'Card renders overlay layout mode class' );
+			$this->assert( strpos( $card_o_res, 'min-height:360px' ) !== false, 'Card renders min-height style' );
+
+			// Read More custom styling
+			$read_more_block = array(
+				'blockName'   => 'gridmaster/read-more',
+				'attrs'       => array( 'text' => 'Discover', 'backgroundColor' => '#2563eb', 'textColor' => '#ffffff', 'borderRadius' => '20px' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$rm_res = Grid_Renderer::render_block_with_context( $read_more_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $rm_res, 'Discover' ) !== false, 'Read More renders custom text' );
+			$this->assert( strpos( $rm_res, 'background-color:#2563eb' ) !== false, 'Read More renders custom background color' );
+			$this->assert( strpos( $rm_res, 'border-radius:20px' ) !== false, 'Read More renders custom border radius' );
+
+			// Post date custom styling
+			$date_block = array(
+				'blockName'   => 'gridmaster/post-date',
+				'attrs'       => array( 'fontSize' => '15px', 'color' => '#10b981' ),
+				'innerBlocks' => array(),
+				'innerHTML'   => '',
+			);
+			$date_res = Grid_Renderer::render_block_with_context( $date_block, $target_post->ID, $target_post->post_type, 1 );
+			$this->assert( strpos( $date_res, 'font-size:15px' ) !== false, 'Post date renders custom font size' );
+			$this->assert( strpos( $date_res, 'color:#10b981' ) !== false, 'Post date renders custom color' );
 		}
 	}
 
@@ -299,11 +405,43 @@ class V2_Test_Runner {
 			$this->assert( $reg->is_registered( 'gridmaster-pro/product-price' ), 'Pro block product-price is registered' );
 			$this->assert( $reg->is_registered( 'gridmaster-pro/add-to-cart' ), 'Pro block add-to-cart is registered' );
 			$this->assert( $reg->is_registered( 'gridmaster-pro/badge' ), 'Pro block badge is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/product-rating' ), 'Pro block product-rating is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/stock-status' ), 'Pro block stock-status is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/sale-countdown' ), 'Pro block sale-countdown is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/quick-view' ), 'Pro block quick-view is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/video-lightbox' ), 'Pro block video-lightbox is registered' );
+			$this->assert( $reg->is_registered( 'gridmaster-pro/bookmark-button' ), 'Pro block bookmark-button is registered' );
 
 			$handlers = Filter_Registry::get_handlers();
 			$this->assert( isset( $handlers['multi-select'] ), 'Pro facet multi-select is registered' );
 			$this->assert( isset( $handlers['date-range'] ), 'Pro facet date-range is registered' );
 			$this->assert( isset( $handlers['meta-filter'] ), 'Pro facet meta-filter is registered' );
+
+			// Test contextual rendering of Pro blocks
+			$posts = get_posts( array( 'post_type' => 'post', 'numberposts' => 1 ) );
+			if ( ! empty( $posts[0] ) ) {
+				$p = $posts[0];
+
+				$qv_block = array(
+					'blockName'   => 'gridmaster-pro/quick-view',
+					'attrs'       => array( 'buttonText' => 'Inspect Now' ),
+					'innerBlocks' => array(),
+					'innerHTML'   => '',
+				);
+				$qv_html = Grid_Renderer::render_block_with_context( $qv_block, $p->ID, $p->post_type, 1 );
+				$this->assert( strpos( $qv_html, 'gm-quick-view-btn' ) !== false, 'Quick View block renders trigger button' );
+				$this->assert( strpos( $qv_html, 'Inspect Now' ) !== false, 'Quick View block honors custom button text' );
+
+				$bm_block = array(
+					'blockName'   => 'gridmaster-pro/bookmark-button',
+					'attrs'       => array(),
+					'innerBlocks' => array(),
+					'innerHTML'   => '',
+				);
+				$bm_html = Grid_Renderer::render_block_with_context( $bm_block, $p->ID, $p->post_type, 1 );
+				$this->assert( strpos( $bm_html, 'gm-bookmark-btn' ) !== false, 'Bookmark block renders toggle button' );
+				$this->assert( strpos( $bm_html, 'data-nonce' ) !== false, 'Bookmark block carries verification nonce' );
+			}
 		} else {
 			echo "  [INFO] Pro plugin inactive, skipping Pro registration assertions\n";
 		}
@@ -388,6 +526,76 @@ class V2_Test_Runner {
 		// Non-existent grid rendering
 		$missing_html = Grid_Renderer::render_grid( 99999999 );
 		$this->assert( strpos( $missing_html, 'not found' ) !== false, 'Non-existent grid returns informative HTML comment' );
+	}
+
+	private function test_accessible_slider() {
+		echo "\nSuite 11: Accessible Carousel & Slider Layout (A360 Model)\n";
+
+		// 1. Create a grid with slider configuration
+		$slider_grid_id = Grid_Repository::save( array(
+			'title'  => 'Accessible Test Slider',
+			'config' => array(
+				'query'  => array( 'posts_per_page' => 5 ),
+				'layout' => array(
+					'type'    => 'slider',
+					'col_gap' => 24,
+					'slider'  => array(
+						'slides_to_show' => array( 'xs' => 1, 'sm' => 2, 'md' => 3, 'lg' => 3, 'xl' => 3 ),
+						'arrows'         => true,
+						'dots'           => true,
+						'autoplay'       => true,
+						'autoplay_speed' => 4000,
+						'pause_on_hover' => true,
+						'infinite'       => true,
+					),
+				),
+			),
+		) );
+
+		$this->assert( $slider_grid_id > 0, "Slider grid created with ID {$slider_grid_id}" );
+
+		$saved_grid = Grid_Repository::get( $slider_grid_id );
+		$this->assert( 'slider' === $saved_grid->config['layout']['type'], 'Layout type saved as slider' );
+		$this->assert( true === $saved_grid->config['layout']['slider']['arrows'], 'Slider arrows enabled in config' );
+		$this->assert( true === $saved_grid->config['layout']['slider']['dots'], 'Slider dots enabled in config' );
+		$this->assert( true === $saved_grid->config['layout']['slider']['autoplay'], 'Slider autoplay enabled in config' );
+
+		// 2. Render slider HTML
+		$html = Grid_Renderer::render_grid( $slider_grid_id );
+
+		// Carousel semantics
+		$this->assert( strpos( $html, 'gm-layout-slider' ) !== false, 'Wrapper has gm-layout-slider class' );
+		$this->assert( strpos( $html, 'data-layout="slider"' ) !== false, 'Wrapper has data-layout="slider" attribute' );
+		$this->assert( strpos( $html, 'role="region"' ) !== false, 'Wrapper has role="region"' );
+		$this->assert( strpos( $html, 'aria-roledescription="carousel"' ) !== false, 'Wrapper has aria-roledescription="carousel"' );
+
+		// Screen reader instructions
+		$this->assert( strpos( $html, 'screen-reader-text sr-only' ) !== false, 'Contains screen-reader-text instructions' );
+
+		// Viewport, Track, Controls
+		$this->assert( strpos( $html, 'gm-slider-viewport' ) !== false, 'Contains .gm-slider-viewport' );
+		$this->assert( strpos( $html, 'gm-slider-prev' ) !== false, 'Contains .gm-slider-prev button' );
+		$this->assert( strpos( $html, 'gm-slider-next' ) !== false, 'Contains .gm-slider-next button' );
+		$this->assert( strpos( $html, 'gm-slider-track' ) !== false, 'Contains .gm-slider-track' );
+		$this->assert( strpos( $html, 'role="group"' ) !== false, 'Track or slides have role="group"' );
+		$this->assert( strpos( $html, 'tabindex="0"' ) !== false, 'Slider track is keyboard focusable with tabindex="0"' );
+
+		// Slides and Accessible Labels
+		$this->assert( strpos( $html, 'gm-slider-slide' ) !== false, 'Contains .gm-slider-slide cards' );
+		$this->assert( strpos( $html, 'aria-roledescription="slide"' ) !== false, 'Slides have aria-roledescription="slide"' );
+		$this->assert( preg_match( '/aria-label="card \d+ of \d+"/', $html ) === 1, 'Slides have indexed aria-label (e.g. card 1 of 5)' );
+
+		// Dots and Autoplay
+		$this->assert( strpos( $html, 'gm-slider-dots' ) !== false, 'Contains .gm-slider-dots container' );
+		$this->assert( strpos( $html, 'role="tablist"' ) !== false, 'Dots container has role="tablist"' );
+		$this->assert( strpos( $html, 'gm-slider-playpause' ) !== false, 'Contains .gm-slider-playpause button' );
+
+		// CSS Variables
+		$this->assert( strpos( $html, '--gm-slides-lg:3' ) !== false, 'CSS vars contain --gm-slides-lg' );
+		$this->assert( strpos( $html, '--gm-slides-xs:1' ) !== false, 'CSS vars contain --gm-slides-xs' );
+
+		// Clean up
+		Grid_Repository::delete( $slider_grid_id );
 	}
 }
 

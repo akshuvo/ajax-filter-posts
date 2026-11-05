@@ -244,16 +244,46 @@ body.gm-focus-mode #wpcontent {
 	gap: 8px;
 }
 
+.gm-copy-shortcode-btn,
+.gm-preview-trigger-btn {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 6px !important;
+	height: 36px !important;
+	padding: 0 12px !important;
+	font-size: 13px !important;
+}
+
+.gm-copy-shortcode-btn .dashicons,
+.gm-preview-trigger-btn .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	display: inline-block;
+	flex-shrink: 0;
+	margin: 0;
+}
+
 .gm-copy-shortcode-btn {
 	color: var(--gm-secondary) !important;
 	border-color: var(--gm-border) !important;
-	font-size: 12px !important;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.gm-copy-shortcode-btn:hover {
+	color: var(--gm-text) !important;
+	border-color: var(--gm-secondary) !important;
 }
 
 .gm-copy-shortcode-btn.is-copied {
 	background: #ecfdf5 !important;
 	border-color: #a7f3d0 !important;
 	color: #065f46 !important;
+}
+
+.gm-copy-shortcode-btn.is-copied .dashicons {
+	color: #059669 !important;
 }
 
 .gm-shortcode-popover code {
@@ -537,7 +567,28 @@ body.gm-focus-mode #wpcontent {
 	background: var(--gm-accent-light) !important;
 }
 
-/* More blocks popover */
+.gm-card-templates-btn {
+	font-size: 12px !important;
+	border-color: var(--gm-border) !important;
+	color: var(--gm-secondary) !important;
+	border-radius: 4px !important;
+}
+
+.gm-card-templates-btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	margin-right: 4px;
+	vertical-align: text-bottom;
+}
+
+.gm-card-templates-btn.is-active {
+	border-color: var(--gm-accent) !important;
+	color: var(--gm-accent) !important;
+	background: var(--gm-accent-light) !important;
+}
+
+/* More blocks and Card Templates popover */
 .gm-more-blocks-popover .components-popover__content {
 	width: 280px;
 	border: 1px solid var(--gm-border);
@@ -545,6 +596,71 @@ body.gm-focus-mode #wpcontent {
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 	background: var(--gm-surface);
 	padding: 12px;
+}
+
+.gm-card-templates-popover .components-popover__content {
+	width: 360px;
+	max-height: 520px;
+	overflow-y: auto;
+}
+
+.gm-template-category-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--gm-border-subtle);
+}
+
+.gm-cat-tab-btn {
+	padding: 3px 8px;
+	border: 1px solid var(--gm-border);
+	border-radius: 12px;
+	background: var(--gm-surface);
+	color: var(--gm-secondary);
+	font-size: 11px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.gm-cat-tab-btn:hover {
+	border-color: var(--gm-accent);
+	color: var(--gm-accent);
+}
+
+.gm-cat-tab-btn.is-active {
+	background: var(--gm-accent);
+	border-color: var(--gm-accent);
+	color: #ffffff;
+}
+
+.gm-template-title-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 2px;
+}
+
+.gm-template-cat-pill {
+	font-size: 10px;
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: #f1f5f9;
+	color: #64748b;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.gm-template-pro-badge {
+	font-size: 9px;
+	padding: 1px 4px;
+	border-radius: 3px;
+	background: #8b5cf6;
+	color: #ffffff;
+	font-weight: 700;
+	letter-spacing: 0.5px;
 }
 
 .gm-popover-search {
@@ -975,6 +1091,64 @@ body.gm-focus-mode #wpcontent {
 	font-size: 13px;
 	color: var(--gm-secondary);
 	line-height: 1.4;
+}
+
+.gm-layout-type-selector {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 14px;
+	margin-top: 12px;
+}
+
+.gm-layout-type-option {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 16px;
+	background: var(--gm-surface, #ffffff);
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: left;
+	transition: all 0.15s ease;
+}
+
+.gm-layout-type-option:hover {
+	border-color: #94a3b8;
+	background: #f8fafc;
+}
+
+.gm-layout-type-option.is-active {
+	border-color: var(--gm-accent, #2271b1);
+	background: var(--gm-accent-light, #f0f6fc);
+	box-shadow: 0 0 0 1px var(--gm-accent, #2271b1);
+}
+
+.gm-layout-type-icon {
+	font-size: 26px;
+	width: 26px;
+	height: 26px;
+	color: var(--gm-secondary, #64748b);
+	flex-shrink: 0;
+}
+
+.gm-layout-type-option.is-active .gm-layout-type-icon {
+	color: var(--gm-accent, #2271b1);
+}
+
+.gm-layout-type-info strong {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--gm-text, #1e293b);
+	margin-bottom: 3px;
+}
+
+.gm-layout-type-info span {
+	display: block;
+	font-size: 11px;
+	color: var(--gm-secondary, #64748b);
+	line-height: 1.35;
 }
 
 .gm-presets-grid {

@@ -103,14 +103,38 @@
 
 		if ( ! isOpen ) return null;
 
-		const blockCategories = [
+		const defaultCategories = [
 			{
-				title: __( 'Post Elements', 'ajax-filter-posts' ),
+				title: __( 'Content & Editorial', 'ajax-filter-posts' ),
 				blocks: [
-					{ name: 'gridmaster/post-date', title: __( 'Post Date', 'ajax-filter-posts' ), icon: 'calendar-alt', desc: __( 'Display published or modified date', 'ajax-filter-posts' ), attrs: {} },
-					{ name: 'gridmaster/post-author', title: __( 'Post Author', 'ajax-filter-posts' ), icon: 'admin-users', desc: __( 'Author name and optional avatar', 'ajax-filter-posts' ), attrs: {} },
-					{ name: 'gridmaster/post-terms', title: __( 'Categories & Tags', 'ajax-filter-posts' ), icon: 'tag', desc: __( 'Display assigned taxonomy terms', 'ajax-filter-posts' ), attrs: { taxonomy: 'category' } },
+					{ name: 'gridmaster/post-date', title: __( 'Post Date', 'ajax-filter-posts' ), icon: 'calendar-alt', desc: __( 'Display published post date', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/modified-date', title: __( 'Modified Date', 'ajax-filter-posts' ), icon: 'update', desc: __( 'Display updated date for modified posts', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/reading-time', title: __( 'Reading Time', 'ajax-filter-posts' ), icon: 'clock', desc: __( 'Estimated read time calculated from post content', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/post-author', title: __( 'Post Author', 'ajax-filter-posts' ), icon: 'admin-users', desc: __( 'Author name and byline', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/author-avatar', title: __( 'Author Avatar', 'ajax-filter-posts' ), icon: 'admin-users', desc: __( 'Author Gravatar photo with link', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/post-terms', title: __( 'Categories & Terms', 'ajax-filter-posts' ), icon: 'tag', desc: __( 'Display assigned taxonomy terms', 'ajax-filter-posts' ), attrs: { taxonomy: 'category' } },
+					{ name: 'gridmaster/post-meta', title: __( 'Custom Field / Meta', 'ajax-filter-posts' ), icon: 'admin-generic', desc: __( 'Custom post meta field value', 'ajax-filter-posts' ), attrs: {} },
 					{ name: 'gridmaster/comments-count', title: __( 'Comments Count', 'ajax-filter-posts' ), icon: 'admin-comments', desc: __( 'Number of comments on the post', 'ajax-filter-posts' ), attrs: {} },
+				],
+			},
+			{
+				title: __( 'Media & Badges', 'ajax-filter-posts' ),
+				blocks: [
+					{ name: 'gridmaster/post-format-icon', title: __( 'Post Format Icon', 'ajax-filter-posts' ), icon: 'video-alt3', desc: __( 'Dynamic icon for video, audio, or gallery formats', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/badge', title: __( 'Custom Badge', 'ajax-filter-posts' ), icon: 'tag', desc: __( 'Static or meta-driven custom badge', 'ajax-filter-posts' ), attrs: {} },
+				],
+			},
+			{
+				title: __( 'Engagement & Social', 'ajax-filter-posts' ),
+				blocks: [
+					{ name: 'gridmaster/social-share', title: __( 'Social Share', 'ajax-filter-posts' ), icon: 'share', desc: __( 'One-click social sharing buttons', 'ajax-filter-posts' ), attrs: {} },
+				],
+			},
+			{
+				title: __( 'Advanced & Embeds', 'ajax-filter-posts' ),
+				blocks: [
+					{ name: 'gridmaster/shortcode', title: __( 'Shortcode', 'ajax-filter-posts' ), icon: 'shortcode', desc: __( 'Execute WordPress shortcodes with dynamic tags like {post_id}', 'ajax-filter-posts' ), attrs: {} },
+					{ name: 'gridmaster/html', title: __( 'Custom HTML', 'ajax-filter-posts' ), icon: 'html', desc: __( 'Embed custom HTML markup with dynamic post tags', 'ajax-filter-posts' ), attrs: {} },
 				],
 			},
 			{
@@ -123,14 +147,24 @@
 				],
 			},
 			{
-				title: __( 'Pro Elements', 'ajax-filter-posts' ),
+				title: __( 'WooCommerce & Pro Elements', 'ajax-filter-posts' ),
 				blocks: [
 					{ name: 'gridmaster-pro/product-price', title: __( 'Product Price (Pro)', 'ajax-filter-posts' ), icon: 'money-alt', desc: __( 'WooCommerce regular and sale price', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/add-to-cart', title: __( 'Add to Cart (Pro)', 'ajax-filter-posts' ), icon: 'cart', desc: __( 'AJAX add-to-cart button', 'ajax-filter-posts' ), isPro: true, attrs: {} },
-					{ name: 'gridmaster-pro/badge', title: __( 'Custom Badge (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', desc: __( 'Dynamic badges like New, Featured, or Sale', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/badge', title: __( 'Product Badge (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', desc: __( 'Dynamic badges like New, Featured, or Sale', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/product-rating', title: __( 'Star Rating (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', desc: __( 'Customer review star ratings', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/stock-status', title: __( 'Stock Status (Pro)', 'ajax-filter-posts' ), icon: 'archive', desc: __( 'Product inventory status and low stock alert', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/sale-countdown', title: __( 'Sale Countdown (Pro)', 'ajax-filter-posts' ), icon: 'clock', desc: __( 'Live countdown timer for scheduled sales', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/quick-view', title: __( 'Quick View (Pro)', 'ajax-filter-posts' ), icon: 'visibility', desc: __( 'Modal quick preview trigger', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/video-lightbox', title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ), icon: 'video-alt3', desc: __( 'Video play button with modal popup', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/bookmark-button', title: __( 'Bookmark / Wishlist (Pro)', 'ajax-filter-posts' ), icon: 'heart', desc: __( 'Save post to visitor favorites', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 				],
 			},
 		];
+
+		const blockCategories = wp.hooks && wp.hooks.applyFilters
+			? wp.hooks.applyFilters( 'gridmaster.cardBlockCategories', defaultCategories )
+			: defaultCategories;
 
 		const lowerSearch = searchTerm.toLowerCase();
 		const filteredCategories = blockCategories.map( ( cat ) => {
@@ -222,12 +256,29 @@
 			'gridmaster/excerpt': { title: __( 'Excerpt', 'ajax-filter-posts' ), icon: 'editor-alignleft' },
 			'gridmaster/read-more': { title: __( 'Button (Read More)', 'ajax-filter-posts' ), icon: 'button' },
 			'gridmaster/post-date': { title: __( 'Post Date', 'ajax-filter-posts' ), icon: 'calendar-alt' },
+			'gridmaster/modified-date': { title: __( 'Modified Date', 'ajax-filter-posts' ), icon: 'update' },
+			'gridmaster/reading-time': { title: __( 'Reading Time', 'ajax-filter-posts' ), icon: 'clock' },
 			'gridmaster/post-author': { title: __( 'Post Author', 'ajax-filter-posts' ), icon: 'admin-users' },
+			'gridmaster/author-avatar': { title: __( 'Author Avatar', 'ajax-filter-posts' ), icon: 'admin-users' },
 			'gridmaster/post-terms': { title: __( 'Categories / Terms', 'ajax-filter-posts' ), icon: 'tag' },
+			'gridmaster/post-format-icon': { title: __( 'Format Icon', 'ajax-filter-posts' ), icon: 'video-alt3' },
+			'gridmaster/social-share': { title: __( 'Social Share', 'ajax-filter-posts' ), icon: 'share' },
+			'gridmaster/badge': { title: __( 'Badge', 'ajax-filter-posts' ), icon: 'tag' },
+			'gridmaster/post-meta': { title: __( 'Custom Meta', 'ajax-filter-posts' ), icon: 'admin-generic' },
 			'gridmaster/comments-count': { title: __( 'Comments Count', 'ajax-filter-posts' ), icon: 'admin-comments' },
+			'gridmaster/shortcode': { title: __( 'Shortcode', 'ajax-filter-posts' ), icon: 'shortcode' },
+			'gridmaster/html': { title: __( 'Custom HTML', 'ajax-filter-posts' ), icon: 'html' },
+			'core/shortcode': { title: __( 'Shortcode', 'ajax-filter-posts' ), icon: 'shortcode' },
+			'core/html': { title: __( 'HTML', 'ajax-filter-posts' ), icon: 'html' },
 			'gridmaster-pro/product-price': { title: __( 'Price (Pro)', 'ajax-filter-posts' ), icon: 'money-alt' },
 			'gridmaster-pro/add-to-cart': { title: __( 'Add to Cart (Pro)', 'ajax-filter-posts' ), icon: 'cart' },
 			'gridmaster-pro/badge': { title: __( 'Badge (Pro)', 'ajax-filter-posts' ), icon: 'star-filled' },
+			'gridmaster-pro/product-rating': { title: __( 'Rating (Pro)', 'ajax-filter-posts' ), icon: 'star-filled' },
+			'gridmaster-pro/stock-status': { title: __( 'Stock (Pro)', 'ajax-filter-posts' ), icon: 'archive' },
+			'gridmaster-pro/sale-countdown': { title: __( 'Countdown (Pro)', 'ajax-filter-posts' ), icon: 'clock' },
+			'gridmaster-pro/quick-view': { title: __( 'Quick View (Pro)', 'ajax-filter-posts' ), icon: 'visibility' },
+			'gridmaster-pro/video-lightbox': { title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ), icon: 'video-alt3' },
+			'gridmaster-pro/bookmark-button': { title: __( 'Bookmark (Pro)', 'ajax-filter-posts' ), icon: 'heart' },
 			'core/group': { title: __( 'Group', 'ajax-filter-posts' ), icon: 'layout' },
 			'core/columns': { title: __( 'Columns', 'ajax-filter-posts' ), icon: 'columns' },
 			'core/spacer': { title: __( 'Spacer', 'ajax-filter-posts' ), icon: 'image-flip-vertical' },
@@ -342,11 +393,574 @@
 	}
 
 	/**
+	 * Card Templates Popover component: instant pre-built layouts (horizontal, vertical, overlay, etc.)
+	 */
+	function CardTemplatesPopover( props ) {
+		const { isOpen, onClose, onApplyTemplate, isPro } = props;
+		const [ searchTerm, setSearchTerm ] = useState( '' );
+		const [ activeCat, setActiveCat ] = useState( 'All' );
+
+		if ( ! isOpen ) return null;
+
+		const categories = [ 'All', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Media', 'Social' ];
+
+		const templates = [
+			// 1. Standard Vertical Card
+			{
+				id: 'vertical-standard',
+				title: __( 'Standard Vertical Card', 'ajax-filter-posts' ),
+				desc: __( 'Classic blog card with 16:9 featured image on top, title, date, excerpt and read more.', 'ajax-filter-posts' ),
+				icon: 'format-aside',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '8px', borderWidth: '0px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '6px' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+					createBlock( 'gridmaster/post-date', { format: 'F j, Y' } ),
+					createBlock( 'gridmaster/excerpt', { length: 20 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Read More', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 2. Horizontal List (Media Left)
+			{
+				id: 'horizontal-list',
+				title: __( 'Horizontal List (Media Left)', 'ajax-filter-posts' ),
+				desc: __( 'Side-by-side list view with image on the left (35%) and content column on the right.', 'ajax-filter-posts' ),
+				icon: 'align-left',
+				category: 'List Views',
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '35%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '4/3', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '16px', right: '0px' } } } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+						createBlock( 'gridmaster/excerpt', { length: 16 } ),
+						createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+							createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+							createBlock( 'gridmaster/reading-time', {} ),
+						] ),
+					] ),
+				],
+			},
+			// 3. Horizontal List (Media Right)
+			{
+				id: 'horizontal-reverse',
+				title: __( 'Horizontal List (Media Right)', 'ajax-filter-posts' ),
+				desc: __( 'Reversed list view with content on the left and image on the right.', 'ajax-filter-posts' ),
+				icon: 'align-right',
+				category: 'List Views',
+				cardAttrs: { layoutMode: 'horizontal-reverse', mediaWidth: '35%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '4/3', borderRadius: '8px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '0px', right: '16px' } } } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+						createBlock( 'gridmaster/excerpt', { length: 16 } ),
+						createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+					] ),
+				],
+			},
+			// 4. Hero Overlay (Cover Image)
+			{
+				id: 'hero-overlay',
+				title: __( 'Hero Overlay (Cover Image)', 'ajax-filter-posts' ),
+				desc: __( 'Full bleed background image with dark scrim gradient and text overlay.', 'ajax-filter-posts' ),
+				icon: 'cover-image',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'overlay', minHeight: '360px', padding: '24px', borderRadius: '12px', borderWidth: '0px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', backgroundColor: '#1e293b', hoverEffect: 'zoom' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'large', aspectRatio: 'auto', objectFit: 'cover' } ),
+					createBlock( 'gridmaster/badge', { text: __( 'Featured', 'ajax-filter-posts' ), backgroundColor: '#2563eb', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '22px', color: '#ffffff', isLink: true } ),
+					createBlock( 'gridmaster/post-date', { format: 'F j, Y', color: '#cbd5e1' } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Explore Post', 'ajax-filter-posts' ), backgroundColor: '#ffffff', textColor: '#0f172a', borderRadius: '20px' } ),
+				],
+			},
+			// 5. Editorial & Magazine Card
+			{
+				id: 'editorial-magazine',
+				title: __( 'Editorial & Magazine Card', 'ajax-filter-posts' ),
+				desc: __( 'Category badge, bold title, author avatar byline row, excerpt, and social share bar.', 'ajax-filter-posts' ),
+				icon: 'media-document',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/badge', { text: __( 'Editorial', 'ajax-filter-posts' ), backgroundColor: '#f1f5f9', textColor: '#475569' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '22px', isLink: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/author-avatar', { size: 32, borderRadius: '50%' } ),
+						createBlock( 'gridmaster/post-author', {} ),
+						createBlock( 'gridmaster/reading-time', {} ),
+					] ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 22 } ),
+					createBlock( 'gridmaster/social-share', {} ),
+				],
+			},
+			// 6. Modern Tech & SaaS
+			{
+				id: 'modern-tech',
+				title: __( 'Modern Tech / SaaS Card', 'ajax-filter-posts' ),
+				desc: __( 'Category pill badge, reading time, bold title, author byline row, and clean hover lift.', 'ajax-filter-posts' ),
+				icon: 'laptop',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '22px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/reading-time', {} ),
+					] ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 18 } ),
+					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/author-avatar', { size: 28, borderRadius: '50%' } ),
+						createBlock( 'gridmaster/post-author', {} ),
+						createBlock( 'gridmaster/post-date', { format: 'M j, Y' } ),
+					] ),
+				],
+			},
+			// 7. Compact List Row (Sidebar / Dense)
+			{
+				id: 'compact-list-row',
+				title: __( 'Compact List Row', 'ajax-filter-posts' ),
+				desc: __( 'Minimal horizontal row with square thumbnail, title, and date for dense news feeds or sidebars.', 'ajax-filter-posts' ),
+				icon: 'menu-alt',
+				category: 'List Views',
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '85px', padding: '10px', borderRadius: '6px', borderWidth: '0px', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'thumbnail', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '12px', right: '0px' } } } }, [
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '14px', isLink: true } ),
+						createBlock( 'gridmaster/post-date', { fontSize: '12px', format: 'M j, Y' } ),
+					] ),
+				],
+			},
+			// 8. Ultra Compact Feed Row
+			{
+				id: 'ultra-compact-ticker',
+				title: __( 'Ultra Compact Feed Row', 'ajax-filter-posts' ),
+				desc: __( '60px rounded thumbnail with category pill and inline title for ticker or sidebar lists.', 'ajax-filter-posts' ),
+				icon: 'list-view',
+				category: 'List Views',
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '60px', padding: '8px 12px', borderRadius: '6px', borderWidth: '1px', borderColor: '#f1f5f9', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'thumbnail', aspectRatio: '1/1', borderRadius: '4px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '10px', right: '0px' } } } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '13px', isLink: true } ),
+					] ),
+				],
+			},
+			// 9. Split 50/50 Feature Card
+			{
+				id: 'split-alternating',
+				title: __( 'Split 50/50 Feature Card', 'ajax-filter-posts' ),
+				desc: __( 'Side-by-side 50/50 split with generous padding, large heading, excerpt, and action button.', 'ajax-filter-posts' ),
+				icon: 'columns',
+				category: 'List Views',
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '50%', padding: '24px', borderRadius: '14px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.06)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'large', aspectRatio: '4/3', borderRadius: '10px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '24px', right: '0px' } } } }, [
+						createBlock( 'gridmaster/badge', { text: __( 'Featured Story', 'ajax-filter-posts' ), backgroundColor: '#eff6ff', textColor: '#1d4ed8' } ),
+						createBlock( 'gridmaster/title', { tagName: 'h2', fontSize: '24px', isLink: true } ),
+						createBlock( 'gridmaster/excerpt', { length: 25 } ),
+						createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+							createBlock( 'gridmaster/post-date', { format: 'F j, Y' } ),
+							createBlock( 'gridmaster/reading-time', {} ),
+						] ),
+						createBlock( 'gridmaster/read-more', { text: __( 'Continue Story', 'ajax-filter-posts' ), borderRadius: '6px' } ),
+					] ),
+				],
+			},
+			// 10. Minimalist Text-Only (Opinion / Essay)
+			{
+				id: 'minimalist-text',
+				title: __( 'Minimalist Text-Only', 'ajax-filter-posts' ),
+				desc: __( 'Text-driven opinion/essay card without featured image.', 'ajax-filter-posts' ),
+				icon: 'text',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '24px', borderRadius: '8px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '22px', isLink: true } ),
+					createBlock( 'gridmaster/post-date', { format: 'F j, Y' } ),
+					createBlock( 'gridmaster/excerpt', { length: 28 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Read Full Article', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 11. Floating Overlapping Box (Legacy Style 2)
+			{
+				id: 'floating-content-box',
+				title: __( 'Floating Overlapping Box (Legacy Style 2)', 'ajax-filter-posts' ),
+				desc: __( 'Featured image with overlapping white content box and centered typography.', 'ajax-filter-posts' ),
+				icon: 'format-aside',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '0px', borderRadius: '12px', borderWidth: '0px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '12px 12px 0 0' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '24px', bottom: '24px', left: '24px', right: '24px' } } } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+						createBlock( 'gridmaster/excerpt', { length: 18 } ),
+						createBlock( 'gridmaster/read-more', { text: __( 'Continue Reading', 'ajax-filter-posts' ), borderRadius: '4px' } ),
+					] ),
+				],
+			},
+			// 12. Centered Aesthetic (Legacy Style 3)
+			{
+				id: 'centered-aesthetic',
+				title: __( 'Centered Aesthetic (Legacy Style 3)', 'ajax-filter-posts' ),
+				desc: __( 'Tall 4:3 rounded image, centered title, excerpt, and styled read more link.', 'ajax-filter-posts' ),
+				icon: 'align-center',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '16px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '4/3', borderRadius: '12px', zoomOnHover: true } ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 16 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Read Story →', 'ajax-filter-posts' ), backgroundColor: 'transparent', textColor: '#2563eb' } ),
+				],
+			},
+			// 13. Bottom Meta Bar (Legacy Style 1)
+			{
+				id: 'legacy-style-1',
+				title: __( 'Bottom Meta Bar (Legacy Style 1)', 'ajax-filter-posts' ),
+				desc: __( 'Featured image, title, excerpt, read more, and separate bottom metadata divider bar.', 'ajax-filter-posts' ),
+				icon: 'feedback',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '18px 18px 0 18px', borderRadius: '8px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '6px' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 16 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Continue Reading', 'ajax-filter-posts' ) } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '12px', bottom: '12px' } } }, layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+						createBlock( 'gridmaster/comments-count', {} ),
+					] ),
+				],
+			},
+			// 14. Inset Border Card (Legacy Style 4)
+			{
+				id: 'legacy-style-4',
+				title: __( 'Inset Border Card (Legacy Style 4)', 'ajax-filter-posts' ),
+				desc: __( 'Bordered card with inset depth, title first, author & comments meta, excerpt, and button.', 'ajax-filter-posts' ),
+				icon: 'admin-appearance',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '14px', borderWidth: '1px', borderColor: '#cbd5e1', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '21px', isLink: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+						createBlock( 'gridmaster/post-author', {} ),
+						createBlock( 'gridmaster/comments-count', {} ),
+					] ),
+					createBlock( 'gridmaster/excerpt', { length: 18 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'View Full Post', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 15. Date-First Magazine (Legacy Style 9)
+			{
+				id: 'date-badge-top',
+				title: __( 'Date-First Magazine (Legacy Style 9)', 'ajax-filter-posts' ),
+				desc: __( 'Prominent formatted date header at top, category badge, image, and read more.', 'ajax-filter-posts' ),
+				icon: 'calendar-alt',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '8px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/post-date', { format: 'l, F jS Y', fontSize: '13px', color: '#64748b' } ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '6px' } ),
+					createBlock( 'gridmaster/excerpt', { length: 20 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Read More', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 16. Dark Slate Aesthetic
+			{
+				id: 'card-dark-mode',
+				title: __( 'Dark Slate Aesthetic', 'ajax-filter-posts' ),
+				desc: __( 'Deep midnight slate card with blue glow hover, white typography, and category pill.', 'ajax-filter-posts' ),
+				icon: 'star-filled',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '12px', borderWidth: '1px', borderColor: '#334155', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', backgroundColor: '#0f172a', hoverEffect: 'glow' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px' } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/badge', { text: __( 'Tech', 'ajax-filter-posts' ), backgroundColor: '#1e293b', textColor: '#38bdf8' } ),
+						createBlock( 'gridmaster/reading-time', {} ),
+					] ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', color: '#f8fafc', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 16 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Explore Article', 'ajax-filter-posts' ), backgroundColor: '#2563eb', textColor: '#ffffff', borderRadius: '6px' } ),
+				],
+			},
+			// 17. Masonry Story Card
+			{
+				id: 'masonry-story',
+				title: __( 'Masonry Story Card', 'ajax-filter-posts' ),
+				desc: __( 'Variable-height card with natural ratio photo, full story excerpt, date, and comments.', 'ajax-filter-posts' ),
+				icon: 'images-alt2',
+				category: 'Editorial',
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'large', aspectRatio: 'auto', borderRadius: '8px' } ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '19px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 30 } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+						createBlock( 'gridmaster/comments-count', {} ),
+					] ),
+				],
+			},
+			// 18. Creative Portfolio & Project
+			{
+				id: 'portfolio-showcase',
+				title: __( 'Creative Portfolio & Project', 'ajax-filter-posts' ),
+				desc: __( '3:2 media aspect ratio with clean zoom effect, project title, categories, and direct action link.', 'ajax-filter-posts' ),
+				icon: 'portfolio',
+				category: 'Creative',
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 14px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'zoom' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'large', aspectRatio: '3/2', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'View Project →', 'ajax-filter-posts' ), backgroundColor: 'transparent', textColor: '#0f172a' } ),
+				],
+			},
+			// 19. E-Commerce Product Showcase (Pro)
+			{
+				id: 'ecommerce-product',
+				title: __( 'E-Commerce Product Showcase (Pro)', 'ajax-filter-posts' ),
+				desc: __( '1:1 product thumbnail, star reviews, product title, price, stock alert, and AJAX Add to Cart button.', 'ajax-filter-posts' ),
+				icon: 'cart',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'gridmaster-pro/product-rating', {} ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster-pro/product-price', {} ),
+						createBlock( 'gridmaster-pro/stock-status', {} ),
+					] ),
+					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 20. Product Quick View & Badge (Pro)
+			{
+				id: 'ecommerce-quick-view',
+				title: __( 'Product Quick View & Badge (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Product badge, 1:1 image, quick view modal trigger button, title, and price.', 'ajax-filter-posts' ),
+				icon: 'visibility',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/badge', { badgeType: 'sale', text: __( 'Sale', 'ajax-filter-posts' ), backgroundColor: '#ef4444' } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'gridmaster-pro/quick-view', { buttonText: __( 'Quick View', 'ajax-filter-posts' ) } ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+				],
+			},
+			// 21. Product Horizontal Row (Pro)
+			{
+				id: 'ecommerce-horizontal-row',
+				title: __( 'Product Horizontal Row (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Side-by-side product row with 30% square image, star rating, price, and Add to Cart.', 'ajax-filter-posts' ),
+				icon: 'align-left',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '30%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '8px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '16px', right: '0px' } } } }, [
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '18px', isLink: true } ),
+						createBlock( 'gridmaster-pro/product-rating', {} ),
+						createBlock( 'gridmaster-pro/product-price', {} ),
+						createBlock( 'gridmaster-pro/stock-status', {} ),
+						createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ) } ),
+					] ),
+				],
+			},
+			// 22. Flash Sale & Countdown (Pro)
+			{
+				id: 'ecommerce-flash-sale',
+				title: __( 'Flash Sale & Countdown (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Urgency-driven deal card with limited sale badge, countdown timer boxes, stock alert, and Add to Cart.', 'ajax-filter-posts' ),
+				icon: 'clock',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '12px', borderWidth: '2px', borderColor: '#ef4444', boxShadow: '0 4px 20px rgba(239,68,68,0.1)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/badge', { badgeType: 'sale', text: __( '⚡ LIMITED DEAL', 'ajax-filter-posts' ), backgroundColor: '#ef4444', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'gridmaster-pro/sale-countdown', { layout: 'boxes', backgroundColor: '#1e293b', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '17px', isLink: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster-pro/product-price', {} ),
+						createBlock( 'gridmaster-pro/stock-status', {} ),
+					] ),
+					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Claim Deal', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 23. Video & Media Spotlight (Pro)
+			{
+				id: 'media-video-lightbox',
+				title: __( 'Video & Media Spotlight (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Format icon, featured media, video lightbox trigger popup, and reading time.', 'ajax-filter-posts' ),
+				icon: 'video-alt3',
+				category: 'Media',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '12px', borderWidth: '0px', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', backgroundColor: '#ffffff', hoverEffect: 'zoom' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/post-format-icon', {} ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px' } ),
+					createBlock( 'gridmaster-pro/video-lightbox', { buttonText: __( 'Watch Video', 'ajax-filter-posts' ) } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+					createBlock( 'gridmaster/reading-time', {} ),
+				],
+			},
+			// 24. Podcast & Audio Episode (Pro)
+			{
+				id: 'podcast-episode',
+				title: __( 'Podcast & Audio Episode (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Audio episode badge, media thumbnail, episode title, host author, and listen button.', 'ajax-filter-posts' ),
+				icon: 'controls-play',
+				category: 'Media',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/badge', { text: __( '🎧 PODCAST EPISODE', 'ajax-filter-posts' ), backgroundColor: '#8b5cf6', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '19px', isLink: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-author', {} ),
+						createBlock( 'gridmaster/post-date', { format: 'M j, Y' } ),
+					] ),
+					createBlock( 'gridmaster/read-more', { text: __( '▶ Listen Episode', 'ajax-filter-posts' ), backgroundColor: '#8b5cf6', textColor: '#ffffff', borderRadius: '6px' } ),
+				],
+			},
+			// 25. Social & Wishlist Card (Pro)
+			{
+				id: 'social-bookmark-card',
+				title: __( 'Social & Wishlist Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Category badge and bookmark toggle in top header row, image, title, and social share bar.', 'ajax-filter-posts' ),
+				icon: 'heart',
+				category: 'Social',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster-pro/bookmark-button', {} ),
+					] ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '6px' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
+					createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
+					createBlock( 'gridmaster/social-share', {} ),
+				],
+			},
+		];
+
+		const lowerSearch = searchTerm.toLowerCase();
+		const filteredTemplates = templates.filter( ( t ) => {
+			const matchesCat = activeCat === 'All' || t.category === activeCat;
+			const matchesSearch = ! searchTerm ||
+				t.title.toLowerCase().includes( lowerSearch ) ||
+				t.desc.toLowerCase().includes( lowerSearch ) ||
+				( t.category && t.category.toLowerCase().includes( lowerSearch ) );
+			return matchesCat && matchesSearch;
+		} );
+
+		return el(
+			Popover,
+			{
+				className: 'gm-more-blocks-popover gm-card-templates-popover',
+				onClose: onClose,
+				position: 'bottom right',
+			},
+			el(
+				'div',
+				{ className: 'gm-popover-content' },
+				el(
+					'div',
+					{ className: 'gm-popover-search' },
+					el( TextControl, {
+						label: __( 'Search Card Layouts', 'ajax-filter-posts' ),
+						placeholder: __( 'Search 25 pre-built card designs...', 'ajax-filter-posts' ),
+						value: searchTerm,
+						onChange: setSearchTerm,
+						autoFocus: true,
+					} )
+				),
+				el(
+					'div',
+					{ className: 'gm-template-category-tabs' },
+					categories.map( ( cat ) =>
+						el(
+							'button',
+							{
+								key: cat,
+								type: 'button',
+								className: 'gm-cat-tab-btn' + ( activeCat === cat ? ' is-active' : '' ),
+								onClick: () => setActiveCat( cat ),
+							},
+							cat
+						)
+					)
+				),
+				el(
+					'div',
+					{ className: 'gm-popover-list' },
+					filteredTemplates.length === 0
+						? el( 'p', { className: 'gm-no-blocks' }, __( 'No matching templates found.', 'ajax-filter-posts' ) )
+						: filteredTemplates.map( ( t ) =>
+								el(
+									'button',
+									{
+										key: t.id,
+										type: 'button',
+										className: 'gm-popover-item-btn' + ( t.isPro ? ' is-pro' : '' ),
+										disabled: t.isPro && ! isPro,
+										onClick: () => {
+											onApplyTemplate( t );
+											onClose();
+										},
+									},
+									el( 'span', { className: 'dashicons dashicons-' + t.icon + ' gm-item-icon' } ),
+									el(
+										'div',
+										{ className: 'gm-item-details' },
+										el(
+											'div',
+											{ className: 'gm-template-title-row' },
+											el( 'span', { className: 'gm-item-title' }, t.title ),
+											t.category && el( 'span', { className: 'gm-template-cat-pill' }, t.category ),
+											t.isPro && el( 'span', { className: 'gm-template-pro-badge' }, 'PRO' )
+										),
+										el( 'span', { className: 'gm-item-desc' }, t.desc )
+									)
+								)
+						  )
+				)
+			)
+		);
+	}
+
+	/**
 	 * Card Canvas Stage: contains quick-add bar, helper text, and Gutenberg canvas.
 	 */
 	function CardCanvasStage( props ) {
 		const { isPro } = props;
-		const { insertBlock } = useDispatch( 'core/block-editor' );
+		const { insertBlock, replaceInnerBlocks, updateBlockAttributes } = useDispatch( 'core/block-editor' );
 		const registry = wp.data.useRegistry();
 		const paperRef = useRef( null );
 		const { rootBlocks, selectedClientId } = useSelect( ( select ) => {
@@ -355,6 +969,7 @@
 		} );
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
+		const [ isTemplatesOpen, setIsTemplatesOpen ] = useState( false );
 		const moreBtnRef = useRef( null );
 
 		const addBlock = ( blockName, defaultAttributes = {} ) => {
@@ -374,6 +989,46 @@
 				insertBlock( newBlock, undefined, rootBlocks[ 0 ].clientId );
 			} else {
 				insertBlock( newBlock );
+			}
+		};
+
+		const applyCardTemplate = ( tpl ) => {
+			const rootCard = rootBlocks.length > 0 && rootBlocks[ 0 ].name === 'gridmaster/card' ? rootBlocks[ 0 ] : null;
+			if ( tpl.isPro && ! isPro ) return;
+
+			if ( rootCard && rootCard.innerBlocks && rootCard.innerBlocks.length > 0 ) {
+				if ( ! window.confirm( __( 'Replace current card blocks with this prebuilt layout?', 'ajax-filter-posts' ) ) ) {
+					return;
+				}
+			}
+
+			// Generate blocks programmatically with 0 parsing errors
+			const newBlocks = typeof tpl.getBlocks === 'function' ? tpl.getBlocks() : parse( tpl.markup );
+
+			const defaultAttrs = {
+				layoutMode: 'vertical',
+				mediaWidth: '35%',
+				minHeight: '',
+				backgroundColor: '#ffffff',
+				padding: '20px',
+				borderRadius: '8px',
+				borderWidth: '0px',
+				borderColor: '#dcdcde',
+				boxShadow: 'none',
+				hoverEffect: 'lift',
+			};
+
+			const mergedAttrs = {
+				...defaultAttrs,
+				...( tpl.cardAttrs || {} ),
+			};
+
+			if ( rootCard ) {
+				updateBlockAttributes( rootCard.clientId, mergedAttrs );
+				replaceInnerBlocks( rootCard.clientId, newBlocks );
+			} else {
+				const newCard = createBlock( 'gridmaster/card', mergedAttrs, newBlocks );
+				insertBlock( newCard );
 			}
 		};
 
@@ -447,6 +1102,28 @@
 							isOpen: isMoreOpen,
 							onClose: () => setIsMoreOpen( false ),
 							onSelectBlock: addBlock,
+							isPro: isPro,
+						} )
+				),
+				el(
+					'div',
+					{ className: 'gm-card-templates-wrap', style: { marginLeft: '8px' } },
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							onClick: () => setIsTemplatesOpen( ! isTemplatesOpen ),
+							className: 'gm-card-templates-btn' + ( isTemplatesOpen ? ' is-active' : '' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-layout' } ),
+						' ' + __( 'Card Layouts', 'ajax-filter-posts' ) + ' ▼'
+					),
+					isTemplatesOpen &&
+						el( CardTemplatesPopover, {
+							isOpen: isTemplatesOpen,
+							onClose: () => setIsTemplatesOpen( false ),
+							onApplyTemplate: applyCardTemplate,
 							isPro: isPro,
 						} )
 				)
@@ -726,6 +1403,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>${escapeHtml( title || 'Preview' )}</title>
+	<link rel="stylesheet" href="${initData.dashiconsCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
 	<style>
@@ -779,6 +1457,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>${escapeHtml( title || 'GridMaster Preview' )}</title>
+	<link rel="stylesheet" href="${initData.dashiconsCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
 	<style>
@@ -1353,12 +2032,56 @@
 				col_gap: 24,
 				row_gap: 28,
 				card: {
+					layoutMode: 'vertical',
 					backgroundColor: '#ffffff',
 					padding: '20px',
 					borderRadius: '8px',
 					borderWidth: '1px',
 					borderColor: '#dcdcde',
 					boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'horizontal-list',
+				title: __( 'Horizontal List View', 'ajax-filter-posts' ),
+				desc: __( 'Side-by-side list view with 35% media on the left and full-width rows.', 'ajax-filter-posts' ),
+				icon: 'align-left',
+				tag: __( '2 Cols • 24px Gap', 'ajax-filter-posts' ),
+				columns: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+				col_gap: 24,
+				row_gap: 24,
+				card: {
+					layoutMode: 'horizontal',
+					mediaWidth: '35%',
+					backgroundColor: '#ffffff',
+					padding: '16px',
+					borderRadius: '10px',
+					borderWidth: '1px',
+					borderColor: '#e2e8f0',
+					boxShadow: 'none',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'hero-overlay',
+				title: __( 'Hero Overlay (Cover)', 'ajax-filter-posts' ),
+				desc: __( 'Full bleed background image cards with gradient scrim and white text.', 'ajax-filter-posts' ),
+				icon: 'cover-image',
+				tag: __( '3 Cols • 24px Gap', 'ajax-filter-posts' ),
+				columns: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
+				col_gap: 24,
+				row_gap: 28,
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '340px',
+					backgroundColor: '#1e293b',
+					padding: '24px',
+					borderRadius: '12px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+					hoverEffect: 'zoom',
 				},
 			},
 			{
@@ -1371,30 +2094,14 @@
 				col_gap: 32,
 				row_gap: 32,
 				card: {
+					layoutMode: 'vertical',
 					backgroundColor: '#ffffff',
 					padding: '24px',
 					borderRadius: '14px',
 					borderWidth: '0px',
 					borderColor: 'transparent',
 					boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-				},
-			},
-			{
-				id: 'minimalist',
-				title: __( 'Minimalist', 'ajax-filter-posts' ),
-				desc: __( 'Lightweight flush design without borders, ideal for portfolios and galleries.', 'ajax-filter-posts' ),
-				icon: 'portfolio',
-				tag: __( '3 Cols • 20px Gap', 'ajax-filter-posts' ),
-				columns: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
-				col_gap: 20,
-				row_gap: 36,
-				card: {
-					backgroundColor: '#ffffff',
-					padding: '0px',
-					borderRadius: '0px',
-					borderWidth: '0px',
-					borderColor: 'transparent',
-					boxShadow: 'none',
+					hoverEffect: 'lift',
 				},
 			},
 			{
@@ -1407,12 +2114,55 @@
 				col_gap: 16,
 				row_gap: 20,
 				card: {
+					layoutMode: 'vertical',
 					backgroundColor: '#ffffff',
 					padding: '14px',
 					borderRadius: '6px',
 					borderWidth: '1px',
 					borderColor: '#e2e8f0',
 					boxShadow: 'none',
+					hoverEffect: 'zoom',
+				},
+			},
+			{
+				id: 'compact-sidebar',
+				title: __( 'Compact List (Sidebar)', 'ajax-filter-posts' ),
+				desc: __( 'Single-column dense horizontal row layout for sidebars or widgets.', 'ajax-filter-posts' ),
+				icon: 'menu-alt',
+				tag: __( '1 Col • 12px Gap', 'ajax-filter-posts' ),
+				columns: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1 },
+				col_gap: 12,
+				row_gap: 12,
+				card: {
+					layoutMode: 'horizontal',
+					mediaWidth: '85px',
+					backgroundColor: '#ffffff',
+					padding: '10px',
+					borderRadius: '6px',
+					borderWidth: '1px',
+					borderColor: '#f1f5f9',
+					boxShadow: 'none',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'minimalist',
+				title: __( 'Minimalist', 'ajax-filter-posts' ),
+				desc: __( 'Lightweight flush design without borders, ideal for portfolios and galleries.', 'ajax-filter-posts' ),
+				icon: 'portfolio',
+				tag: __( '3 Cols • 20px Gap', 'ajax-filter-posts' ),
+				columns: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
+				col_gap: 20,
+				row_gap: 36,
+				card: {
+					layoutMode: 'vertical',
+					backgroundColor: '#ffffff',
+					padding: '0px',
+					borderRadius: '0px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: 'none',
+					hoverEffect: 'none',
 				},
 			},
 			{
@@ -1425,12 +2175,14 @@
 				col_gap: 24,
 				row_gap: 28,
 				card: {
+					layoutMode: 'vertical',
 					backgroundColor: '#1e293b',
 					padding: '20px',
 					borderRadius: '12px',
 					borderWidth: '1px',
 					borderColor: '#334155',
 					boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+					hoverEffect: 'lift',
 				},
 			},
 			{
@@ -1444,30 +2196,110 @@
 				col_gap: 20,
 				row_gap: 28,
 				card: {
+					layoutMode: 'vertical',
 					backgroundColor: '#ffffff',
 					padding: '16px',
 					borderRadius: '10px',
 					borderWidth: '1px',
 					borderColor: '#e5e7eb',
 					boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'accessible-slider',
+				title: __( 'Accessible Carousel', 'ajax-filter-posts' ),
+				desc: __( 'Touch & keyboard accessible carousel with smooth scroll snap, dots & arrows.', 'ajax-filter-posts' ),
+				icon: 'slides',
+				tag: __( 'Slider • 3 Slides', 'ajax-filter-posts' ),
+				layoutType: 'slider',
+				columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+				slider: {
+					slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+					arrows: true,
+					dots: true,
+					autoplay: false,
+					autoplay_speed: 3000,
+					pause_on_hover: true,
+					infinite: true,
+				},
+				col_gap: 24,
+				row_gap: 0,
+				card: {
+					layoutMode: 'vertical',
+					backgroundColor: '#ffffff',
+					padding: '20px',
+					borderRadius: '12px',
+					borderWidth: '1px',
+					borderColor: '#e2e8f0',
+					boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'autoplay-carousel',
+				title: __( 'Autoplay Hero Carousel', 'ajax-filter-posts' ),
+				desc: __( 'Continuous animated carousel with accessible pause control & cover overlay cards.', 'ajax-filter-posts' ),
+				icon: 'controls-play',
+				tag: __( 'Autoplay • 2 Slides', 'ajax-filter-posts' ),
+				layoutType: 'slider',
+				columns: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+				slider: {
+					slides_to_show: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+					arrows: true,
+					dots: true,
+					autoplay: true,
+					autoplay_speed: 3500,
+					pause_on_hover: true,
+					infinite: true,
+				},
+				col_gap: 20,
+				row_gap: 0,
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '320px',
+					backgroundColor: '#1e293b',
+					padding: '24px',
+					borderRadius: '12px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+					hoverEffect: 'zoom',
 				},
 			},
 		];
 
 		const applyPreset = ( preset ) => {
 			setActivePresetId( preset.id );
+			setConfig( ( prev ) => {
+				const nextLayout = {
+					...prev.layout,
+					type: preset.layoutType || prev.layout?.type || 'grid',
+					columns: { ...preset.columns },
+					col_gap: preset.col_gap,
+					row_gap: preset.row_gap,
+				};
+				if ( preset.slider ) {
+					nextLayout.slider = { ...preset.slider };
+				}
+				return {
+					...prev,
+					layout: nextLayout,
+				};
+			} );
+			if ( rootCardBlock && preset.card ) {
+				updateBlockAttributes( rootCardBlock.clientId, { ...preset.card } );
+			}
+		};
+
+		const updateLayoutType = ( type ) => {
 			setConfig( ( prev ) => ( {
 				...prev,
 				layout: {
 					...prev.layout,
-					columns: { ...preset.columns },
-					col_gap: preset.col_gap,
-					row_gap: preset.row_gap,
+					type: type,
 				},
 			} ) );
-			if ( rootCardBlock && preset.card ) {
-				updateBlockAttributes( rootCardBlock.clientId, { ...preset.card } );
-			}
 		};
 
 		const updateColumn = ( breakpoint, val ) => {
@@ -1482,9 +2314,78 @@
 			} );
 		};
 
+		const updateSliderConfig = ( key, val ) => {
+			setConfig( ( prev ) => {
+				const currentSlider = prev.layout?.slider || {
+					slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+					arrows: true,
+					dots: true,
+					autoplay: false,
+					autoplay_speed: 3000,
+					pause_on_hover: true,
+					infinite: true,
+				};
+				return {
+					...prev,
+					layout: {
+						...prev.layout,
+						slider: {
+							...currentSlider,
+							[ key ]: val,
+						},
+					},
+				};
+			} );
+		};
+
+		const updateSliderSlideToShow = ( breakpoint, val ) => {
+			setConfig( ( prev ) => {
+				const currentSlider = prev.layout?.slider || {
+					slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+					arrows: true,
+					dots: true,
+					autoplay: false,
+					autoplay_speed: 3000,
+					pause_on_hover: true,
+					infinite: true,
+				};
+				const currentSlides = { ...( currentSlider.slides_to_show || { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 } ) };
+				currentSlides[ breakpoint ] = parseInt( val, 10 ) || 1;
+				if ( breakpoint === 'lg' ) {
+					currentSlides.xl = parseInt( val, 10 ) || 1;
+				}
+				return {
+					...prev,
+					layout: {
+						...prev.layout,
+						slider: {
+							...currentSlider,
+							slides_to_show: currentSlides,
+						},
+					},
+				};
+			} );
+		};
+
+		const layoutType = config.layout?.type || 'grid';
+		const isSlider = 'slider' === layoutType || 'carousel' === layoutType;
+		const sliderConfig = config.layout?.slider || {
+			slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+			arrows: true,
+			dots: true,
+			autoplay: false,
+			autoplay_speed: 3000,
+			pause_on_hover: true,
+			infinite: true,
+		};
+
 		const colLg = config.layout?.columns?.lg ?? 3;
 		const colMd = config.layout?.columns?.md ?? 2;
 		const colXs = config.layout?.columns?.xs ?? 1;
+
+		const slideLg = sliderConfig.slides_to_show?.lg ?? colLg;
+		const slideMd = sliderConfig.slides_to_show?.md ?? colMd;
+		const slideXs = sliderConfig.slides_to_show?.xs ?? colXs;
 
 		// Exact 0px support
 		const colGap = typeof config.layout?.col_gap !== 'undefined' ? config.layout.col_gap : 30;
@@ -1493,6 +2394,47 @@
 		return el(
 			'div',
 			{ className: 'gm-tab-panel-container' },
+
+			// Layout Type Card
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-forms' } ), ' ' + __( 'Layout Type', 'ajax-filter-posts' ) ),
+				el(
+					'div',
+					{ className: 'gm-layout-type-selector' },
+					el(
+						'button',
+						{
+							type: 'button',
+							className: 'gm-layout-type-option' + ( ! isSlider ? ' is-active' : '' ),
+							onClick: () => updateLayoutType( 'grid' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-grid-view gm-layout-type-icon' } ),
+						el(
+							'div',
+							{ className: 'gm-layout-type-info' },
+							el( 'strong', null, __( 'Standard Post Grid', 'ajax-filter-posts' ) ),
+							el( 'span', null, __( 'Classic responsive grid with columns and pagination.', 'ajax-filter-posts' ) )
+						)
+					),
+					el(
+						'button',
+						{
+							type: 'button',
+							className: 'gm-layout-type-option' + ( isSlider ? ' is-active' : '' ),
+							onClick: () => updateLayoutType( 'slider' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-slides gm-layout-type-icon' } ),
+						el(
+							'div',
+							{ className: 'gm-layout-type-info' },
+							el( 'strong', null, __( 'Accessible Carousel / Slider', 'ajax-filter-posts' ) ),
+							el( 'span', null, __( 'WCAG compliant touch & arrow slider with scroll snap.', 'ajax-filter-posts' ) )
+						)
+					)
+				)
+			),
 
 			// Presets Card
 			el(
@@ -1527,60 +2469,173 @@
 				)
 			),
 
-			// Responsive Columns Card
-			el(
-				'div',
-				{ className: 'gm-settings-card' },
-				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-layout' } ), ' ' + __( 'Responsive Grid Columns', 'ajax-filter-posts' ) ),
+			// Grid-specific settings
+			! isSlider &&
 				el(
-					'div',
-					{ className: 'gm-responsive-columns-group' },
-					el( RangeControl, {
-						label: __( 'Desktop Columns', 'ajax-filter-posts' ),
-						value: colLg,
-						min: 1,
-						max: 6,
-						onChange: ( val ) => updateColumn( 'lg', val ),
-					} ),
-					el( RangeControl, {
-						label: __( 'Tablet Columns', 'ajax-filter-posts' ),
-						value: colMd,
-						min: 1,
-						max: 4,
-						onChange: ( val ) => updateColumn( 'md', val ),
-					} ),
-					el( RangeControl, {
-						label: __( 'Mobile Columns', 'ajax-filter-posts' ),
-						value: colXs,
-						min: 1,
-						max: 3,
-						onChange: ( val ) => updateColumn( 'xs', val ),
-					} )
-				)
-			),
+					Fragment,
+					null,
+					// Responsive Columns Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-layout' } ), ' ' + __( 'Responsive Grid Columns', 'ajax-filter-posts' ) ),
+						el(
+							'div',
+							{ className: 'gm-responsive-columns-group' },
+							el( RangeControl, {
+								label: __( 'Desktop Columns', 'ajax-filter-posts' ),
+								value: colLg,
+								min: 1,
+								max: 6,
+								onChange: ( val ) => updateColumn( 'lg', val ),
+							} ),
+							el( RangeControl, {
+								label: __( 'Tablet Columns', 'ajax-filter-posts' ),
+								value: colMd,
+								min: 1,
+								max: 4,
+								onChange: ( val ) => updateColumn( 'md', val ),
+							} ),
+							el( RangeControl, {
+								label: __( 'Mobile Columns', 'ajax-filter-posts' ),
+								value: colXs,
+								min: 1,
+								max: 3,
+								onChange: ( val ) => updateColumn( 'xs', val ),
+							} )
+						)
+					),
 
-			// Spacing Card
-			el(
-				'div',
-				{ className: 'gm-settings-card' },
-				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-grid-view' } ), ' ' + __( 'Grid Gaps & Spacing', 'ajax-filter-posts' ) ),
-				el( RangeControl, {
-					label: __( 'Column Gap (px)', 'ajax-filter-posts' ),
-					value: colGap,
-					min: 0,
-					max: 80,
-					onChange: ( val ) => updateConfigSection( 'layout', 'col_gap', val ),
-					help: __( 'Horizontal gap between grid post cards. Supports 0px for compact flush grids.', 'ajax-filter-posts' ),
-				} ),
-				el( RangeControl, {
-					label: __( 'Row Gap (px)', 'ajax-filter-posts' ),
-					value: rowGap,
-					min: 0,
-					max: 80,
-					onChange: ( val ) => updateConfigSection( 'layout', 'row_gap', val ),
-					help: __( 'Vertical gap between grid rows. Supports 0px.', 'ajax-filter-posts' ),
-				} )
-			)
+					// Spacing Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-grid-view' } ), ' ' + __( 'Grid Gaps & Spacing', 'ajax-filter-posts' ) ),
+						el( RangeControl, {
+							label: __( 'Column Gap (px)', 'ajax-filter-posts' ),
+							value: colGap,
+							min: 0,
+							max: 80,
+							onChange: ( val ) => updateConfigSection( 'layout', 'col_gap', val ),
+							help: __( 'Horizontal gap between grid post cards. Supports 0px for compact flush grids.', 'ajax-filter-posts' ),
+						} ),
+						el( RangeControl, {
+							label: __( 'Row Gap (px)', 'ajax-filter-posts' ),
+							value: rowGap,
+							min: 0,
+							max: 80,
+							onChange: ( val ) => updateConfigSection( 'layout', 'row_gap', val ),
+							help: __( 'Vertical gap between grid rows. Supports 0px.', 'ajax-filter-posts' ),
+						} )
+					)
+				),
+
+			// Slider-specific settings
+			isSlider &&
+				el(
+					Fragment,
+					null,
+					// Responsive Slides Per View
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-slides' } ), ' ' + __( 'Responsive Slides Per View', 'ajax-filter-posts' ) ),
+						el(
+							'div',
+							{ className: 'gm-responsive-columns-group' },
+							el( RangeControl, {
+								label: __( 'Desktop Slides', 'ajax-filter-posts' ),
+								value: slideLg,
+								min: 1,
+								max: 6,
+								onChange: ( val ) => updateSliderSlideToShow( 'lg', val ),
+							} ),
+							el( RangeControl, {
+								label: __( 'Tablet Slides', 'ajax-filter-posts' ),
+								value: slideMd,
+								min: 1,
+								max: 4,
+								onChange: ( val ) => updateSliderSlideToShow( 'md', val ),
+							} ),
+							el( RangeControl, {
+								label: __( 'Mobile Slides', 'ajax-filter-posts' ),
+								value: slideXs,
+								min: 1,
+								max: 3,
+								onChange: ( val ) => updateSliderSlideToShow( 'xs', val ),
+							} )
+						)
+					),
+
+					// Controls & Navigation Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-arrow-right-alt2' } ), ' ' + __( 'Carousel Navigation & Controls', 'ajax-filter-posts' ) ),
+						el( ToggleControl, {
+							label: __( 'Navigation Arrows', 'ajax-filter-posts' ),
+							help: __( 'Show Previous / Next arrow buttons with accessible screen reader announcements.', 'ajax-filter-posts' ),
+							checked: sliderConfig.arrows !== false,
+							onChange: ( val ) => updateSliderConfig( 'arrows', val ),
+						} ),
+						el( ToggleControl, {
+							label: __( 'Dots Pagination (Tablist)', 'ajax-filter-posts' ),
+							help: __( 'Show accessible slide indicator dots at the bottom of the slider.', 'ajax-filter-posts' ),
+							checked: sliderConfig.dots !== false,
+							onChange: ( val ) => updateSliderConfig( 'dots', val ),
+						} ),
+						el( ToggleControl, {
+							label: __( 'Infinite Wrap (Continuous)', 'ajax-filter-posts' ),
+							help: __( 'When reaching the end, wrap smoothly to the first slide.', 'ajax-filter-posts' ),
+							checked: sliderConfig.infinite !== false,
+							onChange: ( val ) => updateSliderConfig( 'infinite', val ),
+						} )
+					),
+
+					// Autoplay & Motion Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-controls-play' } ), ' ' + __( 'Autoplay & Motion', 'ajax-filter-posts' ) ),
+						el( ToggleControl, {
+							label: __( 'Enable Autoplay', 'ajax-filter-posts' ),
+							help: __( 'Automatically advance slides at a set interval. Respects system prefers-reduced-motion.', 'ajax-filter-posts' ),
+							checked: !! sliderConfig.autoplay,
+							onChange: ( val ) => updateSliderConfig( 'autoplay', val ),
+						} ),
+						sliderConfig.autoplay &&
+							el( RangeControl, {
+								label: __( 'Autoplay Interval (ms)', 'ajax-filter-posts' ),
+								value: sliderConfig.autoplay_speed || 3000,
+								min: 1500,
+								max: 10000,
+								step: 500,
+								onChange: ( val ) => updateSliderConfig( 'autoplay_speed', val ),
+							} ),
+						sliderConfig.autoplay &&
+							el( ToggleControl, {
+								label: __( 'Pause on Hover & Keyboard Focus', 'ajax-filter-posts' ),
+								help: __( 'Recommended for WCAG accessibility compliance.', 'ajax-filter-posts' ),
+								checked: sliderConfig.pause_on_hover !== false,
+								onChange: ( val ) => updateSliderConfig( 'pause_on_hover', val ),
+							} )
+					),
+
+					// Slide Spacing Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-grid-view' } ), ' ' + __( 'Slide Spacing', 'ajax-filter-posts' ) ),
+						el( RangeControl, {
+							label: __( 'Slide Gap (px)', 'ajax-filter-posts' ),
+							value: colGap,
+							min: 0,
+							max: 80,
+							onChange: ( val ) => updateConfigSection( 'layout', 'col_gap', val ),
+							help: __( 'Space between slider cards. Supports 0px for contiguous slides.', 'ajax-filter-posts' ),
+						} )
+					)
+				)
 		);
 	}
 

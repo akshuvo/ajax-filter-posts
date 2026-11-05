@@ -42,6 +42,7 @@ $initial_data = array(
 	'adminUrl'       => admin_url( 'admin.php?page=gridmaster' ),
 	'isPro'          => defined( 'GRIDMASTER_PRO_VERSION' ),
 	'frontendCssUrl' => esc_url_raw( GRIDMASTER_ASSETS . 'css/frontend-v2.css' ),
+	'dashiconsCssUrl' => esc_url_raw( includes_url( 'css/dashicons.min.css' ) ),
 	'coreCssUrl'     => esc_url_raw( includes_url( 'css/dist/block-library/style.min.css' ) ),
 	'frontendJsUrl'  => esc_url_raw( GRIDMASTER_ASSETS . 'js/frontend-v2.js' ),
 	'metadata'       => array(

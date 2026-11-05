@@ -51,6 +51,7 @@ class Grid_Repository {
 				'end_text'        => __( 'No more posts', 'ajax-filter-posts' ),
 			),
 			'layout'     => array(
+				'type'       => 'grid', // 'grid' or 'slider'
 				'columns'    => array(
 					'xs' => 1,
 					'sm' => 2,
@@ -60,6 +61,21 @@ class Grid_Repository {
 				),
 				'col_gap'    => 30,
 				'row_gap'    => 30,
+				'slider'     => array(
+					'slides_to_show' => array(
+						'xs' => 1,
+						'sm' => 2,
+						'md' => 3,
+						'lg' => 3,
+						'xl' => 3,
+					),
+					'arrows'         => true,
+					'dots'           => true,
+					'autoplay'       => false,
+					'autoplay_speed' => 3000,
+					'pause_on_hover' => true,
+					'infinite'       => true,
+				),
 				'card_style' => array(
 					'background'    => '#ffffff',
 					'border_radius' => '8px',
