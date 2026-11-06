@@ -123,6 +123,9 @@ class Grid_Renderer {
 					echo Pagination_Registry::render( $pagination_type, $query, $config['pagination'], $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
+
+			// Render Scoped Custom CSS and Custom Scripts.
+			echo self::render_custom_code( $config, $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 		<?php
@@ -156,6 +159,7 @@ class Grid_Renderer {
 
 		$wrapper_classes = array( 'gm-grid-wrapper', 'gm-v2-grid', 'gm-preview-grid' );
 		$wrapper_attrs   = array(
+			'id'                => 'gm-grid-' . $grid_id,
 			'data-grid-id'      => (string) $grid_id,
 			'data-preview-mode' => '1',
 			'style'             => $css_vars,
@@ -200,6 +204,9 @@ class Grid_Renderer {
 					echo Pagination_Registry::render( $pagination_type, $query, $config['pagination'], $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
+
+			// Render Scoped Custom CSS and Custom Scripts in preview.
+			echo self::render_custom_code( $config, $grid_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 		<?php
@@ -506,21 +513,128 @@ class Grid_Renderer {
 	}
 
 	/**
+	 * Renders scoped custom CSS and safe custom JavaScript for the grid.
+	 *
+	 * @param array $config Grid config.
+	 * @param int   $grid_id Grid ID.
+	 * @param bool  $is_preview Whether rendering in live preview mode.
+	 * @return string HTML output (<style> and <script>).
+	 */
+	public static function render_custom_code( $config, $grid_id, $is_preview = false ) {
+		$custom_code = ! empty( $config['custom_code'] ) && is_array( $config['custom_code'] ) ? $config['custom_code'] : array();
+		$custom_css  = ! empty( $custom_code['css'] ) ? $custom_code['css'] : ( ! empty( $config['custom_css'] ) ? $config['custom_css'] : '' );
+		$custom_js   = ! empty( $custom_code['js'] ) ? $custom_code['js'] : ( ! empty( $config['custom_js'] ) ? $config['custom_js'] : '' );
+
+		$output = '';
+
+		// 1. Process Custom CSS
+		if ( ! empty( $custom_css ) && is_string( $custom_css ) ) {
+			// Strip rogue <style> tags if user entered them
+			$clean_css = preg_replace( '/<\/?style[^>]*>/i', '', $custom_css );
+
+			// Determine selector prefix for {{GRID}} or {{GRID_ID}}
+			$scope_selector = '#gm-grid-' . $grid_id;
+			if ( $is_preview || 0 === (int) $grid_id ) {
+				$scope_selector = '#gm-grid-' . $grid_id . ', [data-preview-mode="1"]';
+			}
+
+			$compiled_css = str_replace( array( '{{GRID}}', '{{GRID_ID}}', '{{grid}}' ), $scope_selector, $clean_css );
+
+			$output .= sprintf(
+				'<style class="gm-grid-custom-css" data-grid-id="%1$s">%2$s</style>',
+				esc_attr( $grid_id ),
+				$compiled_css
+			);
+		}
+
+		// 2. Process Custom JS
+		if ( ! empty( $custom_js ) && is_string( $custom_js ) ) {
+			// Strip rogue <script> tags if user entered them
+			$clean_js = preg_replace( '/<\/?script[^>]*>/i', '', $custom_js );
+
+			$safe_id = esc_js( $grid_id );
+			$int_id  = (int) $grid_id;
+
+			$output .= sprintf(
+				'<script class="gm-grid-custom-js" data-grid-id="%1$s">
+(function() {
+	function gmInitCustom_%2$s() {
+		var grid = document.getElementById("gm-grid-%2$s") || document.querySelector(\'[data-grid-id="%2$s"]\');
+		if (!grid) return;
+		try {
+			(function(gridEl, gridId) {
+%3$s
+			})(grid, %4$d);
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error("[GridMaster Grid #%4$d Custom Script Error]:", err);
+			}
+		}
+	}
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", gmInitCustom_%2$s);
+	} else {
+		gmInitCustom_%2$s();
+	}
+	document.addEventListener("gridmaster_loaded_posts", function(e) {
+		if (e.detail && (e.detail.gridId === %4$d || String(e.detail.gridId) === "%2$s")) {
+			gmInitCustom_%2$s();
+		}
+	});
+})();
+</script>',
+				esc_attr( $grid_id ),
+				$safe_id,
+				$clean_js,
+				$int_id
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Registers frontend scripts and stylesheets early so builders/widgets can declare dependency.
+	 */
+	public static function register_assets() {
+		if ( ! wp_script_is( 'gridmaster-frontend-v2', 'registered' ) ) {
+			wp_register_script(
+				'gridmaster-frontend-v2',
+				GRIDMASTER_ASSETS . 'js/frontend-v2.js',
+				array(),
+				GRIDMASTER_VERSION,
+				true
+			);
+
+			wp_localize_script(
+				'gridmaster-frontend-v2',
+				'gridmasterV2',
+				array(
+					'restUrl'   => esc_url_raw( rest_url( 'gridmaster/v2/' ) ),
+					'nonce'     => wp_create_nonce( 'wp_rest' ),
+					'errorText' => __( 'Could not load posts. Please retry.', 'ajax-filter-posts' ),
+					'retryText' => __( 'Retry', 'ajax-filter-posts' ),
+				)
+			);
+		}
+
+		if ( ! wp_style_is( 'gridmaster-frontend-v2', 'registered' ) ) {
+			wp_register_style(
+				'gridmaster-frontend-v2',
+				GRIDMASTER_ASSETS . 'css/frontend-v2.css',
+				array( 'dashicons' ),
+				GRIDMASTER_VERSION
+			);
+		}
+	}
+
+	/**
 	 * Enqueues frontend scripts and stylesheets.
 	 */
 	public static function enqueue_assets() {
-		wp_enqueue_script( 'gridmaster-frontend-v2', GRIDMASTER_ASSETS . 'js/frontend-v2.js', array(), GRIDMASTER_VERSION, true );
-		wp_localize_script(
-			'gridmaster-frontend-v2',
-			'gridmasterV2',
-			array(
-				'restUrl' => esc_url_raw( rest_url( 'gridmaster/v2/' ) ),
-				'nonce'   => wp_create_nonce( 'wp_rest' ),
-					'errorText' => __( 'Could not load posts. Please retry.', 'ajax-filter-posts' ),
-					'retryText' => __( 'Retry', 'ajax-filter-posts' ),
-			)
-		);
+		self::register_assets();
 
-		wp_enqueue_style( 'gridmaster-frontend-v2', GRIDMASTER_ASSETS . 'css/frontend-v2.css', array( 'dashicons' ), GRIDMASTER_VERSION );
+		wp_enqueue_script( 'gridmaster-frontend-v2' );
+		wp_enqueue_style( 'gridmaster-frontend-v2' );
 	}
 }

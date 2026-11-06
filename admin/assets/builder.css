@@ -1736,8 +1736,10 @@ body.gm-focus-mode #wpcontent {
 .gm-card-studio-container {
 	height: auto;
 }
-.gm-tab-panel-container {
+.gm-tab-panel-container,
+.gm-code-tab-container {
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 .gm-history-group, .gm-device-switcher {
 	display: inline-flex;
@@ -1807,4 +1809,318 @@ body.gridmaster_page_gridmaster-builder .block-editor-block-popover__drop-zone-f
 	transform: none !important;
 	animation: none !important;
 	transition: none !important;
+}
+
+/* ==========================================================================
+   Custom Code Tab (CSS & Scripts)
+   ========================================================================== */
+.gm-code-tab-container {
+	max-width: 860px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 24px 20px 60px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	overflow-y: auto;
+	flex: 1 1 auto;
+	min-height: 0;
+	box-sizing: border-box;
+}
+
+.gm-code-intro-card {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-left: 4px solid #4f46e5;
+	border-radius: 8px;
+	padding: 16px 20px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.gm-code-intro-title {
+	margin: 0 0 6px 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: #0f172a;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.gm-code-intro-desc {
+	margin: 0;
+	font-size: 13px;
+	color: #475569;
+	line-height: 1.5;
+}
+
+.gm-code-editor-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.gm-code-editor-heading {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #0f172a;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.gm-code-editor-heading .dashicons {
+	color: #4f46e5;
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+.gm-code-toolbar-section {
+	margin-bottom: 12px;
+}
+
+.gm-code-toolbar-label {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #64748b;
+	margin-bottom: 6px;
+	display: block;
+}
+
+.gm-code-chips-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.gm-code-chip-btn {
+	display: inline-flex;
+	align-items: center;
+	background: #f1f5f9;
+	border: 1px solid #cbd5e1;
+	color: #334155;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 11px;
+	font-weight: 500;
+	padding: 3px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.gm-code-chip-btn:hover {
+	background: #e2e8f0;
+	border-color: #94a3b8;
+	color: #0f172a;
+}
+
+.gm-code-preset-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.gm-code-preset-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	background: #eef2ff;
+	border: 1px solid #c7d2fe;
+	color: #4338ca;
+	font-size: 12px;
+	font-weight: 500;
+	padding: 4px 10px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.gm-code-preset-pill:hover {
+	background: #e0e7ff;
+	border-color: #a5b4fc;
+	color: #3730a3;
+}
+
+.gm-code-preset-pill .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+.gm-code-textarea-wrapper {
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid #1e293b;
+	background: #0f172a;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.gm-code-textarea {
+	width: 100%;
+	min-height: 220px;
+	background: #0f172a !important;
+	color: #e2e8f0 !important;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+	font-size: 13px !important;
+	line-height: 1.6 !important;
+	padding: 14px 16px !important;
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
+	resize: vertical;
+	tab-size: 2;
+	box-sizing: border-box;
+	display: block;
+}
+
+.gm-code-textarea:focus {
+	box-shadow: inset 0 0 0 1px #6366f1 !important;
+}
+
+.gm-code-textarea::placeholder {
+	color: #475569 !important;
+	font-style: italic;
+}
+
+.gm-code-textarea:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	background: #1e293b !important;
+}
+
+.gm-code-footer-help {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 8px;
+	font-size: 12px;
+	color: #64748b;
+}
+
+.gm-code-tag-badge {
+	display: inline-block;
+	background: #f1f5f9;
+	color: #334155;
+	font-family: monospace;
+	font-size: 11px;
+	padding: 1px 5px;
+	border-radius: 3px;
+	border: 1px solid #e2e8f0;
+}
+
+/* ==========================================================================
+   Fixed Toast Notifications (Bottom-Right, Zero Layout Shift)
+   ========================================================================== */
+.gm-toast-container {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	z-index: 100000;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	pointer-events: none;
+}
+
+.gm-toast-notification {
+	pointer-events: auto;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 260px;
+	max-width: 420px;
+	padding: 12px 16px;
+	background: #0f172a;
+	color: #f8fafc;
+	border-radius: 8px;
+	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	animation: gmToastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	backdrop-filter: blur(8px);
+}
+
+.gm-toast-notification.gm-toast-success {
+	background: #0f172a;
+	border-left: 4px solid #10b981;
+}
+
+.gm-toast-notification.gm-toast-success .gm-toast-icon {
+	color: #10b981;
+}
+
+.gm-toast-notification.gm-toast-info {
+	background: #0f172a;
+	border-left: 4px solid #6366f1;
+}
+
+.gm-toast-notification.gm-toast-info .gm-toast-icon {
+	color: #818cf8;
+}
+
+.gm-toast-notification.gm-toast-error {
+	background: #0f172a;
+	border-left: 4px solid #ef4444;
+}
+
+.gm-toast-notification.gm-toast-error .gm-toast-icon {
+	color: #ef4444;
+}
+
+.gm-toast-icon {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+.gm-toast-message {
+	flex: 1;
+	word-break: break-word;
+}
+
+.gm-toast-close {
+	background: transparent;
+	border: none;
+	color: #94a3b8;
+	cursor: pointer;
+	padding: 2px;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.15s ease;
+}
+
+.gm-toast-close:hover {
+	color: #ffffff;
+}
+
+.gm-toast-close .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+@keyframes gmToastSlideUp {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
 }

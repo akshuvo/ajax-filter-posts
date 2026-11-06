@@ -30,6 +30,7 @@
 		Tooltip,
 	} = wp.components;
 	const __ = wp.i18n.__;
+	const sprintf = wp.i18n.sprintf || ( ( str, ...args ) => args.reduce( ( s, a ) => s.replace( /%s/, a ), str ) );
 
 	const initData = window.gridmasterBuilderData || {};
 	// The standalone shell must register core blocks as well as load their script.
@@ -1073,7 +1074,7 @@
 	 * Card Canvas Stage: contains quick-add bar, helper text, and Gutenberg canvas.
 	 */
 	function CardCanvasStage( props ) {
-		const { isPro } = props;
+		const { isPro, customCss, showToast } = props;
 		const { insertBlock, replaceInnerBlocks, updateBlockAttributes } = useDispatch( 'core/block-editor' );
 		const registry = wp.data.useRegistry();
 		const paperRef = useRef( null );
@@ -1081,6 +1082,10 @@
 			const be = select( 'core/block-editor' );
 			return { rootBlocks: be.getBlocks(), selectedClientId: be.getSelectedBlockClientId() };
 		} );
+
+		const canvasCss = customCss
+			? customCss.replace( /\{\{GRID\}\}|\{\{GRID_ID\}\}|\{\{grid\}\}/g, '.gm-card-canvas-paper' )
+			: '';
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const [ isTemplatesOpen, setIsTemplatesOpen ] = useState( false );
@@ -1143,6 +1148,9 @@
 			} else {
 				const newCard = createBlock( 'gridmaster/card', mergedAttrs, newBlocks );
 				insertBlock( newCard );
+			}
+			if ( showToast ) {
+				showToast( sprintf( __( 'Applied "%s" card layout.', 'ajax-filter-posts' ), tpl.name ), 'success', 'layout' );
 			}
 		};
 
@@ -1269,6 +1277,7 @@
 				el(
 					'div',
 					{ className: 'gm-card-canvas-paper', ref: paperRef },
+					canvasCss && el( 'style', { id: 'gm-builder-canvas-custom-css' }, canvasCss ),
 					el(
 						BlockTools,
 						{ className: 'gm-card-block-tools' },
@@ -2153,7 +2162,7 @@
 	 * Layout Tab: Design & Layout presets, responsive columns, and grid gaps.
 	 */
 	function LayoutTab( props ) {
-		const { config, setConfig, updateConfigSection, isPro } = props;
+		const { config, setConfig, updateConfigSection, isPro, showToast } = props;
 		const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
 		const rootCardBlock = useSelect( ( select ) => {
 			const blocks = select( 'core/block-editor' ).getBlocks();
@@ -2521,6 +2530,9 @@
 
 		const applyPreset = ( preset ) => {
 			setActivePresetId( preset.id );
+			if ( showToast ) {
+				showToast( sprintf( __( 'Applied "%s" layout preset.', 'ajax-filter-posts' ), preset.title ), 'success', 'layout' );
+			}
 			setConfig( ( prev ) => {
 				const nextLayout = {
 					...prev.layout,
@@ -3068,6 +3080,304 @@
 	}
 
 	/**
+	 * Custom Code Tab: Custom CSS stylesheet & custom JavaScript lifecycle scripts.
+	 */
+	function CustomCodeTab( props ) {
+		const { config, setConfig, updateConfigSection, canUnfilteredHtml, gridId, showToast } = props;
+		const customCode = config.custom_code || {};
+		const cssVal = customCode.css || config.custom_css || '';
+		const jsVal = customCode.js || config.custom_js || '';
+
+		const handleCssChange = ( val ) => {
+			updateConfigSection( 'custom_code', 'css', val );
+		};
+
+		const handleJsChange = ( val ) => {
+			updateConfigSection( 'custom_code', 'js', val );
+		};
+
+		const insertCssSnippet = ( snippet, name ) => {
+			const current = cssVal ? cssVal.trimEnd() + '\n\n' : '';
+			handleCssChange( current + snippet );
+			if ( showToast ) {
+				showToast( sprintf( __( 'Inserted "%s" snippet into Custom CSS.', 'ajax-filter-posts' ), name ), 'success', 'yes-alt' );
+			}
+		};
+
+		const insertJsSnippet = ( snippet, name ) => {
+			const current = jsVal ? jsVal.trimEnd() + '\n\n' : '';
+			handleJsChange( current + snippet );
+			if ( showToast ) {
+				showToast( sprintf( __( 'Inserted "%s" snippet into Custom JavaScript.', 'ajax-filter-posts' ), name ), 'success', 'yes-alt' );
+			}
+		};
+
+		const handleKeyDown = ( e, updateFn, currentValue ) => {
+			if ( e.key === 'Tab' ) {
+				e.preventDefault();
+				const target = e.target;
+				const start = target.selectionStart;
+				const end = target.selectionEnd;
+				const nextVal = currentValue.substring( 0, start ) + '  ' + currentValue.substring( end );
+				updateFn( nextVal );
+				requestAnimationFrame( () => {
+					target.selectionStart = target.selectionEnd = start + 2;
+				} );
+			}
+		};
+
+		// CSS Selector Helpers
+		const cssSelectors = [
+			{ label: '{{GRID}}', desc: __( 'Scoped Grid Wrapper', 'ajax-filter-posts' ), snippet: '{{GRID}} {\n  \n}' },
+			{ label: '.gm-card', desc: __( 'Post Card Container', 'ajax-filter-posts' ), snippet: '{{GRID}} .gm-card {\n  \n}' },
+			{ label: '.gm-card-media', desc: __( 'Featured Media', 'ajax-filter-posts' ), snippet: '{{GRID}} .gm-card-media img {\n  \n}' },
+			{ label: '.gm-card-title', desc: __( 'Post Title', 'ajax-filter-posts' ), snippet: '{{GRID}} .gm-card-title a {\n  \n}' },
+			{ label: '.gm-filter-btn', desc: __( 'Filter Buttons', 'ajax-filter-posts' ), snippet: '{{GRID}} .gm-filter-btn {\n  \n}' },
+			{ label: '.gm-pagination', desc: __( 'Pagination Controls', 'ajax-filter-posts' ), snippet: '{{GRID}} .gm-pagination {\n  \n}' },
+		];
+
+		// Out-of-the-Box CSS Style Presets
+		const cssPresets = [
+			{
+				id: 'hover-lift',
+				name: __( 'Hover 3D Lift & Shadow', 'ajax-filter-posts' ),
+				snippet: `/* Hover 3D Lift & Elevation */\n{{GRID}} .gm-card {\n  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;\n}\n{{GRID}} .gm-card:hover {\n  transform: translateY(-8px);\n  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15);\n}`,
+			},
+			{
+				id: 'glassmorphism',
+				name: __( 'Modern Glassmorphism', 'ajax-filter-posts' ),
+				snippet: `/* Modern Glassmorphism Card */\n{{GRID}} .gm-card {\n  background: rgba(255, 255, 255, 0.72) !important;\n  backdrop-filter: blur(16px);\n  -webkit-backdrop-filter: blur(16px);\n  border: 1px solid rgba(255, 255, 255, 0.45) !important;\n  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;\n}`,
+			},
+			{
+				id: 'gradient-pills',
+				name: __( 'Gradient Filter Active Pills', 'ajax-filter-posts' ),
+				snippet: `/* Gradient Filter Active Pills */\n{{GRID}} .gm-filter-btn {\n  border-radius: 9999px !important;\n  transition: all 0.25s ease;\n}\n{{GRID}} .gm-filter-btn.gm-active {\n  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;\n  color: #ffffff !important;\n  border-color: transparent !important;\n  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);\n}`,
+			},
+			{
+				id: 'media-zoom',
+				name: __( 'Smooth Media Zoom on Hover', 'ajax-filter-posts' ),
+				snippet: `/* Smooth Media Zoom on Hover */\n{{GRID}} .gm-card .gm-card-media,\n{{GRID}} .gm-card .gm-card__media {\n  overflow: hidden;\n  border-radius: 8px;\n}\n{{GRID}} .gm-card .gm-card-media img,\n{{GRID}} .gm-card .gm-card__media img {\n  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);\n}\n{{GRID}} .gm-card:hover .gm-card-media img,\n{{GRID}} .gm-card:hover .gm-card__media img {\n  transform: scale(1.06);\n}`,
+			},
+			{
+				id: 'soft-neumorphism',
+				name: __( 'Soft Neumorphic Card', 'ajax-filter-posts' ),
+				snippet: `/* Soft Neumorphic Card */\n{{GRID}} .gm-card {\n  background: #f8fafc !important;\n  border: 1px solid #e2e8f0 !important;\n  box-shadow: 6px 6px 16px #e2e8f0, -6px -6px 16px #ffffff !important;\n  border-radius: 16px;\n}`,
+			},
+		];
+
+		// JavaScript Presets
+		const jsPresets = [
+			{
+				id: 'card-click-analytics',
+				name: __( 'Card Click Event / Analytics Tracking', 'ajax-filter-posts' ),
+				snippet: `// Card Click Tracking\ngridEl.querySelectorAll('.gm-card').forEach(function(card, idx) {\n  card.addEventListener('click', function() {\n    var title = card.querySelector('.gm-card-title, .gm-card__title')?.innerText || 'Card ' + (idx + 1);\n    console.log('[GridMaster Grid #' + gridId + '] Post clicked:', title);\n  });\n});`,
+			},
+			{
+				id: 'stagger-fade-in',
+				name: __( 'Staggered Fade-In Card Animation', 'ajax-filter-posts' ),
+				snippet: `// Staggered Fade-In Animation\ngridEl.querySelectorAll('.gm-card').forEach(function(card, idx) {\n  card.style.opacity = '0';\n  card.style.transform = 'translateY(16px)';\n  card.style.transition = 'opacity 0.4s ease ' + (idx * 0.05) + 's, transform 0.4s ease ' + (idx * 0.05) + 's';\n  requestAnimationFrame(function() {\n    card.style.opacity = '1';\n    card.style.transform = 'translateY(0)';\n  });\n});`,
+			},
+			{
+				id: 'external-link-target',
+				name: __( 'Auto Open External Links in New Tab', 'ajax-filter-posts' ),
+				snippet: `// External Links New Tab\ngridEl.querySelectorAll('.gm-card a[href^="http"]').forEach(function(link) {\n  if (link.hostname !== window.location.hostname) {\n    link.setAttribute('target', '_blank');\n    link.setAttribute('rel', 'noopener noreferrer');\n  }\n});`,
+			},
+		];
+
+		return el(
+			'div',
+			{ className: 'gm-tab-panel-container gm-code-tab-container' },
+
+			// Top Intro Guidance Banner
+			el(
+				'div',
+				{ className: 'gm-code-intro-card' },
+				el(
+					'h3',
+					{ className: 'gm-code-intro-title' },
+					el( 'span', { className: 'dashicons dashicons-editor-code' } ),
+					__( 'Custom CSS Styles & JavaScript Lifecycle Scripts', 'ajax-filter-posts' )
+				),
+				el(
+					'p',
+					{ className: 'gm-code-intro-desc' },
+					__( 'Write custom CSS rules to modify or invent out-of-the-box card styles, hover animations, filter gradients, and responsive layouts. Use custom JavaScript to bind interactive behaviors that execute on render and re-trigger automatically on AJAX filter/pagination updates.', 'ajax-filter-posts' )
+				)
+			),
+
+			// Card 1: Custom CSS
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el(
+					'div',
+					{ className: 'gm-code-editor-header' },
+					el(
+						'h4',
+						{ className: 'gm-code-editor-heading' },
+						el( 'span', { className: 'dashicons dashicons-art' } ),
+						__( 'Custom CSS Stylesheet', 'ajax-filter-posts' )
+					)
+				),
+
+				// Quick Selector Insertion Chips
+				el(
+					'div',
+					{ className: 'gm-code-toolbar-section' },
+					el( 'span', { className: 'gm-code-toolbar-label' }, __( 'Target Selectors (Click to Insert):', 'ajax-filter-posts' ) ),
+					el(
+						'div',
+						{ className: 'gm-code-chips-group' },
+						cssSelectors.map( ( item ) =>
+							el(
+								'button',
+								{
+									key: item.label,
+									type: 'button',
+									className: 'gm-code-chip-btn',
+									title: item.desc,
+									onClick: () => insertCssSnippet( item.snippet, item.label ),
+								},
+								'+ ' + item.label
+							)
+						)
+					)
+				),
+
+				// Style Presets
+				el(
+					'div',
+					{ className: 'gm-code-toolbar-section' },
+					el( 'span', { className: 'gm-code-toolbar-label' }, __( 'Out-of-the-Box Style Presets:', 'ajax-filter-posts' ) ),
+					el(
+						'div',
+						{ className: 'gm-code-preset-pills' },
+						cssPresets.map( ( preset ) =>
+							el(
+								'button',
+								{
+									key: preset.id,
+									type: 'button',
+									className: 'gm-code-preset-pill',
+									onClick: () => insertCssSnippet( preset.snippet, preset.name ),
+								},
+								el( 'span', { className: 'dashicons dashicons-plus-alt2' } ),
+								preset.name
+							)
+						)
+					)
+				),
+
+				// CSS Code Textarea Editor
+				el(
+					'div',
+					{ className: 'gm-code-textarea-wrapper' },
+					el( 'textarea', {
+						className: 'gm-code-textarea',
+						value: cssVal,
+						rows: 12,
+						spellCheck: false,
+						placeholder: `/* Write custom CSS scoped to this grid */\n{{GRID}} .gm-card {\n  /* Your styles here */\n}`,
+						onChange: ( e ) => handleCssChange( e.target.value ),
+						onKeyDown: ( e ) => handleKeyDown( e, handleCssChange, cssVal ),
+					} )
+				),
+
+				el(
+					'div',
+					{ className: 'gm-code-footer-help' },
+					el( 'span', null,
+						__( 'Scope macro: Use ', 'ajax-filter-posts' ),
+						el( 'span', { className: 'gm-code-tag-badge' }, '{{GRID}}' ),
+						__( ' to automatically prefix rules with #gm-grid-', 'ajax-filter-posts' ) + ( gridId || '<id>' ) + '.'
+					),
+					el( 'span', null, __( 'Live in Card canvas & preview', 'ajax-filter-posts' ) )
+				)
+			),
+
+			// Card 2: Custom JavaScript Lifecycle Scripts
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el(
+					'div',
+					{ className: 'gm-code-editor-header' },
+					el(
+						'h4',
+						{ className: 'gm-code-editor-heading' },
+						el( 'span', { className: 'dashicons dashicons-admin-generic' } ),
+						__( 'Custom JavaScript / Lifecycle Scripts', 'ajax-filter-posts' )
+					)
+				),
+
+				! canUnfilteredHtml &&
+					el(
+						Notice,
+						{
+							status: 'warning',
+							isDismissible: false,
+						},
+						__( 'Security Notice: Your current WordPress user role cannot edit raw JavaScript (unfiltered_html capability required). Custom CSS remains fully functional.', 'ajax-filter-posts' )
+					),
+
+				// JS Presets
+				el(
+					'div',
+					{ className: 'gm-code-toolbar-section' },
+					el( 'span', { className: 'gm-code-toolbar-label' }, __( 'Starter Script Snippets:', 'ajax-filter-posts' ) ),
+					el(
+						'div',
+						{ className: 'gm-code-preset-pills' },
+						jsPresets.map( ( preset ) =>
+							el(
+								'button',
+								{
+									key: preset.id,
+									type: 'button',
+									className: 'gm-code-preset-pill',
+									disabled: ! canUnfilteredHtml,
+									onClick: () => insertJsSnippet( preset.snippet, preset.name ),
+								},
+								el( 'span', { className: 'dashicons dashicons-plus-alt2' } ),
+								preset.name
+							)
+						)
+					)
+				),
+
+				// JS Code Textarea Editor
+				el(
+					'div',
+					{ className: 'gm-code-textarea-wrapper' },
+					el( 'textarea', {
+						className: 'gm-code-textarea',
+						value: jsVal,
+						rows: 10,
+						disabled: ! canUnfilteredHtml,
+						spellCheck: false,
+						placeholder: `// Executes on render & every AJAX page / filter reload\n// Parameters available: gridEl (DOM node), gridId (integer)\nconsole.log('Grid initialized:', gridId);`,
+						onChange: ( e ) => handleJsChange( e.target.value ),
+						onKeyDown: ( e ) => handleKeyDown( e, handleJsChange, jsVal ),
+					} )
+				),
+
+				el(
+					'div',
+					{ className: 'gm-code-footer-help' },
+					el( 'span', null,
+						__( 'Lifecycle parameters: ', 'ajax-filter-posts' ),
+						el( 'span', { className: 'gm-code-tag-badge' }, 'gridEl' ),
+						', ',
+						el( 'span', { className: 'gm-code-tag-badge' }, 'gridId' ),
+						__( '. Runs on DOM ready and gridmaster_loaded_posts events.', 'ajax-filter-posts' )
+					),
+					el( 'span', null, __( 'Protected in isolated IIFE wrapper', 'ajax-filter-posts' ) )
+				)
+			)
+		);
+	}
+
+	/**
 	 * Top Contextual Tools (Undo/Redo/ListView/FocusMode/Inspector)
 	 */
 	function ContextualEditorTools( props ) {
@@ -3178,6 +3488,18 @@
 		const [ saveError, setSaveError ] = useState( null );
 		const [ lastSavedAt, setLastSavedAt ] = useState( null );
 
+		// Toast notification state
+		const [ toast, setToast ] = useState( null );
+		const toastTimerRef = useRef( null );
+
+		const showToast = useCallback( ( message, type = 'success', icon = 'yes-alt' ) => {
+			if ( toastTimerRef.current ) clearTimeout( toastTimerRef.current );
+			setToast( { message, type, icon } );
+			toastTimerRef.current = setTimeout( () => {
+				setToast( null );
+			}, 2800 );
+		}, [] );
+
 		// Preview Modal state
 		const [ isPreviewOpen, setIsPreviewOpen ] = useState( false );
 		const previewBtnRef = useRef( null );
@@ -3272,6 +3594,7 @@
 					if ( data && data.id ) {
 						setGridId( data.id );
 						setLastSavedAt( new Date() );
+						showToast( __( 'Grid saved successfully!', 'ajax-filter-posts' ), 'success', 'saved' );
 						setSavedSnapshot( JSON.stringify( {
 							title: title,
 							config: config,
@@ -3297,6 +3620,7 @@
 			const code = `[gridmaster id="${gridId}"]`;
 			safeCopy( code ).then( () => {
 				setIsCopied( true );
+				showToast( sprintf( __( 'Copied shortcode to clipboard: %s', 'ajax-filter-posts' ), code ), 'info', 'clipboard' );
 				setTimeout( () => setIsCopied( false ), 2000 );
 			} ).catch( ( e ) => {
 				console.error( 'Copy error:', e );
@@ -3530,6 +3854,7 @@
 							{ id: 'filters', label: __( 'Filters', 'ajax-filter-posts' ), icon: 'filter' },
 							{ id: 'pagination', label: __( 'Pagination', 'ajax-filter-posts' ), icon: 'ellipsis' },
 							{ id: 'layout', label: __( 'Layout', 'ajax-filter-posts' ), icon: 'layout' },
+							{ id: 'code', label: __( 'Custom Code', 'ajax-filter-posts' ), icon: 'editor-code' },
 						].map( ( tab ) =>
 							el(
 								'button',
@@ -3625,7 +3950,11 @@
 							} ),
 
 						// Center Canvas Stage
-						el( CardCanvasStage, { isPro: initData.isPro } ),
+						el( CardCanvasStage, {
+							isPro: initData.isPro,
+							customCss: config.custom_code?.css || config.custom_css || '',
+							showToast: showToast,
+						} ),
 
 						// Right Drawer / Panel: Contextual Inspector
 						isInspectorOpen &&
@@ -3665,6 +3994,18 @@
 							setConfig: setConfig,
 							updateConfigSection: updateConfigSection,
 							isPro: initData.isPro,
+							showToast: showToast,
+						} ),
+
+					// Tab 6: Custom Code (CSS & Scripts)
+					activeTab === 'code' &&
+						el( CustomCodeTab, {
+							config: config,
+							setConfig: setConfig,
+							updateConfigSection: updateConfigSection,
+							canUnfilteredHtml: initData.canUnfilteredHtml !== false,
+							gridId: gridId,
+							showToast: showToast,
 						} )
 				),
 
@@ -3682,7 +4023,34 @@
 						config: config,
 						blocks: blocks,
 						gridId: gridId,
-					} )
+					} ),
+
+				// Fixed Toast Notification Container (Bottom-Right, Zero Layout Shift)
+				toast &&
+					el(
+						'div',
+						{ className: 'gm-toast-container' },
+						el(
+							'div',
+							{
+								className: 'gm-toast-notification gm-toast-' + ( toast.type || 'success' ),
+								role: 'status',
+								'aria-live': 'polite',
+							},
+							el( 'span', { className: 'dashicons dashicons-' + ( toast.icon || 'yes-alt' ) + ' gm-toast-icon' } ),
+							el( 'span', { className: 'gm-toast-message' }, toast.message ),
+							el(
+								'button',
+								{
+									type: 'button',
+									className: 'gm-toast-close',
+									'aria-label': __( 'Dismiss', 'ajax-filter-posts' ),
+									onClick: () => setToast( null ),
+								},
+								el( 'span', { className: 'dashicons dashicons-no-alt' } )
+							)
+						)
+					)
 			)
 		);
 	}

@@ -1186,9 +1186,34 @@
 	min-height: 18px !important;
 	max-width: 18px !important;
 	max-height: 18px !important;
-	display: block !important;
 	flex-shrink: 0 !important;
 	pointer-events: none !important;
+}
+
+/* Default (muted) state: show mute icon only */
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle .gm-sound-muted,
+.gm-video-sound-toggle .gm-sound-muted {
+	display: block !important;
+}
+
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle .gm-sound-on,
+.gm-video-sound-toggle .gm-sound-on {
+	display: none !important;
+}
+
+/* Unmuted state: show sound-on icon only */
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle[aria-pressed="true"] .gm-sound-muted,
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle.is-unmuted .gm-sound-muted,
+.gm-video-sound-toggle[aria-pressed="true"] .gm-sound-muted,
+.gm-video-sound-toggle.is-unmuted .gm-sound-muted {
+	display: none !important;
+}
+
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle[aria-pressed="true"] .gm-sound-on,
+.gm-v2-grid .gm-card-video-wrap .gm-video-sound-toggle.is-unmuted .gm-sound-on,
+.gm-video-sound-toggle[aria-pressed="true"] .gm-sound-on,
+.gm-video-sound-toggle.is-unmuted .gm-sound-on {
+	display: block !important;
 }
 
 .gm-v2-grid .gm-card--overlay .gm-author-avatar-img {

@@ -4,11 +4,13 @@
 ( function ( wp ) {
 	'use strict';
 
-	const { registerBlockType } = wp.blocks;
+	const { registerBlockType, createBlock } = wp.blocks;
 	const { createElement: el, Fragment, useState, useEffect, useRef } = wp.element;
-	const { InspectorControls, useBlockProps, InnerBlocks } = wp.blockEditor;
-	const { PanelBody, TextControl, TextareaControl, SelectControl, ToggleControl, RangeControl, ColorPalette, Button, Popover } = wp.components;
+	const { InspectorControls, BlockControls, useBlockProps, InnerBlocks } = wp.blockEditor;
+	const { PanelBody, TextControl, TextareaControl, SelectControl, ToggleControl, RangeControl, ColorPalette, Button, Popover, Spinner, Placeholder, ToolbarGroup, ToolbarButton, Notice } = wp.components;
+	const DisabledComponent = ( wp.blockEditor && wp.blockEditor.Disabled ) || ( wp.components && wp.components.Disabled ) || ( ( { children } ) => el( 'div', { style: { pointerEvents: 'none' } }, children ) );
 	const { __, sprintf } = wp.i18n;
+	const apiFetch = wp.apiFetch;
 
 	const blockData = window.gridmasterBlockData || {};
 	const grids = blockData.grids || [ { label: __( 'Select a Grid', 'ajax-filter-posts' ), value: 0 } ];
@@ -738,50 +740,353 @@
 	// ==========================================
 	registerBlockType( 'gridmaster/grid', {
 		apiVersion: 3,
-		title: __( 'GridMaster Grid', 'ajax-filter-posts' ),
-		description: __( 'Embed a saved GridMaster post grid layout.', 'ajax-filter-posts' ),
+		title: __( 'Post Grid Master', 'ajax-filter-posts' ),
+		description: __( 'Embed a saved Post Grid Master layout with live canvas preview.', 'ajax-filter-posts' ),
 		icon: 'grid-view',
 		category: 'widgets',
+		supports: {
+			align: [ 'wide', 'full' ],
+			html: false,
+		},
 		attributes: {
 			gridId: { type: 'number', default: 0 },
+			align: { type: 'string', default: '' },
+		},
+		transforms: {
+			from: [
+				{
+					type: 'shortcode',
+					tag: [ 'gridmaster', 'am_post_grid', 'asr_ajax' ],
+					isMatch: function ( { named } ) {
+						return Boolean( named && named.id && Object.keys( named ).length === 1 );
+					},
+					attributes: {
+						gridId: {
+							type: 'number',
+							shortcode: function ( { named } ) {
+								return parseInt( named.id, 10 ) || 0;
+							},
+						},
+					},
+				},
+				{
+					type: 'block',
+					blocks: [ 'core/shortcode' ],
+					isMatch: function ( { text } ) {
+						return /^\s*\[(gridmaster|am_post_grid|asr_ajax)\s+id=["']?\d+["']?\s*\]\s*$/i.test( text || '' );
+					},
+					transform: function ( { text } ) {
+						const match = ( text || '' ).match( /id=["']?(\d+)/i );
+						return createBlock( 'gridmaster/grid', {
+							gridId: match ? parseInt( match[ 1 ], 10 ) : 0,
+						} );
+					},
+				},
+			],
+			to: [
+				{
+					type: 'block',
+					blocks: [ 'core/shortcode' ],
+					transform: function ( { gridId } ) {
+						return createBlock( 'core/shortcode', {
+							text: '[gridmaster id="' + ( gridId || 0 ) + '"]',
+						} );
+					},
+				},
+			],
 		},
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
+			const { gridId } = attributes;
 			const blockProps = useBlockProps( { className: 'gm-editor-embed-block' } );
 
+			const [ previewData, setPreviewData ] = useState( null );
+			const [ isLoading, setIsLoading ] = useState( false );
+			const [ error, setError ] = useState( null );
+			const [ refreshKey, setRefreshKey ] = useState( 0 );
+			const containerRef = useRef( null );
+
+			// Fetch live embed preview via REST
+			useEffect( () => {
+				if ( ! gridId ) {
+					setPreviewData( null );
+					setIsLoading( false );
+					setError( null );
+					return;
+				}
+
+				let isMounted = true;
+				setIsLoading( true );
+				setError( null );
+
+				const endpoint = ( blockData.restPath || '/gridmaster/v2/grids/' ) + gridId + '/embed-preview';
+
+				if ( typeof apiFetch === 'function' ) {
+					apiFetch( { path: endpoint } )
+						.then( ( data ) => {
+							if ( isMounted ) {
+								setPreviewData( data );
+								setIsLoading( false );
+							}
+						} )
+						.catch( ( err ) => {
+							if ( isMounted ) {
+								setError( ( err && err.message ) || __( 'Failed to load grid preview.', 'ajax-filter-posts' ) );
+								setIsLoading( false );
+							}
+						} );
+				} else {
+					setIsLoading( false );
+				}
+
+				return () => {
+					isMounted = false;
+				};
+			}, [ gridId, refreshKey ] );
+
+			// Dynamic asset injection & reinitialization in iframe / canvas
+			useEffect( () => {
+				if ( ! previewData || ! previewData.html || ! containerRef.current ) {
+					return;
+				}
+
+				const targetDoc = containerRef.current.ownerDocument || document;
+				const targetWin = targetDoc.defaultView || window;
+
+				// Inject stylesheets into document head if not already loaded
+				if ( Array.isArray( previewData.styles ) ) {
+					previewData.styles.forEach( ( href ) => {
+						if ( ! href ) return;
+						const exists = targetDoc.querySelector( `link[href="${ href }"]` );
+						if ( ! exists ) {
+							const link = targetDoc.createElement( 'link' );
+							link.rel = 'stylesheet';
+							link.href = href;
+							targetDoc.head.appendChild( link );
+						}
+					} );
+				}
+
+				// Re-init slider/reels inside canvas after markup is inserted
+				setTimeout( () => {
+					if ( typeof targetWin.gridmasterInit === 'function' ) {
+						targetWin.gridmasterInit();
+					} else if ( typeof window.gridmasterInit === 'function' ) {
+						window.gridmasterInit();
+					}
+					if ( typeof targetWin.jQuery === 'function' ) {
+						targetWin.jQuery( targetDoc ).trigger( 'gridmaster_init_all_sliders' );
+					}
+				}, 60 );
+			}, [ previewData ] );
+
+			// Open GridMaster builder in new tab and auto-refresh on return
+			const onEditClick = ( url ) => {
+				if ( ! url ) return;
+				window.open( url, '_blank' );
+
+				const onWindowFocus = () => {
+					setRefreshKey( ( k ) => k + 1 );
+				};
+				window.addEventListener( 'focus', onWindowFocus, { once: true } );
+			};
+
+			const editUrl = previewData && previewData.edit_url;
+			const canManage = Boolean( blockData.canManage );
+
+			// Toolbar controls
+			const toolbarControls = el(
+				BlockControls,
+				null,
+				el(
+					ToolbarGroup,
+					null,
+					editUrl &&
+						el( ToolbarButton, {
+							icon: 'edit',
+							label: __( 'Edit Grid in GridMaster ↗', 'ajax-filter-posts' ),
+							onClick: () => onEditClick( editUrl ),
+						} ),
+					gridId > 0 &&
+						el( ToolbarButton, {
+							icon: 'update',
+							label: __( 'Refresh Preview', 'ajax-filter-posts' ),
+							onClick: () => setRefreshKey( ( k ) => k + 1 ),
+						} )
+				)
+			);
+
+			// Inspector controls
+			const inspectorControls = el(
+				InspectorControls,
+				null,
+				el(
+					PanelBody,
+					{ title: __( 'Grid Selection', 'ajax-filter-posts' ), initialOpen: true },
+					el( SelectControl, {
+						label: __( 'Select Grid', 'ajax-filter-posts' ),
+						value: gridId,
+						options: grids,
+						onChange: function ( val ) {
+							setAttributes( { gridId: parseInt( val, 10 ) || 0 } );
+						},
+					} ),
+					gridId > 0 &&
+						previewData &&
+						el(
+							'div',
+							{ className: 'gm-editor-engine-badge' },
+							el( 'span', { className: 'gm-badge-label' }, __( 'Engine: ', 'ajax-filter-posts' ) ),
+							el(
+								'span',
+								{ className: 'gm-badge-tag ' + ( previewData.engine === 'legacy' ? 'gm-tag-legacy' : 'gm-tag-v2' ) },
+								previewData.engine === 'legacy' ? __( 'Legacy (v1)', 'ajax-filter-posts' ) : __( 'GridMaster 2.0', 'ajax-filter-posts' )
+							)
+						),
+					editUrl &&
+						el(
+							Button,
+							{
+								isPrimary: true,
+								className: 'gm-block-edit-btn',
+								onClick: () => onEditClick( editUrl ),
+							},
+							el( 'span', { className: 'dashicons dashicons-edit' } ),
+							' ' + __( 'Edit this grid in GridMaster ↗', 'ajax-filter-posts' )
+						),
+					canManage &&
+						el(
+							'div',
+							{ className: 'gm-block-helper-links' },
+							blockData.createUrl &&
+								el(
+									'a',
+									{
+										href: blockData.createUrl,
+										target: '_blank',
+										rel: 'noopener noreferrer',
+										className: 'gm-create-link',
+									},
+									'+ ' + __( 'Create New Grid', 'ajax-filter-posts' )
+								),
+							blockData.manageUrl &&
+								el(
+									'a',
+									{
+										href: blockData.manageUrl,
+										target: '_blank',
+										rel: 'noopener noreferrer',
+										className: 'gm-manage-link',
+									},
+									__( 'Manage All Grids', 'ajax-filter-posts' )
+								)
+						)
+				)
+			);
+
+			// Render Placeholder if no grid is selected
+			if ( ! gridId ) {
+				return el(
+					Fragment,
+					null,
+					inspectorControls,
+					el(
+						'div',
+						blockProps,
+						el(
+							Placeholder,
+							{
+								icon: 'grid-view',
+								label: __( 'Post Grid Master', 'ajax-filter-posts' ),
+								instructions: __( 'Choose a saved post grid layout to display on this page.', 'ajax-filter-posts' ),
+								className: 'gm-gutenberg-placeholder',
+							},
+							el( SelectControl, {
+								label: __( 'Select Grid', 'ajax-filter-posts' ),
+								hideLabelFromVision: true,
+								value: gridId,
+								options: grids,
+								onChange: function ( val ) {
+									setAttributes( { gridId: parseInt( val, 10 ) || 0 } );
+								},
+							} ),
+							canManage &&
+								blockData.createUrl &&
+								el(
+									Button,
+									{
+										isSecondary: true,
+										href: blockData.createUrl,
+										target: '_blank',
+										rel: 'noopener noreferrer',
+									},
+									'+ ' + __( 'Create New Grid', 'ajax-filter-posts' )
+								)
+						)
+					)
+				);
+			}
+
+			// Render Loading state
+			if ( isLoading && ! previewData ) {
+				return el(
+					Fragment,
+					null,
+					toolbarControls,
+					inspectorControls,
+					el(
+						'div',
+						blockProps,
+						el(
+							'div',
+							{ className: 'gm-block-preview-loading' },
+							el( Spinner, null ),
+							el( 'p', null, sprintf( __( 'Loading preview for Grid #%d…', 'ajax-filter-posts' ), gridId ) )
+						)
+					)
+				);
+			}
+
+			// Render Error state
+			if ( error || ( previewData && ! previewData.exists ) ) {
+				return el(
+					Fragment,
+					null,
+					toolbarControls,
+					inspectorControls,
+					el(
+						'div',
+						blockProps,
+						el(
+							Notice,
+							{ status: 'error', isDismissible: false },
+							error || sprintf( __( 'Grid #%d was not found. It may have been deleted.', 'ajax-filter-posts' ), gridId )
+						)
+					)
+				);
+			}
+
+			// Render Live Preview
 			return el(
 				Fragment,
 				null,
-				el(
-					InspectorControls,
-					null,
-					el(
-						PanelBody,
-						{ title: __( 'Grid Settings', 'ajax-filter-posts' ), initialOpen: true },
-						el( SelectControl, {
-							label: __( 'Select Grid', 'ajax-filter-posts' ),
-							value: attributes.gridId,
-							options: grids,
-							onChange: function ( val ) {
-								setAttributes( { gridId: parseInt( val, 10 ) || 0 } );
-							},
-						} )
-					)
-				),
+				toolbarControls,
+				inspectorControls,
 				el(
 					'div',
 					blockProps,
 					el(
 						'div',
-						{ className: 'gm-embed-placeholder' },
-						el( 'span', { className: 'dashicons dashicons-grid-view' } ),
-						el( 'strong', null, __( 'GridMaster Grid Embed', 'ajax-filter-posts' ) ),
+						{
+							ref: containerRef,
+							className: 'gm-live-embed-preview',
+						},
 						el(
-							'p',
+							DisabledComponent,
 							null,
-							attributes.gridId
-								? sprintf( __( 'Rendering Grid #%d on frontend.', 'ajax-filter-posts' ), attributes.gridId )
-								: __( 'Please choose a grid in the block settings panel.', 'ajax-filter-posts' )
+							el( 'div', {
+								dangerouslySetInnerHTML: { __html: previewData && previewData.html ? previewData.html : '' },
+							} )
 						)
 					)
 				)

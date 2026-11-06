@@ -21,6 +21,9 @@ Post Grid Master includes a shortcode generator that lets you easily create shor
 ### Features of Post Grid Master
 Post Grid Master offers you a lot of features that will help you create a post grid with AJAX filter easily. You can develop your custom theme templates easily by using the Post Grid Master shortcode. Here are some of the features that you will get with Post Grid Master.
 
+**Page Builder Addons & Live Previews**  
+Embed any saved grid directly inside your favorite page builder without touching shortcodes! Includes native dropdown widgets, modules, and elements for Gutenberg (Block Editor with live canvas preview), Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic WordPress Widgets. Click "Edit this grid" to hop directly into GridMaster, and see changes refresh automatically when you return.
+
 **Shortcode Generator**  
 Post Grid Master has a shortcode generator that helps you generate the shortcode easily and use it anywhere to show the post grid. It includes a preview feature so you can preview the post grid before using it.
 

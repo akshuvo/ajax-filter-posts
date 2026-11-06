@@ -32,6 +32,8 @@ These are current call shapes, not a separately versioned SDK. Preserve argument
 | `gridmaster_grid_styles`, `gridmaster_filter_styles` | Filter style-ID-to-label maps; Free advertises premium choices at priority 9 |
 | `gridmaster_grid_pro_styles` | Used by both premium grid and premium filter registry helpers in current code |
 | `gridmaster_grid_settings_fields_before`, `gridmaster_grid_settings_fields_after` | Builder actions, no explicit arguments |
+| `gridmaster_enabled_integrations` | Filter `(array $enabled_keys)` to toggle page builder integrations (elementor, beaver, bricks, wpbakery, widget) |
+| `gridmaster_embed_grid_choices_limit` | Filter `(int $limit = 500)` controlling maximum number of grids loaded in builder select dropdowns |
 | `lmfwppt_license_activation_form_fields` | Settings view action, no explicit arguments, permits extension license fields |
 
 `gridmaster_is_pro()` tests only whether `GRIDMASTER_PRO_VERSION` is defined. Template/style resolution uses `GRIDMASTER_PRO_PATH` and related asset constants. Tax-input retention instead checks `function_exists('GridMasterProPlugin')`; these checks are not interchangeable with license validation.
@@ -48,6 +50,17 @@ These are current call shapes, not a separately versioned SDK. Preserve argument
 - Admin script handle `gridmaster-admin-script` localizes `gridmaster_params` including AJAX URL, nonce, home URL, breakpoints, Pro detection and demo links. Admin forms use `gridmaster_ajax`, `gm-action`, and `gm_nonce`; successful submissions emit `gm-ajax-success-<gmAction>` with response data. Preview uses `gm_shortcode_preview=1`, `_wpnonce`, and `shortcode` query parameters.
 
 ## External and theme integrations
+
+### Page builder integration surfaces (2026-11-07)
+
+Free provides native dropdown integrations for popular page builders, managed by `Integrations_Manager` on `after_setup_theme` (priority 20) with strict conditional loading:
+- **Gutenberg (`gridmaster/grid`)**: Server-rendered live preview via authenticated `GET gridmaster/v2/grids/{id}/embed-preview`. Supports auto-conversion on pasting `[gridmaster id="X"]` and transform from `core/shortcode`. Offers direct "Edit grid in GridMaster ↗" button opening the builder in a new tab, with automatic canvas refresh on return.
+- **Elementor (`gridmaster-grid`)**: Registered in category `gridmaster` under title "Post Grid Master". Select2 grid dropdown, panel button, hover canvas edit badge, and auto-refresh on window focus.
+- **Beaver Builder (`Grid_Module`)**: Registered via `FLBuilder::register_module()` under category and title "Post Grid Master". Supports partial refresh and edit badge.
+- **Bricks Builder (`gridmaster-grid`)**: Registered via `\Bricks\Elements::register_element()` under name `gridmaster-grid` and title "Post Grid Master". Defines `$scripts = ['gridmasterBricksInit']` to re-bind sliders/reels after canvas updates.
+- **WPBakery Page Builder (`[gridmaster]`)**: Directly maps the existing `[gridmaster]` shortcode via `vc_map()` with dropdown selection and frontend editor live preview.
+- **Classic WordPress Widget (`gridmaster_grid_widget`)**: Registered in `$wp_widget_factory` under title "Post Grid Master" for legacy widget areas and widget-based builders (SiteOrigin).
+- **Builder live preview protocol**: Assets `builder-preview.js` and `builder-preview.css` are enqueued solely inside active builder edit/preview frames. Exposes `window.gridmasterInit()` for idempotent re-initialization of v2 grids, sliders, and reels. Clicks on card links inside canvas previews are intercepted to prevent accidental builder frame navigation.
 
 Template overrides use `<active stylesheet directory>/gridmaster/templates/` and require Pro's path constant in the current lookup. Test actual child/parent theme configurations rather than assuming a generic theme override facility.
 

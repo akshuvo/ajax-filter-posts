@@ -937,3 +937,100 @@
 	color: #0f172a;
 	background: #f1f5f9;
 }
+
+/* ==========================================================================
+   Post Grid Master Embed Block Live Preview Styles
+   ========================================================================== */
+
+.gm-editor-embed-block {
+	position: relative;
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.gm-live-embed-preview {
+	position: relative;
+	width: 100%;
+	min-height: 120px;
+}
+
+.gm-block-preview-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 20px;
+	background: #f8fafc;
+	border: 1px dashed #cbd5e1;
+	border-radius: 8px;
+	color: #64748b;
+	text-align: center;
+}
+
+.gm-block-preview-loading p {
+	margin: 12px 0 0 0;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.gm-editor-engine-badge {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 12px 0;
+	padding: 6px 10px;
+	background: #f1f5f9;
+	border-radius: 6px;
+	font-size: 12px;
+}
+
+.gm-editor-engine-badge .gm-badge-label {
+	color: #64748b;
+	font-weight: 500;
+}
+
+.gm-editor-engine-badge .gm-badge-tag {
+	font-weight: 600;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+}
+
+.gm-editor-engine-badge .gm-tag-v2 {
+	background: #e0e7ff;
+	color: #4338ca;
+}
+
+.gm-editor-engine-badge .gm-tag-legacy {
+	background: #fef3c7;
+	color: #92400e;
+}
+
+.gm-block-edit-btn {
+	width: 100%;
+	justify-content: center;
+	margin-top: 10px !important;
+	margin-bottom: 12px !important;
+}
+
+.gm-block-helper-links {
+	margin-top: 12px;
+	padding-top: 10px;
+	border-top: 1px solid #e2e8f0;
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.gm-block-helper-links .gm-create-link {
+	display: block;
+	font-weight: 600;
+	color: #4f46e5;
+	text-decoration: none;
+	margin-bottom: 4px;
+}
+
+.gm-block-helper-links .gm-manage-link {
+	color: #64748b;
+	text-decoration: underline;
+}

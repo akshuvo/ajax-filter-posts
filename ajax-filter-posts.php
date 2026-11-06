@@ -141,6 +141,15 @@ final class GridMasterPlugin {
 			require_once GRIDMASTER_PATH . '/inc/Shortcode.php';
 		}
 		$shortcode = GridMaster\Shortcode::init();
+
+		// Page builder integrations (strictly conditionally loaded per active builder).
+		require_once GRIDMASTER_PATH . '/inc/Integrations/Embed_Helper.php';
+		require_once GRIDMASTER_PATH . '/inc/Integrations/Integrations_Manager.php';
+		new \GridMaster\Integrations\Integrations_Manager();
+
+		// Register frontend v2 assets early so widgets and builders can declare dependency.
+		add_action( 'wp_enqueue_scripts', array( '\GridMaster\Engine\Grid_Renderer', 'register_assets' ), 5 );
+		add_action( 'enqueue_block_assets', array( '\GridMaster\Engine\Grid_Renderer', 'register_assets' ), 5 );
 	}
 
 	/**

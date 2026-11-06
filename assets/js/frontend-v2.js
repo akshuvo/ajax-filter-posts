@@ -959,6 +959,12 @@
 							} else {
 								vid.muted = true;
 							}
+							const soundBtn = vidWrap.querySelector( '.gm-video-sound-toggle' );
+							if ( soundBtn ) {
+								const isUnmuted = ! vid.muted;
+								soundBtn.setAttribute( 'aria-pressed', isUnmuted ? 'true' : 'false' );
+								soundBtn.classList.toggle( 'is-unmuted', isUnmuted );
+							}
 							const p = vid.play();
 							if ( p && p.catch ) p.catch( () => {} );
 							vidWrap.classList.add( 'is-playing' );
@@ -1065,6 +1071,7 @@
 	// Expose for builder preview
 	window.gridmasterInitAllSliders = initAllGrids;
 	window.gridmasterInitAllReels = initAllGrids;
+	window.gridmasterInit = initAllGrids;
 
 	// Delegated Copy Link handler for social share
 	document.addEventListener( 'click', ( e ) => {

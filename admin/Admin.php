@@ -175,6 +175,11 @@ class Admin {
 			wp_enqueue_style( 'wp-block-library' );
 			wp_enqueue_style( 'wp-block-library-theme' );
 
+			if ( function_exists( 'wp_enqueue_code_editor' ) ) {
+				wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
+				wp_enqueue_code_editor( array( 'type' => 'application/javascript' ) );
+			}
+
 			$builder_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
 			wp_enqueue_script( 'gridmaster-blocks-editor', GRIDMASTER_ASSETS . 'blocks/editor.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-block-library' ), $builder_ver, true );
 			wp_enqueue_style( 'gridmaster-blocks-editor', GRIDMASTER_ASSETS . 'blocks/editor.css', array( 'wp-components', 'wp-block-library' ), $builder_ver );

@@ -49,6 +49,7 @@ $initial_data = array(
 		'post_types' => $formatted_pts,
 		'taxonomies' => $formatted_tax,
 	),
+	'canUnfilteredHtml' => current_user_can( 'unfiltered_html' ),
 );
 ?>
 

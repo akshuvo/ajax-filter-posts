@@ -83,6 +83,10 @@ class Grid_Repository {
 					'box_shadow'    => 'none',
 				),
 			),
+			'custom_code' => array(
+				'css' => '',
+				'js'  => '',
+			),
 		);
 	}
 
@@ -138,6 +142,13 @@ class Grid_Repository {
 			$grid->config   = is_array( $decoded_config ) ? $decoded_config : self::default_config();
 		} else {
 			$grid->config   = self::default_config();
+		}
+
+		if ( empty( $grid->config['custom_code'] ) ) {
+			$grid->config['custom_code'] = array(
+				'css' => ! empty( $grid->config['custom_css'] ) ? $grid->config['custom_css'] : '',
+				'js'  => ! empty( $grid->config['custom_js'] ) ? $grid->config['custom_js'] : '',
+			);
 		}
 
 		// Legacy attributes deserialization.

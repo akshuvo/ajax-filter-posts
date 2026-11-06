@@ -32,10 +32,18 @@ class Blocks {
 				'editor_script'   => 'gridmaster-blocks-editor',
 				'editor_style'    => 'gridmaster-blocks-editor',
 				'render_callback' => array( $this, 'render_grid_block' ),
+				'supports'        => array(
+					'align' => array( 'wide', 'full' ),
+					'html'  => false,
+				),
 				'attributes'      => array(
 					'gridId' => array(
 						'type'    => 'number',
 						'default' => 0,
+					),
+					'align'  => array(
+						'type'    => 'string',
+						'default' => '',
 					),
 				),
 			)
@@ -268,7 +276,7 @@ class Blocks {
 		wp_register_script(
 			'gridmaster-blocks-editor',
 			GRIDMASTER_ASSETS . 'blocks/editor.js',
-			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n' ),
+			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-api-fetch' ),
 			GRIDMASTER_VERSION,
 			true
 		);
@@ -286,25 +294,30 @@ class Blocks {
 	 */
 	public function editor_assets() {
 		// Fetch saved grids for the grid selector block.
-		$grids_result = \GridMaster\Storage\Grid_Repository::list_grids( array( 'per_page' => 100 ) );
+		$choices = \GridMaster\Integrations\Embed_Helper::get_grid_choices( false );
 		$grid_options = array(
-			array( 'label' => __( 'Select a Grid', 'ajax-filter-posts' ), 'value' => 0 ),
+			array(
+				'label' => __( '— Select a Grid —', 'ajax-filter-posts' ),
+				'value' => 0,
+			),
 		);
-		if ( ! empty( $grids_result['items'] ) ) {
-			foreach ( $grids_result['items'] as $grid ) {
-				$grid_options[] = array(
-					'label' => sprintf( '#%d — %s', $grid->id, $grid->title ),
-					'value' => $grid->id,
-				);
-			}
+		foreach ( $choices as $val => $label ) {
+			$grid_options[] = array(
+				'label' => $label,
+				'value' => (int) $val,
+			);
 		}
 
 		wp_localize_script(
 			'gridmaster-blocks-editor',
 			'gridmasterBlockData',
 			array(
-				'grids'   => $grid_options,
-				'siteUrl' => get_site_url(),
+				'grids'     => $grid_options,
+				'siteUrl'   => get_site_url(),
+				'canManage' => current_user_can( 'manage_options' ),
+				'createUrl' => \GridMaster\Integrations\Embed_Helper::get_create_url(),
+				'manageUrl' => \GridMaster\Integrations\Embed_Helper::get_manage_url(),
+				'restPath'  => '/gridmaster/v2/grids/',
 			)
 		);
 
@@ -403,11 +416,7 @@ class Blocks {
 			return '<div class="gm-empty-grid-notice">' . esc_html__( 'Please select a GridMaster grid.', 'ajax-filter-posts' ) . '</div>';
 		}
 
-		if ( ! class_exists( 'GridMaster\Engine\Grid_Renderer' ) ) {
-			require_once GRIDMASTER_PATH . '/inc/Engine/Grid_Renderer.php';
-		}
-
-		return \GridMaster\Engine\Grid_Renderer::render_grid( $grid_id );
+		return \GridMaster\Integrations\Embed_Helper::render( $grid_id );
 	}
 
 	/**

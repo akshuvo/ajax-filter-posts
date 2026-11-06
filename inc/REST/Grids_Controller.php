@@ -128,6 +128,26 @@ class Grids_Controller extends \WP_REST_Controller {
 			)
 		);
 
+		// Embed preview endpoint for Gutenberg and block editors.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/embed-preview',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_embed_preview' ),
+				'permission_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+				'args'                => array(
+					'id' => array(
+						'validate_callback' => function( $param ) {
+							return is_numeric( $param );
+						},
+					),
+				),
+			)
+		);
+
 		// Public dynamic rendering endpoint for frontend AJAX filtering/pagination.
 		register_rest_route(
 			$this->namespace,
@@ -243,10 +263,23 @@ class Grids_Controller extends \WP_REST_Controller {
 	 * Creates a new grid.
 	 */
 	public function create_item( $request ) {
+		$config = $request->get_param( 'config' );
+		if ( is_string( $config ) ) {
+			$config = json_decode( $config, true );
+		}
+		if ( is_array( $config ) && ! current_user_can( 'unfiltered_html' ) ) {
+			if ( isset( $config['custom_code']['js'] ) ) {
+				$config['custom_code']['js'] = '';
+			}
+			if ( isset( $config['custom_js'] ) ) {
+				$config['custom_js'] = '';
+			}
+		}
+
 		$data = array(
 			'id'               => 0,
 			'title'            => $request->get_param( 'title' ),
-			'config'           => $request->get_param( 'config' ),
+			'config'           => $config,
 			'block_content'    => $request->get_param( 'block_content' ),
 			'migration_status' => 'new_builder',
 			'schema_version'   => 2,
@@ -272,10 +305,23 @@ class Grids_Controller extends \WP_REST_Controller {
 			return new \WP_Error( 'grid_not_found', __( 'Grid not found.', 'ajax-filter-posts' ), array( 'status' => 404 ) );
 		}
 
+		$config = $request->has_param( 'config' ) ? $request->get_param( 'config' ) : $existing->config;
+		if ( is_string( $config ) ) {
+			$config = json_decode( $config, true );
+		}
+		if ( is_array( $config ) && ! current_user_can( 'unfiltered_html' ) ) {
+			if ( isset( $config['custom_code']['js'] ) ) {
+				$config['custom_code']['js'] = isset( $existing->config['custom_code']['js'] ) ? $existing->config['custom_code']['js'] : '';
+			}
+			if ( isset( $config['custom_js'] ) ) {
+				$config['custom_js'] = isset( $existing->config['custom_js'] ) ? $existing->config['custom_js'] : '';
+			}
+		}
+
 		$data = array(
 			'id'               => $id,
 			'title'            => $request->has_param( 'title' ) ? $request->get_param( 'title' ) : $existing->title,
-			'config'           => $request->has_param( 'config' ) ? $request->get_param( 'config' ) : $existing->config,
+			'config'           => $config,
 			'block_content'    => $request->has_param( 'block_content' ) ? $request->get_param( 'block_content' ) : $existing->block_content,
 			'migration_status' => $request->has_param( 'migration_status' ) ? $request->get_param( 'migration_status' ) : $existing->migration_status,
 			'schema_version'   => 2,
@@ -504,5 +550,42 @@ class Grids_Controller extends \WP_REST_Controller {
 			'post_types' => $formatted_pts,
 			'taxonomies' => $formatted_tax,
 		) );
+	}
+
+	/**
+	 * Returns rendered HTML, stylesheets, and scripts for embedding a grid into an editor iframe (Gutenberg).
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function get_embed_preview( $request ) {
+		$id   = absint( $request->get_param( 'id' ) );
+		$grid = Grid_Repository::get( $id );
+
+		if ( ! $grid ) {
+			return new \WP_Error(
+				'grid_not_found',
+				__( 'Grid not found.', 'ajax-filter-posts' ),
+				array(
+					'status' => 404,
+					'exists' => false,
+				)
+			);
+		}
+
+		$rendered_data = \GridMaster\Integrations\Embed_Helper::render_with_assets( $id );
+
+		return rest_ensure_response(
+			array(
+				'id'       => $id,
+				'title'    => ! empty( $grid->title ) ? $grid->title : sprintf( __( 'Grid #%d', 'ajax-filter-posts' ), $id ),
+				'engine'   => isset( $grid->migration_status ) && 'legacy' === $grid->migration_status ? 'legacy' : 'v2',
+				'exists'   => true,
+				'html'     => $rendered_data['html'],
+				'styles'   => $rendered_data['styles'],
+				'scripts'  => $rendered_data['scripts'],
+				'edit_url' => current_user_can( 'manage_options' ) ? \GridMaster\Integrations\Embed_Helper::get_edit_url( $id ) : '',
+			)
+		);
 	}
 }
