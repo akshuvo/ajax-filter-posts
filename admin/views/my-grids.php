@@ -267,26 +267,25 @@ $is_pro                = function_exists( 'gridmaster_is_pro' ) && gridmaster_is
 										<span><?php esc_html_e( 'Edit', 'ajax-filter-posts' ); ?></span>
 									</a>
 
-									<?php if ( $is_legacy ) : ?>
-										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=migrate&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-btn gm-action-migrate" title="<?php esc_attr_e( 'Convert to Gutenberg v2 Builder', 'ajax-filter-posts' ); ?>">
-											<span class="dashicons dashicons-update"></span>
-											<span><?php esc_html_e( 'Migrate', 'ajax-filter-posts' ); ?></span>
-										</a>
-									<?php elseif ( $is_converted ) : ?>
-										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=rollback&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-btn gm-action-rollback" onclick="return confirm('<?php esc_attr_e( 'Roll back this grid to the legacy renderer?', 'ajax-filter-posts' ); ?>');" title="<?php esc_attr_e( 'Roll back to legacy renderer', 'ajax-filter-posts' ); ?>">
-											<span class="dashicons dashicons-undo"></span>
-											<span><?php esc_html_e( 'Rollback', 'ajax-filter-posts' ); ?></span>
-										</a>
-									<?php endif; ?>
+									<div class="gm-action-icon-group">
+										<?php if ( $is_legacy ) : ?>
+											<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=migrate&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-migrate" title="<?php esc_attr_e( 'Convert to Gutenberg v2 Builder', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Migrate to Gutenberg v2', 'ajax-filter-posts' ); ?>">
+												<span class="dashicons dashicons-update"></span>
+											</a>
+										<?php elseif ( $is_converted ) : ?>
+											<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=rollback&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-rollback" onclick="return confirm('<?php esc_attr_e( 'Roll back this grid to the legacy renderer?', 'ajax-filter-posts' ); ?>');" title="<?php esc_attr_e( 'Roll back to legacy renderer', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Rollback to legacy renderer', 'ajax-filter-posts' ); ?>">
+												<span class="dashicons dashicons-undo"></span>
+											</a>
+										<?php endif; ?>
 
-									<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=duplicate&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-btn gm-action-duplicate" title="<?php esc_attr_e( 'Duplicate Grid', 'ajax-filter-posts' ); ?>">
-										<span class="dashicons dashicons-admin-page"></span>
-										<span><?php esc_html_e( 'Duplicate', 'ajax-filter-posts' ); ?></span>
-									</a>
+										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=duplicate&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-duplicate" title="<?php esc_attr_e( 'Duplicate Grid', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Duplicate Grid', 'ajax-filter-posts' ); ?>">
+											<span class="dashicons dashicons-admin-page"></span>
+										</a>
 
-									<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=delete&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-btn gm-action-delete" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this grid? This action cannot be undone.', 'ajax-filter-posts' ); ?>');" title="<?php esc_attr_e( 'Delete Grid', 'ajax-filter-posts' ); ?>">
-										<span class="dashicons dashicons-trash"></span>
-									</a>
+										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=delete&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-delete" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this grid? This action cannot be undone.', 'ajax-filter-posts' ); ?>');" title="<?php esc_attr_e( 'Delete Grid', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Delete Grid', 'ajax-filter-posts' ); ?>">
+											<span class="dashicons dashicons-trash"></span>
+										</a>
+									</div>
 								</div>
 							</td>
 						</tr>

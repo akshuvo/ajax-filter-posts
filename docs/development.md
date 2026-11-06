@@ -37,6 +37,17 @@ Use surrounding PHP namespace/helper conventions, jQuery's existing event model,
 
 Readable JS and minified runtime JS are both tracked. There is **no verified build/minification command**. Before an asset change, establish the maintainer's tool/version and which runtime files need regeneration; do not invent `npm run build`, install new dependencies, or hand-edit only a minified file as a default. Test the asset WordPress actually enqueues as well as the readable source. Some CSS is loaded directly or inline; inspect the affected enqueue/template rather than assuming every CSS file needs minification.
 
+## Gutenberg Card Block Registration Requirements
+
+Whenever adding or modifying a block meant for use inside cards or the GridMaster Builder, verify all 6 registration touchpoints:
+
+1. **PHP Registration**: `register_block_type()` in `inc/Blocks.php` (Free) or `inc/Blocks/Pro_Blocks.php` (Pro).
+2. **Editor JS Registration**: `registerBlockType()` in `assets/blocks/editor.js` (Free) or `assets/js/pro-blocks-editor.js` (Pro).
+3. **Card Container `allowedBlocks` Whitelist**: Must be in `defaultAllowedBlocks` in `ajax-filter-posts/assets/blocks/editor.js` and `proBlocks` array in `gridmaster-pro/assets/js/pro-blocks-editor.js`. Omitting this causes Gutenberg's `InnerBlocks` to silently hide the block from the in-canvas `+` inserter.
+4. **Builder Inserter Catalog**: Must be added to `MoreBlocksPopover` -> `defaultCategories` in `ajax-filter-posts/admin/assets/builder.js`.
+5. **Block Metadata Map**: Must be added to `blockMetaMap` in `ajax-filter-posts/admin/assets/builder.js` for proper tree outline/breadcrumbs.
+6. **Canvas Quick-Add**: Add a toolbar button in `ajax-filter-posts/admin/assets/builder.js` if the block is a primary card component.
+
 ## Deployment boundaries
 
 [demoServerPush.yml](../.github/workflows/demoServerPush.yml) deploys pushes to `main` by FTP. [wporg.yml](../.github/workflows/wporg.yml) validates PRs, pushes to `dev` and manual dispatches without publishing. Only a published non-prerelease GitHub release deploys its exact tag commit to WordPress.org through the guarded [release script](../scripts/release.py). It builds a deterministic ZIP, gates recursive content/deletions before SVN commit, verifies exported SVN and both published ZIPs, and uploads evidence. Runtime files follow an explicit inventory; docs, agents and development tools are excluded. No npm build step is needed for checked-in assets.

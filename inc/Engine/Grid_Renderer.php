@@ -73,6 +73,7 @@ class Grid_Renderer {
 
 		$layout_type = ! empty( $config['layout']['type'] ) ? $config['layout']['type'] : 'grid';
 		$is_slider   = 'slider' === $layout_type || 'carousel' === $layout_type;
+		$is_reels    = 'reels' === $layout_type || 'shorts' === $layout_type;
 		$slider_cfg  = ! empty( $config['layout']['slider'] ) ? $config['layout']['slider'] : array();
 
 		$wrapper_classes = array( 'gm-grid-wrapper', 'gm-v2-grid' );
@@ -89,6 +90,14 @@ class Grid_Renderer {
 			$wrapper_attrs['role']                = 'region';
 			$wrapper_attrs['aria-roledescription'] = 'carousel';
 			$wrapper_attrs['aria-label']          = ! empty( $grid->title ) ? $grid->title : __( 'Post Carousel', 'ajax-filter-posts' );
+		} elseif ( $is_reels ) {
+			$reels_cfg                            = ! empty( $config['layout']['reels'] ) ? $config['layout']['reels'] : array();
+			$wrapper_classes[]                    = 'gm-layout-reels';
+			$wrapper_attrs['data-layout']        = 'reels';
+			$wrapper_attrs['data-nav-position']  = ! empty( $reels_cfg['nav_position'] ) ? $reels_cfg['nav_position'] : 'outside';
+			$wrapper_attrs['role']                = 'region';
+			$wrapper_attrs['aria-roledescription'] = 'feed';
+			$wrapper_attrs['aria-label']          = ! empty( $grid->title ) ? $grid->title : __( 'Vertical Video Reels Feed', 'ajax-filter-posts' );
 		}
 
 		$attrs_rendered = '';
@@ -142,6 +151,7 @@ class Grid_Renderer {
 
 		$layout_type = ! empty( $layout['type'] ) ? $layout['type'] : 'grid';
 		$is_slider   = 'slider' === $layout_type || 'carousel' === $layout_type;
+		$is_reels    = 'reels' === $layout_type || 'shorts' === $layout_type;
 		$slider_cfg  = ! empty( $layout['slider'] ) ? $layout['slider'] : array();
 
 		$wrapper_classes = array( 'gm-grid-wrapper', 'gm-v2-grid', 'gm-preview-grid' );
@@ -158,6 +168,14 @@ class Grid_Renderer {
 			$wrapper_attrs['role']                = 'region';
 			$wrapper_attrs['aria-roledescription'] = 'carousel';
 			$wrapper_attrs['aria-label']          = __( 'Live Carousel Preview', 'ajax-filter-posts' );
+		} elseif ( $is_reels ) {
+			$reels_cfg                            = ! empty( $layout['reels'] ) ? $layout['reels'] : array();
+			$wrapper_classes[]                    = 'gm-layout-reels';
+			$wrapper_attrs['data-layout']        = 'reels';
+			$wrapper_attrs['data-nav-position']  = ! empty( $reels_cfg['nav_position'] ) ? $reels_cfg['nav_position'] : 'outside';
+			$wrapper_attrs['role']                = 'region';
+			$wrapper_attrs['aria-roledescription'] = 'feed';
+			$wrapper_attrs['aria-label']          = __( 'Live Reels Feed Preview', 'ajax-filter-posts' );
 		}
 
 		$attrs_rendered = '';
@@ -201,6 +219,7 @@ class Grid_Renderer {
 	public static function render_grid_items_markup( $query, $block_content, $layout, $grid_id, $grid_title = '' ) {
 		$layout_type = ! empty( $layout['type'] ) ? $layout['type'] : 'grid';
 		$is_slider   = 'slider' === $layout_type || 'carousel' === $layout_type;
+		$is_reels    = 'reels' === $layout_type || 'shorts' === $layout_type;
 		$slider_cfg  = ! empty( $layout['slider'] ) ? $layout['slider'] : array();
 
 		$show_arrows = ! isset( $slider_cfg['arrows'] ) || ! empty( $slider_cfg['arrows'] );
@@ -275,6 +294,69 @@ class Grid_Renderer {
 					</button>
 				</div>
 			<?php endif; ?>
+			<?php
+		} elseif ( $is_reels ) {
+			$reels_cfg       = ! empty( $layout['reels'] ) ? $layout['reels'] : array();
+			$show_nav        = ! isset( $reels_cfg['show_nav'] ) || ! empty( $reels_cfg['show_nav'] );
+			$end_text        = ! empty( $reels_cfg['end_text'] ) ? $reels_cfg['end_text'] : __( "You're All Caught Up!", 'ajax-filter-posts' );
+			$show_end_slide  = ! isset( $reels_cfg['show_end_slide'] ) || ! empty( $reels_cfg['show_end_slide'] );
+			$current_paged   = max( 1, (int) $query->get( 'paged' ) );
+			$is_last_page    = $current_paged >= $query->max_num_pages;
+			?>
+			<p class="screen-reader-text sr-only"><?php esc_html_e( 'Vertical video reels feed. Swipe up or down, or use the arrow buttons or keys to navigate reels one by one.', 'ajax-filter-posts' ); ?></p>
+			<div class="gm-reels-viewport">
+				<div class="gm-grid-items gm-reels-track" role="feed" aria-label="<?php esc_attr_e( 'Vertical video reels feed', 'ajax-filter-posts' ); ?>" tabindex="0">
+					<?php
+					while ( $query->have_posts() ) :
+						$query->the_post();
+						global $post;
+						$post_id   = get_the_ID();
+						$post_type = get_post_type();
+						$slide_index++;
+						?>
+						<article class="gm-grid-item gm-reels-slide gm-post-<?php echo esc_attr( $post_id ); ?>" data-post-id="<?php echo esc_attr( $post_id ); ?>" role="article" aria-label="<?php echo esc_attr( sprintf( __( 'Reel %1$d of %2$d: %3$s', 'ajax-filter-posts' ), $slide_index, $total_posts, get_the_title( $post_id ) ) ); ?>">
+							<?php
+							foreach ( $parsed_blocks as $parsed_block ) {
+								echo self::render_block_with_context( $parsed_block, $post_id, $post_type, $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							}
+							?>
+						</article>
+						<?php
+					endwhile;
+					wp_reset_postdata();
+
+					if ( $is_last_page && $show_end_slide ) :
+						?>
+						<div class="gm-grid-item gm-reels-slide gm-reels-end-slide" role="article" aria-label="<?php esc_attr_e( 'End of reels feed', 'ajax-filter-posts' ); ?>">
+							<div class="gm-reels-end-card">
+								<div class="gm-reels-end-icon">
+									<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+								</div>
+								<h3 class="gm-reels-end-title"><?php echo esc_html( $end_text ); ?></h3>
+								<p class="gm-reels-end-desc"><?php esc_html_e( "You've watched all available video reels.", 'ajax-filter-posts' ); ?></p>
+								<button type="button" class="gm-reels-restart-btn">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+									<span><?php esc_html_e( 'Watch Again', 'ajax-filter-posts' ); ?></span>
+								</button>
+							</div>
+						</div>
+						<?php
+					endif;
+					?>
+				</div>
+				<?php if ( $show_nav ) : ?>
+					<div class="gm-reels-nav" aria-label="<?php esc_attr_e( 'Reel navigation', 'ajax-filter-posts' ); ?>">
+						<button class="gm-reels-nav-btn gm-reels-prev" type="button" aria-label="<?php esc_attr_e( 'Previous reel', 'ajax-filter-posts' ); ?>">
+							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+							<span class="screen-reader-text"><?php esc_html_e( 'Previous reel', 'ajax-filter-posts' ); ?></span>
+						</button>
+						<button class="gm-reels-nav-btn gm-reels-next" type="button" aria-label="<?php esc_attr_e( 'Next reel', 'ajax-filter-posts' ); ?>">
+							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+							<span class="screen-reader-text"><?php esc_html_e( 'Next reel', 'ajax-filter-posts' ); ?></span>
+						</button>
+					</div>
+				<?php endif; ?>
+			</div>
 			<?php
 		} else {
 			?>
@@ -394,8 +476,15 @@ class Grid_Renderer {
 		$s_lg   = isset( $slider_slides['lg'] ) ? absint( $slider_slides['lg'] ) : $lg;
 		$s_xl   = isset( $slider_slides['xl'] ) ? absint( $slider_slides['xl'] ) : $xl;
 
+		$reels_cfg       = ! empty( $layout['reels'] ) ? $layout['reels'] : array();
+		$nav_bg          = ! empty( $reels_cfg['nav_bg'] ) ? $reels_cfg['nav_bg'] : '#1e293b';
+		$nav_color       = ! empty( $reels_cfg['nav_color'] ) ? $reels_cfg['nav_color'] : '#ffffff';
+		$nav_hover_bg    = ! empty( $reels_cfg['nav_hover_bg'] ) ? $reels_cfg['nav_hover_bg'] : '#334155';
+		$nav_hover_color = ! empty( $reels_cfg['nav_hover_color'] ) ? $reels_cfg['nav_hover_color'] : '#ffffff';
+		$nav_size        = ! empty( $reels_cfg['nav_size'] ) ? absint( $reels_cfg['nav_size'] ) : 46;
+
 		return sprintf(
-			'--gm-cols-xs:%d;--gm-cols-sm:%d;--gm-cols-md:%d;--gm-cols-lg:%d;--gm-cols-xl:%d;--gm-slides-xs:%d;--gm-slides-sm:%d;--gm-slides-md:%d;--gm-slides-lg:%d;--gm-slides-xl:%d;--gm-col-gap:%dpx;--gm-row-gap:%dpx;',
+			'--gm-cols-xs:%d;--gm-cols-sm:%d;--gm-cols-md:%d;--gm-cols-lg:%d;--gm-cols-xl:%d;--gm-slides-xs:%d;--gm-slides-sm:%d;--gm-slides-md:%d;--gm-slides-lg:%d;--gm-slides-xl:%d;--gm-col-gap:%dpx;--gm-row-gap:%dpx;--gm-reels-btn-bg:%s;--gm-reels-btn-color:%s;--gm-reels-btn-hover-bg:%s;--gm-reels-btn-hover-color:%s;--gm-reels-btn-size:%dpx;',
 			$xs,
 			$sm,
 			$md,
@@ -407,7 +496,12 @@ class Grid_Renderer {
 			$s_lg,
 			$s_xl,
 			$col_gap,
-			$row_gap
+			$row_gap,
+			esc_attr( $nav_bg ),
+			esc_attr( $nav_color ),
+			esc_attr( $nav_hover_bg ),
+			esc_attr( $nav_hover_color ),
+			$nav_size
 		);
 	}
 

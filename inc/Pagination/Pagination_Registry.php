@@ -97,6 +97,9 @@ class Pagination_Registry {
 	 * Renders Infinite Scroll observer trigger.
 	 */
 	private static function render_infinite( $current, $max, $config, $grid_id ) {
+		if ( $current >= $max ) {
+			return '';
+		}
 		$loading = ! empty( $config['loading_text'] ) ? sanitize_text_field( $config['loading_text'] ) : __( 'Loading more posts...', 'ajax-filter-posts' );
 
 		ob_start();

@@ -691,6 +691,7 @@
 		'gridmaster/featured-image',
 		'gridmaster/title',
 		'gridmaster/excerpt',
+		'gridmaster/post-excerpt',
 		'gridmaster/read-more',
 		'gridmaster/post-date',
 		'gridmaster/modified-date',
@@ -713,6 +714,7 @@
 		'gridmaster-pro/sale-countdown',
 		'gridmaster-pro/quick-view',
 		'gridmaster-pro/video-lightbox',
+		'gridmaster-pro/card-video',
 		'gridmaster-pro/bookmark-button',
 		'core/group',
 		'core/columns',
@@ -973,6 +975,10 @@
 			borderRadius: { type: 'string', default: '6px' },
 			isLink: { type: 'boolean', default: true },
 			zoomOnHover: { type: 'boolean', default: false },
+			sourceType: { type: 'string', default: 'featured_image' },
+			metaKey: { type: 'string', default: '' },
+			staticUrl: { type: 'string', default: '' },
+			fallbackUrl: { type: 'string', default: '' },
 		},
 		edit: function ( props ) {
 			const { attributes, setAttributes } = props;
@@ -988,12 +994,43 @@
 						PanelBody,
 						{ title: __( 'Image Settings', 'ajax-filter-posts' ) },
 						el( SelectControl, {
+							label: __( 'Image Source', 'ajax-filter-posts' ),
+							value: attributes.sourceType || 'featured_image',
+							options: [
+								{ label: __( 'Featured Image (Default)', 'ajax-filter-posts' ), value: 'featured_image' },
+								{ label: __( 'Custom Field / Meta Key (ACF/MetaBox)', 'ajax-filter-posts' ), value: 'custom_meta' },
+								{ label: __( 'First Image in Post Content', 'ajax-filter-posts' ), value: 'content_first' },
+								{ label: __( 'Post Author Avatar', 'ajax-filter-posts' ), value: 'author_avatar' },
+								{ label: __( 'Static Image URL', 'ajax-filter-posts' ), value: 'static_url' },
+							],
+							onChange: function ( val ) { setAttributes( { sourceType: val } ); },
+						} ),
+						attributes.sourceType === 'custom_meta' && el( TextControl, {
+							label: __( 'Meta Key / Custom Field Name', 'ajax-filter-posts' ),
+							help: __( 'Enter the custom meta key storing the image ID or URL (e.g. hero_image, banner_url).', 'ajax-filter-posts' ),
+							value: attributes.metaKey || '',
+							onChange: function ( val ) { setAttributes( { metaKey: val } ); },
+						} ),
+						attributes.sourceType === 'static_url' && el( TextControl, {
+							label: __( 'Static Image URL', 'ajax-filter-posts' ),
+							value: attributes.staticUrl || '',
+							onChange: function ( val ) { setAttributes( { staticUrl: val } ); },
+						} ),
+						el( TextControl, {
+							label: __( 'Fallback Image URL (Optional)', 'ajax-filter-posts' ),
+							help: __( 'Used if the primary source has no image.', 'ajax-filter-posts' ),
+							value: attributes.fallbackUrl || '',
+							onChange: function ( val ) { setAttributes( { fallbackUrl: val } ); },
+						} ),
+						el( SelectControl, {
 							label: __( 'Aspect Ratio', 'ajax-filter-posts' ),
 							value: attributes.aspectRatio || '16/9',
 							options: [
 								{ label: __( '16:9 Landscape', 'ajax-filter-posts' ), value: '16/9' },
+								{ label: __( '9:16 Vertical (Shorts/Reels/TikTok)', 'ajax-filter-posts' ), value: '9/16' },
+								{ label: __( '4:5 Portrait (Instagram)', 'ajax-filter-posts' ), value: '4/5' },
+								{ label: __( '1:1 Square (Instagram)', 'ajax-filter-posts' ), value: '1/1' },
 								{ label: __( '4:3 Standard', 'ajax-filter-posts' ), value: '4/3' },
-								{ label: __( '1:1 Square', 'ajax-filter-posts' ), value: '1/1' },
 								{ label: __( '3:2 Classic Photo', 'ajax-filter-posts' ), value: '3/2' },
 								{ label: __( '21:9 Cinematic', 'ajax-filter-posts' ), value: '21/9' },
 								{ label: __( 'Original / Auto', 'ajax-filter-posts' ), value: 'auto' },
@@ -1141,6 +1178,63 @@
 	// 5. Post Excerpt (gridmaster/excerpt)
 	// ==========================================
 	registerBlockType( 'gridmaster/excerpt', {
+		apiVersion: 3,
+		title: __( 'Post Excerpt', 'ajax-filter-posts' ),
+		icon: 'excerpt-view',
+		category: 'theme',
+		attributes: Object.assign(
+			{ length: { type: 'number', default: 20 } },
+			responsiveFontSizeAttributes( '14px' ),
+			{ color: { type: 'string', default: '' } }
+		),
+		edit: function ( props ) {
+			const { attributes, setAttributes } = props;
+			const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-excerpt' } );
+			const device = useEditorDevice();
+
+			return el(
+				Fragment,
+				null,
+				el(
+					InspectorControls,
+					null,
+					el(
+						PanelBody,
+						{ title: __( 'Excerpt Settings', 'ajax-filter-posts' ) },
+						el( RangeControl, {
+							label: __( 'Length (Words)', 'ajax-filter-posts' ),
+							value: attributes.length,
+							min: 5,
+							max: 100,
+							onChange: function ( val ) { setAttributes( { length: val } ); },
+						} ),
+						el( ResponsiveFontSizeControl, {
+							label: __( 'Font Size', 'ajax-filter-posts' ),
+							attributes: attributes,
+							setAttributes: setAttributes,
+							defaultValue: '14px',
+							pxMin: 10,
+							pxMax: 40,
+						} ),
+						renderColorControl(
+							__( 'Text Color', 'ajax-filter-posts' ),
+							attributes.color || '#6b7280',
+							( val ) => setAttributes( { color: val } )
+						)
+					)
+				),
+				el(
+					'div',
+					blockProps,
+					el( 'p', { style: { color: attributes.color || '#6b7280', fontSize: getResponsiveFontSize( attributes, device, '14px' ), margin: 0 } }, __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...', 'ajax-filter-posts' ) )
+				)
+			);
+		},
+		save: function () { return null; },
+	} );
+
+	// Alias for backwards-compatibility
+	registerBlockType( 'gridmaster/post-excerpt', {
 		apiVersion: 3,
 		title: __( 'Post Excerpt', 'ajax-filter-posts' ),
 		icon: 'excerpt-view',

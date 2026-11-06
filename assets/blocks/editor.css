@@ -70,45 +70,219 @@
 
 /* Overlay Card Preview */
 .gm-editor-card--overlay {
-	background: #0f172a !important;
-	color: #ffffff !important;
 	position: relative !important;
 	overflow: hidden !important;
-	min-height: 280px !important;
-}
-
-.gm-editor-card--overlay .block-editor-block-list__layout {
+	width: 340px !important;
+	max-width: 100% !important;
+	height: 580px !important;
+	min-height: 580px !important;
+	max-height: 580px !important;
+	margin: 20px auto !important;
+	border-radius: 20px !important;
+	background: #0f172a !important;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
 	display: flex !important;
 	flex-direction: column !important;
 	justify-content: flex-end !important;
-	min-height: 280px !important;
-	position: relative !important;
 }
 
-.gm-editor-card--overlay .block-editor-block-list__layout > [data-type="gridmaster/featured-image"] {
+.gm-editor-card--overlay::after {
+	content: '' !important;
+	position: absolute !important;
+	inset: 0 !important;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.92) 100%) !important;
+	pointer-events: none !important;
+	z-index: 2 !important;
+	border-radius: inherit !important;
+}
+
+/* Gutenberg Layout Container: must fill the 580px card height */
+.gm-editor-card--overlay .block-editor-inner-blocks,
+.gm-editor-card--overlay .block-editor-inner-blocks > .block-editor-block-list__layout {
+	height: 100% !important;
+	min-height: 100% !important;
+	display: flex !important;
+	flex-direction: column !important;
+	justify-content: flex-end !important;
+	position: relative !important;
+	box-sizing: border-box !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* RESET all nested layouts inside groups so they don't blow up */
+.gm-editor-card--overlay .block-editor-block-list__layout .block-editor-block-list__layout {
+	min-height: auto !important;
+	height: auto !important;
+	justify-content: normal !important;
+	padding: 0 !important;
+}
+
+/* Card Background Fill: Featured Image or Pro Card Video */
+.gm-editor-card--overlay [data-type="gridmaster/featured-image"],
+.gm-editor-card--overlay [data-type="gridmaster-pro/card-video"] {
 	position: absolute !important;
 	inset: 0 !important;
 	width: 100% !important;
 	height: 100% !important;
 	z-index: 1 !important;
-	opacity: 0.25 !important;
-	pointer-events: none !important;
-	margin-bottom: 0 !important;
+	margin: 0 !important;
+	border-radius: inherit !important;
 }
 
-.gm-editor-card--overlay .block-editor-block-list__layout > [data-type="gridmaster/featured-image"] .gm-placeholder-img {
+.gm-editor-card--overlay [data-type="gridmaster/featured-image"] {
+	opacity: 0.35 !important;
+}
+
+.gm-editor-card--overlay [data-type="gridmaster/featured-image"] .gm-placeholder-img {
 	height: 100% !important;
 	background: #334155 !important;
 	color: #94a3b8 !important;
+	border: none !important;
+	border-radius: inherit !important;
 }
 
-.gm-editor-card--overlay .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]) {
+.gm-editor-card--overlay [data-type="gridmaster-pro/card-video"] .gm-field-pro-card-video,
+.gm-editor-card--overlay [data-type="gridmaster-pro/card-video"] .gm-field-pro-card-video > div {
+	height: 100% !important;
+	width: 100% !important;
+	aspect-ratio: auto !important;
+	border-radius: inherit !important;
+	background: linear-gradient(180deg, #1e293b 0%, #0b0e16 100%) !important;
+	margin: 0 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+/* Badge at top-left */
+.gm-editor-card--overlay [data-type="gridmaster/badge"],
+.gm-editor-card--overlay [data-type="gridmaster-pro/badge"] {
+	position: absolute !important;
+	top: 18px !important;
+	left: 18px !important;
+	z-index: 10 !important;
+	margin: 0 !important;
+}
+
+/* Reset Gutenberg standard block margins inside overlay card */
+.gm-editor-card--overlay .block-editor-block-list__block {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+/* Foreground content group pushed to bottom */
+.gm-editor-card--overlay .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="core/group"]:last-child,
+.gm-editor-card--overlay .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="core/group"] {
 	position: relative !important;
-	z-index: 2 !important;
+	z-index: 5 !important;
+	margin-top: auto !important;
+	margin-bottom: 0 !important;
+	width: 100% !important;
+	box-sizing: border-box !important;
+	padding: 18px !important;
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 10px !important;
+	background: transparent !important;
 }
 
-.gm-editor-card--overlay .gm-editor-field {
+/* Nested Groups Layout: Horizontal flex for author and date/bookmark rows */
+.gm-editor-card--overlay .wp-block-group.is-layout-flex,
+.gm-editor-card--overlay [data-type="core/group"].is-layout-flex,
+.gm-editor-card--overlay .wp-block-group.is-layout-flex > .block-editor-block-list__layout,
+.gm-editor-card--overlay [data-type="core/group"].is-layout-flex > .block-editor-block-list__layout {
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center !important;
+	gap: 10px !important;
+	flex-wrap: nowrap !important;
+	min-height: auto !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100% !important;
+}
+
+.gm-editor-card--overlay .wp-block-group.is-content-justification-space-between,
+.gm-editor-card--overlay [data-type="core/group"].is-content-justification-space-between,
+.gm-editor-card--overlay .wp-block-group.is-content-justification-space-between > .block-editor-block-list__layout,
+.gm-editor-card--overlay [data-type="core/group"].is-content-justification-space-between > .block-editor-block-list__layout {
+	justify-content: space-between !important;
+}
+
+.gm-editor-card--overlay .is-layout-flex > [data-type="gridmaster/author-avatar"],
+.gm-editor-card--overlay .is-layout-flex .gm-field-author-avatar {
+	flex: 0 0 auto !important;
+	width: auto !important;
+	margin: 0 !important;
+}
+
+.gm-editor-card--overlay .is-layout-flex > [data-type="gridmaster/post-author"],
+.gm-editor-card--overlay .is-layout-flex .gm-field-author {
+	flex: 1 1 auto !important;
+	margin: 0 !important;
+}
+
+.gm-editor-card--overlay .is-layout-flex > [data-type="gridmaster/post-date"],
+.gm-editor-card--overlay .is-layout-flex .gm-field-date {
+	flex: 0 0 auto !important;
+	margin: 0 !important;
+}
+
+.gm-editor-card--overlay .is-layout-flex > [data-type="gridmaster-pro/bookmark-button"],
+.gm-editor-card--overlay .is-layout-flex .gm-field-pro-bookmark {
+	flex: 0 0 auto !important;
+	margin: 0 !important;
+	margin-left: auto !important;
+}
+
+/* Typography & Colors in Overlay */
+.gm-editor-card--overlay .gm-field-title h1,
+.gm-editor-card--overlay .gm-field-title h2,
+.gm-editor-card--overlay .gm-field-title h3,
+.gm-editor-card--overlay .gm-field-title h4,
+.gm-editor-card--overlay .gm-field-title a {
 	color: #ffffff !important;
+	font-size: 17px !important;
+	font-weight: 700 !important;
+	margin: 0 !important;
+	line-height: 1.35 !important;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.gm-editor-card--overlay .gm-field-author,
+.gm-editor-card--overlay .gm-field-author a,
+.gm-editor-card--overlay .gm-field-author span {
+	color: #ffffff !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
+	margin: 0 !important;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.gm-editor-card--overlay .gm-field-excerpt p {
+	color: #cbd5e1 !important;
+	font-size: 12.5px !important;
+	line-height: 1.4 !important;
+	margin: 0 !important;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
+}
+
+.gm-editor-card--overlay .gm-field-date,
+.gm-editor-card--overlay .gm-field-date time {
+	color: #94a3b8 !important;
+	font-size: 12px !important;
+	margin: 0 !important;
+}
+
+.gm-editor-card--overlay [data-type="gridmaster-pro/bookmark-button"] {
+	color: #ffffff !important;
+}
+
+.gm-editor-card--overlay .gm-author-avatar-img,
+.gm-editor-card--overlay .gm-field-author-avatar .dashicons {
+	border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+	border-radius: 50% !important;
 }
 .gm-editor-field {
 	margin-bottom: 12px;
@@ -613,12 +787,14 @@
    ======================================================== */
 .gm-editor-color-field {
 	margin-bottom: 16px;
+	max-width: 100%;
 }
 .gm-color-row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
+	flex-wrap: wrap;
 }
 .gm-color-label {
 	font-size: 11px;
@@ -627,23 +803,31 @@
 	letter-spacing: 0.5px;
 	color: #1e1e1e;
 	margin: 0;
-	white-space: nowrap;
+	white-space: normal;
+	line-height: 1.35;
+	flex: 1 1 auto;
+	min-width: 110px;
+	word-break: break-word;
 }
 .gm-color-actions {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
+	flex-shrink: 0;
+	max-width: 100%;
 }
 .gm-color-swatch-btn {
 	display: inline-flex;
 	align-items: center;
-	gap: 7px;
+	gap: 6px;
 	padding: 3px 8px 3px 4px;
 	background: #ffffff;
 	border: 1px solid #cbd5e1;
 	border-radius: 9999px;
 	cursor: pointer;
 	transition: all 0.15s ease;
+	max-width: 140px;
+	box-sizing: border-box;
 }
 .gm-color-swatch-btn:hover {
 	border-color: #94a3b8;
@@ -654,11 +838,12 @@
 	outline-offset: 1px;
 }
 .gm-color-swatch-circle {
-	width: 18px;
-	height: 18px;
+	width: 16px;
+	height: 16px;
 	border-radius: 50%;
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	display: inline-block;
+	flex-shrink: 0;
 	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2);
 }
 .gm-color-swatch-btn.is-empty .gm-color-swatch-circle {
@@ -669,6 +854,11 @@
 	font-weight: 500;
 	color: #475569;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	max-width: 95px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
 }
 .gm-color-clear-btn {
 	width: 22px;
@@ -683,6 +873,7 @@
 	justify-content: center;
 	cursor: pointer;
 	transition: all 0.15s ease;
+	flex-shrink: 0;
 }
 .gm-color-clear-btn .dashicons {
 	font-size: 14px;
@@ -693,6 +884,16 @@
 .gm-color-clear-btn:hover {
 	color: #ef4444;
 	background: #fef2f2;
+}
+
+/* Prevent horizontal overflow in inspector panels */
+.block-editor-block-inspector,
+.edit-post-sidebar,
+.interface-interface-skeleton__sidebar {
+	overflow-x: hidden !important;
+}
+.block-editor-block-inspector .components-panel__body {
+	overflow-x: hidden !important;
 }
 .gm-color-popover .components-popover__content {
 	border-radius: 8px !important;

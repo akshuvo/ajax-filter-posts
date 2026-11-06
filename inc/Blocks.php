@@ -75,6 +75,10 @@ class Blocks {
 					'borderRadius' => array( 'type' => 'string', 'default' => '0px' ),
 					'isLink'       => array( 'type' => 'boolean', 'default' => true ),
 					'zoomOnHover'  => array( 'type' => 'boolean', 'default' => false ),
+					'sourceType'   => array( 'type' => 'string', 'default' => 'featured_image' ),
+					'metaKey'      => array( 'type' => 'string', 'default' => '' ),
+					'staticUrl'    => array( 'type' => 'string', 'default' => '' ),
+					'fallbackUrl'  => array( 'type' => 'string', 'default' => '' ),
 				),
 			),
 			'title'          => array(
@@ -89,6 +93,16 @@ class Blocks {
 				),
 			),
 			'excerpt'        => array(
+				'callback'   => 'render_excerpt',
+				'attributes' => array(
+					'length'         => array( 'type' => 'number', 'default' => 20 ),
+					'fontSize'       => array( 'type' => 'string', 'default' => '14px' ),
+					'fontSizeTablet' => array( 'type' => 'string', 'default' => '' ),
+					'fontSizeMobile' => array( 'type' => 'string', 'default' => '' ),
+					'color'          => array( 'type' => 'string', 'default' => '' ),
+				),
+			),
+			'post-excerpt'   => array(
 				'callback'   => 'render_excerpt',
 				'attributes' => array(
 					'length'         => array( 'type' => 'number', 'default' => 20 ),
@@ -442,20 +456,24 @@ class Blocks {
 	}
 
 	/**
-	 * Render Featured Image block.
+	 * Render Featured Image block with Dynamic Source support.
 	 */
 	public function render_featured_image( $attributes, $content, $block ) {
 		$post_id = $this->get_context_post_id( $attributes, $block );
-		if ( ! $post_id || ! has_post_thumbnail( $post_id ) ) {
+		if ( ! $post_id ) {
 			return '';
 		}
 
-		$size        = ! empty( $attributes['size'] ) ? sanitize_key( $attributes['size'] ) : 'medium_large';
-		$aspect      = ! empty( $attributes['aspectRatio'] ) ? sanitize_text_field( $attributes['aspectRatio'] ) : '16/9';
-		$fit         = ! empty( $attributes['objectFit'] ) ? sanitize_key( $attributes['objectFit'] ) : 'cover';
-		$is_link     = ! isset( $attributes['isLink'] ) || (bool) $attributes['isLink'];
-		$radius      = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '0px';
-		$zoom_class  = ! empty( $attributes['zoomOnHover'] ) ? ' gm-img-zoom' : '';
+		$size         = ! empty( $attributes['size'] ) ? sanitize_key( $attributes['size'] ) : 'medium_large';
+		$aspect       = ! empty( $attributes['aspectRatio'] ) ? sanitize_text_field( $attributes['aspectRatio'] ) : '16/9';
+		$fit          = ! empty( $attributes['objectFit'] ) ? sanitize_key( $attributes['objectFit'] ) : 'cover';
+		$is_link      = ! isset( $attributes['isLink'] ) || (bool) $attributes['isLink'];
+		$radius       = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '0px';
+		$zoom_class   = ! empty( $attributes['zoomOnHover'] ) ? ' gm-img-zoom' : '';
+		$source_type  = ! empty( $attributes['sourceType'] ) ? sanitize_key( $attributes['sourceType'] ) : 'featured_image';
+		$meta_key     = ! empty( $attributes['metaKey'] ) ? sanitize_text_field( $attributes['metaKey'] ) : '';
+		$static_url   = ! empty( $attributes['staticUrl'] ) ? esc_url_raw( $attributes['staticUrl'] ) : '';
+		$fallback_url = ! empty( $attributes['fallbackUrl'] ) ? esc_url_raw( $attributes['fallbackUrl'] ) : '';
 
 		$img_style = sprintf(
 			'width:100%%;height:%s;object-fit:%s;border-radius:%s;%s',
@@ -465,13 +483,78 @@ class Blocks {
 			'auto' !== $aspect ? 'aspect-ratio:' . esc_attr( $aspect ) . ';' : ''
 		);
 
-		$image_html = get_the_post_thumbnail( $post_id, $size, array(
-			'style' => $img_style,
-			'class' => 'gm-card-img' . $zoom_class,
-		) );
+		$image_html = '';
+		$image_src  = '';
+
+		// 1. Resolve source based on sourceType
+		if ( 'featured_image' === $source_type ) {
+			if ( has_post_thumbnail( $post_id ) ) {
+				$image_html = get_the_post_thumbnail( $post_id, $size, array(
+					'style' => $img_style,
+					'class' => 'gm-card-img' . $zoom_class,
+				) );
+			}
+		} elseif ( 'custom_meta' === $source_type && ! empty( $meta_key ) ) {
+			$meta_val = get_post_meta( $post_id, $meta_key, true );
+			if ( is_numeric( $meta_val ) && $meta_val > 0 ) {
+				$image_html = wp_get_attachment_image( $meta_val, $size, false, array(
+					'style' => $img_style,
+					'class' => 'gm-card-img' . $zoom_class,
+				) );
+			} elseif ( is_string( $meta_val ) && ! empty( $meta_val ) ) {
+				$image_src = $meta_val;
+			} elseif ( is_array( $meta_val ) && ! empty( $meta_val['url'] ) ) {
+				$image_src = $meta_val['url'];
+			}
+		} elseif ( 'content_first' === $source_type ) {
+			$post_content = get_post_field( 'post_content', $post_id );
+			if ( preg_match( '/<img[^>]+src=[\'"]([^\'"]+)[\'"]/i', $post_content, $matches ) ) {
+				$image_src = $matches[1];
+			}
+		} elseif ( 'author_avatar' === $source_type ) {
+			$author_id = get_post_field( 'post_author', $post_id );
+			if ( $author_id ) {
+				$image_src = get_avatar_url( $author_id, array( 'size' => 600 ) );
+			}
+		} elseif ( 'static_url' === $source_type && ! empty( $static_url ) ) {
+			$image_src = $static_url;
+		}
+
+		// 2. Fallbacks
+		if ( empty( $image_html ) && empty( $image_src ) ) {
+			if ( ! empty( $fallback_url ) ) {
+				$image_src = $fallback_url;
+			} elseif ( 'featured_image' !== $source_type && has_post_thumbnail( $post_id ) ) {
+				// Secondary fallback to post thumbnail if custom source failed
+				$image_html = get_the_post_thumbnail( $post_id, $size, array(
+					'style' => $img_style,
+					'class' => 'gm-card-img' . $zoom_class,
+				) );
+			}
+		}
+
+		// 3. Assemble HTML if resolved via URL
+		if ( empty( $image_html ) && ! empty( $image_src ) ) {
+			$image_html = sprintf(
+				'<img src="%s" alt="%s" style="%s" class="gm-card-img%s" loading="lazy" />',
+				esc_url( $image_src ),
+				esc_attr( get_the_title( $post_id ) ),
+				$img_style,
+				$zoom_class
+			);
+		}
+
+		if ( empty( $image_html ) ) {
+			return '';
+		}
 
 		if ( $is_link ) {
-			$image_html = sprintf( '<a href="%s" aria-label="%s" style="display:block;height:100%%;">%s</a>', esc_url( get_permalink( $post_id ) ), esc_attr( get_the_title( $post_id ) ), $image_html );
+			$image_html = sprintf(
+				'<a href="%s" aria-label="%s" style="display:block;height:100%%;">%s</a>',
+				esc_url( get_permalink( $post_id ) ),
+				esc_attr( get_the_title( $post_id ) ),
+				$image_html
+			);
 		}
 
 		return '<div class="gm-field gm-field-featured-image">' . $image_html . '</div>';

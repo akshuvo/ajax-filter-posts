@@ -32,6 +32,7 @@
 			this.initPagination();
 			this.initInfiniteScroll();
 			this.initSlider();
+			this.initVerticalReels();
 		}
 
 		initFilters() {
@@ -39,7 +40,7 @@
 				return;
 			}
 
-			// 1. Tab buttons
+			// 1. Tab buttons (Supports single-select and multi-select chips)
 			this.filtersWrap.addEventListener( 'click', ( e ) => {
 				const btn = e.target.closest( '.gm-filter-btn' );
 				if ( ! btn ) return;
@@ -47,22 +48,65 @@
 				const facetEl = btn.closest( '.gm-facet' );
 				const taxonomy = facetEl.getAttribute( 'data-taxonomy' );
 				const termId = parseInt( btn.getAttribute( 'data-term-id' ), 10 );
+				const isMulti = facetEl.getAttribute( 'data-multi-select' ) === '1';
 
-				// Update active classes within this tab group
-				facetEl.querySelectorAll( '.gm-filter-btn' ).forEach( ( b ) => {
-					b.classList.remove( 'gm-active' );
-					b.setAttribute( 'aria-selected', 'false' );
-				} );
-				btn.classList.add( 'gm-active' );
-				btn.setAttribute( 'aria-selected', 'true' );
+				if ( isMulti ) {
+					if ( termId === 0 ) {
+						// Reset group to 'All'
+						facetEl.querySelectorAll( '.gm-filter-btn' ).forEach( ( b ) => {
+							const isAll = parseInt( b.getAttribute( 'data-term-id' ), 10 ) === 0;
+							b.classList.toggle( 'gm-active', isAll );
+							b.setAttribute( 'aria-selected', isAll ? 'true' : 'false' );
+						} );
+						delete this.state.facets[ taxonomy ];
+					} else {
+						// Deselect the 'All' button
+						const allBtn = facetEl.querySelector( '.gm-filter-btn[data-term-id="0"]' );
+						if ( allBtn ) {
+							allBtn.classList.remove( 'gm-active' );
+							allBtn.setAttribute( 'aria-selected', 'false' );
+						}
 
-				if ( termId === 0 ) {
-					delete this.state.facets[ taxonomy ];
+						btn.classList.toggle( 'gm-active' );
+						const isActive = btn.classList.contains( 'gm-active' );
+						btn.setAttribute( 'aria-selected', isActive ? 'true' : 'false' );
+
+						const current = Array.isArray( this.state.facets[ taxonomy ] ) ? [ ...this.state.facets[ taxonomy ] ] : [];
+						const idx = current.indexOf( termId );
+						if ( isActive && idx === -1 ) {
+							current.push( termId );
+						} else if ( ! isActive && idx !== -1 ) {
+							current.splice( idx, 1 );
+						}
+
+						if ( current.length === 0 ) {
+							delete this.state.facets[ taxonomy ];
+							if ( allBtn ) {
+								allBtn.classList.add( 'gm-active' );
+								allBtn.setAttribute( 'aria-selected', 'true' );
+							}
+						} else {
+							this.state.facets[ taxonomy ] = current;
+						}
+					}
 				} else {
-					this.state.facets[ taxonomy ] = [ termId ];
+					// Update active classes within single-select tab group
+					facetEl.querySelectorAll( '.gm-filter-btn' ).forEach( ( b ) => {
+						b.classList.remove( 'gm-active' );
+						b.setAttribute( 'aria-selected', 'false' );
+					} );
+					btn.classList.add( 'gm-active' );
+					btn.setAttribute( 'aria-selected', 'true' );
+
+					if ( termId === 0 ) {
+						delete this.state.facets[ taxonomy ];
+					} else {
+						this.state.facets[ taxonomy ] = [ termId ];
+					}
 				}
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.fetchResults( false );
 			} );
 
@@ -201,7 +245,7 @@
 						this.fetchResults( true );
 					}
 				}
-			}, { rootMargin: '200px' } );
+			}, { rootMargin: '300px' } );
 
 			observer.observe( infiniteEl );
 			this.infiniteObserver = observer;
@@ -300,6 +344,13 @@
 						// Re-observe if infinite scroll
 						this.initInfiniteScroll();
 						this.initSlider();
+						this.initVerticalReels();
+
+						// Dispatch loaded event for Pro blocks and external widgets
+						document.dispatchEvent( new CustomEvent( 'gridmaster_loaded_posts', { detail: { gridId: this.gridId } } ) );
+						if ( window.jQuery ) {
+							window.jQuery( document ).trigger( 'gridmaster_loaded_posts', [ this.gridId ] );
+						}
 					}
 				} )
 				.catch( ( err ) => {
@@ -348,6 +399,54 @@
 					if ( text && loadBtn.dataset.originalText ) text.textContent = loadBtn.dataset.originalText;
 				}
 			}
+		}
+
+		syncUrl() {
+			try {
+				const url = new URL( window.location.href );
+				let changed = false;
+
+				if ( this.state.search ) {
+					url.searchParams.set( 'gm_q', this.state.search );
+					changed = true;
+				} else if ( url.searchParams.has( 'gm_q' ) ) {
+					url.searchParams.delete( 'gm_q' );
+					changed = true;
+				}
+
+				Object.keys( this.state.facets ).forEach( ( tax ) => {
+					const vals = this.state.facets[ tax ];
+					if ( Array.isArray( vals ) && vals.length > 0 ) {
+						url.searchParams.set( 'gm_' + tax, vals.join( ',' ) );
+						changed = true;
+					} else if ( url.searchParams.has( 'gm_' + tax ) ) {
+						url.searchParams.delete( 'gm_' + tax );
+						changed = true;
+					}
+				} );
+
+				for ( const param of Array.from( url.searchParams.keys() ) ) {
+					if ( param.startsWith( 'gm_' ) && param !== 'gm_q' && param !== 'gm_paged' ) {
+						const tax = param.replace( 'gm_', '' );
+						if ( ! this.state.facets[ tax ] || this.state.facets[ tax ].length === 0 ) {
+							url.searchParams.delete( param );
+							changed = true;
+						}
+					}
+				}
+
+				if ( this.state.page > 1 ) {
+					url.searchParams.set( 'gm_paged', this.state.page );
+					changed = true;
+				} else if ( url.searchParams.has( 'gm_paged' ) ) {
+					url.searchParams.delete( 'gm_paged' );
+					changed = true;
+				}
+
+				if ( changed ) {
+					window.history.replaceState( null, '', url.toString() );
+				}
+			} catch ( e ) {}
 		}
 
 		initSlider() {
@@ -750,6 +849,201 @@
 			// Initial visibility calculation
 			hideNonVisibleCards();
 		}
+
+		initVerticalReels() {
+			if ( this.reelsCleanup ) {
+				this.reelsCleanup();
+				this.reelsCleanup = null;
+			}
+
+			const isReels = this.container.classList.contains( 'gm-layout-reels' ) || this.container.getAttribute( 'data-layout' ) === 'reels';
+			if ( ! isReels ) {
+				return;
+			}
+
+			const track = this.container.querySelector( '.gm-reels-track' ) || this.container.querySelector( '.gm-grid-items' );
+			if ( ! track ) return;
+
+			const prevBtn = this.container.querySelector( '.gm-reels-prev' );
+			const nextBtn = this.container.querySelector( '.gm-reels-next' );
+			const getSlides = () => Array.from( track.querySelectorAll( '.gm-grid-item' ) );
+
+			const getCurrentIndex = () => {
+				const slides = getSlides();
+				if ( ! slides.length ) return 0;
+				const trackScrollTop = track.scrollTop;
+				let closestIdx = 0;
+				let minDiff = Infinity;
+				slides.forEach( ( slide, idx ) => {
+					const diff = Math.abs( ( slide.offsetTop - track.offsetTop ) - trackScrollTop );
+					if ( diff < minDiff ) {
+						minDiff = diff;
+						closestIdx = idx;
+					}
+				} );
+				return closestIdx;
+			};
+
+			const scrollToSlide = ( index, smooth = true ) => {
+				const slides = getSlides();
+				if ( index < 0 || index >= slides.length ) return;
+				const target = slides[ index ];
+				if ( ! target ) return;
+				const top = target.offsetTop - track.offsetTop;
+				track.scrollTo( {
+					top,
+					behavior: smooth ? 'smooth' : 'auto',
+				} );
+			};
+
+			const nextReel = () => {
+				const cur = getCurrentIndex();
+				const slides = getSlides();
+				if ( cur < slides.length - 1 ) {
+					scrollToSlide( cur + 1 );
+				}
+			};
+
+			const prevReel = () => {
+				const cur = getCurrentIndex();
+				if ( cur > 0 ) {
+					scrollToSlide( cur - 1 );
+				}
+			};
+
+			if ( prevBtn ) prevBtn.addEventListener( 'click', prevReel );
+			if ( nextBtn ) nextBtn.addEventListener( 'click', nextReel );
+
+			// Restart feed handler for "All Caught Up" end slide
+			const onRestartClick = ( e ) => {
+				const btn = e.target.closest( '.gm-reels-restart-btn' );
+				if ( ! btn ) return;
+				e.preventDefault();
+				scrollToSlide( 0 );
+			};
+			track.addEventListener( 'click', onRestartClick );
+
+			// Keyboard navigation (ArrowUp / ArrowDown / PageUp / PageDown)
+			const onKeyDown = ( e ) => {
+				if ( e.key === 'ArrowDown' || e.key === 'PageDown' ) {
+					e.preventDefault();
+					nextReel();
+				} else if ( e.key === 'ArrowUp' || e.key === 'PageUp' ) {
+					e.preventDefault();
+					prevReel();
+				}
+			};
+			track.addEventListener( 'keydown', onKeyDown );
+
+			// Single-active video coordinator for vertical reels
+			const syncActiveVideos = () => {
+				const slides = getSlides();
+				const activeIdx = getCurrentIndex();
+
+				slides.forEach( ( slide, idx ) => {
+					const isActive = ( idx === activeIdx );
+					slide.classList.toggle( 'is-active-reel', isActive );
+
+					const vidWrap = slide.querySelector( '.gm-card-video-wrap' );
+					if ( ! vidWrap ) return;
+					const vid = vidWrap.querySelector( 'video' );
+
+					if ( isActive ) {
+						if ( vid ) {
+							if ( ! vid.getAttribute( 'src' ) ) {
+								vid.src = vid.getAttribute( 'data-src' ) || vidWrap.getAttribute( 'data-video-url' );
+								vid.load();
+							}
+							if ( window.__gmReelsUnmuted ) {
+								vid.muted = false;
+							} else {
+								vid.muted = true;
+							}
+							const p = vid.play();
+							if ( p && p.catch ) p.catch( () => {} );
+							vidWrap.classList.add( 'is-playing' );
+						}
+					} else {
+						if ( vid ) {
+							try { vid.pause(); } catch ( e ) {}
+							vidWrap.classList.remove( 'is-playing' );
+						}
+					}
+				} );
+			};
+
+			// IntersectionObserver to accurately detect snapped reel
+			let reelObserver = null;
+			if ( 'IntersectionObserver' in window ) {
+				reelObserver = new IntersectionObserver( ( entries ) => {
+					entries.forEach( ( entry ) => {
+						if ( entry.isIntersecting && entry.intersectionRatio >= 0.55 ) {
+							syncActiveVideos();
+						}
+					} );
+				}, {
+					root: track,
+					threshold: [ 0.55 ],
+				} );
+
+				getSlides().forEach( ( slide ) => reelObserver.observe( slide ) );
+			}
+
+			// Scroll listener for nav buttons & infinite auto-paging
+			let scrollDebounce = null;
+			const onScroll = () => {
+				if ( scrollDebounce ) clearTimeout( scrollDebounce );
+				scrollDebounce = setTimeout( () => {
+					const slides = getSlides();
+					const cur = getCurrentIndex();
+
+					if ( prevBtn ) {
+						const isStart = cur <= 0;
+						prevBtn.disabled = isStart;
+						prevBtn.setAttribute( 'aria-disabled', isStart ? 'true' : 'false' );
+					}
+					if ( nextBtn ) {
+						const isEnd = cur >= slides.length - 1;
+						nextBtn.disabled = isEnd;
+						nextBtn.setAttribute( 'aria-disabled', isEnd ? 'true' : 'false' );
+					}
+
+					// Infinite auto-paging within vertical track
+					const isNearBottom = ( track.scrollTop + track.clientHeight ) >= ( track.scrollHeight - track.clientHeight * 1.5 );
+					if ( isNearBottom && ! this.isLoading ) {
+						const infiniteEl = this.container.querySelector( '.gm-pagination-infinite, .gm-load-more-btn, .gm-btn-load-more' );
+						if ( infiniteEl ) {
+							const nextPage = parseInt( infiniteEl.getAttribute( 'data-page' ), 10 ) || ( this.state.page + 1 );
+							const maxPages = parseInt( infiniteEl.getAttribute( 'data-max-pages' ), 10 ) || 0;
+							if ( ! maxPages || nextPage <= maxPages ) {
+								this.state.page = nextPage;
+								this.fetchResults( true );
+							}
+						}
+					}
+				}, 60 );
+			};
+
+			track.addEventListener( 'scroll', onScroll, { passive: true } );
+
+			// Initial sync on ready
+			setTimeout( () => {
+				syncActiveVideos();
+				if ( prevBtn ) {
+					prevBtn.disabled = true;
+					prevBtn.setAttribute( 'aria-disabled', 'true' );
+				}
+			}, 100 );
+
+			this.reelsCleanup = () => {
+				if ( prevBtn ) prevBtn.removeEventListener( 'click', prevReel );
+				if ( nextBtn ) nextBtn.removeEventListener( 'click', nextReel );
+				track.removeEventListener( 'click', onRestartClick );
+				track.removeEventListener( 'keydown', onKeyDown );
+				track.removeEventListener( 'scroll', onScroll );
+				if ( reelObserver ) reelObserver.disconnect();
+			};
+		}
 	}
 
 	// Auto-initialize all grids on page load
@@ -758,10 +1052,11 @@
 			if ( ! activeGrids.has( el ) ) {
 				activeGrids.set( el, new GridInstance( el ) );
 			} else {
-				// Re-init slider if already existing
+				// Re-init slider or reels if already existing
 				const inst = activeGrids.get( el );
-				if ( inst && inst.initSlider ) {
-					inst.initSlider();
+				if ( inst ) {
+					if ( inst.initSlider ) inst.initSlider();
+					if ( inst.initVerticalReels ) inst.initVerticalReels();
 				}
 			}
 		} );
@@ -769,6 +1064,7 @@
 
 	// Expose for builder preview
 	window.gridmasterInitAllSliders = initAllGrids;
+	window.gridmasterInitAllReels = initAllGrids;
 
 	// Delegated Copy Link handler for social share
 	document.addEventListener( 'click', ( e ) => {

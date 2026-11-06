@@ -120,6 +120,8 @@
 			{
 				title: __( 'Media & Badges', 'ajax-filter-posts' ),
 				blocks: [
+					{ name: 'gridmaster-pro/card-video', title: __( 'Card Video Player (Pro)', 'ajax-filter-posts' ), icon: 'video-alt2', desc: __( 'Inline video player or preview on click/hover/loop', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/video-lightbox', title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ), icon: 'video-alt3', desc: __( 'Video play button with modal popup', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster/post-format-icon', title: __( 'Post Format Icon', 'ajax-filter-posts' ), icon: 'video-alt3', desc: __( 'Dynamic icon for video, audio, or gallery formats', 'ajax-filter-posts' ), attrs: {} },
 					{ name: 'gridmaster/badge', title: __( 'Custom Badge', 'ajax-filter-posts' ), icon: 'tag', desc: __( 'Static or meta-driven custom badge', 'ajax-filter-posts' ), attrs: {} },
 				],
@@ -157,6 +159,7 @@
 					{ name: 'gridmaster-pro/sale-countdown', title: __( 'Sale Countdown (Pro)', 'ajax-filter-posts' ), icon: 'clock', desc: __( 'Live countdown timer for scheduled sales', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/quick-view', title: __( 'Quick View (Pro)', 'ajax-filter-posts' ), icon: 'visibility', desc: __( 'Modal quick preview trigger', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/video-lightbox', title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ), icon: 'video-alt3', desc: __( 'Video play button with modal popup', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/card-video', title: __( 'Card Video Player (Pro)', 'ajax-filter-posts' ), icon: 'video-alt2', desc: __( 'Inline video player, preview on click/hover, or vertical shorts loop', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/bookmark-button', title: __( 'Bookmark / Wishlist (Pro)', 'ajax-filter-posts' ), icon: 'heart', desc: __( 'Save post to visitor favorites', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 				],
 			},
@@ -254,6 +257,7 @@
 			'gridmaster/title': { title: __( 'Post Title', 'ajax-filter-posts' ), icon: 'heading' },
 			'gridmaster/featured-image': { title: __( 'Featured Image', 'ajax-filter-posts' ), icon: 'format-image' },
 			'gridmaster/excerpt': { title: __( 'Excerpt', 'ajax-filter-posts' ), icon: 'editor-alignleft' },
+			'gridmaster/post-excerpt': { title: __( 'Excerpt', 'ajax-filter-posts' ), icon: 'editor-alignleft' },
 			'gridmaster/read-more': { title: __( 'Button (Read More)', 'ajax-filter-posts' ), icon: 'button' },
 			'gridmaster/post-date': { title: __( 'Post Date', 'ajax-filter-posts' ), icon: 'calendar-alt' },
 			'gridmaster/modified-date': { title: __( 'Modified Date', 'ajax-filter-posts' ), icon: 'update' },
@@ -278,6 +282,7 @@
 			'gridmaster-pro/sale-countdown': { title: __( 'Countdown (Pro)', 'ajax-filter-posts' ), icon: 'clock' },
 			'gridmaster-pro/quick-view': { title: __( 'Quick View (Pro)', 'ajax-filter-posts' ), icon: 'visibility' },
 			'gridmaster-pro/video-lightbox': { title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ), icon: 'video-alt3' },
+			'gridmaster-pro/card-video': { title: __( 'Card Video (Pro)', 'ajax-filter-posts' ), icon: 'video-alt2' },
 			'gridmaster-pro/bookmark-button': { title: __( 'Bookmark (Pro)', 'ajax-filter-posts' ), icon: 'heart' },
 			'core/group': { title: __( 'Group', 'ajax-filter-posts' ), icon: 'layout' },
 			'core/columns': { title: __( 'Columns', 'ajax-filter-posts' ), icon: 'columns' },
@@ -402,7 +407,7 @@
 
 		if ( ! isOpen ) return null;
 
-		const categories = [ 'All', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Media', 'Social' ];
+		const categories = [ 'All', 'Video & Reels', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Social' ];
 
 		const templates = [
 			// 1. Standard Vertical Card
@@ -817,7 +822,7 @@
 				title: __( 'Video & Media Spotlight (Pro)', 'ajax-filter-posts' ),
 				desc: __( 'Format icon, featured media, video lightbox trigger popup, and reading time.', 'ajax-filter-posts' ),
 				icon: 'video-alt3',
-				category: 'Media',
+				category: 'Video & Reels',
 				isPro: true,
 				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '12px', borderWidth: '0px', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', backgroundColor: '#ffffff', hoverEffect: 'zoom' },
 				getBlocks: () => [
@@ -834,7 +839,7 @@
 				title: __( 'Podcast & Audio Episode (Pro)', 'ajax-filter-posts' ),
 				desc: __( 'Audio episode badge, media thumbnail, episode title, host author, and listen button.', 'ajax-filter-posts' ),
 				icon: 'controls-play',
-				category: 'Media',
+				category: 'Video & Reels',
 				isPro: true,
 				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
 				getBlocks: () => [
@@ -866,6 +871,115 @@
 					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '18px', isLink: true } ),
 					createBlock( 'gridmaster/post-date', { format: 'M d, Y' } ),
 					createBlock( 'gridmaster/social-share', {} ),
+				],
+			},
+			// 26. Superhero DJs Routine Video Card (Pro)
+			{
+				id: 'superhero-video-routine',
+				title: __( 'Superhero DJs Routine Video (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Dark neon 16:9 card with inline video player preview, glowing play button, difficulty level badge, DJ title, and lesson link.', 'ajax-filter-posts' ),
+				icon: 'format-video',
+				category: 'Video & Reels',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '12px', borderWidth: '1px', borderColor: 'rgba(150,95,255,0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.4)', backgroundColor: '#0b0e16', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/card-video', {
+						aspectRatio: '16/9',
+						playbackMode: 'inline_click',
+						showPlayButton: true,
+						showProgressBar: true,
+						playBgColor: 'rgba(213, 0, 0, 0.92)',
+						borderRadius: '8px',
+					} ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/badge', { text: __( 'MEDIUM', 'ajax-filter-posts' ), backgroundColor: '#050608', textColor: '#ffcf5a' } ),
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					] ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', color: '#ffffff', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 15, color: '#94a3b8' } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Start this lesson →', 'ajax-filter-posts' ), textColor: '#8fb8ff', backgroundColor: 'transparent' } ),
+				],
+			},
+			// 27. TikTok / Reels / Shorts 9:16 Vertical Video (Pro)
+			{
+				id: 'shorts-vertical-feed',
+				title: __( 'TikTok / Reels / Shorts 9:16 (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Full portrait 9:16 vertical card with auto-looping muted teaser, sound toggle, creator avatar, and engagement actions.', 'ajax-filter-posts' ),
+				icon: 'smartphone',
+				category: 'Video & Reels',
+				isPro: true,
+				cardAttrs: { layoutMode: 'overlay', minHeight: '440px', padding: '18px', borderRadius: '16px', borderWidth: '0px', boxShadow: '0 8px 30px rgba(0,0,0,0.5)', backgroundColor: '#000000', hoverEffect: 'zoom' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/card-video', {
+						aspectRatio: '9/16',
+						playbackMode: 'autoplay_loop',
+						showPlayButton: false,
+						showSoundToggle: true,
+						borderRadius: '16px',
+					} ),
+					createBlock( 'gridmaster/badge', { text: __( '🔥 REEL', 'ajax-filter-posts' ), backgroundColor: 'rgba(239,68,68,0.85)', textColor: '#ffffff' } ),
+					createBlock( 'core/group', { style: { spacing: { margin: { top: 'auto' } } } }, [
+						createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
+							createBlock( 'gridmaster/author-avatar', { avatarSize: 36, borderRadius: '50%' } ),
+							createBlock( 'gridmaster/post-author', {} ),
+						] ),
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', color: '#ffffff', isLink: true } ),
+						createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+							createBlock( 'gridmaster/post-date', { format: 'M j', color: '#e2e8f0' } ),
+							createBlock( 'gridmaster-pro/bookmark-button', { iconSize: 20, activeColor: '#ef4444' } ),
+						] ),
+					] ),
+				],
+			},
+			// 28. Instagram 1:1 Square Video Grid (Pro)
+			{
+				id: 'instagram-square-video',
+				title: __( 'Instagram 1:1 Square Video (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Clean 1:1 square media card with video indicator badge and hover preview or lightbox trigger.', 'ajax-filter-posts' ),
+				icon: 'camera',
+				category: 'Video & Reels',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '12px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/card-video', {
+						aspectRatio: '1/1',
+						playbackMode: 'inline_hover',
+						showPlayButton: true,
+						borderRadius: '8px',
+					} ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '15px', isLink: true } ),
+						createBlock( 'gridmaster-pro/bookmark-button', { iconSize: 18 } ),
+					] ),
+					createBlock( 'gridmaster/excerpt', { length: 12, fontSize: '13px' } ),
+				],
+			},
+			// 29. YouTube Channel Video Card (Pro)
+			{
+				id: 'youtube-playlist-card',
+				title: __( 'YouTube Channel Video Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( '16:9 video thumbnail with duration badge, channel author avatar, video title, and lightbox watch button.', 'ajax-filter-posts' ),
+				icon: 'format-video',
+				category: 'Video & Reels',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '14px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/card-video', {
+						aspectRatio: '16/9',
+						playbackMode: 'inline_click',
+						showPlayButton: true,
+						borderRadius: '8px',
+					} ),
+					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'flex-start', gap: '12px' } }, [
+						createBlock( 'gridmaster/author-avatar', { avatarSize: 38, borderRadius: '50%' } ),
+						createBlock( 'core/group', { style: { spacing: { margin: { top: '0', bottom: '0' } } } }, [
+							createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '16px', isLink: true } ),
+							createBlock( 'core/group', { layout: { type: 'flex', gap: '8px', alignItems: 'center' } }, [
+								createBlock( 'gridmaster/post-author', {} ),
+								createBlock( 'gridmaster/post-date', { format: 'M j, Y', fontSize: '12px' } ),
+							] ),
+						] ),
+					] ),
 				],
 			},
 		];
@@ -1062,6 +1176,16 @@
 							className: 'gm-quick-add-btn',
 						},
 						'+ ' + __( 'Image', 'ajax-filter-posts' )
+					),
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							onClick: () => addBlock( 'gridmaster-pro/card-video', { aspectRatio: '16/9' } ),
+							className: 'gm-quick-add-btn gm-quick-video-btn',
+						},
+						'+ ' + __( 'Video (Pro)', 'ajax-filter-posts' )
 					),
 					el(
 						Button,
@@ -2004,6 +2128,22 @@
 							value: config.pagination?.load_more_text || __( 'Load More', 'ajax-filter-posts' ),
 							onChange: ( val ) => updateConfigSection( 'pagination', 'load_more_text', val ),
 						} )
+					),
+
+				currentType === 'infinite' &&
+					el(
+						'div',
+						{ className: 'gm-contextual-subfield' },
+						el( TextControl, {
+							label: __( 'Loading Indicator Text', 'ajax-filter-posts' ),
+							value: config.pagination?.loading_text || __( 'Loading more...', 'ajax-filter-posts' ),
+							onChange: ( val ) => updateConfigSection( 'pagination', 'loading_text', val ),
+						} ),
+						el(
+							'p',
+							{ className: 'gm-control-help', style: { marginTop: '8px', color: '#64748b', fontSize: '13px', lineHeight: 1.5 } },
+							__( '⚡ Auto-paging is active: new posts and reels automatically stream in as visitors scroll down the feed (TikTok, Shorts & Instagram style).', 'ajax-filter-posts' )
+						)
 					)
 			)
 		);
@@ -2267,6 +2407,116 @@
 					hoverEffect: 'zoom',
 				},
 			},
+			{
+				id: 'tiktok-reels-grid',
+				title: __( 'TikTok / Reels 9:16 Feed (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Vertical 4-column 9:16 portrait video feed with auto-paging on scroll and dark overlay cards.', 'ajax-filter-posts' ),
+				icon: 'smartphone',
+				tag: __( '4 Cols • 9:16 Infinite', 'ajax-filter-posts' ),
+				isPro: true,
+				columns: { xs: 1, sm: 2, md: 3, lg: 4, xl: 4 },
+				col_gap: 16,
+				row_gap: 24,
+				pagination: {
+					type: 'infinite',
+					loading_text: __( 'Streaming next reels...', 'ajax-filter-posts' ),
+				},
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '440px',
+					backgroundColor: '#000000',
+					padding: '16px',
+					borderRadius: '16px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+					hoverEffect: 'zoom',
+				},
+			},
+			{
+				id: 'reels-shorts-slider',
+				title: __( 'Reels & Shorts Carousel (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Horizontal swipeable vertical reel carousel (5 slides desktop, 2 mobile) with scroll snap.', 'ajax-filter-posts' ),
+				icon: 'slides',
+				tag: __( 'Slider • 5 Vertical Reels', 'ajax-filter-posts' ),
+				isPro: true,
+				layoutType: 'slider',
+				columns: { xs: 2, sm: 2, md: 3, lg: 5, xl: 5 },
+				slider: {
+					slides_to_show: { xs: 2, sm: 2, md: 3, lg: 5, xl: 5 },
+					arrows: true,
+					dots: false,
+					autoplay: false,
+					autoplay_speed: 3000,
+					pause_on_hover: true,
+					infinite: false,
+				},
+				col_gap: 16,
+				row_gap: 0,
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '380px',
+					backgroundColor: '#000000',
+					padding: '16px',
+					borderRadius: '16px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+					hoverEffect: 'zoom',
+				},
+			},
+			{
+				id: 'superhero-djs-grid',
+				title: __( 'Superhero DJs Video Grid (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Dark neon aesthetic 3-column video routine grid with glowing accents and auto-paging infinite stream.', 'ajax-filter-posts' ),
+				icon: 'format-video',
+				tag: __( '3 Cols • Video Grid', 'ajax-filter-posts' ),
+				isPro: true,
+				columns: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
+				col_gap: 24,
+				row_gap: 28,
+				pagination: {
+					type: 'infinite',
+					loading_text: __( 'Loading more DJ routines...', 'ajax-filter-posts' ),
+				},
+				card: {
+					layoutMode: 'vertical',
+					backgroundColor: '#0b0e16',
+					padding: '16px',
+					borderRadius: '14px',
+					borderWidth: '1px',
+					borderColor: 'rgba(150,95,255,0.3)',
+					boxShadow: '0 6px 24px rgba(0,0,0,0.45)',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'youtube-shorts-vertical',
+				title: __( 'YouTube / FB Reels Snap Feed (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Full-portrait 9:16 vertical snap feed. Swipe top-to-bottom one-by-one with up/down navigation and auto-paging.', 'ajax-filter-posts' ),
+				icon: 'video-alt3',
+				tag: __( 'Vertical Snap • 1 by 1', 'ajax-filter-posts' ),
+				isPro: true,
+				layoutType: 'reels',
+				columns: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1 },
+				col_gap: 0,
+				row_gap: 0,
+				pagination: {
+					type: 'infinite',
+					loading_text: __( 'Loading next reel...', 'ajax-filter-posts' ),
+				},
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '100%',
+					backgroundColor: '#000000',
+					padding: '20px',
+					borderRadius: '20px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+					hoverEffect: 'none',
+				},
+			},
 		];
 
 		const applyPreset = ( preset ) => {
@@ -2282,10 +2532,17 @@
 				if ( preset.slider ) {
 					nextLayout.slider = { ...preset.slider };
 				}
-				return {
+				const nextConfig = {
 					...prev,
 					layout: nextLayout,
 				};
+				if ( preset.pagination ) {
+					nextConfig.pagination = {
+						...prev.pagination,
+						...preset.pagination,
+					};
+				}
+				return nextConfig;
 			} );
 			if ( rootCardBlock && preset.card ) {
 				updateBlockAttributes( rootCardBlock.clientId, { ...preset.card } );
@@ -2367,8 +2624,48 @@
 			} );
 		};
 
+		const updateReelsConfig = ( key, val ) => {
+			setConfig( ( prev ) => {
+				const currentReels = prev.layout?.reels || {
+					show_nav: true,
+					nav_bg: '#1e293b',
+					nav_color: '#ffffff',
+					nav_hover_bg: '#334155',
+					nav_hover_color: '#ffffff',
+					nav_size: 46,
+					nav_position: 'outside',
+					show_end_slide: true,
+					end_text: __( "You're All Caught Up!", 'ajax-filter-posts' ),
+				};
+				return {
+					...prev,
+					layout: {
+						...prev.layout,
+						reels: {
+							...currentReels,
+							[ key ]: val,
+						},
+					},
+				};
+			} );
+		};
+
+		const reelsConfig = config.layout?.reels || {
+			show_nav: true,
+			nav_bg: '#1e293b',
+			nav_color: '#ffffff',
+			nav_hover_bg: '#334155',
+			nav_hover_color: '#ffffff',
+			nav_size: 46,
+			nav_position: 'outside',
+			show_end_slide: true,
+			end_text: __( "You're All Caught Up!", 'ajax-filter-posts' ),
+		};
+
 		const layoutType = config.layout?.type || 'grid';
 		const isSlider = 'slider' === layoutType || 'carousel' === layoutType;
+		const isReels = 'reels' === layoutType || 'shorts' === layoutType;
+		const isGrid = ! isSlider && ! isReels;
 		const sliderConfig = config.layout?.slider || {
 			slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
 			arrows: true,
@@ -2407,7 +2704,7 @@
 						'button',
 						{
 							type: 'button',
-							className: 'gm-layout-type-option' + ( ! isSlider ? ' is-active' : '' ),
+							className: 'gm-layout-type-option' + ( isGrid ? ' is-active' : '' ),
 							onClick: () => updateLayoutType( 'grid' ),
 						},
 						el( 'span', { className: 'dashicons dashicons-grid-view gm-layout-type-icon' } ),
@@ -2431,6 +2728,21 @@
 							{ className: 'gm-layout-type-info' },
 							el( 'strong', null, __( 'Accessible Carousel / Slider', 'ajax-filter-posts' ) ),
 							el( 'span', null, __( 'WCAG compliant touch & arrow slider with scroll snap.', 'ajax-filter-posts' ) )
+						)
+					),
+					el(
+						'button',
+						{
+							type: 'button',
+							className: 'gm-layout-type-option' + ( isReels ? ' is-active' : '' ),
+							onClick: () => updateLayoutType( 'reels' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-video-alt3 gm-layout-type-icon' } ),
+						el(
+							'div',
+							{ className: 'gm-layout-type-info' },
+							el( 'strong', null, __( 'Vertical Reel Snap Feed (Pro)', 'ajax-filter-posts' ) ),
+							el( 'span', null, __( 'One-by-one vertical swipe feed for YouTube Shorts, Reels, and TikTok.', 'ajax-filter-posts' ) )
 						)
 					)
 				)
@@ -2469,8 +2781,124 @@
 				)
 			),
 
+			// Reels-specific settings
+			isReels &&
+				el(
+					Fragment,
+					null,
+					// Overview & Guide Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-video-alt3' } ), ' ' + __( 'Vertical Reel Snap Feed Settings', 'ajax-filter-posts' ) ),
+						el( 'p', { className: 'gm-preset-intro', style: { marginBottom: '12px' } }, __( 'Displays posts in a single-column 9:16 portrait vertical snap feed (like YouTube Shorts, Facebook Reels, and TikTok). Users can swipe top-to-bottom, click the up/down arrow buttons, or use the keyboard arrow keys.', 'ajax-filter-posts' ) ),
+						el( 'div', { className: 'gm-info-callout', style: { padding: '12px 16px', background: 'rgba(99, 102, 241, 0.08)', borderRadius: '8px', borderLeft: '3px solid #6366f1', fontSize: '13px', color: '#475569' } },
+							el( 'strong', null, __( 'Pro Tip: ', 'ajax-filter-posts' ) ),
+							__( 'Pair this layout with Card Video set to "Autoplay Loop" and Infinite Scroll pagination for continuous reel streaming.', 'ajax-filter-posts' )
+						)
+					),
+
+					// Floating Next/Prev Arrow Buttons Customization Card
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-controls-play' } ), ' ' + __( 'Next / Previous Navigation Buttons', 'ajax-filter-posts' ) ),
+						el( ToggleControl, {
+							label: __( 'Show Floating Up/Down Arrow Buttons', 'ajax-filter-posts' ),
+							help: __( 'Displays floating circular buttons on the reel for jumping to previous/next reels with one click.', 'ajax-filter-posts' ),
+							checked: reelsConfig.show_nav !== false,
+							onChange: ( val ) => updateReelsConfig( 'show_nav', val ),
+						} ),
+						reelsConfig.show_nav !== false &&
+							el(
+								Fragment,
+								null,
+								el( SelectControl, {
+									label: __( 'Button Placement', 'ajax-filter-posts' ),
+									value: reelsConfig.nav_position || 'outside',
+									options: [
+										{ label: __( 'Outside Right (Desktop Floating)', 'ajax-filter-posts' ), value: 'outside' },
+										{ label: __( 'Inside Right (Card Overlay)', 'ajax-filter-posts' ), value: 'inside' },
+									],
+									onChange: ( val ) => updateReelsConfig( 'nav_position', val ),
+								} ),
+								el( RangeControl, {
+									label: __( 'Button Size (px)', 'ajax-filter-posts' ),
+									value: reelsConfig.nav_size || 46,
+									min: 36,
+									max: 64,
+									step: 2,
+									onChange: ( val ) => updateReelsConfig( 'nav_size', val ),
+								} ),
+								el(
+									'div',
+									{ style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '14px' } },
+									el(
+										'div',
+										null,
+										el( 'label', { className: 'gm-field-label', style: { display: 'block', marginBottom: '8px', fontWeight: 600 } }, __( 'Button Background', 'ajax-filter-posts' ) ),
+										el( ColorPalette, {
+											value: reelsConfig.nav_bg || '#1e293b',
+											onChange: ( val ) => updateReelsConfig( 'nav_bg', val || '#1e293b' ),
+										} )
+									),
+									el(
+										'div',
+										null,
+										el( 'label', { className: 'gm-field-label', style: { display: 'block', marginBottom: '8px', fontWeight: 600 } }, __( 'Arrow / Icon Color', 'ajax-filter-posts' ) ),
+										el( ColorPalette, {
+											value: reelsConfig.nav_color || '#ffffff',
+											onChange: ( val ) => updateReelsConfig( 'nav_color', val || '#ffffff' ),
+										} )
+									)
+								),
+								el(
+									'div',
+									{ style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '14px' } },
+									el(
+										'div',
+										null,
+										el( 'label', { className: 'gm-field-label', style: { display: 'block', marginBottom: '8px', fontWeight: 600 } }, __( 'Hover Background', 'ajax-filter-posts' ) ),
+										el( ColorPalette, {
+											value: reelsConfig.nav_hover_bg || '#334155',
+											onChange: ( val ) => updateReelsConfig( 'nav_hover_bg', val || '#334155' ),
+										} )
+									),
+									el(
+										'div',
+										null,
+										el( 'label', { className: 'gm-field-label', style: { display: 'block', marginBottom: '8px', fontWeight: 600 } }, __( 'Hover Icon Color', 'ajax-filter-posts' ) ),
+										el( ColorPalette, {
+											value: reelsConfig.nav_hover_color || '#ffffff',
+											onChange: ( val ) => updateReelsConfig( 'nav_hover_color', val || '#ffffff' ),
+										} )
+									)
+								)
+							)
+					),
+
+					// End of Feed Card ("All Caught Up")
+					el(
+						'div',
+						{ className: 'gm-settings-card' },
+						el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-yes-alt' } ), ' ' + __( 'End of Feed ("All Caught Up") Card', 'ajax-filter-posts' ) ),
+						el( 'p', { className: 'gm-preset-intro', style: { marginBottom: '12px' } }, __( 'Displays an attractive celebration screen when the user has viewed every reel in the feed.', 'ajax-filter-posts' ) ),
+						el( ToggleControl, {
+							label: __( 'Show "All Caught Up" Card at End of Reels', 'ajax-filter-posts' ),
+							checked: reelsConfig.show_end_slide !== false,
+							onChange: ( val ) => updateReelsConfig( 'show_end_slide', val ),
+						} ),
+						reelsConfig.show_end_slide !== false &&
+							el( TextControl, {
+								label: __( 'End Screen Heading', 'ajax-filter-posts' ),
+								value: reelsConfig.end_text || __( "You're All Caught Up!", 'ajax-filter-posts' ),
+								onChange: ( val ) => updateReelsConfig( 'end_text', val ),
+							} )
+					)
+				),
+
 			// Grid-specific settings
-			! isSlider &&
+			isGrid &&
 				el(
 					Fragment,
 					null,

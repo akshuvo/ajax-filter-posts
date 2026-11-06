@@ -17,10 +17,12 @@ class Taxonomy_Tabs implements Facet_Handler_Interface {
 	}
 
 	public static function render( $facet, $grid_id, $runtime_params = array(), $is_preview = false ) {
-		$taxonomy   = ! empty( $facet['taxonomy'] ) ? sanitize_key( $facet['taxonomy'] ) : 'category';
-		$heading    = ! empty( $facet['heading'] ) ? sanitize_text_field( $facet['heading'] ) : '';
-		$show_all   = ! isset( $facet['show_all'] ) || (bool) $facet['show_all'];
-		$all_label  = ! empty( $facet['all_label'] ) ? sanitize_text_field( $facet['all_label'] ) : __( 'All', 'ajax-filter-posts' );
+		$taxonomy     = ! empty( $facet['taxonomy'] ) ? sanitize_key( $facet['taxonomy'] ) : 'category';
+		$heading      = ! empty( $facet['heading'] ) ? sanitize_text_field( $facet['heading'] ) : '';
+		$show_all     = ! isset( $facet['show_all'] ) || (bool) $facet['show_all'];
+		$all_label    = ! empty( $facet['all_label'] ) ? sanitize_text_field( $facet['all_label'] ) : __( 'All', 'ajax-filter-posts' );
+		$style        = ! empty( $facet['style'] ) ? sanitize_key( $facet['style'] ) : 'tabs';
+		$multi_select = ! empty( $facet['multi_select'] );
 
 		$terms = get_terms( array(
 			'taxonomy'   => $taxonomy,
@@ -34,9 +36,16 @@ class Taxonomy_Tabs implements Facet_Handler_Interface {
 		$active_terms = ! empty( $runtime_params['facets'][ $taxonomy ] ) ? (array) $runtime_params['facets'][ $taxonomy ] : array();
 		$is_all_active = empty( $active_terms ) || in_array( 'all', $active_terms, true ) || in_array( 0, $active_terms, true );
 
+		$extra_classes = '';
+		if ( 'chips_scroll' === $style ) {
+			$extra_classes = ' gm-facet-chips gm-chips-scroll';
+		} elseif ( 'chips' === $style ) {
+			$extra_classes = ' gm-facet-chips';
+		}
+
 		ob_start();
 		?>
-		<div class="gm-facet gm-facet-tabs" data-taxonomy="<?php echo esc_attr( $taxonomy ); ?>">
+		<div class="gm-facet gm-facet-tabs<?php echo esc_attr( $extra_classes ); ?>" data-taxonomy="<?php echo esc_attr( $taxonomy ); ?>" data-multi-select="<?php echo $multi_select ? '1' : '0'; ?>">
 			<?php if ( $heading ) : ?>
 				<h4 class="gm-facet-title"><?php echo esc_html( $heading ); ?></h4>
 			<?php endif; ?>
