@@ -354,11 +354,11 @@ class Grid_Renderer {
 				<?php if ( $show_nav ) : ?>
 					<div class="gm-reels-nav" aria-label="<?php esc_attr_e( 'Reel navigation', 'ajax-filter-posts' ); ?>">
 						<button class="gm-reels-nav-btn gm-reels-prev" type="button" aria-label="<?php esc_attr_e( 'Previous reel', 'ajax-filter-posts' ); ?>">
-							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
 							<span class="screen-reader-text"><?php esc_html_e( 'Previous reel', 'ajax-filter-posts' ); ?></span>
 						</button>
 						<button class="gm-reels-nav-btn gm-reels-next" type="button" aria-label="<?php esc_attr_e( 'Next reel', 'ajax-filter-posts' ); ?>">
-							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
 							<span class="screen-reader-text"><?php esc_html_e( 'Next reel', 'ajax-filter-posts' ); ?></span>
 						</button>
 					</div>
@@ -484,11 +484,11 @@ class Grid_Renderer {
 		$s_xl   = isset( $slider_slides['xl'] ) ? absint( $slider_slides['xl'] ) : $xl;
 
 		$reels_cfg       = ! empty( $layout['reels'] ) ? $layout['reels'] : array();
-		$nav_bg          = ! empty( $reels_cfg['nav_bg'] ) ? $reels_cfg['nav_bg'] : '#1e293b';
+		$nav_bg          = ! empty( $reels_cfg['nav_bg'] ) ? $reels_cfg['nav_bg'] : 'rgba(20, 20, 20, 0.75)';
 		$nav_color       = ! empty( $reels_cfg['nav_color'] ) ? $reels_cfg['nav_color'] : '#ffffff';
-		$nav_hover_bg    = ! empty( $reels_cfg['nav_hover_bg'] ) ? $reels_cfg['nav_hover_bg'] : '#334155';
+		$nav_hover_bg    = ! empty( $reels_cfg['nav_hover_bg'] ) ? $reels_cfg['nav_hover_bg'] : 'rgba(30, 30, 30, 0.95)';
 		$nav_hover_color = ! empty( $reels_cfg['nav_hover_color'] ) ? $reels_cfg['nav_hover_color'] : '#ffffff';
-		$nav_size        = ! empty( $reels_cfg['nav_size'] ) ? absint( $reels_cfg['nav_size'] ) : 46;
+		$nav_size        = ! empty( $reels_cfg['nav_size'] ) ? absint( $reels_cfg['nav_size'] ) : 48;
 
 		return sprintf(
 			'--gm-cols-xs:%d;--gm-cols-sm:%d;--gm-cols-md:%d;--gm-cols-lg:%d;--gm-cols-xl:%d;--gm-slides-xs:%d;--gm-slides-sm:%d;--gm-slides-md:%d;--gm-slides-lg:%d;--gm-slides-xl:%d;--gm-col-gap:%dpx;--gm-row-gap:%dpx;--gm-reels-btn-bg:%s;--gm-reels-btn-color:%s;--gm-reels-btn-hover-bg:%s;--gm-reels-btn-hover-color:%s;--gm-reels-btn-size:%dpx;',
@@ -597,12 +597,14 @@ class Grid_Renderer {
 	 * Registers frontend scripts and stylesheets early so builders/widgets can declare dependency.
 	 */
 	public static function register_assets() {
+		$asset_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
+
 		if ( ! wp_script_is( 'gridmaster-frontend-v2', 'registered' ) ) {
 			wp_register_script(
 				'gridmaster-frontend-v2',
 				GRIDMASTER_ASSETS . 'js/frontend-v2.js',
 				array(),
-				GRIDMASTER_VERSION,
+				$asset_ver,
 				true
 			);
 
@@ -623,7 +625,7 @@ class Grid_Renderer {
 				'gridmaster-frontend-v2',
 				GRIDMASTER_ASSETS . 'css/frontend-v2.css',
 				array( 'dashicons' ),
-				GRIDMASTER_VERSION
+				$asset_ver
 			);
 		}
 	}

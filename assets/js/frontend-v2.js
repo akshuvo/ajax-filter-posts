@@ -923,6 +923,23 @@
 			};
 			track.addEventListener( 'click', onRestartClick );
 
+			// Update reels navigation buttons disabled states
+			const updateNavState = () => {
+				const slides = getSlides();
+				const cur = getCurrentIndex();
+
+				if ( prevBtn ) {
+					const isStart = cur <= 0;
+					prevBtn.disabled = isStart;
+					prevBtn.setAttribute( 'aria-disabled', isStart ? 'true' : 'false' );
+				}
+				if ( nextBtn ) {
+					const isEnd = cur >= slides.length - 1;
+					nextBtn.disabled = isEnd;
+					nextBtn.setAttribute( 'aria-disabled', isEnd ? 'true' : 'false' );
+				}
+			};
+
 			// Keyboard navigation (ArrowUp / ArrowDown / PageUp / PageDown)
 			const onKeyDown = ( e ) => {
 				if ( e.key === 'ArrowDown' || e.key === 'PageDown' ) {
@@ -976,6 +993,8 @@
 						}
 					}
 				} );
+
+				updateNavState();
 			};
 
 			// IntersectionObserver to accurately detect snapped reel
@@ -1000,19 +1019,7 @@
 			const onScroll = () => {
 				if ( scrollDebounce ) clearTimeout( scrollDebounce );
 				scrollDebounce = setTimeout( () => {
-					const slides = getSlides();
-					const cur = getCurrentIndex();
-
-					if ( prevBtn ) {
-						const isStart = cur <= 0;
-						prevBtn.disabled = isStart;
-						prevBtn.setAttribute( 'aria-disabled', isStart ? 'true' : 'false' );
-					}
-					if ( nextBtn ) {
-						const isEnd = cur >= slides.length - 1;
-						nextBtn.disabled = isEnd;
-						nextBtn.setAttribute( 'aria-disabled', isEnd ? 'true' : 'false' );
-					}
+					updateNavState();
 
 					// Infinite auto-paging within vertical track
 					const isNearBottom = ( track.scrollTop + track.clientHeight ) >= ( track.scrollHeight - track.clientHeight * 1.5 );
@@ -1027,7 +1034,7 @@
 							}
 						}
 					}
-				}, 60 );
+				}, 40 );
 			};
 
 			track.addEventListener( 'scroll', onScroll, { passive: true } );

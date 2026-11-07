@@ -187,6 +187,30 @@
 	z-index: 3;
 }
 
+/* Overlay Badges (Pinned to top-left with auto width so it never overlaps the sound toggle) */
+.gm-v2-grid .gm-card--overlay > .gm-field-badge,
+.gm-v2-grid .gm-card--overlay > .gm-badge {
+	position: absolute !important;
+	top: 16px !important;
+	left: 16px !important;
+	right: auto !important;
+	width: auto !important;
+	max-width: calc(100% - 76px) !important;
+	z-index: 10 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	pointer-events: auto !important;
+}
+
+.gm-v2-grid .gm-card--overlay > .gm-field-badge .gm-badge-tag,
+.gm-v2-grid .gm-card--overlay > .gm-badge .gm-badge-tag {
+	display: inline-flex !important;
+	align-items: center !important;
+	white-space: nowrap !important;
+}
+
 .gm-v2-grid .gm-card--overlay .gm-field-title a {
 	color: #ffffff;
 }
@@ -984,67 +1008,86 @@
 	border: none;
 }
 
-/* Floating Vertical Nav Buttons (Up / Down) */
+/* Floating Vertical Nav Buttons (Simple Two-Button Stack matching Image 2) */
 .gm-v2-grid.gm-layout-reels .gm-reels-nav {
 	position: absolute;
-	right: -60px;
+	right: -64px;
 	top: 50%;
 	transform: translateY(-50%);
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 14px;
 	z-index: 10;
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	padding: 0 !important;
 }
 
 .gm-v2-grid.gm-layout-reels[data-nav-position="inside"] .gm-reels-nav,
 .gm-v2-grid.gm-layout-reels.gm-nav-inside .gm-reels-nav {
-	right: 16px;
+	right: 18px;
 }
 
 .gm-v2-grid.gm-layout-reels .gm-reels-nav-btn {
-	width: var(--gm-reels-btn-size, 46px) !important;
-	height: var(--gm-reels-btn-size, 46px) !important;
-	min-width: var(--gm-reels-btn-size, 46px) !important;
-	max-width: var(--gm-reels-btn-size, 46px) !important;
-	min-height: var(--gm-reels-btn-size, 46px) !important;
-	max-height: var(--gm-reels-btn-size, 46px) !important;
+	width: var(--gm-reels-btn-size, 48px) !important;
+	height: var(--gm-reels-btn-size, 48px) !important;
+	min-width: var(--gm-reels-btn-size, 48px) !important;
+	max-width: var(--gm-reels-btn-size, 48px) !important;
+	min-height: var(--gm-reels-btn-size, 48px) !important;
+	max-height: var(--gm-reels-btn-size, 48px) !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	box-sizing: border-box !important;
 	line-height: 1 !important;
 	border-radius: 50% !important;
-	background: var(--gm-reels-btn-bg, #1e293b);
-	color: var(--gm-reels-btn-color, #ffffff);
-	border: 1px solid rgba(255, 255, 255, 0.2);
-	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+	background: var(--gm-reels-btn-bg, rgba(20, 20, 20, 0.75)) !important;
+	color: var(--gm-reels-btn-color, #ffffff) !important;
+	border: 2.5px solid #ffffff !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+	backdrop-filter: blur(8px) !important;
+	-webkit-backdrop-filter: blur(8px) !important;
 	cursor: pointer;
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	transition: background 0.2s, transform 0.2s, color 0.2s, opacity 0.2s;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .gm-v2-grid.gm-layout-reels .gm-reels-nav-btn:hover:not(:disabled) {
-	background: var(--gm-reels-btn-hover-bg, #334155);
-	color: var(--gm-reels-btn-hover-color, #ffffff);
-	transform: scale(1.08);
+	background: var(--gm-reels-btn-hover-bg, rgba(30, 30, 30, 0.95)) !important;
+	color: var(--gm-reels-btn-hover-color, #ffffff) !important;
+	border-color: #ffffff !important;
+	transform: scale(1.08) !important;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55) !important;
+}
+
+.gm-v2-grid.gm-layout-reels .gm-reels-nav-btn:active:not(:disabled) {
+	transform: scale(0.93) !important;
 }
 
 .gm-v2-grid.gm-layout-reels .gm-reels-nav-btn:disabled {
-	opacity: 0.38;
-	cursor: not-allowed;
-	pointer-events: auto;
+	opacity: 0.4 !important;
+	border-color: rgba(255, 255, 255, 0.35) !important;
+	cursor: not-allowed !important;
+	pointer-events: none !important;
+	transform: none !important;
+	box-shadow: none !important;
 }
 
 .gm-v2-grid.gm-layout-reels .gm-reels-nav-btn svg {
-	width: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
-	height: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
-	min-width: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
-	min-height: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
-	max-width: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
-	max-height: calc(var(--gm-reels-btn-size, 46px) * 0.48) !important;
+	width: 22px !important;
+	height: 22px !important;
+	min-width: 22px !important;
+	min-height: 22px !important;
+	max-width: 22px !important;
+	max-height: 22px !important;
 	flex-shrink: 0 !important;
 	stroke: currentColor !important;
+	stroke-width: 3 !important;
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
 	fill: none !important;
 	display: block !important;
 	pointer-events: none !important;
