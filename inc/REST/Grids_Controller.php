@@ -402,6 +402,59 @@ class Grids_Controller extends \WP_REST_Controller {
 	}
 
 	/**
+	 * Extracts and sanitizes runtime filter, sort, search, and pagination parameters from a REST request.
+	 *
+	 * @param \WP_REST_Request $request REST request instance.
+	 * @return array Sanitized runtime parameters.
+	 */
+	private function extract_runtime_params( $request ) {
+		$raw_facets = $request->get_param( 'facets' );
+		$facets     = array();
+		if ( is_array( $raw_facets ) ) {
+			foreach ( $raw_facets as $tax => $terms ) {
+				$clean_tax = sanitize_key( $tax );
+				if ( '' !== $clean_tax ) {
+					$facets[ $clean_tax ] = is_array( $terms ) ? array_map( 'absint', $terms ) : array( absint( $terms ) );
+				}
+			}
+		}
+
+		$raw_meta = $request->get_param( 'meta' );
+		$meta     = array();
+		if ( is_array( $raw_meta ) ) {
+			foreach ( $raw_meta as $mk => $mv ) {
+				$clean_mk = sanitize_key( $mk );
+				if ( '' !== $clean_mk && is_scalar( $mv ) ) {
+					$meta[ $clean_mk ] = sanitize_text_field( (string) $mv );
+				}
+			}
+		}
+
+		$raw_bookmarks = $request->get_param( 'bookmarks' );
+		$bookmarks     = is_array( $raw_bookmarks ) ? array_values( array_filter( array_map( 'absint', $raw_bookmarks ) ) ) : array();
+
+		$raw_min_price = $request->get_param( 'min_price' );
+		$raw_max_price = $request->get_param( 'max_price' );
+
+		return array(
+			'paged'      => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
+			'facets'     => $facets,
+			'search'     => $request->get_param( 'search' ) ? sanitize_text_field( $request->get_param( 'search' ) ) : '',
+			'orderby'    => $request->get_param( 'orderby' ) ? sanitize_key( $request->get_param( 'orderby' ) ) : '',
+			'min_price'  => ( '' !== $raw_min_price && null !== $raw_min_price ) ? floatval( $raw_min_price ) : '',
+			'max_price'  => ( '' !== $raw_max_price && null !== $raw_max_price ) ? floatval( $raw_max_price ) : '',
+			'min_rating' => $request->get_param( 'min_rating' ) ? absint( $request->get_param( 'min_rating' ) ) : 0,
+			'on_sale'    => ! empty( $request->get_param( 'on_sale' ) ),
+			'in_stock'   => ! empty( $request->get_param( 'in_stock' ) ),
+			'featured'   => ! empty( $request->get_param( 'featured' ) ),
+			'meta'       => $meta,
+			'date_from'  => $request->get_param( 'date_from' ) ? sanitize_text_field( $request->get_param( 'date_from' ) ) : '',
+			'date_to'    => $request->get_param( 'date_to' ) ? sanitize_text_field( $request->get_param( 'date_to' ) ) : '',
+			'bookmarks'  => $bookmarks,
+		);
+	}
+
+	/**
 	 * Public endpoint for frontend AJAX filtering & pagination.
 	 */
 	public function render_grid_ajax( $request ) {
@@ -411,11 +464,7 @@ class Grids_Controller extends \WP_REST_Controller {
 			require_once GRIDMASTER_PATH . '/inc/Engine/Grid_Renderer.php';
 		}
 
-		$runtime_params = array(
-			'paged'  => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
-			'facets' => $request->get_param( 'facets' ) && is_array( $request->get_param( 'facets' ) ) ? $request->get_param( 'facets' ) : array(),
-			'search' => $request->get_param( 'search' ) ? sanitize_text_field( $request->get_param( 'search' ) ) : '',
-		);
+		$runtime_params = $this->extract_runtime_params( $request );
 
 		$html = Grid_Renderer::render_grid( $grid_id, $runtime_params );
 
@@ -479,11 +528,7 @@ class Grids_Controller extends \WP_REST_Controller {
 			$block_content = Grid_Repository::default_block_content();
 		}
 
-		$runtime_params = array(
-			'paged'  => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
-			'facets' => $request->get_param( 'facets' ) && is_array( $request->get_param( 'facets' ) ) ? $request->get_param( 'facets' ) : array(),
-			'search' => $request->get_param( 'search' ) ? sanitize_text_field( $request->get_param( 'search' ) ) : '',
-		);
+		$runtime_params = $this->extract_runtime_params( $request );
 
 		$html = Grid_Renderer::render_preview( $config, $block_content, $grid_id, $runtime_params );
 
@@ -547,8 +592,11 @@ class Grids_Controller extends \WP_REST_Controller {
 		}
 
 		return rest_ensure_response( array(
-			'post_types' => $formatted_pts,
-			'taxonomies' => $formatted_tax,
+			'post_types'  => $formatted_pts,
+			'taxonomies'  => $formatted_tax,
+			'pro_active'  => defined( 'GM_PRO_VERSION' ) || defined( 'GRIDMASTER_PRO_VERSION' ),
+			'pro_css_url' => defined( 'GM_PRO_URL' ) ? GM_PRO_URL . 'assets/css/frontend.css' : ( defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ? GRIDMASTER_PRO_ASSETS_URL . '/css/frontend.css' : '' ),
+			'pro_js_url'  => defined( 'GM_PRO_URL' ) ? GM_PRO_URL . 'assets/frontend.js' : ( defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ? GRIDMASTER_PRO_ASSETS_URL . '/frontend.js' : '' ),
 		) );
 	}
 

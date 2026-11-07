@@ -22,11 +22,23 @@
 				page: 1,
 				facets: {},
 				search: '',
+				orderby: '',
+				min_price: '',
+				max_price: '',
+				min_rating: 0,
+				on_sale: false,
+				in_stock: false,
+				featured: false,
+				meta: {},
+				date_from: '',
+				date_to: '',
 			};
 
 			this.activeAbortController = null;
 			this.isLoading = false;
 			this.searchTimeout = null;
+			this.priceTimeout = null;
+			this.metaTimeout = null;
 
 			this.initFilters();
 			this.initPagination();
@@ -107,6 +119,7 @@
 
 				this.state.page = 1;
 				this.syncUrl();
+				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
@@ -125,17 +138,25 @@
 				}
 
 				this.state.page = 1;
+				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
-			// 3. Checkboxes
+			// 3. Checkboxes & Pro Multi-Select Pills
 			this.filtersWrap.addEventListener( 'change', ( e ) => {
-				const checkbox = e.target.closest( '.gm-filter-checkbox' );
+				const checkbox = e.target.closest( '.gm-filter-checkbox, .gm-filter-checkbox-pill' );
 				if ( ! checkbox ) return;
 
 				const taxonomy = checkbox.getAttribute( 'data-taxonomy' );
+				const pillLabel = checkbox.closest( '.gm-pill-option, label' );
+				if ( pillLabel ) {
+					pillLabel.classList.toggle( 'gm-active', checkbox.checked );
+				}
+
 				const checked = Array.from(
-					this.filtersWrap.querySelectorAll( `.gm-filter-checkbox[data-taxonomy="${taxonomy}"]:checked` )
+					this.filtersWrap.querySelectorAll(
+						`.gm-filter-checkbox[data-taxonomy="${taxonomy}"]:checked, .gm-filter-checkbox-pill[data-taxonomy="${taxonomy}"]:checked`
+					)
 				).map( ( cb ) => parseInt( cb.value, 10 ) );
 
 				if ( checked.length === 0 ) {
@@ -145,6 +166,7 @@
 				}
 
 				this.state.page = 1;
+				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
@@ -163,6 +185,7 @@
 				}
 
 				this.state.page = 1;
+				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
@@ -174,35 +197,528 @@
 					this.searchTimeout = setTimeout( () => {
 						this.state.search = e.target.value.trim();
 						this.state.page = 1;
+						this.updateActiveFiltersBar();
 						this.fetchResults( false );
 					}, 350 );
 				} );
 			}
 
-			// 6. Reset Filters button
+			// 6. WooCommerce Price Range Slider & Number Inputs (.gm-facet-price-range)
+			this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( priceFacet ) => {
+				const minSlider = priceFacet.querySelector( '.gm-price-range-min' );
+				const maxSlider = priceFacet.querySelector( '.gm-price-range-max' );
+				const minInput = priceFacet.querySelector( '.gm-price-input-min' );
+				const maxInput = priceFacet.querySelector( '.gm-price-input-max' );
+				const fillBar = priceFacet.querySelector( '.gm-price-range-fill' );
+
+				const absMin = parseFloat( priceFacet.getAttribute( 'data-min' ) ?? minSlider?.min ?? 0 );
+				const absMax = parseFloat( priceFacet.getAttribute( 'data-max' ) ?? maxSlider?.max ?? 500 );
+
+				const updateFill = ( low, high ) => {
+					if ( ! fillBar ) return;
+					const span = Math.max( 1, absMax - absMin );
+					const leftPct = Math.max( 0, Math.min( 100, ( ( low - absMin ) / span ) * 100 ) );
+					const rightPct = Math.max( 0, Math.min( 100, ( ( high - absMin ) / span ) * 100 ) );
+					fillBar.style.left = leftPct + '%';
+					fillBar.style.width = Math.max( 0, rightPct - leftPct ) + '%';
+				};
+
+				const triggerPriceChange = ( low, high ) => {
+					this.state.min_price = low <= absMin ? '' : low;
+					this.state.max_price = high >= absMax ? '' : high;
+					this.state.page = 1;
+					this.updateActiveFiltersBar();
+					clearTimeout( this.priceTimeout );
+					this.priceTimeout = setTimeout( () => {
+						this.fetchResults( false );
+					}, 300 );
+				};
+
+				const syncFromSliders = () => {
+					let low = parseFloat( minSlider ? minSlider.value : absMin );
+					let high = parseFloat( maxSlider ? maxSlider.value : absMax );
+					if ( low > high ) {
+						const tmp = low;
+						low = high;
+						high = tmp;
+					}
+					if ( minInput ) minInput.value = low;
+					if ( maxInput ) maxInput.value = high;
+					updateFill( low, high );
+					triggerPriceChange( low, high );
+				};
+
+				const syncFromInputs = () => {
+					let low = parseFloat( minInput && minInput.value !== '' ? minInput.value : absMin );
+					let high = parseFloat( maxInput && maxInput.value !== '' ? maxInput.value : absMax );
+					low = Math.max( absMin, Math.min( absMax, isNaN( low ) ? absMin : low ) );
+					high = Math.max( absMin, Math.min( absMax, isNaN( high ) ? absMax : high ) );
+					if ( low > high ) {
+						low = high;
+					}
+					if ( minSlider ) minSlider.value = low;
+					if ( maxSlider ) maxSlider.value = high;
+					updateFill( low, high );
+					triggerPriceChange( low, high );
+				};
+
+				if ( minSlider ) minSlider.addEventListener( 'input', syncFromSliders );
+				if ( maxSlider ) maxSlider.addEventListener( 'input', syncFromSliders );
+				if ( minInput ) minInput.addEventListener( 'change', syncFromInputs );
+				if ( maxInput ) maxInput.addEventListener( 'change', syncFromInputs );
+
+				// Initialize fill bar position
+				updateFill(
+					parseFloat( minSlider?.value ?? absMin ),
+					parseFloat( maxSlider?.value ?? absMax )
+				);
+			} );
+
+			// 7. WooCommerce Attribute Swatch Filter Buttons (.gm-swatch-filter-btn)
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const swatchBtn = e.target.closest( '.gm-swatch-filter-btn' );
+				if ( ! swatchBtn ) return;
+
+				const facetEl = swatchBtn.closest( '.gm-facet, .gm-facet-swatches' );
+				const taxonomy = swatchBtn.getAttribute( 'data-taxonomy' ) || facetEl?.getAttribute( 'data-taxonomy' );
+				const termId = parseInt( swatchBtn.getAttribute( 'data-term-id' ) || swatchBtn.value, 10 );
+				if ( ! taxonomy || isNaN( termId ) ) return;
+
+				const isMulti = facetEl ? facetEl.getAttribute( 'data-multi-select' ) !== '0' : true;
+
+				if ( termId === 0 ) {
+					if ( facetEl ) {
+						facetEl.querySelectorAll( '.gm-swatch-filter-btn' ).forEach( ( b ) => {
+							const isAll = parseInt( b.getAttribute( 'data-term-id' ), 10 ) === 0;
+							b.classList.toggle( 'gm-active', isAll );
+							b.setAttribute( 'aria-pressed', isAll ? 'true' : 'false' );
+						} );
+					}
+					delete this.state.facets[ taxonomy ];
+				} else if ( isMulti ) {
+					swatchBtn.classList.toggle( 'gm-active' );
+					const isActive = swatchBtn.classList.contains( 'gm-active' );
+					swatchBtn.setAttribute( 'aria-pressed', isActive ? 'true' : 'false' );
+
+					const current = Array.isArray( this.state.facets[ taxonomy ] ) ? [ ...this.state.facets[ taxonomy ] ] : [];
+					const idx = current.indexOf( termId );
+					if ( isActive && idx === -1 ) {
+						current.push( termId );
+					} else if ( ! isActive && idx !== -1 ) {
+						current.splice( idx, 1 );
+					}
+
+					if ( current.length === 0 ) {
+						delete this.state.facets[ taxonomy ];
+					} else {
+						this.state.facets[ taxonomy ] = current;
+					}
+				} else {
+					const wasActive = swatchBtn.classList.contains( 'gm-active' );
+					if ( facetEl ) {
+						facetEl.querySelectorAll( '.gm-swatch-filter-btn' ).forEach( ( b ) => {
+							b.classList.remove( 'gm-active' );
+							b.setAttribute( 'aria-pressed', 'false' );
+						} );
+					}
+					if ( wasActive ) {
+						delete this.state.facets[ taxonomy ];
+					} else {
+						swatchBtn.classList.add( 'gm-active' );
+						swatchBtn.setAttribute( 'aria-pressed', 'true' );
+						this.state.facets[ taxonomy ] = [ termId ];
+					}
+				}
+
+				this.state.page = 1;
+				this.syncUrl();
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			// 8. WooCommerce Star Rating Filter Buttons (.gm-rating-filter-btn)
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const ratingBtn = e.target.closest( '.gm-rating-filter-btn' );
+				if ( ! ratingBtn ) return;
+
+				const rating = parseInt( ratingBtn.getAttribute( 'data-rating' ) || ratingBtn.value, 10 ) || 0;
+				const facetEl = ratingBtn.closest( '.gm-facet, .gm-facet-rating' ) || this.filtersWrap;
+
+				if ( this.state.min_rating === rating || rating === 0 ) {
+					this.state.min_rating = 0;
+					facetEl.querySelectorAll( '.gm-rating-filter-btn' ).forEach( ( b ) => {
+						b.classList.remove( 'gm-active' );
+						b.setAttribute( 'aria-pressed', 'false' );
+					} );
+				} else {
+					this.state.min_rating = rating;
+					facetEl.querySelectorAll( '.gm-rating-filter-btn' ).forEach( ( b ) => {
+						const isMatch = parseInt( b.getAttribute( 'data-rating' ) || b.value, 10 ) === rating;
+						b.classList.toggle( 'gm-active', isMatch );
+						b.setAttribute( 'aria-pressed', isMatch ? 'true' : 'false' );
+					} );
+				}
+
+				this.state.page = 1;
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			// 9. WooCommerce Status Toggles (.gm-status-toggle-btn)
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const toggleBtn = e.target.closest( '.gm-status-toggle-btn' );
+				if ( ! toggleBtn ) return;
+
+				const statusKey = toggleBtn.getAttribute( 'data-status' );
+				if ( ! [ 'on_sale', 'in_stock', 'featured' ].includes( statusKey ) ) return;
+
+				const nextVal = ! this.state[ statusKey ];
+				this.state[ statusKey ] = nextVal;
+				toggleBtn.classList.toggle( 'gm-active', nextVal );
+				toggleBtn.setAttribute( 'aria-pressed', nextVal ? 'true' : 'false' );
+
+				this.state.page = 1;
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			// 10. WooCommerce Sort Dropdown (.gm-woo-sort-select)
+			this.filtersWrap.addEventListener( 'change', ( e ) => {
+				const sortSelect = e.target.closest( '.gm-woo-sort-select' );
+				if ( ! sortSelect ) return;
+
+				this.state.orderby = sortSelect.value || '';
+				this.state.page = 1;
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			// 11. Pro Date Range Inputs (.gm-date-from, .gm-date-to)
+			this.filtersWrap.addEventListener( 'change', ( e ) => {
+				const dateFrom = e.target.closest( '.gm-date-from' );
+				const dateTo = e.target.closest( '.gm-date-to' );
+				if ( ! dateFrom && ! dateTo ) return;
+
+				if ( dateFrom ) {
+					this.state.date_from = dateFrom.value || '';
+				}
+				if ( dateTo ) {
+					this.state.date_to = dateTo.value || '';
+				}
+
+				this.state.page = 1;
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			// 12. Pro Custom Meta Field Inputs (.gm-meta-input)
+			this.filtersWrap.addEventListener( 'input', ( e ) => {
+				const metaInput = e.target.closest( '.gm-meta-input' );
+				if ( ! metaInput ) return;
+
+				const metaKey = metaInput.getAttribute( 'data-meta-key' );
+				if ( ! metaKey ) return;
+
+				clearTimeout( this.metaTimeout );
+				this.metaTimeout = setTimeout( () => {
+					const val = metaInput.value.trim();
+					if ( val ) {
+						this.state.meta[ metaKey ] = val;
+					} else {
+						delete this.state.meta[ metaKey ];
+					}
+					this.state.page = 1;
+					this.updateActiveFiltersBar();
+					this.fetchResults( false );
+				}, 300 );
+			} );
+
+			// 13. Active Filter Chips Removal & Clear All (.gm-facet-active-filters)
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const clearAllBtn = e.target.closest( '.gm-clear-all-filters' );
+				if ( clearAllBtn ) {
+					e.preventDefault();
+					this.resetAllFilters();
+					return;
+				}
+
+				const chipBtn = e.target.closest( '.gm-active-filter-chip' );
+				if ( chipBtn ) {
+					e.preventDefault();
+					const chipType = chipBtn.getAttribute( 'data-chip-type' );
+					const chipKey = chipBtn.getAttribute( 'data-chip-key' );
+					const chipVal = chipBtn.getAttribute( 'data-chip-val' );
+
+					if ( chipType === 'taxonomy' && chipKey ) {
+						const termId = parseInt( chipVal, 10 );
+						if ( Array.isArray( this.state.facets[ chipKey ] ) ) {
+							this.state.facets[ chipKey ] = this.state.facets[ chipKey ].filter( ( id ) => id !== termId );
+							if ( this.state.facets[ chipKey ].length === 0 ) {
+								delete this.state.facets[ chipKey ];
+							}
+						}
+						// Sync UI controls for this term
+						this.filtersWrap
+							.querySelectorAll( `[data-taxonomy="${chipKey}"][data-term-id="${termId}"], [data-taxonomy="${chipKey}"][value="${termId}"]` )
+							.forEach( ( ctrl ) => {
+								ctrl.classList.remove( 'gm-active' );
+								ctrl.setAttribute( 'aria-selected', 'false' );
+								ctrl.setAttribute( 'aria-pressed', 'false' );
+								if ( ctrl.type === 'checkbox' || ctrl.type === 'radio' ) {
+									ctrl.checked = false;
+									ctrl.closest( '.gm-pill-option, label' )?.classList.remove( 'gm-active' );
+								}
+							} );
+						const selectCtrl = this.filtersWrap.querySelector( `.gm-filter-select[data-taxonomy="${chipKey}"]` );
+						if ( selectCtrl && parseInt( selectCtrl.value, 10 ) === termId ) {
+							selectCtrl.value = '0';
+						}
+						if ( ! this.state.facets[ chipKey ] ) {
+							const allBtn = this.filtersWrap.querySelector( `.gm-facet[data-taxonomy="${chipKey}"] .gm-filter-btn[data-term-id="0"]` );
+							if ( allBtn ) {
+								allBtn.classList.add( 'gm-active' );
+								allBtn.setAttribute( 'aria-selected', 'true' );
+							}
+						}
+					} else if ( chipType === 'price' ) {
+						this.state.min_price = '';
+						this.state.max_price = '';
+						this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
+							const absMin = pf.getAttribute( 'data-min' ) || '0';
+							const absMax = pf.getAttribute( 'data-max' ) || '500';
+							const minS = pf.querySelector( '.gm-price-range-min' );
+							const maxS = pf.querySelector( '.gm-price-range-max' );
+							const minI = pf.querySelector( '.gm-price-input-min' );
+							const maxI = pf.querySelector( '.gm-price-input-max' );
+							const fill = pf.querySelector( '.gm-price-range-fill' );
+							if ( minS ) minS.value = absMin;
+							if ( maxS ) maxS.value = absMax;
+							if ( minI ) minI.value = absMin;
+							if ( maxI ) maxI.value = absMax;
+							if ( fill ) {
+								fill.style.left = '0%';
+								fill.style.width = '100%';
+							}
+						} );
+					} else if ( chipType === 'rating' ) {
+						this.state.min_rating = 0;
+						this.filtersWrap.querySelectorAll( '.gm-rating-filter-btn' ).forEach( ( b ) => {
+							b.classList.remove( 'gm-active' );
+							b.setAttribute( 'aria-pressed', 'false' );
+						} );
+					} else if ( chipType === 'status' && chipKey ) {
+						this.state[ chipKey ] = false;
+						this.filtersWrap.querySelectorAll( `.gm-status-toggle-btn[data-status="${chipKey}"]` ).forEach( ( b ) => {
+							b.classList.remove( 'gm-active' );
+							b.setAttribute( 'aria-pressed', 'false' );
+						} );
+					} else if ( chipType === 'search' ) {
+						this.state.search = '';
+						if ( searchInput ) searchInput.value = '';
+					} else if ( chipType === 'date' ) {
+						this.state.date_from = '';
+						this.state.date_to = '';
+						this.filtersWrap.querySelectorAll( '.gm-date-from, .gm-date-to' ).forEach( ( d ) => ( d.value = '' ) );
+					} else if ( chipType === 'meta' && chipKey ) {
+						delete this.state.meta[ chipKey ];
+						this.filtersWrap.querySelectorAll( `.gm-meta-input[data-meta-key="${chipKey}"]` ).forEach( ( m ) => ( m.value = '' ) );
+					}
+
+					this.state.page = 1;
+					this.syncUrl();
+					this.updateActiveFiltersBar();
+					this.fetchResults( false );
+				}
+			} );
+
+			// 14. Reset Filters button
 			const resetBtn = this.filtersWrap.querySelector( '.gm-btn-reset' );
 			if ( resetBtn ) {
 				resetBtn.addEventListener( 'click', () => {
-					this.state.facets = {};
-					this.state.search = '';
-					this.state.page = 1;
-
-					// Reset form inputs in this grid
-					this.filtersWrap.querySelectorAll( '.gm-filter-btn' ).forEach( ( b ) => {
-						const isAll = parseInt( b.getAttribute( 'data-term-id' ), 10 ) === 0;
-						b.classList.toggle( 'gm-active', isAll );
-						b.setAttribute( 'aria-selected', isAll ? 'true' : 'false' );
-					} );
-					this.filtersWrap.querySelectorAll( '.gm-filter-select' ).forEach( ( s ) => ( s.value = '0' ) );
-					this.filtersWrap.querySelectorAll( '.gm-filter-checkbox' ).forEach( ( c ) => ( c.checked = false ) );
-					this.filtersWrap.querySelectorAll( '.gm-filter-radio' ).forEach( ( r ) => {
-						r.checked = parseInt( r.value, 10 ) === 0;
-					} );
-					if ( searchInput ) searchInput.value = '';
-
-					this.fetchResults( false );
+					this.resetAllFilters();
 				} );
 			}
+
+			// Initial render of active filters bar if present
+			this.updateActiveFiltersBar();
+		}
+
+		resetAllFilters() {
+			this.state.facets = {};
+			this.state.search = '';
+			this.state.orderby = '';
+			this.state.min_price = '';
+			this.state.max_price = '';
+			this.state.min_rating = 0;
+			this.state.on_sale = false;
+			this.state.in_stock = false;
+			this.state.featured = false;
+			this.state.meta = {};
+			this.state.date_from = '';
+			this.state.date_to = '';
+			this.state.page = 1;
+
+			if ( this.filtersWrap ) {
+				this.filtersWrap.querySelectorAll( '.gm-filter-btn' ).forEach( ( b ) => {
+					const isAll = parseInt( b.getAttribute( 'data-term-id' ), 10 ) === 0;
+					b.classList.toggle( 'gm-active', isAll );
+					b.setAttribute( 'aria-selected', isAll ? 'true' : 'false' );
+				} );
+				this.filtersWrap.querySelectorAll( '.gm-filter-select' ).forEach( ( s ) => ( s.value = '0' ) );
+				this.filtersWrap.querySelectorAll( '.gm-woo-sort-select' ).forEach( ( s ) => ( s.value = '' ) );
+				this.filtersWrap.querySelectorAll( '.gm-filter-checkbox, .gm-filter-checkbox-pill' ).forEach( ( c ) => {
+					c.checked = false;
+					c.closest( '.gm-pill-option, label' )?.classList.remove( 'gm-active' );
+				} );
+				this.filtersWrap.querySelectorAll( '.gm-filter-radio' ).forEach( ( r ) => {
+					r.checked = parseInt( r.value, 10 ) === 0;
+				} );
+				this.filtersWrap.querySelectorAll( '.gm-swatch-filter-btn, .gm-rating-filter-btn, .gm-status-toggle-btn' ).forEach( ( b ) => {
+					const isAll = parseInt( b.getAttribute( 'data-term-id' ), 10 ) === 0 && b.classList.contains( 'gm-swatch-filter-btn' );
+					b.classList.toggle( 'gm-active', isAll );
+					b.setAttribute( 'aria-pressed', isAll ? 'true' : 'false' );
+				} );
+				this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
+					const absMin = pf.getAttribute( 'data-min' ) || '0';
+					const absMax = pf.getAttribute( 'data-max' ) || '500';
+					const minS = pf.querySelector( '.gm-price-range-min' );
+					const maxS = pf.querySelector( '.gm-price-range-max' );
+					const minI = pf.querySelector( '.gm-price-input-min' );
+					const maxI = pf.querySelector( '.gm-price-input-max' );
+					const fill = pf.querySelector( '.gm-price-range-fill' );
+					if ( minS ) minS.value = absMin;
+					if ( maxS ) maxS.value = absMax;
+					if ( minI ) minI.value = absMin;
+					if ( maxI ) maxI.value = absMax;
+					if ( fill ) {
+						fill.style.left = '0%';
+						fill.style.width = '100%';
+					}
+				} );
+				this.filtersWrap.querySelectorAll( '.gm-filter-search, .gm-date-from, .gm-date-to, .gm-meta-input' ).forEach( ( inp ) => {
+					inp.value = '';
+				} );
+			}
+
+			this.syncUrl();
+			this.updateActiveFiltersBar();
+			this.fetchResults( false );
+		}
+
+		updateActiveFiltersBar() {
+			if ( ! this.filtersWrap ) return;
+			const bar = this.filtersWrap.querySelector( '.gm-facet-active-filters' );
+			if ( ! bar ) return;
+
+			let listEl = bar.querySelector( '.gm-active-filters-list' );
+			if ( ! listEl ) {
+				listEl = document.createElement( 'div' );
+				listEl.className = 'gm-active-filters-list';
+				bar.insertBefore( listEl, bar.firstChild );
+			}
+
+			const chips = [];
+
+			// 1. Taxonomy term chips
+			Object.keys( this.state.facets ).forEach( ( tax ) => {
+				const termIds = this.state.facets[ tax ];
+				if ( ! Array.isArray( termIds ) ) return;
+				termIds.forEach( ( termId ) => {
+					if ( ! termId ) return;
+					let label = `#${termId}`;
+					const btnEl = this.filtersWrap.querySelector(
+						`[data-taxonomy="${tax}"][data-term-id="${termId}"], .gm-swatch-filter-btn[data-taxonomy="${tax}"][data-term-id="${termId}"]`
+					);
+					const optEl = this.filtersWrap.querySelector( `.gm-filter-select[data-taxonomy="${tax}"] option[value="${termId}"]` );
+					const cbEl = this.filtersWrap.querySelector(
+						`.gm-filter-checkbox[data-taxonomy="${tax}"][value="${termId}"], .gm-filter-checkbox-pill[data-taxonomy="${tax}"][value="${termId}"]`
+					);
+					if ( btnEl ) {
+						label = btnEl.getAttribute( 'data-label' ) || btnEl.getAttribute( 'title' ) || btnEl.textContent.trim();
+					} else if ( optEl ) {
+						label = optEl.textContent.trim();
+					} else if ( cbEl ) {
+						const parentLabel = cbEl.closest( 'label' );
+						label = parentLabel ? parentLabel.textContent.trim() : label;
+					}
+					chips.push( { type: 'taxonomy', key: tax, val: String( termId ), label } );
+				} );
+			} );
+
+			// 2. Price range chip
+			if ( this.state.min_price !== '' || this.state.max_price !== '' ) {
+				const minLabel = this.state.min_price !== '' ? this.state.min_price : '0';
+				const maxLabel = this.state.max_price !== '' ? this.state.max_price : '∞';
+				chips.push( { type: 'price', key: 'price', val: '1', label: `Price: ${minLabel} – ${maxLabel}` } );
+			}
+
+			// 3. Rating chip
+			if ( this.state.min_rating > 0 ) {
+				chips.push( { type: 'rating', key: 'rating', val: String( this.state.min_rating ), label: `${this.state.min_rating}★ & Up` } );
+			}
+
+			// 4. Status toggle chips
+			if ( this.state.on_sale ) {
+				chips.push( { type: 'status', key: 'on_sale', val: '1', label: 'On Sale' } );
+			}
+			if ( this.state.in_stock ) {
+				chips.push( { type: 'status', key: 'in_stock', val: '1', label: 'In Stock' } );
+			}
+			if ( this.state.featured ) {
+				chips.push( { type: 'status', key: 'featured', val: '1', label: 'Featured' } );
+			}
+
+			// 5. Date range chip
+			if ( this.state.date_from || this.state.date_to ) {
+				chips.push( {
+					type: 'date',
+					key: 'date',
+					val: '1',
+					label: `${this.state.date_from || '…'} → ${this.state.date_to || '…'}`,
+				} );
+			}
+
+			// 6. Meta filter chips
+			Object.keys( this.state.meta ).forEach( ( metaKey ) => {
+				if ( this.state.meta[ metaKey ] ) {
+					chips.push( {
+						type: 'meta',
+						key: metaKey,
+						val: this.state.meta[ metaKey ],
+						label: `${metaKey}: ${this.state.meta[ metaKey ]}`,
+					} );
+				}
+			} );
+
+			// 7. Search keyword chip
+			if ( this.state.search ) {
+				chips.push( { type: 'search', key: 'search', val: this.state.search, label: `"${this.state.search}"` } );
+			}
+
+			listEl.innerHTML = '';
+			chips.forEach( ( chip ) => {
+				const btn = document.createElement( 'button' );
+				btn.type = 'button';
+				btn.className = 'gm-active-filter-chip';
+				btn.setAttribute( 'data-chip-type', chip.type );
+				btn.setAttribute( 'data-chip-key', chip.key );
+				btn.setAttribute( 'data-chip-val', chip.val );
+				const textSpan = document.createElement( 'span' );
+				textSpan.className = 'gm-chip-label';
+				textSpan.textContent = chip.label;
+				const removeSpan = document.createElement( 'span' );
+				removeSpan.className = 'gm-chip-remove';
+				removeSpan.setAttribute( 'aria-hidden', 'true' );
+				removeSpan.textContent = '×';
+				btn.append( textSpan, removeSpan );
+				listEl.appendChild( btn );
+			} );
+
+			const clearBtn = bar.querySelector( '.gm-clear-all-filters' );
+			if ( clearBtn ) {
+				clearBtn.style.display = chips.length > 0 ? '' : 'none';
+			}
+			bar.classList.toggle( 'has-active-filters', chips.length > 0 );
 		}
 
 		initPagination() {
@@ -265,12 +781,34 @@
 
 			const isPreview = this.container.getAttribute( 'data-preview-mode' ) === '1' || window.__gm_preview_mode;
 			const restBase = window.gridmasterV2 ? window.gridmasterV2.restUrl : '/wp-json/gridmaster/v2/';
+
+			let guestBookmarks = [];
+			try {
+				const rawBookmarks = window.localStorage ? window.localStorage.getItem( 'gm_bookmarks' ) : null;
+				if ( rawBookmarks ) {
+					const parsed = JSON.parse( rawBookmarks );
+					if ( Array.isArray( parsed ) ) {
+						guestBookmarks = parsed.map( ( id ) => parseInt( id, 10 ) ).filter( Boolean );
+					}
+				}
+			} catch ( e ) {}
 			
 			let url;
 			let payload = {
 				page: this.state.page,
 				facets: this.state.facets,
 				search: this.state.search,
+				orderby: this.state.orderby,
+				min_price: this.state.min_price,
+				max_price: this.state.max_price,
+				min_rating: this.state.min_rating,
+				on_sale: this.state.on_sale,
+				in_stock: this.state.in_stock,
+				featured: this.state.featured,
+				meta: this.state.meta,
+				date_from: this.state.date_from,
+				date_to: this.state.date_to,
+				bookmarks: guestBookmarks,
 			};
 
 			if ( isPreview && window.__gm_preview_data ) {
@@ -348,8 +886,10 @@
 
 						// Dispatch loaded event for Pro blocks and external widgets
 						document.dispatchEvent( new CustomEvent( 'gridmaster_loaded_posts', { detail: { gridId: this.gridId } } ) );
+						document.dispatchEvent( new CustomEvent( 'gridmaster:rendered', { detail: { gridId: this.gridId, container: this.container } } ) );
 						if ( window.jQuery ) {
 							window.jQuery( document ).trigger( 'gridmaster_loaded_posts', [ this.gridId ] );
+							window.jQuery( document ).trigger( 'gridmaster_v2_rendered', [ this.container ] );
 						}
 					}
 				} )

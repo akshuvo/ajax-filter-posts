@@ -52,6 +52,12 @@ class Grid_Renderer {
 		// Enqueue frontend runtime assets.
 		self::enqueue_assets();
 
+		// Trigger hook for modular asset loaders (e.g. Pro WooCommerce modules)
+		do_action( 'gridmaster_enqueue_grid_assets', $grid, ! empty( $grid->config ) ? $grid->config : array() );
+		if ( class_exists( '\GridMasterPro\Assets\Pro_Assets' ) ) {
+			\GridMasterPro\Assets\Pro_Assets::detect_and_enqueue_from_content( ! empty( $grid->block_content ) ? $grid->block_content : '', ! empty( $grid->config ) ? $grid->config : array() );
+		}
+
 		$config        = ! empty( $grid->config ) ? $grid->config : Grid_Repository::default_config();
 		$default_cfg   = Grid_Repository::default_config();
 		if ( empty( $config['query'] ) ) {

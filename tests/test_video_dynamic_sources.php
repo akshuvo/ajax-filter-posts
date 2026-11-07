@@ -140,7 +140,7 @@ assert_test( strpos( $html_content, 'content-img.png' ) !== false && strpos( $ht
 $html_static = $blocks->render_featured_image( array( 'sourceType' => 'static_url', 'staticUrl' => 'http://example.com/static.png' ), '', $mock_block2 );
 assert_test( strpos( $html_static, 'static.png' ) !== false, 'Featured image renders static URL' );
 
-// 5. Test Card Video Block (Pro): Inline Click mode (Superhero DJs style)
+// 5. Test Card Video Block (Pro): Inline Click mode (Video Showcase style)
 $html_vid = $pro_blocks->render_card_video( array(
     'videoSourceType' => 'custom_meta',
     'videoMetaKey' => 'video_url',

@@ -145,6 +145,10 @@ class Shortcode {
 			}
 		}
 
+		// Enqueue legacy frontend scripts and styles conditionally when legacy grid is rendered.
+		wp_enqueue_script( 'gridmaster-frontend' );
+		wp_enqueue_style( 'gridmaster-frontend' );
+
 		// Shortcode attributes.
 		$atts = shortcode_atts(
 			$default_atts,

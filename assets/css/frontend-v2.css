@@ -472,7 +472,7 @@
 	border-color: #2563eb;
 }
 
-/* Chips and Scrollable Chips Row (Superhero DJs style) */
+/* Chips and Scrollable Chips Row (Pill & Category Filters) */
 .gm-v2-grid .gm-facet-chips .gm-filter-btn {
 	border-radius: 9999px;
 	padding: 6px 16px;
@@ -1283,4 +1283,344 @@
 		top: auto;
 		transform: none;
 	}
+}
+
+/* ==========================================
+   WooCommerce Hover Gallery Image Crossfade
+   ========================================== */
+.gm-featured-image.has-woo-hover-img,
+.gm-field-featured-image.has-woo-hover-img {
+	position: relative;
+	overflow: hidden;
+}
+
+.gm-featured-image.has-woo-hover-img .gm-woo-hover-img,
+.gm-field-featured-image.has-woo-hover-img .gm-woo-hover-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	transition: opacity 0.35s ease, transform 0.4s ease;
+	pointer-events: none;
+	z-index: 2;
+}
+
+.gm-grid-item:hover .gm-featured-image.has-woo-hover-img .gm-woo-hover-img,
+.gm-grid-item:hover .gm-field-featured-image.has-woo-hover-img .gm-woo-hover-img {
+	opacity: 1;
+}
+
+/* ==========================================
+   WooCommerce & Pro Filter Facets (V2)
+   ========================================== */
+
+/* 1. Price Range Slider & Inputs (.gm-facet-price-range) */
+.gm-facet-price-range {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 220px;
+}
+
+.gm-price-range-slider-wrap {
+	position: relative;
+	height: 22px;
+	display: flex;
+	align-items: center;
+}
+
+.gm-price-range-track {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 6px;
+	background: #e2e8f0;
+	border-radius: 999px;
+	overflow: hidden;
+}
+
+.gm-price-range-fill {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0%;
+	width: 100%;
+	background: var(--gm-primary, #2563eb);
+	border-radius: 999px;
+}
+
+.gm-price-range-slider-wrap input[type="range"].gm-price-range-min,
+.gm-price-range-slider-wrap input[type="range"].gm-price-range-max {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	background: transparent;
+	pointer-events: none;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 6px;
+}
+
+.gm-price-range-slider-wrap input[type="range"]::-webkit-slider-thumb {
+	pointer-events: auto;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 2px solid var(--gm-primary, #2563eb);
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gm-price-range-slider-wrap input[type="range"]::-webkit-slider-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+}
+
+.gm-price-range-slider-wrap input[type="range"]::-moz-range-thumb {
+	pointer-events: auto;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 2px solid var(--gm-primary, #2563eb);
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+	cursor: pointer;
+}
+
+.gm-price-inputs {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.gm-price-input-min,
+.gm-price-input-max {
+	width: 84px;
+	padding: 6px 10px;
+	border: 1px solid #cbd5e1;
+	border-radius: 6px;
+	font-size: 13px;
+	color: #0f172a;
+	background: #ffffff;
+}
+
+/* 2. Attribute Swatches (.gm-facet-swatches / .gm-swatch-filter-btn) */
+.gm-facet-swatches,
+.gm-swatch-filter-list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.gm-swatch-filter-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border: 1px solid #cbd5e1;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #1e293b;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: all 0.18s ease;
+}
+
+.gm-swatch-filter-btn:hover {
+	border-color: #94a3b8;
+	background: #f8fafc;
+}
+
+.gm-swatch-filter-btn.gm-active {
+	border-color: var(--gm-primary, #2563eb);
+	background: #eff6ff;
+	color: var(--gm-primary, #2563eb);
+	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+}
+
+.gm-swatch-filter-btn .gm-swatch-color-dot {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 1px solid rgba(15, 23, 42, 0.15);
+	flex-shrink: 0;
+}
+
+.gm-swatch-filter-btn .gm-swatch-img {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+/* 3. Star Rating Filter (.gm-facet-rating / .gm-rating-filter-btn) */
+.gm-facet-rating,
+.gm-rating-filter-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.gm-rating-filter-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 12px;
+	border: 1px solid #cbd5e1;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #334155;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.18s ease;
+}
+
+.gm-rating-filter-btn .gm-stars {
+	color: #f59e0b;
+	letter-spacing: 1px;
+}
+
+.gm-rating-filter-btn:hover {
+	border-color: #f59e0b;
+	background: #fffbeb;
+}
+
+.gm-rating-filter-btn.gm-active {
+	border-color: #d97706;
+	background: #fef3c7;
+	color: #92400e;
+	font-weight: 600;
+}
+
+/* 4. Status Toggles (.gm-facet-status-toggles / .gm-status-toggle-btn) */
+.gm-facet-status-toggles,
+.gm-status-toggles-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.gm-status-toggle-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 14px;
+	border: 1px solid #cbd5e1;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #334155;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.18s ease;
+}
+
+.gm-status-toggle-btn:hover {
+	border-color: #94a3b8;
+	background: #f8fafc;
+}
+
+.gm-status-toggle-btn.gm-active {
+	border-color: var(--gm-primary, #2563eb);
+	background: var(--gm-primary, #2563eb);
+	color: #ffffff;
+}
+
+/* 5. WooCommerce Sort Dropdown (.gm-woo-sort-select) */
+.gm-woo-sort-select {
+	padding: 8px 32px 8px 12px;
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #0f172a;
+	font-size: 13.5px;
+	font-weight: 500;
+	cursor: pointer;
+	min-width: 180px;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gm-woo-sort-select:focus {
+	outline: none;
+	border-color: var(--gm-primary, #2563eb);
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* 6. Active Filters Bar & Removable Chips (.gm-facet-active-filters / .gm-active-filter-chip) */
+.gm-facet-active-filters {
+	display: none;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding-top: 4px;
+}
+
+.gm-facet-active-filters.has-active-filters {
+	display: flex;
+}
+
+.gm-active-filters-list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+}
+
+.gm-active-filter-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1d4ed8;
+	font-size: 12.5px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.gm-active-filter-chip:hover {
+	background: #dbeafe;
+	border-color: #93c5fd;
+}
+
+.gm-active-filter-chip .gm-chip-remove {
+	font-size: 14px;
+	line-height: 1;
+	font-weight: 700;
+	opacity: 0.75;
+}
+
+.gm-active-filter-chip:hover .gm-chip-remove {
+	opacity: 1;
+}
+
+.gm-clear-all-filters {
+	background: transparent;
+	border: none;
+	color: #dc2626;
+	font-size: 12.5px;
+	font-weight: 600;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 4px 6px;
+}
+
+.gm-clear-all-filters:hover {
+	color: #b91c1c;
 }

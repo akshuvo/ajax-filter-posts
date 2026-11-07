@@ -84,9 +84,10 @@ class Blocks {
 					'isLink'       => array( 'type' => 'boolean', 'default' => true ),
 					'zoomOnHover'  => array( 'type' => 'boolean', 'default' => false ),
 					'sourceType'   => array( 'type' => 'string', 'default' => 'featured_image' ),
-					'metaKey'      => array( 'type' => 'string', 'default' => '' ),
-					'staticUrl'    => array( 'type' => 'string', 'default' => '' ),
-					'fallbackUrl'  => array( 'type' => 'string', 'default' => '' ),
+					'metaKey'              => array( 'type' => 'string', 'default' => '' ),
+					'staticUrl'            => array( 'type' => 'string', 'default' => '' ),
+					'fallbackUrl'          => array( 'type' => 'string', 'default' => '' ),
+					'wooHoverGalleryImage' => array( 'type' => 'boolean', 'default' => false ),
 				),
 			),
 			'title'          => array(
@@ -267,6 +268,46 @@ class Blocks {
 		 * Allow Pro and add-ons to register additional Gutenberg blocks.
 		 */
 		do_action( 'gridmaster_register_blocks' );
+
+		// Free fallback server-side registration for basic WooCommerce blocks when Pro is not active.
+		$registry = \WP_Block_Type_Registry::get_instance();
+		if ( ! $registry->is_registered( 'gridmaster-pro/product-price' ) ) {
+			register_block_type(
+				'gridmaster-pro/product-price',
+				array(
+					'api_version'     => 3,
+					'uses_context'    => array( 'postId', 'postType', 'gridmaster/gridId' ),
+					'render_callback' => array( $this, 'render_free_product_price' ),
+					'attributes'      => array(
+						'fontSize'         => array( 'type' => 'string', 'default' => '' ),
+						'fontSizeTablet'   => array( 'type' => 'string', 'default' => '' ),
+						'fontSizeMobile'   => array( 'type' => 'string', 'default' => '' ),
+						'color'            => array( 'type' => 'string', 'default' => '' ),
+						'saleColor'        => array( 'type' => 'string', 'default' => '#ef4444' ),
+						'showRegularPrice' => array( 'type' => 'boolean', 'default' => true ),
+					),
+				)
+			);
+		}
+
+		if ( ! $registry->is_registered( 'gridmaster-pro/add-to-cart' ) ) {
+			register_block_type(
+				'gridmaster-pro/add-to-cart',
+				array(
+					'api_version'     => 3,
+					'uses_context'    => array( 'postId', 'postType', 'gridmaster/gridId' ),
+					'render_callback' => array( $this, 'render_free_add_to_cart' ),
+					'attributes'      => array(
+						'buttonText'      => array( 'type' => 'string', 'default' => '' ),
+						'showIcon'        => array( 'type' => 'boolean', 'default' => true ),
+						'backgroundColor' => array( 'type' => 'string', 'default' => '#2563eb' ),
+						'textColor'       => array( 'type' => 'string', 'default' => '#ffffff' ),
+						'borderRadius'    => array( 'type' => 'string', 'default' => '4px' ),
+						'padding'         => array( 'type' => 'string', 'default' => '8px 16px' ),
+					),
+				)
+			);
+		}
 	}
 
 	/**
@@ -557,6 +598,30 @@ class Blocks {
 			return '';
 		}
 
+		$has_hover_img = false;
+		if ( ! empty( $attributes['wooHoverGalleryImage'] ) && function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( $post_id );
+			if ( $product ) {
+				$gallery_ids = $product->get_gallery_image_ids();
+				if ( ! empty( $gallery_ids ) ) {
+					$hover_img_html = wp_get_attachment_image(
+						$gallery_ids[0],
+						$size,
+						false,
+						array(
+							'class'   => 'gm-woo-hover-img',
+							'loading' => 'lazy',
+							'style'   => $img_style,
+						)
+					);
+					if ( ! empty( $hover_img_html ) ) {
+						$image_html   .= $hover_img_html;
+						$has_hover_img = true;
+					}
+				}
+			}
+		}
+
 		if ( $is_link ) {
 			$image_html = sprintf(
 				'<a href="%s" aria-label="%s" style="display:block;height:100%%;">%s</a>',
@@ -566,7 +631,8 @@ class Blocks {
 			);
 		}
 
-		return '<div class="gm-field gm-field-featured-image">' . $image_html . '</div>';
+		$wrap_classes = 'gm-field gm-field-featured-image gm-featured-image' . ( $has_hover_img ? ' has-woo-hover-img' : '' );
+		return '<div class="' . esc_attr( $wrap_classes ) . '">' . $image_html . '</div>';
 	}
 
 	/**
@@ -1048,12 +1114,55 @@ class Blocks {
 		}
 
 		$badge_type = ! empty( $attributes['badgeType'] ) ? $attributes['badgeType'] : 'static';
-		$label = '';
+		$is_preview = is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST && false !== strpos( isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', '/preview' ) );
+		$label      = '';
 
 		if ( 'meta' === $badge_type && ! empty( $attributes['metaKey'] ) ) {
 			$meta_val = get_post_meta( $post_id, sanitize_key( $attributes['metaKey'] ), true );
 			if ( ! empty( $meta_val ) ) {
 				$label = is_array( $meta_val ) ? implode( ', ', $meta_val ) : (string) $meta_val;
+			}
+		} elseif ( 'sale' === $badge_type ) {
+			if ( function_exists( 'wc_get_product' ) ) {
+				$product = wc_get_product( $post_id );
+				if ( $product && $product->is_on_sale() ) {
+					$label = ! empty( $attributes['text'] ) && 'Featured' !== $attributes['text'] ? sanitize_text_field( $attributes['text'] ) : __( 'Sale!', 'ajax-filter-posts' );
+				} elseif ( $is_preview ) {
+					$label = ! empty( $attributes['text'] ) && 'Featured' !== $attributes['text'] ? sanitize_text_field( $attributes['text'] ) : __( 'Sale!', 'ajax-filter-posts' );
+				} else {
+					return '';
+				}
+			} elseif ( $is_preview ) {
+				$label = ! empty( $attributes['text'] ) ? sanitize_text_field( $attributes['text'] ) : __( 'Sale!', 'ajax-filter-posts' );
+			} else {
+				return '';
+			}
+		} elseif ( 'discount' === $badge_type ) {
+			if ( function_exists( 'wc_get_product' ) ) {
+				$product = wc_get_product( $post_id );
+				if ( $product && $product->is_on_sale() ) {
+					if ( $product->is_type( 'variable' ) ) {
+						$reg  = (float) $product->get_variation_regular_price( 'min', true );
+						$sale = (float) $product->get_variation_sale_price( 'min', true );
+					} else {
+						$reg  = (float) $product->get_regular_price();
+						$sale = (float) $product->get_sale_price();
+					}
+					if ( $reg > 0 && $sale > 0 && $reg > $sale ) {
+						$pct   = (int) round( ( ( $reg - $sale ) / $reg ) * 100 );
+						$label = '-' . $pct . '%';
+					} else {
+						$label = __( 'Sale!', 'ajax-filter-posts' );
+					}
+				} elseif ( $is_preview ) {
+					$label = '-20%';
+				} else {
+					return '';
+				}
+			} elseif ( $is_preview ) {
+				$label = '-20%';
+			} else {
+				return '';
 			}
 		} else {
 			$label = ! empty( $attributes['text'] ) ? sanitize_text_field( $attributes['text'] ) : __( 'Featured', 'ajax-filter-posts' );
@@ -1063,8 +1172,8 @@ class Blocks {
 			return '';
 		}
 
-		$bg      = ! empty( $attributes['backgroundColor'] ) ? sanitize_text_field( $attributes['backgroundColor'] ) : '#ef4444';
-		$color   = ! empty( $attributes['textColor'] ) ? sanitize_hex_color( $attributes['textColor'] ) : '#ffffff';
+		$bg       = ! empty( $attributes['backgroundColor'] ) ? sanitize_text_field( $attributes['backgroundColor'] ) : '#ef4444';
+		$color    = ! empty( $attributes['textColor'] ) ? sanitize_hex_color( $attributes['textColor'] ) : '#ffffff';
 		$font_css = self::get_font_size_css( $attributes, '11px' );
 		$radius   = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '9999px';
 		$padding  = ! empty( $attributes['padding'] ) ? sanitize_text_field( $attributes['padding'] ) : '3px 8px';
@@ -1087,6 +1196,89 @@ class Blocks {
 	}
 
 	/**
+	 * Free Fallback Renderer: WooCommerce Product Price (`gridmaster-pro/product-price`).
+	 */
+	public function render_free_product_price( $attributes, $content, $block ) {
+		$post_id = $this->get_context_post_id( $attributes, $block );
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$price_html = '$49.00';
+		if ( function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( $post_id );
+			if ( $product ) {
+				$price_html = $product->get_price_html();
+			}
+		}
+
+		$font_css = self::get_font_size_css( $attributes );
+		$style    = $font_css['style'];
+		if ( ! empty( $attributes['color'] ) ) {
+			$style .= 'color:' . esc_attr( $attributes['color'] ) . ';';
+		}
+		$style_attr = ! empty( $style ) ? ' style="' . esc_attr( $style ) . '"' : '';
+		$classes    = trim( 'gm-pro-field gm-product-price ' . $font_css['class'] );
+
+		return sprintf(
+			'<div class="%s"%s><span class="price">%s</span></div>',
+			esc_attr( $classes ),
+			$style_attr,
+			$price_html
+		);
+	}
+
+	/**
+	 * Free Fallback Renderer: WooCommerce Add to Cart (`gridmaster-pro/add-to-cart`).
+	 */
+	public function render_free_add_to_cart( $attributes, $content, $block ) {
+		$post_id = $this->get_context_post_id( $attributes, $block );
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$bg        = ! empty( $attributes['backgroundColor'] ) ? sanitize_text_field( $attributes['backgroundColor'] ) : '#2563eb';
+		$color     = ! empty( $attributes['textColor'] ) ? sanitize_hex_color( $attributes['textColor'] ) : '#ffffff';
+		$radius    = ! empty( $attributes['borderRadius'] ) ? sanitize_text_field( $attributes['borderRadius'] ) : '4px';
+		$padding   = ! empty( $attributes['padding'] ) ? sanitize_text_field( $attributes['padding'] ) : '8px 16px';
+		$show_icon = ! isset( $attributes['showIcon'] ) || (bool) $attributes['showIcon'];
+
+		$style = sprintf(
+			'background-color:%s;color:%s;border-radius:%s;padding:%s;',
+			esc_attr( $bg ),
+			esc_attr( $color ),
+			esc_attr( $radius ),
+			esc_attr( $padding )
+		);
+
+		$icon_html = $show_icon ? '<span class="gm-icon gm-icon-cart" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span> ' : '';
+
+		if ( function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( $post_id );
+			if ( $product ) {
+				$btn_text = ! empty( $attributes['buttonText'] ) ? sanitize_text_field( $attributes['buttonText'] ) : $product->add_to_cart_text();
+				return sprintf(
+					'<div class="gm-pro-field gm-add-to-cart"><a href="%s" class="gm-btn button add_to_cart_button ajax_add_to_cart" data-product_id="%d" style="%s">%s<span>%s</span></a></div>',
+					esc_url( $product->add_to_cart_url() ),
+					$product->get_id(),
+					$style,
+					$icon_html,
+					esc_html( $btn_text )
+				);
+			}
+		}
+
+		$btn_text = ! empty( $attributes['buttonText'] ) ? sanitize_text_field( $attributes['buttonText'] ) : __( 'Add to Cart', 'ajax-filter-posts' );
+		return sprintf(
+			'<div class="gm-pro-field gm-add-to-cart"><a href="%s" class="gm-btn" style="%s">%s<span>%s</span></a></div>',
+			esc_url( get_permalink( $post_id ) ),
+			$style,
+			$icon_html,
+			esc_html( $btn_text )
+		);
+	}
+
+	/**
 	 * Render Shortcode block.
 	 */
 	public function render_shortcode( $attributes, $content, $block ) {
@@ -1100,22 +1292,44 @@ class Blocks {
 			return '';
 		}
 
-		// Replace dynamic post tags
+		$post_obj    = get_post( $post_id );
+		$product_sku = '';
+		$is_product  = ( $post_obj && 'product' === $post_obj->post_type && function_exists( 'wc_get_product' ) );
+		$wc_product  = $is_product ? wc_get_product( $post_id ) : null;
+		if ( $wc_product && method_exists( $wc_product, 'get_sku' ) ) {
+			$product_sku = (string) $wc_product->get_sku();
+		}
+
+		// Replace dynamic post and product tags
 		$shortcode_text = str_replace(
-			array( '{post_id}', '{id}', '{title}', '{permalink}' ),
-			array( $post_id, $post_id, esc_attr( get_the_title( $post_id ) ), esc_url( get_permalink( $post_id ) ) ),
+			array( '{post_id}', '{id}', '{product_id}', '{product_sku}', '{title}', '{permalink}' ),
+			array( $post_id, $post_id, $post_id, esc_attr( $product_sku ), esc_attr( get_the_title( $post_id ) ), esc_url( get_permalink( $post_id ) ) ),
 			$shortcode_text
 		);
 
-		// Setup global post context so shortcodes relying on get_the_ID() work
+		// Setup global post and product context so shortcodes relying on get_the_ID() or global $product work
 		global $post;
-		$orig_post = $post;
-		$post      = get_post( $post_id );
+		$orig_post    = $post;
+		$had_product  = array_key_exists( 'product', $GLOBALS );
+		$prev_product = $had_product ? $GLOBALS['product'] : null;
+
+		$post = $post_obj;
 		if ( $post ) {
 			setup_postdata( $post );
 		}
+		if ( $wc_product ) {
+			$GLOBALS['product'] = $wc_product;
+		}
 
 		$output = do_shortcode( $shortcode_text );
+
+		if ( $is_product ) {
+			if ( $had_product ) {
+				$GLOBALS['product'] = $prev_product;
+			} else {
+				unset( $GLOBALS['product'] );
+			}
+		}
 
 		if ( $orig_post ) {
 			$post = $orig_post;

@@ -23,6 +23,11 @@ class Query_Builder {
 		'comment_count',
 		'meta_value',
 		'meta_value_num',
+		'price',
+		'price-desc',
+		'popularity',
+		'rating',
+		'sku',
 	);
 
 	/**
@@ -83,9 +88,18 @@ class Query_Builder {
 			$post_type = sanitize_key( $post_type ? $post_type : 'post' );
 		}
 
-		// Sanitize orderby and order.
-		$orderby = in_array( $config['orderby'], self::ALLOWED_ORDERBY, true ) ? $config['orderby'] : 'date';
-		$order   = 'ASC' === strtoupper( $config['order'] ) ? 'ASC' : 'DESC';
+		// Sanitize orderby and order (runtime_params['orderby'] overrides config['orderby']).
+		$raw_orderby = ! empty( $runtime_params['orderby'] ) ? $runtime_params['orderby'] : $config['orderby'];
+		$orderby     = in_array( $raw_orderby, self::ALLOWED_ORDERBY, true ) ? $raw_orderby : 'date';
+		$order       = 'ASC' === strtoupper( $config['order'] ) ? 'ASC' : 'DESC';
+
+		if ( ! empty( $runtime_params['orderby'] ) ) {
+			if ( 'title' === $orderby ) {
+				$order = 'ASC';
+			} elseif ( 'date' === $orderby ) {
+				$order = 'DESC';
+			}
+		}
 
 		$query_args = array(
 			'post_type'           => $post_type,
@@ -96,6 +110,35 @@ class Query_Builder {
 			'order'               => $order,
 			'ignore_sticky_posts' => true,
 		);
+
+		// Map WooCommerce sorting options to WP_Query meta_key / orderby / order.
+		switch ( $orderby ) {
+			case 'price':
+				$query_args['orderby']  = 'meta_value_num';
+				$query_args['meta_key'] = '_price';
+				$query_args['order']    = 'ASC';
+				break;
+			case 'price-desc':
+				$query_args['orderby']  = 'meta_value_num';
+				$query_args['meta_key'] = '_price';
+				$query_args['order']    = 'DESC';
+				break;
+			case 'popularity':
+				$query_args['orderby']  = 'meta_value_num';
+				$query_args['meta_key'] = 'total_sales';
+				$query_args['order']    = 'DESC';
+				break;
+			case 'rating':
+				$query_args['orderby']  = 'meta_value_num';
+				$query_args['meta_key'] = '_wc_average_rating';
+				$query_args['order']    = 'DESC';
+				break;
+			case 'sku':
+				$query_args['orderby']  = 'meta_value';
+				$query_args['meta_key'] = '_sku';
+				$query_args['order']    = 'ASC';
+				break;
+		}
 
 		// Search keyword.
 		$search_query = ! empty( $runtime_params['search'] ) ? $runtime_params['search'] : $config['search'];

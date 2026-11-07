@@ -63,7 +63,7 @@ final class GridMasterPlugin {
      * @return void
      */
     public function define_constants() {
-        define( 'GRIDMASTER_VERSION', '3.4.21' );
+        define( 'GRIDMASTER_VERSION', '3.4.24' );
         define( 'GRIDMASTER_V2_CAPABLE', true );
         define( 'GRIDMASTER_V2_VERSION', '2.0.0' );
         define( 'GRIDMASTER_FILE', __FILE__ );
@@ -165,11 +165,11 @@ final class GridMasterPlugin {
 	}
 
 	/**
-	 * Enqueue scripts and styles
+	 * Register frontend scripts and styles (enqueued conditionally only when grids are rendered).
 	 */
 	public function scripts() {
 
-		wp_enqueue_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
+		wp_register_script( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'frontend.min.js', array( 'jquery' ), GRIDMASTER_VERSION, true );
 
 		// Localization.
 		wp_localize_script(
@@ -183,7 +183,7 @@ final class GridMasterPlugin {
 			)
 		);
 
-		wp_enqueue_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.min.css', array(), GRIDMASTER_VERSION );
+		wp_register_style( 'gridmaster-frontend', GRIDMASTER_ASSETS . 'css/frontend.min.css', array(), GRIDMASTER_VERSION );
 	}
 
 	/**

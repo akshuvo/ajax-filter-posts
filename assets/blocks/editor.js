@@ -718,6 +718,11 @@
 		'gridmaster-pro/video-lightbox',
 		'gridmaster-pro/card-video',
 		'gridmaster-pro/bookmark-button',
+		'gridmaster-pro/product-compare',
+		'gridmaster-pro/request-quote',
+		'gridmaster-pro/variation-swatches',
+		'gridmaster-pro/product-meta',
+		'gridmaster-pro/action-bar',
 		'core/group',
 		'core/columns',
 		'core/column',
@@ -1280,6 +1285,7 @@
 			borderRadius: { type: 'string', default: '6px' },
 			isLink: { type: 'boolean', default: true },
 			zoomOnHover: { type: 'boolean', default: false },
+			wooHoverGalleryImage: { type: 'boolean', default: false },
 			sourceType: { type: 'string', default: 'featured_image' },
 			metaKey: { type: 'string', default: '' },
 			staticUrl: { type: 'string', default: '' },
@@ -1380,6 +1386,12 @@
 							label: __( 'Zoom on Card Hover', 'ajax-filter-posts' ),
 							checked: !! attributes.zoomOnHover,
 							onChange: function ( val ) { setAttributes( { zoomOnHover: val } ); },
+						} ),
+						el( ToggleControl, {
+							label: __( 'Swap to 2nd Product Gallery Image on Hover (WooCommerce)', 'ajax-filter-posts' ),
+							help: __( 'Crossfades to the second product gallery image when hovering over a WooCommerce product card.', 'ajax-filter-posts' ),
+							checked: !! attributes.wooHoverGalleryImage,
+							onChange: function ( val ) { setAttributes( { wooHoverGalleryImage: val } ); },
 						} )
 					)
 				),
@@ -2274,10 +2286,12 @@
 							options: [
 								{ label: __( 'Static Text', 'ajax-filter-posts' ), value: 'static' },
 								{ label: __( 'Dynamic from Custom Meta', 'ajax-filter-posts' ), value: 'meta' },
+								{ label: __( 'WooCommerce Sale Badge', 'ajax-filter-posts' ), value: 'sale' },
+								{ label: __( 'WooCommerce Discount %', 'ajax-filter-posts' ), value: 'discount' },
 							],
 							onChange: function ( val ) { setAttributes( { badgeType: val } ); },
 						} ),
-						attributes.badgeType === 'static' && el( TextControl, {
+						( attributes.badgeType === 'static' || attributes.badgeType === 'sale' ) && el( TextControl, {
 							label: __( 'Badge Text', 'ajax-filter-posts' ),
 							value: attributes.text,
 							onChange: function ( val ) { setAttributes( { text: val } ); },
@@ -2336,7 +2350,9 @@
 								textTransform: 'uppercase',
 							},
 						},
-						attributes.badgeType === 'meta' ? ( attributes.metaKey ? attributes.metaKey : 'META BADGE' ) : ( attributes.text || 'FEATURED' )
+						attributes.badgeType === 'meta'
+							? ( attributes.metaKey ? attributes.metaKey : 'META BADGE' )
+							: ( attributes.badgeType === 'discount' || attributes.badgeType === 'discount_percent' ? '-20%' : ( attributes.text || ( attributes.badgeType === 'sale' ? 'SALE!' : 'FEATURED' ) ) )
 					)
 				)
 			);
@@ -2445,133 +2461,353 @@
 	} );
 
 	// ==========================================
-	// Pro Blocks (Editor Fallback Previews)
-	// Only registered if Pro plugin hasn't registered them
+	// WooCommerce Free Fallback & Pro Block Previews
+	// Registered via domReady so Pro's pro-blocks-editor.js takes precedence when active
 	// ==========================================
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-price' ) ) {
-		registerBlockType( 'gridmaster-pro/product-price', {
-			apiVersion: 3,
-			title: __( 'Product Price (Pro)', 'ajax-filter-posts' ),
-			icon: 'cart',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-price' } );
-				return el( 'div', blockProps, el( 'span', { style: { fontSize: '16px', fontWeight: 'bold', color: '#059669' } }, '$49.00' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+	const onDomReady = wp.domReady || function ( fn ) {
+		if ( document.readyState !== 'loading' ) {
+			fn();
+		} else {
+			document.addEventListener( 'DOMContentLoaded', fn );
+		}
+	};
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/add-to-cart' ) ) {
-		registerBlockType( 'gridmaster-pro/add-to-cart', {
-			apiVersion: 3,
-			title: __( 'Add to Cart (Pro)', 'ajax-filter-posts' ),
-			icon: 'cart',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-cart' } );
-				return el( 'div', blockProps, el( 'button', { type: 'button', className: 'gm-btn', style: { padding: '8px 16px', background: '#2563eb', color: '#fff', borderRadius: '4px', border: 'none', cursor: 'default' } }, __( 'Add to Cart', 'ajax-filter-posts' ) ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+	onDomReady( function () {
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-price' ) ) {
+			registerBlockType( 'gridmaster-pro/product-price', {
+				apiVersion: 3,
+				title: __( 'Product Price', 'ajax-filter-posts' ),
+				icon: 'money-alt',
+				category: 'widgets',
+				attributes: Object.assign(
+					responsiveFontSizeAttributes( '' ),
+					{
+						color: { type: 'string', default: '' },
+						saleColor: { type: 'string', default: '#ef4444' },
+						showRegularPrice: { type: 'boolean', default: true },
+						showDiscountBadge: { type: 'boolean', default: false },
+					}
+				),
+				edit: function ( props ) {
+					const { attributes, setAttributes } = props;
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-price' } );
+					const device = useEditorDevice();
+					const currentFontSize = getResponsiveFontSize( attributes, device, '16px' );
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/badge' ) ) {
-		registerBlockType( 'gridmaster-pro/badge', {
-			apiVersion: 3,
-			title: __( 'Badge (Pro)', 'ajax-filter-posts' ),
-			icon: 'tag',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-badge' } );
-				return el( 'div', blockProps, el( 'span', { style: { display: 'inline-block', padding: '3px 8px', background: '#ef4444', color: '#fff', borderRadius: '9999px', fontSize: '11px', fontWeight: 'bold' } }, 'HOT' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+					return el(
+						Fragment,
+						null,
+						el(
+							InspectorControls,
+							null,
+							el(
+								PanelBody,
+								{ title: __( 'Price Settings', 'ajax-filter-posts' ) },
+								el( ResponsiveFontSizeControl, {
+									label: __( 'Font Size', 'ajax-filter-posts' ),
+									attributes: attributes,
+									setAttributes: setAttributes,
+									defaultValue: '16px',
+									pxMin: 10,
+									pxMax: 48,
+								} ),
+								renderColorControl(
+									__( 'Regular Price Color', 'ajax-filter-posts' ),
+									attributes.color,
+									( val ) => setAttributes( { color: val } )
+								),
+								renderColorControl(
+									__( 'Sale Price Color', 'ajax-filter-posts' ),
+									attributes.saleColor,
+									( val ) => setAttributes( { saleColor: val } )
+								),
+								el( ToggleControl, {
+									label: __( 'Show Strikethrough Regular Price', 'ajax-filter-posts' ),
+									checked: attributes.showRegularPrice !== false,
+									onChange: function ( val ) { setAttributes( { showRegularPrice: val } ); },
+								} )
+							)
+						),
+						el(
+							'div',
+							blockProps,
+							el(
+								'div',
+								{ className: 'gm-product-price-preview', style: { fontSize: currentFontSize } },
+								attributes.showRegularPrice !== false && el( 'span', { style: { textDecoration: 'line-through', color: attributes.color || '#9ca3af', marginRight: '6px' } }, '$69.00' ),
+								el( 'span', { style: { fontWeight: 'bold', color: attributes.saleColor || '#ef4444' } }, '$49.00' )
+							)
+						)
+					);
+				},
+				save: function () { return null; },
+			} );
+		}
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-rating' ) ) {
-		registerBlockType( 'gridmaster-pro/product-rating', {
-			apiVersion: 3,
-			title: __( 'Product Rating (Pro)', 'ajax-filter-posts' ),
-			icon: 'star-filled',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-rating' } );
-				return el( 'div', blockProps, el( 'span', { style: { color: '#f59e0b', fontSize: '14px' } }, '★★★★★ (5)' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/add-to-cart' ) ) {
+			registerBlockType( 'gridmaster-pro/add-to-cart', {
+				apiVersion: 3,
+				title: __( 'Add to Cart', 'ajax-filter-posts' ),
+				icon: 'cart',
+				category: 'widgets',
+				attributes: {
+					buttonText: { type: 'string', default: '' },
+					showIcon: { type: 'boolean', default: true },
+					showQuantityStepper: { type: 'boolean', default: false },
+					fullWidth: { type: 'boolean', default: false },
+					backgroundColor: { type: 'string', default: '#2563eb' },
+					textColor: { type: 'string', default: '#ffffff' },
+					borderRadius: { type: 'string', default: '4px' },
+					padding: { type: 'string', default: '8px 16px' },
+				},
+				edit: function ( props ) {
+					const { attributes, setAttributes } = props;
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-cart' } );
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/stock-status' ) ) {
-		registerBlockType( 'gridmaster-pro/stock-status', {
-			apiVersion: 3,
-			title: __( 'Stock Status (Pro)', 'ajax-filter-posts' ),
-			icon: 'archive',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-stock' } );
-				return el( 'div', blockProps, el( 'span', { style: { color: '#10b981', fontSize: '12px', fontWeight: 'bold' } }, '● In Stock' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+					return el(
+						Fragment,
+						null,
+						el(
+							InspectorControls,
+							null,
+							el(
+								PanelBody,
+								{ title: __( 'Button Settings', 'ajax-filter-posts' ) },
+								el( TextControl, {
+									label: __( 'Button Text Override', 'ajax-filter-posts' ),
+									placeholder: __( 'Auto (WooCommerce)', 'ajax-filter-posts' ),
+									value: attributes.buttonText,
+									onChange: function ( val ) { setAttributes( { buttonText: val } ); },
+								} ),
+								el( ToggleControl, {
+									label: __( 'Show Cart Icon', 'ajax-filter-posts' ),
+									checked: attributes.showIcon !== false,
+									onChange: function ( val ) { setAttributes( { showIcon: val } ); },
+								} ),
+								el( ToggleControl, {
+									label: __( 'Full Width Button', 'ajax-filter-posts' ),
+									checked: !! attributes.fullWidth,
+									onChange: function ( val ) { setAttributes( { fullWidth: val } ); },
+								} ),
+								el( RangeControl, {
+									label: __( 'Border Radius (px)', 'ajax-filter-posts' ),
+									value: parsePx( attributes.borderRadius, 4 ),
+									min: 0,
+									max: 30,
+									step: 1,
+									onChange: function ( val ) { setAttributes( { borderRadius: val + 'px' } ); },
+								} ),
+								renderColorControl(
+									__( 'Background Color', 'ajax-filter-posts' ),
+									attributes.backgroundColor,
+									( val ) => setAttributes( { backgroundColor: val } )
+								),
+								renderColorControl(
+									__( 'Text Color', 'ajax-filter-posts' ),
+									attributes.textColor,
+									( val ) => setAttributes( { textColor: val } )
+								)
+							)
+						),
+						el(
+							'div',
+							blockProps,
+							el(
+								'button',
+								{
+									type: 'button',
+									className: 'gm-btn',
+									style: {
+										padding: attributes.padding || '8px 16px',
+										background: attributes.backgroundColor || '#2563eb',
+										color: attributes.textColor || '#ffffff',
+										borderRadius: attributes.borderRadius || '4px',
+										border: 'none',
+										display: 'inline-flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										width: attributes.fullWidth ? '100%' : 'auto',
+										gap: '6px',
+										cursor: 'default',
+									},
+								},
+								attributes.showIcon !== false && el( 'span', { className: 'dashicons dashicons-cart' } ),
+								attributes.buttonText || __( 'Add to Cart', 'ajax-filter-posts' )
+							)
+						)
+					);
+				},
+				save: function () { return null; },
+			} );
+		}
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/sale-countdown' ) ) {
-		registerBlockType( 'gridmaster-pro/sale-countdown', {
-			apiVersion: 3,
-			title: __( 'Sale Countdown (Pro)', 'ajax-filter-posts' ),
-			icon: 'clock',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-countdown' } );
-				return el( 'div', blockProps, el( 'span', { style: { background: '#1f2937', color: '#fff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' } }, '⏳ 03d : 14h : 42m' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/badge' ) ) {
+			registerBlockType( 'gridmaster-pro/badge', {
+				apiVersion: 3,
+				title: __( 'Badge (Pro)', 'ajax-filter-posts' ),
+				icon: 'tag',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-badge' } );
+					return el( 'div', blockProps, el( 'span', { style: { display: 'inline-block', padding: '3px 8px', background: '#ef4444', color: '#fff', borderRadius: '9999px', fontSize: '11px', fontWeight: 'bold' } }, 'HOT' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/quick-view' ) ) {
-		registerBlockType( 'gridmaster-pro/quick-view', {
-			apiVersion: 3,
-			title: __( 'Quick View (Pro)', 'ajax-filter-posts' ),
-			icon: 'visibility',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-quick-view' } );
-				return el( 'div', blockProps, el( 'button', { type: 'button', className: 'gm-btn', style: { padding: '6px 12px', background: '#2563eb', color: '#fff', borderRadius: '4px' } }, '👁 Quick View' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-rating' ) ) {
+			registerBlockType( 'gridmaster-pro/product-rating', {
+				apiVersion: 3,
+				title: __( 'Product Rating (Pro)', 'ajax-filter-posts' ),
+				icon: 'star-filled',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-rating' } );
+					return el( 'div', blockProps, el( 'span', { style: { color: '#f59e0b', fontSize: '14px' } }, '★★★★★ (5)' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/video-lightbox' ) ) {
-		registerBlockType( 'gridmaster-pro/video-lightbox', {
-			apiVersion: 3,
-			title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ),
-			icon: 'video-alt3',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-video' } );
-				return el( 'div', blockProps, el( 'button', { type: 'button', style: { width: '40px', height: '40px', borderRadius: '50%', background: '#e11d48', color: '#fff', border: 'none' } }, '▶' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/stock-status' ) ) {
+			registerBlockType( 'gridmaster-pro/stock-status', {
+				apiVersion: 3,
+				title: __( 'Stock Status (Pro)', 'ajax-filter-posts' ),
+				icon: 'archive',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-stock' } );
+					return el( 'div', blockProps, el( 'span', { style: { color: '#10b981', fontSize: '12px', fontWeight: 'bold' } }, '● In Stock' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
 
-	if ( ! wp.blocks.getBlockType( 'gridmaster-pro/bookmark-button' ) ) {
-		registerBlockType( 'gridmaster-pro/bookmark-button', {
-			apiVersion: 3,
-			title: __( 'Bookmark / Wishlist (Pro)', 'ajax-filter-posts' ),
-			icon: 'heart',
-			category: 'widgets',
-			edit: function () {
-				const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-bookmark' } );
-				return el( 'div', blockProps, el( 'span', { style: { color: '#ef4444', fontSize: '18px' } }, '♥' ) );
-			},
-			save: function () { return null; },
-		} );
-	}
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/sale-countdown' ) ) {
+			registerBlockType( 'gridmaster-pro/sale-countdown', {
+				apiVersion: 3,
+				title: __( 'Sale Countdown (Pro)', 'ajax-filter-posts' ),
+				icon: 'clock',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-countdown' } );
+					return el( 'div', blockProps, el( 'span', { style: { background: '#1f2937', color: '#fff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' } }, '⏳ 03d : 14h : 42m' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/quick-view' ) ) {
+			registerBlockType( 'gridmaster-pro/quick-view', {
+				apiVersion: 3,
+				title: __( 'Quick View (Pro)', 'ajax-filter-posts' ),
+				icon: 'visibility',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-quick-view' } );
+					return el( 'div', blockProps, el( 'button', { type: 'button', className: 'gm-btn', style: { padding: '6px 12px', background: '#2563eb', color: '#fff', borderRadius: '4px' } }, '👁 Quick View' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/video-lightbox' ) ) {
+			registerBlockType( 'gridmaster-pro/video-lightbox', {
+				apiVersion: 3,
+				title: __( 'Video Lightbox (Pro)', 'ajax-filter-posts' ),
+				icon: 'video-alt3',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-video' } );
+					return el( 'div', blockProps, el( 'button', { type: 'button', style: { width: '40px', height: '40px', borderRadius: '50%', background: '#e11d48', color: '#fff', border: 'none' } }, '▶' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/bookmark-button' ) ) {
+			registerBlockType( 'gridmaster-pro/bookmark-button', {
+				apiVersion: 3,
+				title: __( 'Bookmark / Wishlist (Pro)', 'ajax-filter-posts' ),
+				icon: 'heart',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-bookmark' } );
+					return el( 'div', blockProps, el( 'span', { style: { color: '#ef4444', fontSize: '18px' } }, '♥' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/action-bar' ) ) {
+			registerBlockType( 'gridmaster-pro/action-bar', {
+				apiVersion: 3,
+				title: __( 'Product Action Bar (Pro)', 'ajax-filter-posts' ),
+				icon: 'screenoptions',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-action-bar' } );
+					return el( 'div', blockProps, el( 'span', { style: { fontSize: '13px', color: '#475569' } }, '♥  👁  ⇄  🛒' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/variation-swatches' ) ) {
+			registerBlockType( 'gridmaster-pro/variation-swatches', {
+				apiVersion: 3,
+				title: __( 'Variation Swatches (Pro)', 'ajax-filter-posts' ),
+				icon: 'art',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-swatches' } );
+					return el( 'div', blockProps, el( 'span', { style: { fontSize: '13px', color: '#475569' } }, '● ● ●  [S] [M] [L]' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-compare' ) ) {
+			registerBlockType( 'gridmaster-pro/product-compare', {
+				apiVersion: 3,
+				title: __( 'Compare Button (Pro)', 'ajax-filter-posts' ),
+				icon: 'randomize',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-compare' } );
+					return el( 'div', blockProps, el( 'span', { style: { fontSize: '13px', color: '#475569' } }, '⇄ Compare' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/request-quote' ) ) {
+			registerBlockType( 'gridmaster-pro/request-quote', {
+				apiVersion: 3,
+				title: __( 'Request a Quote (Pro)', 'ajax-filter-posts' ),
+				icon: 'email-alt',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-quote' } );
+					return el( 'div', blockProps, el( 'button', { type: 'button', className: 'gm-btn', style: { padding: '6px 12px', background: '#0f172a', color: '#fff', borderRadius: '4px' } }, '✉ Request a Quote' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+
+		if ( ! wp.blocks.getBlockType( 'gridmaster-pro/product-meta' ) ) {
+			registerBlockType( 'gridmaster-pro/product-meta', {
+				apiVersion: 3,
+				title: __( 'Product Meta & Specs (Pro)', 'ajax-filter-posts' ),
+				icon: 'info-outline',
+				category: 'widgets',
+				edit: function () {
+					const blockProps = useBlockProps( { className: 'gm-editor-field gm-field-pro-product-meta' } );
+					return el( 'div', blockProps, el( 'span', { style: { fontSize: '12px', color: '#64748b' } }, 'SKU: GM-1042 • Brand: Acme' ) );
+				},
+				save: function () { return null; },
+			} );
+		}
+	} );
 
 } )( window.wp );

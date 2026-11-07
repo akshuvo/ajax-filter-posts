@@ -101,6 +101,7 @@
 	function MoreBlocksPopover( props ) {
 		const { isOpen, onClose, onSelectBlock, isPro } = props;
 		const [ searchTerm, setSearchTerm ] = useState( '' );
+		const [ activeCat, setActiveCat ] = useState( 'All' );
 
 		if ( ! isOpen ) return null;
 
@@ -152,8 +153,14 @@
 			{
 				title: __( 'WooCommerce & Pro Elements', 'ajax-filter-posts' ),
 				blocks: [
-					{ name: 'gridmaster-pro/product-price', title: __( 'Product Price (Pro)', 'ajax-filter-posts' ), icon: 'money-alt', desc: __( 'WooCommerce regular and sale price', 'ajax-filter-posts' ), isPro: true, attrs: {} },
-					{ name: 'gridmaster-pro/add-to-cart', title: __( 'Add to Cart (Pro)', 'ajax-filter-posts' ), icon: 'cart', desc: __( 'AJAX add-to-cart button', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/product-price', title: __( 'Product Price', 'ajax-filter-posts' ), icon: 'money-alt', desc: __( 'WooCommerce regular and sale price', 'ajax-filter-posts' ), isPro: false, attrs: {} },
+					{ name: 'gridmaster-pro/add-to-cart', title: __( 'Add to Cart', 'ajax-filter-posts' ), icon: 'cart', desc: __( 'AJAX add-to-cart button', 'ajax-filter-posts' ), isPro: false, attrs: {} },
+					{ name: 'gridmaster/badge', title: __( 'Sale Badge', 'ajax-filter-posts' ), icon: 'tag', desc: __( 'Dynamic Sale or -% badge for products.', 'ajax-filter-posts' ), isPro: false, attrs: { badgeType: 'sale', text: 'Sale!' } },
+					{ name: 'gridmaster-pro/action-bar', title: __( 'Product Action Bar', 'ajax-filter-posts' ), icon: 'screenoptions', desc: __( 'Floating Wishlist, Quick View, Compare & Cart icons.', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/variation-swatches', title: __( 'Variation Swatches', 'ajax-filter-posts' ), icon: 'art', desc: __( 'Color, image & label swatches with live image swap.', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/product-compare', title: __( 'Compare Button', 'ajax-filter-posts' ), icon: 'randomize', desc: __( 'Side-by-side product comparison drawer & table (Native / WPC / YITH).', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/request-quote', title: __( 'Request a Quote', 'ajax-filter-posts' ), icon: 'email-alt', desc: __( 'Product enquiry / B2B quote modal button (Native / YITH / WPC).', 'ajax-filter-posts' ), isPro: true, attrs: {} },
+					{ name: 'gridmaster-pro/product-meta', title: __( 'Product Meta & Specs', 'ajax-filter-posts' ), icon: 'info-outline', desc: __( 'SKU, Brand, Weight, Dimensions & key spec attributes.', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/badge', title: __( 'Product Badge (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', desc: __( 'Dynamic badges like New, Featured, or Sale', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/product-rating', title: __( 'Star Rating (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', desc: __( 'Customer review star ratings', 'ajax-filter-posts' ), isPro: true, attrs: {} },
 					{ name: 'gridmaster-pro/stock-status', title: __( 'Stock Status (Pro)', 'ajax-filter-posts' ), icon: 'archive', desc: __( 'Product inventory status and low stock alert', 'ajax-filter-posts' ), isPro: true, attrs: {} },
@@ -170,67 +177,222 @@
 			? wp.hooks.applyFilters( 'gridmaster.cardBlockCategories', defaultCategories )
 			: defaultCategories;
 
-		const lowerSearch = searchTerm.toLowerCase();
-		const filteredCategories = blockCategories.map( ( cat ) => {
-			const matching = cat.blocks.filter( ( b ) =>
-				b.title.toLowerCase().includes( lowerSearch ) ||
-				b.desc.toLowerCase().includes( lowerSearch )
-			);
-			return { ...cat, blocks: matching };
-		} ).filter( ( cat ) => cat.blocks.length > 0 );
+		// Compute total blocks and category pills
+		let totalBlocksCount = 0;
+		const categoryTabs = [ { id: 'All', title: __( 'All', 'ajax-filter-posts' ), fullTitle: 'All', count: 0 } ];
+
+		blockCategories.forEach( ( cat ) => {
+			const count = cat.blocks ? cat.blocks.length : 0;
+			totalBlocksCount += count;
+			let shortTitle = cat.title
+				.replace( ' & Pro Elements', '' )
+				.replace( ' & Badges', '' )
+				.replace( ' & Social', '' )
+				.replace( ' & Embeds', '' )
+				.replace( ' & Structure', '' );
+			categoryTabs.push( {
+				id: cat.title,
+				title: shortTitle,
+				fullTitle: cat.title,
+				count: count,
+			} );
+		} );
+		categoryTabs[ 0 ].count = totalBlocksCount;
+
+		const getThemeForCat = ( catTitle ) => {
+			if ( ! catTitle ) return 'theme-editorial';
+			const t = catTitle.toLowerCase();
+			if ( t.includes( 'woo' ) ) return 'theme-woo';
+			if ( t.includes( 'media' ) ) return 'theme-media';
+			if ( t.includes( 'social' ) || t.includes( 'engagement' ) ) return 'theme-social';
+			if ( t.includes( 'layout' ) || t.includes( 'structure' ) ) return 'theme-layout';
+			if ( t.includes( 'advanced' ) || t.includes( 'embed' ) ) return 'theme-advanced';
+			return 'theme-editorial';
+		};
+
+		const lowerSearch = searchTerm.trim().toLowerCase();
+		const filteredCategories = blockCategories
+			.filter( ( cat ) => activeCat === 'All' || cat.title === activeCat )
+			.map( ( cat ) => {
+				const matching = ( cat.blocks || [] ).filter( ( b ) => {
+					if ( ! lowerSearch ) return true;
+					return (
+						( b.title && b.title.toLowerCase().includes( lowerSearch ) ) ||
+						( b.desc && b.desc.toLowerCase().includes( lowerSearch ) ) ||
+						( cat.title && cat.title.toLowerCase().includes( lowerSearch ) )
+					);
+				} );
+				return { ...cat, blocks: matching };
+			} )
+			.filter( ( cat ) => cat.blocks.length > 0 );
+
+		const totalVisibleBlocks = filteredCategories.reduce( ( sum, cat ) => sum + cat.blocks.length, 0 );
 
 		return el(
 			Popover,
 			{
-				className: 'gm-more-blocks-popover',
+				className: 'gm-popover-mega gm-more-blocks-popover',
 				onClose: onClose,
 				position: 'bottom right',
 			},
 			el(
 				'div',
-				{ className: 'gm-popover-content' },
+				{ className: 'gm-popover-mega-panel' },
+
+				// Header: Title Bar + Count + Close Button
 				el(
 					'div',
-					{ className: 'gm-popover-search' },
-					el( TextControl, {
-						label: __( 'Search blocks', 'ajax-filter-posts' ),
-						placeholder: __( 'Search post blocks...', 'ajax-filter-posts' ),
-						value: searchTerm,
-						onChange: setSearchTerm,
-						autoFocus: true,
+					{ className: 'gm-popover-header' },
+					el(
+						'div',
+						{ className: 'gm-popover-header-title-row' },
+						el( 'span', { className: 'dashicons dashicons-plus-alt' } ),
+						el( 'h3', { className: 'gm-popover-title' }, __( 'Card Blocks Library', 'ajax-filter-posts' ) ),
+						el(
+							'span',
+							{ className: 'gm-popover-count-pill' },
+							sprintf( __( '%d blocks', 'ajax-filter-posts' ), totalBlocksCount )
+						)
+					),
+					el( Button, {
+						icon: 'no-alt',
+						label: __( 'Close', 'ajax-filter-posts' ),
+						onClick: onClose,
+						className: 'gm-popover-close-btn',
+						isSmall: true,
 					} )
 				),
+
+				// Search Bar
 				el(
 					'div',
-					{ className: 'gm-popover-list' },
-					filteredCategories.length === 0
-						? el( 'p', { className: 'gm-no-blocks' }, __( 'No matching blocks found.', 'ajax-filter-posts' ) )
+					{ className: 'gm-popover-search-wrap' },
+					el( 'span', { className: 'dashicons dashicons-search gm-search-icon' } ),
+					el( 'input', {
+						type: 'text',
+						className: 'gm-search-input',
+						placeholder: __( 'Search blocks (e.g. date, video, price, rating)...', 'ajax-filter-posts' ),
+						value: searchTerm,
+						onChange: ( e ) => setSearchTerm( e.target.value ),
+						autoFocus: true,
+					} ),
+					searchTerm &&
+						el(
+							'button',
+							{
+								type: 'button',
+								className: 'gm-search-clear-btn',
+								onClick: () => setSearchTerm( '' ),
+								'aria-label': __( 'Clear search', 'ajax-filter-posts' ),
+							},
+							'✕'
+						)
+				),
+
+				// Category Filter Tabs
+				el(
+					'div',
+					{ className: 'gm-popover-tabs-bar' },
+					categoryTabs.map( ( tab ) =>
+						el(
+							'button',
+							{
+								key: tab.id,
+								type: 'button',
+								className: 'gm-tab-pill' + ( activeCat === tab.fullTitle ? ' is-active' : '' ),
+								onClick: () => setActiveCat( tab.fullTitle ),
+							},
+							tab.title,
+							el( 'span', { className: 'gm-tab-count' }, tab.count )
+						)
+					)
+				),
+
+				// Scrollable Grid of Blocks
+				el(
+					'div',
+					{ className: 'gm-popover-scrollable-body' },
+					totalVisibleBlocks === 0
+						? el(
+								'div',
+								{ className: 'gm-popover-empty-state' },
+								el( 'span', { className: 'dashicons dashicons-search' } ),
+								el( 'p', { className: 'gm-empty-title' }, __( 'No matching blocks found', 'ajax-filter-posts' ) ),
+								el( 'p', { className: 'gm-empty-hint' }, __( 'Try another keyword or select the "All" category tab.', 'ajax-filter-posts' ) ),
+								searchTerm &&
+									el(
+										Button,
+										{
+											isSecondary: true,
+											isSmall: true,
+											onClick: () => setSearchTerm( '' ),
+										},
+										__( 'Clear Search', 'ajax-filter-posts' )
+									)
+						  )
 						: filteredCategories.map( ( cat, idx ) =>
 								el(
 									'div',
-									{ key: idx, className: 'gm-popover-cat-group' },
-									el( 'h4', { className: 'gm-popover-cat-title' }, cat.title ),
-									cat.blocks.map( ( b ) =>
+									{ key: cat.title || idx, className: 'gm-category-section' },
+									activeCat === 'All' &&
 										el(
-											'button',
-											{
-												key: b.name,
-												type: 'button',
-												className: 'gm-popover-item-btn' + ( b.isPro ? ' is-pro' : '' ),
-												disabled: b.isPro && ! isPro,
-												onClick: () => {
-													onSelectBlock( b.name, b.attrs );
-													onClose();
+											'div',
+											{ className: 'gm-category-section-header' },
+											el( 'span', { className: 'gm-category-section-title' }, cat.title ),
+											el( 'span', { className: 'gm-category-section-count' }, cat.blocks.length )
+										),
+									el(
+										'div',
+										{ className: 'gm-blocks-grid-2col' },
+										cat.blocks.map( ( b, bIdx ) => {
+											const themeClass = getThemeForCat( cat.title );
+											const isBlockDisabled = b.isPro && ! isPro;
+											return el(
+												'button',
+												{
+													key: b.name + '-' + bIdx,
+													type: 'button',
+													className:
+														'gm-block-grid-item' +
+														( b.isPro ? ' is-pro' : '' ) +
+														( isBlockDisabled ? ' is-pro-disabled' : '' ),
+													disabled: isBlockDisabled,
+													onClick: () => {
+														onSelectBlock( b.name, b.attrs );
+														onClose();
+													},
+													title: isBlockDisabled
+														? __( 'Pro element — upgrade GridMaster to unlock', 'ajax-filter-posts' )
+														: b.desc || b.title,
 												},
-											},
-											el( 'span', { className: 'dashicons dashicons-' + b.icon + ' gm-item-icon' } ),
-											el(
-												'div',
-												{ className: 'gm-item-details' },
-												el( 'span', { className: 'gm-item-title' }, b.title ),
-												el( 'span', { className: 'gm-item-desc' }, b.desc )
-											)
-										)
+												el(
+													'div',
+													{ className: 'gm-block-icon-badge ' + themeClass },
+													el( 'span', { className: 'dashicons dashicons-' + b.icon } )
+												),
+												el(
+													'div',
+													{ className: 'gm-block-content' },
+													el(
+														'div',
+														{ className: 'gm-block-title-row' },
+														el( 'span', { className: 'gm-block-title' }, b.title ),
+														b.isPro &&
+															el(
+																'span',
+																{ className: 'gm-pro-badge-pill' },
+																'PRO'
+															)
+													),
+													el( 'span', { className: 'gm-block-desc' }, b.desc )
+												),
+												el(
+													'div',
+													{ className: 'gm-block-add-affordance' },
+													el( 'span', { className: 'dashicons dashicons-plus-alt2' } )
+												)
+											);
+										} )
 									)
 								)
 						  )
@@ -275,8 +437,13 @@
 			'gridmaster/html': { title: __( 'Custom HTML', 'ajax-filter-posts' ), icon: 'html' },
 			'core/shortcode': { title: __( 'Shortcode', 'ajax-filter-posts' ), icon: 'shortcode' },
 			'core/html': { title: __( 'HTML', 'ajax-filter-posts' ), icon: 'html' },
-			'gridmaster-pro/product-price': { title: __( 'Price (Pro)', 'ajax-filter-posts' ), icon: 'money-alt' },
-			'gridmaster-pro/add-to-cart': { title: __( 'Add to Cart (Pro)', 'ajax-filter-posts' ), icon: 'cart' },
+			'gridmaster-pro/product-price': { title: __( 'Product Price', 'ajax-filter-posts' ), icon: 'money-alt' },
+			'gridmaster-pro/add-to-cart': { title: __( 'Add to Cart', 'ajax-filter-posts' ), icon: 'cart' },
+			'gridmaster-pro/action-bar': { title: __( 'Action Bar', 'ajax-filter-posts' ), icon: 'screenoptions' },
+			'gridmaster-pro/variation-swatches': { title: __( 'Variation Swatches', 'ajax-filter-posts' ), icon: 'art' },
+			'gridmaster-pro/product-compare': { title: __( 'Compare Button', 'ajax-filter-posts' ), icon: 'randomize' },
+			'gridmaster-pro/request-quote': { title: __( 'Request a Quote', 'ajax-filter-posts' ), icon: 'email-alt' },
+			'gridmaster-pro/product-meta': { title: __( 'Product Meta & Specs', 'ajax-filter-posts' ), icon: 'info-outline' },
 			'gridmaster-pro/badge': { title: __( 'Badge (Pro)', 'ajax-filter-posts' ), icon: 'star-filled' },
 			'gridmaster-pro/product-rating': { title: __( 'Rating (Pro)', 'ajax-filter-posts' ), icon: 'star-filled' },
 			'gridmaster-pro/stock-status': { title: __( 'Stock (Pro)', 'ajax-filter-posts' ), icon: 'archive' },
@@ -395,6 +562,521 @@
 						: __( 'Drop at the blue line in %s.', 'ajax-filter-posts' ), dropTargetName )
 					: __( 'Move over the card to find a drop position.', 'ajax-filter-posts' ) )
 				: __( 'Drag by the block handle; follow the blue drop line.', 'ajax-filter-posts' )
+		);
+	}
+
+	/**
+	 * Visual Wireframe schematic for pre-built card layout archetypes.
+	 */
+	function TemplateWireframe( props ) {
+		const { template } = props;
+		const id = template?.id || '';
+
+		// 1. TikTok / Reels / Shorts 9:16
+		if ( id === 'shorts-vertical-feed' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-reel' },
+				el(
+					'div',
+					{ className: 'gm-wf-reel-phone' },
+					el( 'span', { className: 'gm-wf-badge-red' }, 'REEL' ),
+					el( 'div', { className: 'gm-wf-play-circle' }, '▶' ),
+					el(
+						'div',
+						{ className: 'gm-wf-reel-bottom' },
+						el( 'div', { className: 'gm-wf-avatar' } ),
+						el(
+							'div',
+							{ className: 'gm-wf-lines-compact' },
+							el( 'div', { className: 'gm-wf-line-title gm-wf-white' } ),
+							el( 'div', { className: 'gm-wf-line-sub gm-wf-dim' } )
+						)
+					)
+				)
+			);
+		}
+
+		// 2. Video Showcase Course
+		if ( id === 'video-showcase-course' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-dark-video' },
+				el(
+					'div',
+					{ className: 'gm-wf-video-hero' },
+					el( 'div', { className: 'gm-wf-play-circle-red' }, '▶' )
+				),
+				el(
+					'div',
+					{ className: 'gm-wf-video-info' },
+					el( 'span', { className: 'gm-wf-badge-yellow' }, 'MEDIUM' ),
+					el( 'div', { className: 'gm-wf-line-title gm-wf-white' } )
+				)
+			);
+		}
+
+		// 3. Media Video Lightbox, YouTube Playlist, Instagram Video
+		if ( id === 'media-video-lightbox' || id === 'youtube-playlist-card' || id === 'instagram-square-video' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el(
+					'div',
+					{ className: 'gm-wf-video-thumb' },
+					el( 'span', { className: 'dashicons dashicons-video-alt3 gm-wf-video-icon' } ),
+					el( 'div', { className: 'gm-wf-play-pill' }, '▶ Play' )
+				),
+				el(
+					'div',
+					{ className: 'gm-wf-content-row' },
+					el( 'div', { className: 'gm-wf-avatar-mini' } ),
+					el(
+						'div',
+						{ className: 'gm-wf-lines-compact' },
+						el( 'div', { className: 'gm-wf-line-title' } ),
+						el( 'div', { className: 'gm-wf-line-sub' } )
+					)
+				)
+			);
+		}
+
+		// 4. Podcast & Audio Episode
+		if ( id === 'podcast-episode' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'span', { className: 'gm-wf-badge-purple' }, 'PODCAST' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-btn-purple' }, '▶ Listen' )
+				)
+			);
+		}
+
+		// 5. Hero Overlay
+		if ( id === 'hero-overlay' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-hero-overlay' },
+				el( 'span', { className: 'gm-wf-badge-blue' }, 'FEATURED' ),
+				el(
+					'div',
+					null,
+					el( 'div', { className: 'gm-wf-line-title gm-wf-white' } ),
+					el( 'div', { className: 'gm-wf-btn-pill-white' } )
+				)
+			);
+		}
+
+		// 6. Dark Slate Aesthetic
+		if ( id === 'card-dark-mode' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-dark-slate' },
+				el( 'div', { className: 'gm-wf-image-dark' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-badge-cyan' }, 'TECH' ),
+					el( 'div', { className: 'gm-wf-line-short gm-wf-dim' } )
+				),
+				el( 'div', { className: 'gm-wf-line-title gm-wf-white' } )
+			);
+		}
+
+		// 7. Horizontal List (Media Left)
+		if ( id === 'horizontal-list' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el( 'div', { className: 'gm-wf-side-media' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-side-col' },
+					el( 'span', { className: 'gm-wf-badge-blue' }, 'CATEGORY' ),
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-line-sub' } )
+				)
+			);
+		}
+
+		// 8. Horizontal List (Media Right)
+		if ( id === 'horizontal-reverse' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el(
+					'div',
+					{ className: 'gm-wf-side-col' },
+					el( 'span', { className: 'gm-wf-badge-blue' }, 'CATEGORY' ),
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-line-sub' } )
+				),
+				el( 'div', { className: 'gm-wf-side-media' } )
+			);
+		}
+
+		// 9. Split 50/50 Feature Card
+		if ( id === 'split-alternating' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el( 'div', { className: 'gm-wf-half-media' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-half-content' },
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-line-sub' } ),
+					el( 'div', { className: 'gm-wf-btn-blue' } )
+				)
+			);
+		}
+
+		// 10. Compact List Row & Ultra Compact Feed Row
+		if ( id === 'compact-list-row' || id === 'ultra-compact-ticker' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el( 'div', { className: 'gm-wf-thumb-square' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-compact-lines' },
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-line-short' } )
+				)
+			);
+		}
+
+		// 11. Minimalist Text-Only
+		if ( id === 'minimalist-text' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-minimalist' },
+				el( 'span', { className: 'gm-wf-badge-gray' }, 'ESSAY' ),
+				el( 'div', { className: 'gm-wf-line-title-lg' } ),
+				el( 'div', { className: 'gm-wf-line-sub' } ),
+				el( 'div', { className: 'gm-wf-line-link' }, 'Read Article →' )
+			);
+		}
+
+		// 12. Floating Overlapping Box
+		if ( id === 'floating-content-box' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-floating-wrap' },
+				el( 'div', { className: 'gm-wf-float-image' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-float-card' },
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'div', { className: 'gm-wf-line-short' } )
+				)
+			);
+		}
+
+		// 13. Centered Aesthetic
+		if ( id === 'centered-aesthetic' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-centered' },
+				el( 'div', { className: 'gm-wf-image-centered' } ),
+				el( 'div', { className: 'gm-wf-line-title gm-wf-center' } ),
+				el( 'div', { className: 'gm-wf-line-sub gm-wf-center' } )
+			);
+		}
+
+		// 14. Date-First Magazine
+		if ( id === 'date-badge-top' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'div', { className: 'gm-wf-date-row' }, 'Thursday, Nov 12, 2026' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } )
+			);
+		}
+
+		// 15. Legacy Style 1 & 4 (Bottom meta bar)
+		if ( id === 'legacy-style-1' || id === 'legacy-style-4' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-meta-bar' },
+					el( 'span', { className: 'gm-wf-line-short' } ),
+					el( 'span', { className: 'gm-wf-icon-comment' }, '💬' )
+				)
+			);
+		}
+
+		// 16. Masonry Story & Portfolio Showcase
+		if ( id === 'masonry-story' || id === 'portfolio-showcase' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'div', { className: 'gm-wf-image-tall' } ),
+				el( 'div', { className: 'gm-wf-line-title' } )
+			);
+		}
+
+		// 17. Flash Sale & Countdown
+		if ( id === 'ecommerce-flash-sale' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-flash-sale' },
+				el( 'span', { className: 'gm-wf-badge-red' }, '⚡ SALE DEAL' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-countdown-row' },
+					el( 'div', { className: 'gm-wf-countdown-box' }, '12' ),
+					el( 'div', { className: 'gm-wf-countdown-box' }, '34' ),
+					el( 'div', { className: 'gm-wf-countdown-box' }, '56' )
+				),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price-red' }, '$39.00' ),
+					el( 'span', { className: 'gm-wf-btn-red' }, 'Claim' )
+				)
+			);
+		}
+
+		// 18. Fashion & Apparel Hover Card
+		if ( id === 'ecommerce-fashion-hover' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el(
+					'div',
+					{ className: 'gm-wf-media-portrait' },
+					el(
+						'div',
+						{ className: 'gm-wf-floating-bar' },
+						el( 'span', null, '♥' ),
+						el( 'span', null, '👁' )
+					)
+				),
+				el(
+					'div',
+					{ className: 'gm-wf-side-col' },
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el( 'span', { className: 'gm-wf-price' }, '$89.00' ),
+					el(
+						'div',
+						{ className: 'gm-wf-swatches' },
+						el( 'span', { className: 'gm-wf-swatch-1' } ),
+						el( 'span', { className: 'gm-wf-swatch-2' } ),
+						el( 'span', { className: 'gm-wf-swatch-3' } )
+					)
+				)
+			);
+		}
+
+		// 19. Wholesale / B2B Quick-Order Row (Clean horizontal alignment)
+		if ( id === 'ecommerce-b2b-wholesale-row' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el( 'div', { className: 'gm-wf-side-media-sm' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-side-col' },
+					el( 'span', { className: 'gm-wf-badge-gray' }, 'SKU-892' ),
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el(
+						'div',
+						{ className: 'gm-wf-btn-group' },
+						el( 'span', { className: 'gm-wf-stepper' }, '− 1 +' ),
+						el( 'span', { className: 'gm-wf-btn-quote' }, 'Quote' )
+					)
+				)
+			);
+		}
+
+		// 20. B2B Catalog & Quote Card (Industrial quote card, no prices)
+		if ( id === 'ecommerce-b2b-quote-catalog' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'span', { className: 'gm-wf-badge-gray' }, 'SKU • SPECS' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el( 'div', { className: 'gm-wf-btn-full-blue' }, 'Request a Quote' )
+			);
+		}
+
+		// 21. Product Horizontal Row (Pro)
+		if ( id === 'ecommerce-horizontal-row' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box gm-wf-row' },
+				el( 'div', { className: 'gm-wf-side-media' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-side-col' },
+					el( 'div', { className: 'gm-wf-stars' }, '★★★★★' ),
+					el( 'div', { className: 'gm-wf-line-title' } ),
+					el(
+						'div',
+						{ className: 'gm-wf-row-space' },
+						el( 'span', { className: 'gm-wf-price' }, '$39.00' ),
+						el( 'span', { className: 'gm-wf-btn-cart' }, '+ Cart' )
+					)
+				)
+			);
+		}
+
+		// 22. Grocery / Instant-Stepper Card
+		if ( id === 'ecommerce-grocery-stepper' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-badge-green' }, '−20%' ),
+					el( 'span', { className: 'gm-wf-badge-gray' }, '500g' )
+				),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price' }, '$4.99' ),
+					el( 'span', { className: 'gm-wf-stepper-green' }, '− 2 +' )
+				)
+			);
+		}
+
+		// 23. Electronics & Tech Spec Card
+		if ( id === 'ecommerce-electronics-spec' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-badge-gray' }, 'SKU-PRO' ),
+					el( 'span', { className: 'gm-wf-badge-cyan' }, 'BRAND' )
+				),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-stars' }, '★★★★★' ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price' }, '$599' ),
+					el( 'span', { className: 'gm-wf-btn-cart' }, '+ Cart' )
+				)
+			);
+		}
+
+		// 24. Wishlist & Favorites Card
+		if ( id === 'ecommerce-wishlist-showcase' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'div', { className: 'gm-wf-stars' }, '★★★★★' ),
+					el( 'span', { className: 'gm-wf-heart' }, '♥' )
+				),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price' }, '$49.00' ),
+					el( 'span', { className: 'gm-wf-btn-cart' }, '+ Cart' )
+				)
+			);
+		}
+
+		// 25. Quick View Product Card
+		if ( id === 'ecommerce-quick-view' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'span', { className: 'gm-wf-badge-red' }, 'SALE' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price' }, '$49.00' ),
+					el( 'span', { className: 'gm-wf-btn-quick' }, 'Quick View' )
+				)
+			);
+		}
+
+		// 26. Standard WooCommerce Product
+		if ( id === 'ecommerce-product' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'span', { className: 'gm-wf-badge-red' }, 'SALE' ),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-stars' }, '★★★★★' ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-price' }, '$49.00' ),
+					el( 'span', { className: 'gm-wf-btn-cart' }, '+ Cart' )
+				)
+			);
+		}
+
+		// 27. Editorial & Magazine / Modern Tech
+		if ( id === 'editorial-magazine' || id === 'modern-tech' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'div', { className: 'gm-wf-avatar-mini' } ),
+					el( 'div', { className: 'gm-wf-line-short' } )
+				),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el( 'div', { className: 'gm-wf-line-sub' } )
+			);
+		}
+
+		// 28. Social Bookmark Card
+		if ( id === 'social-bookmark-card' ) {
+			return el(
+				'div',
+				{ className: 'gm-wf-box' },
+				el(
+					'div',
+					{ className: 'gm-wf-row-space' },
+					el( 'span', { className: 'gm-wf-badge-blue' }, 'SOCIAL' ),
+					el( 'span', { className: 'gm-wf-heart' }, '♥' )
+				),
+				el( 'div', { className: 'gm-wf-image-box' } ),
+				el( 'div', { className: 'gm-wf-line-title' } ),
+				el( 'div', { className: 'gm-wf-share-dots' }, '● ● ●' )
+			);
+		}
+
+		// Default / Standard Vertical Card
+		return el(
+			'div',
+			{ className: 'gm-wf-box' },
+			el( 'div', { className: 'gm-wf-image-box' } ),
+			el( 'div', { className: 'gm-wf-line-title' } ),
+			el( 'div', { className: 'gm-wf-line-sub' } ),
+			el( 'div', { className: 'gm-wf-btn-read-more' } )
 		);
 	}
 
@@ -739,24 +1421,22 @@
 					createBlock( 'gridmaster/read-more', { text: __( 'View Project →', 'ajax-filter-posts' ), backgroundColor: 'transparent', textColor: '#0f172a' } ),
 				],
 			},
-			// 19. E-Commerce Product Showcase (Pro)
+			// 19. E-Commerce Product Starter (Free)
 			{
 				id: 'ecommerce-product',
-				title: __( 'E-Commerce Product Showcase (Pro)', 'ajax-filter-posts' ),
-				desc: __( '1:1 product thumbnail, star reviews, product title, price, stock alert, and AJAX Add to Cart button.', 'ajax-filter-posts' ),
+				title: __( 'E-Commerce Product Starter', 'ajax-filter-posts' ),
+				desc: __( 'Sale badge, 1:1 product thumbnail, product category, title, price, and AJAX Add to Cart button.', 'ajax-filter-posts' ),
 				icon: 'cart',
 				category: 'WooCommerce',
-				isPro: true,
+				isPro: false,
 				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
 				getBlocks: () => [
+					createBlock( 'gridmaster/badge', { badgeType: 'sale', text: __( 'Sale!', 'ajax-filter-posts' ), backgroundColor: '#ef4444', textColor: '#ffffff' } ),
 					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
-					createBlock( 'gridmaster-pro/product-rating', {} ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'product_cat' } ),
 					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
-					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
-						createBlock( 'gridmaster-pro/product-price', {} ),
-						createBlock( 'gridmaster-pro/stock-status', {} ),
-					] ),
-					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ) } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ), fullWidth: true } ),
 				],
 			},
 			// 20. Product Quick View & Badge (Pro)
@@ -800,21 +1480,136 @@
 			{
 				id: 'ecommerce-flash-sale',
 				title: __( 'Flash Sale & Countdown (Pro)', 'ajax-filter-posts' ),
-				desc: __( 'Urgency-driven deal card with limited sale badge, countdown timer boxes, stock alert, and Add to Cart.', 'ajax-filter-posts' ),
+				desc: __( 'Urgency-driven deal card with discount % badge, countdown timer boxes, stock progress bar, and Add to Cart.', 'ajax-filter-posts' ),
 				icon: 'clock',
 				category: 'WooCommerce',
 				isPro: true,
 				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '12px', borderWidth: '2px', borderColor: '#ef4444', boxShadow: '0 4px 20px rgba(239,68,68,0.1)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
 				getBlocks: () => [
-					createBlock( 'gridmaster-pro/badge', { badgeType: 'sale', text: __( '⚡ LIMITED DEAL', 'ajax-filter-posts' ), backgroundColor: '#ef4444', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster-pro/badge', { badgeType: 'discount_percent', text: __( '⚡ LIMITED DEAL', 'ajax-filter-posts' ), backgroundColor: '#ef4444', textColor: '#ffffff' } ),
 					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
 					createBlock( 'gridmaster-pro/sale-countdown', { layout: 'boxes', backgroundColor: '#1e293b', textColor: '#ffffff' } ),
 					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '17px', isLink: true } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+					createBlock( 'gridmaster-pro/stock-status', { showProgressBar: true } ),
+					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Claim Deal', 'ajax-filter-posts' ), fullWidth: true } ),
+				],
+			},
+			// 23. Fashion & Apparel Hover Card (Pro)
+			{
+				id: 'ecommerce-fashion-hover',
+				title: __( 'Fashion & Apparel Hover Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( '3:4 portrait fashion image with 2nd gallery image hover swap, floating action bar (Wishlist, Quick View, Compare), title, price, and variation swatches.', 'ajax-filter-posts' ),
+				icon: 'visibility',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '14px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 14px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '3/4', borderRadius: '8px', wooHoverGalleryImage: true } ),
+					createBlock( 'gridmaster-pro/action-bar', { position: 'top-right-vertical', showWishlist: true, showQuickView: true, showCompare: true } ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+					createBlock( 'gridmaster-pro/variation-swatches', {} ),
+				],
+			},
+			// 24. Electronics & Tech Spec Card (Pro)
+			{
+				id: 'ecommerce-electronics-spec',
+				title: __( 'Electronics & Tech Spec Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( '1:1 product media, SKU & Brand specs, star rating, title, stock status, price with discount badge, and Add to Cart + Compare row.', 'ajax-filter-posts' ),
+				icon: 'laptop',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '12px', borderWidth: '1px', borderColor: '#cbd5e1', boxShadow: '0 2px 10px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'gridmaster-pro/product-meta', { showSku: true, showBrand: true, showAttributes: true } ),
+					createBlock( 'gridmaster-pro/product-rating', {} ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
+					createBlock( 'gridmaster-pro/stock-status', {} ),
+					createBlock( 'gridmaster-pro/product-price', { showDiscountBadge: true } ),
 					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
-						createBlock( 'gridmaster-pro/product-price', {} ),
-						createBlock( 'gridmaster-pro/stock-status', {} ),
+						createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ) } ),
+						createBlock( 'gridmaster-pro/product-compare', {} ),
 					] ),
-					createBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Claim Deal', 'ajax-filter-posts' ) } ),
+				],
+			},
+			// 25. Wholesale / B2B Quick-Order Row (Pro)
+			{
+				id: 'ecommerce-b2b-wholesale-row',
+				title: __( 'Wholesale / B2B Quick-Order Row (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Horizontal B2B quick-order row (22% media) with SKU & Brand, variation swatches, stock status, quantity stepper Add to Cart, and Request a Quote.', 'ajax-filter-posts' ),
+				icon: 'list-view',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'horizontal', layoutDirection: 'horizontal', mediaWidth: '22%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
+					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '16px', right: '0px' } } } }, [
+						createBlock( 'gridmaster-pro/product-meta', { showSku: true, showBrand: true } ),
+						createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '17px', isLink: true } ),
+						createBlock( 'gridmaster-pro/variation-swatches', {} ),
+						createBlock( 'gridmaster-pro/stock-status', {} ),
+						createBlock( 'gridmaster-pro/product-price', {} ),
+						createBlock( 'core/group', { layout: { type: 'flex', gap: '10px', alignItems: 'center' } }, [
+							createBlock( 'gridmaster-pro/add-to-cart', { showQuantityStepper: true } ),
+							createBlock( 'gridmaster-pro/request-quote', {} ),
+						] ),
+					] ),
+				],
+			},
+			// 26. Grocery / Instant-Stepper Card (Pro)
+			{
+				id: 'ecommerce-grocery-stepper',
+				title: __( 'Grocery / Instant-Stepper Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Discount % badge, 1:1 image, weight/dimensions meta, product title, price, and full-width quantity stepper Add to Cart.', 'ajax-filter-posts' ),
+				icon: 'cart',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '14px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 2px 6px rgba(0,0,0,0.03)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/badge', { badgeType: 'discount_percent', backgroundColor: '#16a34a', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '8px' } ),
+					createBlock( 'gridmaster-pro/product-meta', { showWeightDimensions: true, showSku: false, showBrand: false } ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '15px', isLink: true } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+					createBlock( 'gridmaster-pro/add-to-cart', { showQuantityStepper: true, fullWidth: true } ),
+				],
+			},
+			// 27. B2B Catalog & Quote Card (Pro)
+			{
+				id: 'ecommerce-b2b-quote-catalog',
+				title: __( 'B2B Catalog & Quote Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Price-free B2B industrial catalog card with 4:3 image, SKU & spec attributes, short excerpt, and full-width Request a Quote button.', 'ajax-filter-posts' ),
+				icon: 'email-alt',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '10px', borderWidth: '1px', borderColor: '#cbd5e1', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '4/3', borderRadius: '6px' } ),
+					createBlock( 'gridmaster-pro/product-meta', { showSku: true, showAttributes: true } ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '17px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 14 } ),
+					createBlock( 'gridmaster-pro/request-quote', { buttonText: __( 'Request a Quote', 'ajax-filter-posts' ), fullWidth: true } ),
+				],
+			},
+			// 28. Wishlist & Favorites Card (Pro)
+			{
+				id: 'ecommerce-wishlist-showcase',
+				title: __( 'Wishlist & Favorites Card (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Heart wishlist toggle button, 1:1 product photo, star rating, title, price, stock status, and full-width Add to Cart button.', 'ajax-filter-posts' ),
+				icon: 'heart',
+				category: 'WooCommerce',
+				isPro: true,
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '12px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				getBlocks: () => [
+					createBlock( 'gridmaster-pro/bookmark-button', { styleType: 'heart' } ),
+					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '8px' } ),
+					createBlock( 'gridmaster-pro/product-rating', {} ),
+					createBlock( 'gridmaster/title', { tagName: 'h4', fontSize: '16px', isLink: true } ),
+					createBlock( 'gridmaster-pro/product-price', {} ),
+					createBlock( 'gridmaster-pro/stock-status', {} ),
+					createBlock( 'gridmaster-pro/add-to-cart', { fullWidth: true } ),
 				],
 			},
 			// 23. Video & Media Spotlight (Pro)
@@ -874,11 +1669,11 @@
 					createBlock( 'gridmaster/social-share', {} ),
 				],
 			},
-			// 26. Superhero DJs Routine Video Card (Pro)
+			// 26. Video Showcase Lesson Card (Pro)
 			{
-				id: 'superhero-video-routine',
-				title: __( 'Superhero DJs Routine Video (Pro)', 'ajax-filter-posts' ),
-				desc: __( 'Dark neon 16:9 card with inline video player preview, glowing play button, difficulty level badge, DJ title, and lesson link.', 'ajax-filter-posts' ),
+				id: 'video-showcase-course',
+				title: __( 'Video Showcase & Course (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Dark neon 16:9 card with inline video player preview, glowing play button, difficulty level badge, title, and lesson link.', 'ajax-filter-posts' ),
 				icon: 'format-video',
 				category: 'Video & Reels',
 				isPro: true,
@@ -985,12 +1780,23 @@
 			},
 		];
 
-		const lowerSearch = searchTerm.toLowerCase();
+		// Compute category counts
+		const categoryCounts = {};
+		categories.forEach( ( cat ) => {
+			if ( cat === 'All' ) {
+				categoryCounts[ cat ] = templates.length;
+			} else {
+				categoryCounts[ cat ] = templates.filter( ( t ) => t.category === cat ).length;
+			}
+		} );
+
+		const lowerSearch = searchTerm.trim().toLowerCase();
 		const filteredTemplates = templates.filter( ( t ) => {
 			const matchesCat = activeCat === 'All' || t.category === activeCat;
-			const matchesSearch = ! searchTerm ||
-				t.title.toLowerCase().includes( lowerSearch ) ||
-				t.desc.toLowerCase().includes( lowerSearch ) ||
+			const matchesSearch =
+				! lowerSearch ||
+				( t.title && t.title.toLowerCase().includes( lowerSearch ) ) ||
+				( t.desc && t.desc.toLowerCase().includes( lowerSearch ) ) ||
 				( t.category && t.category.toLowerCase().includes( lowerSearch ) );
 			return matchesCat && matchesSearch;
 		} );
@@ -998,72 +1804,181 @@
 		return el(
 			Popover,
 			{
-				className: 'gm-more-blocks-popover gm-card-templates-popover',
+				className: 'gm-popover-mega gm-card-templates-popover',
 				onClose: onClose,
 				position: 'bottom right',
 			},
 			el(
 				'div',
-				{ className: 'gm-popover-content' },
+				{ className: 'gm-popover-mega-panel' },
+
+				// Header: Title Bar + Close Button
 				el(
 					'div',
-					{ className: 'gm-popover-search' },
-					el( TextControl, {
-						label: __( 'Search Card Layouts', 'ajax-filter-posts' ),
-						placeholder: __( 'Search 25 pre-built card designs...', 'ajax-filter-posts' ),
-						value: searchTerm,
-						onChange: setSearchTerm,
-						autoFocus: true,
+					{ className: 'gm-popover-header' },
+					el(
+						'div',
+						{ className: 'gm-popover-header-title-row' },
+						el( 'span', { className: 'dashicons dashicons-layout' } ),
+						el( 'h3', { className: 'gm-popover-title' }, __( 'Card Layouts Library', 'ajax-filter-posts' ) ),
+						el(
+							'span',
+							{ className: 'gm-popover-count-pill' },
+							sprintf( __( '%d pre-built designs', 'ajax-filter-posts' ), templates.length )
+						)
+					),
+					el( Button, {
+						icon: 'no-alt',
+						label: __( 'Close', 'ajax-filter-posts' ),
+						onClick: onClose,
+						className: 'gm-popover-close-btn',
+						isSmall: true,
 					} )
 				),
+
+				// Search Bar
 				el(
 					'div',
-					{ className: 'gm-template-category-tabs' },
+					{ className: 'gm-popover-search-wrap' },
+					el( 'span', { className: 'dashicons dashicons-search gm-search-icon' } ),
+					el( 'input', {
+						type: 'text',
+						className: 'gm-search-input',
+						placeholder: sprintf(
+							__( 'Search %d pre-built card designs (e.g. video, reel, list, deal)...', 'ajax-filter-posts' ),
+							templates.length
+						),
+						value: searchTerm,
+						onChange: ( e ) => setSearchTerm( e.target.value ),
+						autoFocus: true,
+					} ),
+					searchTerm &&
+						el(
+							'button',
+							{
+								type: 'button',
+								className: 'gm-search-clear-btn',
+								onClick: () => setSearchTerm( '' ),
+								'aria-label': __( 'Clear search', 'ajax-filter-posts' ),
+							},
+							'✕'
+						)
+				),
+
+				// Category Tabs
+				el(
+					'div',
+					{ className: 'gm-popover-tabs-bar' },
 					categories.map( ( cat ) =>
 						el(
 							'button',
 							{
 								key: cat,
 								type: 'button',
-								className: 'gm-cat-tab-btn' + ( activeCat === cat ? ' is-active' : '' ),
+								className: 'gm-tab-pill' + ( activeCat === cat ? ' is-active' : '' ),
 								onClick: () => setActiveCat( cat ),
 							},
-							cat
+							cat,
+							el( 'span', { className: 'gm-tab-count' }, categoryCounts[ cat ] || 0 )
 						)
 					)
 				),
+
+				// Scrollable Grid of Layout Cards
 				el(
 					'div',
-					{ className: 'gm-popover-list' },
+					{ className: 'gm-popover-scrollable-body' },
 					filteredTemplates.length === 0
-						? el( 'p', { className: 'gm-no-blocks' }, __( 'No matching templates found.', 'ajax-filter-posts' ) )
-						: filteredTemplates.map( ( t ) =>
-								el(
-									'button',
-									{
-										key: t.id,
-										type: 'button',
-										className: 'gm-popover-item-btn' + ( t.isPro ? ' is-pro' : '' ),
-										disabled: t.isPro && ! isPro,
-										onClick: () => {
-											onApplyTemplate( t );
-											onClose();
-										},
-									},
-									el( 'span', { className: 'dashicons dashicons-' + t.icon + ' gm-item-icon' } ),
+						? el(
+								'div',
+								{ className: 'gm-popover-empty-state' },
+								el( 'span', { className: 'dashicons dashicons-search' } ),
+								el( 'p', { className: 'gm-empty-title' }, __( 'No matching card layouts found', 'ajax-filter-posts' ) ),
+								el( 'p', { className: 'gm-empty-hint' }, __( 'Try searching for video, reel, list, or deal, or click the "All" tab.', 'ajax-filter-posts' ) ),
+								searchTerm &&
 									el(
+										Button,
+										{
+											isSecondary: true,
+											isSmall: true,
+											onClick: () => setSearchTerm( '' ),
+										},
+										__( 'Clear Search', 'ajax-filter-posts' )
+									)
+						  )
+						: el(
+								'div',
+								{ className: 'gm-layouts-grid' },
+								filteredTemplates.map( ( t ) => {
+									const isCardDisabled = t.isPro && ! isPro;
+									return el(
 										'div',
-										{ className: 'gm-item-details' },
+										{
+											key: t.id,
+											className:
+												'gm-layout-card' +
+												( t.isPro ? ' is-pro' : '' ) +
+												( isCardDisabled ? ' is-pro-disabled' : '' ),
+											onClick: () => {
+												if ( isCardDisabled ) return;
+												onApplyTemplate( t );
+												onClose();
+											},
+											role: 'button',
+											tabIndex: isCardDisabled ? -1 : 0,
+											onKeyDown: ( e ) => {
+												if ( ( e.key === 'Enter' || e.key === ' ' ) && ! isCardDisabled ) {
+													e.preventDefault();
+													onApplyTemplate( t );
+													onClose();
+												}
+											},
+											title: isCardDisabled
+												? __( 'Pro card layout — upgrade GridMaster to unlock', 'ajax-filter-posts' )
+												: ( t.desc || t.title ),
+										},
+										// 1. Visual Mini Wireframe Graphic
+										el( TemplateWireframe, { template: t } ),
+										// 2. Info / Content
 										el(
 											'div',
-											{ className: 'gm-template-title-row' },
-											el( 'span', { className: 'gm-item-title' }, t.title ),
-											t.category && el( 'span', { className: 'gm-template-cat-pill' }, t.category ),
-											t.isPro && el( 'span', { className: 'gm-template-pro-badge' }, 'PRO' )
+											{ className: 'gm-layout-info' },
+											el(
+												'div',
+												{ className: 'gm-layout-title-row' },
+												el( 'span', { className: 'gm-layout-title' }, t.title ),
+												t.isPro &&
+													el(
+														'span',
+														{ className: 'gm-pro-badge-pill' },
+														'PRO'
+													)
+											),
+											t.category &&
+												el( 'span', { className: 'gm-layout-cat-pill' }, t.category ),
+											el( 'p', { className: 'gm-layout-desc' }, t.desc )
 										),
-										el( 'span', { className: 'gm-item-desc' }, t.desc )
-									)
-								)
+										// 3. Action Button Bar
+										el(
+											'div',
+											{ className: 'gm-layout-action-wrap' },
+											el(
+												'button',
+												{
+													type: 'button',
+													className:
+														'gm-layout-apply-btn' +
+														( isCardDisabled ? ' is-disabled' : '' ),
+													disabled: isCardDisabled,
+													tabIndex: -1,
+												},
+												isCardDisabled
+													? __( 'Pro Only 🔒', 'ajax-filter-posts' )
+													: __( 'Apply Layout', 'ajax-filter-posts' ) + ' →'
+											)
+										)
+									);
+								} )
 						  )
 				)
 			)
@@ -1074,7 +1989,7 @@
 	 * Card Canvas Stage: contains quick-add bar, helper text, and Gutenberg canvas.
 	 */
 	function CardCanvasStage( props ) {
-		const { isPro, customCss, showToast } = props;
+		const { isPro, customCss, showToast, config } = props;
 		const { insertBlock, replaceInnerBlocks, updateBlockAttributes } = useDispatch( 'core/block-editor' );
 		const registry = wp.data.useRegistry();
 		const paperRef = useRef( null );
@@ -1090,6 +2005,7 @@
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const [ isTemplatesOpen, setIsTemplatesOpen ] = useState( false );
 		const moreBtnRef = useRef( null );
+		const templatesBtnRef = useRef( null );
 
 		const addBlock = ( blockName, defaultAttributes = {} ) => {
 			const newBlock = createBlock( blockName, defaultAttributes );
@@ -1150,7 +2066,7 @@
 				insertBlock( newCard );
 			}
 			if ( showToast ) {
-				showToast( sprintf( __( 'Applied "%s" card layout.', 'ajax-filter-posts' ), tpl.name ), 'success', 'layout' );
+				showToast( sprintf( __( 'Applied "%s" card layout.', 'ajax-filter-posts' ), tpl.title || tpl.name ), 'success', 'layout' );
 			}
 		};
 
@@ -1214,6 +2130,26 @@
 							className: 'gm-quick-add-btn',
 						},
 						'+ ' + __( 'Button', 'ajax-filter-posts' )
+					),
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							onClick: () => addBlock( 'gridmaster-pro/product-price', {} ),
+							className: 'gm-quick-add-btn gm-quick-woo-btn' + ( config?.query?.post_type === 'product' ? ' is-woo-active' : '' ),
+						},
+						'+ ' + __( 'Price', 'ajax-filter-posts' )
+					),
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							onClick: () => addBlock( 'gridmaster-pro/add-to-cart', { buttonText: __( 'Add to Cart', 'ajax-filter-posts' ) } ),
+							className: 'gm-quick-add-btn gm-quick-woo-btn' + ( config?.query?.post_type === 'product' ? ' is-woo-active' : '' ),
+						},
+						'+ ' + __( 'Add to Cart', 'ajax-filter-posts' )
 					)
 				),
 				el(
@@ -1224,7 +2160,11 @@
 						{
 							isSecondary: true,
 							isSmall: true,
-							onClick: () => setIsMoreOpen( ! isMoreOpen ),
+							onClick: () => {
+								const next = ! isMoreOpen;
+								setIsMoreOpen( next );
+								if ( next ) setIsTemplatesOpen( false );
+							},
 							className: 'gm-more-blocks-btn' + ( isMoreOpen ? ' is-active' : '' ),
 						},
 						__( 'More blocks', 'ajax-filter-posts' ) + ' ▼'
@@ -1239,13 +2179,17 @@
 				),
 				el(
 					'div',
-					{ className: 'gm-card-templates-wrap', style: { marginLeft: '8px' } },
+					{ className: 'gm-card-templates-wrap', ref: templatesBtnRef, style: { marginLeft: '8px' } },
 					el(
 						Button,
 						{
 							isSecondary: true,
 							isSmall: true,
-							onClick: () => setIsTemplatesOpen( ! isTemplatesOpen ),
+							onClick: () => {
+								const next = ! isTemplatesOpen;
+								setIsTemplatesOpen( next );
+								if ( next ) setIsMoreOpen( false );
+							},
 							className: 'gm-card-templates-btn' + ( isTemplatesOpen ? ' is-active' : '' ),
 						},
 						el( 'span', { className: 'dashicons dashicons-layout' } ),
@@ -1524,11 +2468,15 @@
 		}, [ config, blocks, title, isOpen, getFingerprint ] );
 
 		// Write preview markup to isolated iframe
+		const previewMeta = props.metadata || initData.metadata || {};
 		useEffect( () => {
 			if ( iframeRef.current && previewHtml ) {
 				const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document;
 				if ( iframeDoc ) {
 					const previewData = previewDraft;
+					const proCssLink = previewMeta.pro_css_url ? `<link rel="stylesheet" href="${previewMeta.pro_css_url}">` : '';
+					const jqueryScript = previewMeta.jquery_url ? `<script src="${previewMeta.jquery_url}"></script>` : '';
+					const proJsScript = previewMeta.pro_js_url ? `<script src="${previewMeta.pro_js_url}"></script>` : '';
 
 					const docContent = `<!DOCTYPE html>
 <html lang="en">
@@ -1539,6 +2487,7 @@
 	<link rel="stylesheet" href="${initData.dashiconsCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
+	${proCssLink}
 	<style>
 		body {
 			margin: 0;
@@ -1555,11 +2504,16 @@
 	<div class="gm-preview-embedded-container">
 		${previewHtml}
 	</div>
+	${jqueryScript}
 	<script>
+		if ( ! window.jQuery && window.parent && window.parent.jQuery ) {
+			window.jQuery = window.$ = window.parent.jQuery;
+		}
 		window.__gm_preview_data = ${scriptJson( previewData )};
 		window.gridmasterV2 = ${scriptJson( previewRuntime )};
 	</script>
 	<script src="${initData.frontendJsUrl || ''}"></script>
+	${proJsScript}
 </body>
 </html>`;
 					iframeDoc.open();
@@ -1584,6 +2538,9 @@
 				return;
 			}
 			const previewData = previewDraft;
+			const proCssLink = previewMeta.pro_css_url ? `<link rel="stylesheet" href="${previewMeta.pro_css_url}">` : '';
+			const jqueryScript = previewMeta.jquery_url ? `<script src="${previewMeta.jquery_url}"></script>` : '';
+			const proJsScript = previewMeta.pro_js_url ? `<script src="${previewMeta.pro_js_url}"></script>` : '';
 			const docContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1593,6 +2550,7 @@
 	<link rel="stylesheet" href="${initData.dashiconsCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.frontendCssUrl || ''}">
 	<link rel="stylesheet" href="${initData.coreCssUrl || ''}">
+	${proCssLink}
 	<style>
 		body {
 			margin: 0;
@@ -1614,11 +2572,16 @@
 	<div class="gm-tab-wrap">
 		${previewHtml}
 	</div>
+	${jqueryScript}
 	<script>
+		if ( ! window.jQuery && window.opener && window.opener.jQuery ) {
+			window.jQuery = window.$ = window.opener.jQuery;
+		}
 		window.__gm_preview_data = ${scriptJson( previewData )};
 		window.gridmasterV2 = ${scriptJson( previewRuntime )};
 	</script>
 	<script src="${initData.frontendJsUrl || ''}"></script>
+	${proJsScript}
 </body>
 </html>`;
 			previewWin.document.open();
@@ -1861,6 +2824,11 @@
 						{ label: __( 'Menu Order', 'ajax-filter-posts' ), value: 'menu_order' },
 						{ label: __( 'Random', 'ajax-filter-posts' ), value: 'rand' },
 						{ label: __( 'Comment Count', 'ajax-filter-posts' ), value: 'comment_count' },
+						{ label: __( 'WooCommerce: Price (Low to High)', 'ajax-filter-posts' ), value: 'price' },
+						{ label: __( 'WooCommerce: Price (High to Low)', 'ajax-filter-posts' ), value: 'price-desc' },
+						{ label: __( 'WooCommerce: Best Selling (Popularity)', 'ajax-filter-posts' ), value: 'popularity' },
+						{ label: __( 'WooCommerce: Average Rating', 'ajax-filter-posts' ), value: 'rating' },
+						{ label: __( 'WooCommerce: SKU', 'ajax-filter-posts' ), value: 'sku' },
 					],
 					onChange: ( val ) => updateConfigSection( 'query', 'orderby', val ),
 				} ),
@@ -1873,7 +2841,43 @@
 					],
 					onChange: ( val ) => updateConfigSection( 'query', 'order', val ),
 				} )
-			)
+			),
+			config.query?.post_type === 'product' &&
+				el(
+					'div',
+					{ className: 'gm-settings-card' },
+					el(
+						'h3',
+						{ className: 'gm-card-heading' },
+						el( 'span', { className: 'dashicons dashicons-cart' } ),
+						' ' + __( 'WooCommerce Product Query Settings', 'ajax-filter-posts' )
+					),
+					el( SelectControl, {
+						label: __( 'Product Filter Preset', 'ajax-filter-posts' ),
+						value: config.query?.product_source || 'all',
+						options: [
+							{ label: __( 'All Products', 'ajax-filter-posts' ), value: 'all' },
+							{ label: __( 'On Sale Products Only', 'ajax-filter-posts' ), value: 'on_sale' },
+							{ label: __( 'Featured Products Only', 'ajax-filter-posts' ), value: 'featured' },
+							{ label: __( 'Best Selling Products', 'ajax-filter-posts' ), value: 'best_selling' },
+							{ label: __( 'Top Rated Products', 'ajax-filter-posts' ), value: 'top_rated' },
+							{ label: __( 'In-Stock Products Only', 'ajax-filter-posts' ), value: 'in_stock' },
+							{ label: __( 'User Wishlist / Saved Products', 'ajax-filter-posts' ), value: 'wishlist' },
+						],
+						onChange: ( val ) => updateConfigSection( 'query', 'product_source', val ),
+					} ),
+					el( ToggleControl, {
+						label: __( 'Hide Out-of-Stock Products', 'ajax-filter-posts' ),
+						checked: !! config.query?.hide_out_of_stock,
+						onChange: ( val ) => updateConfigSection( 'query', 'hide_out_of_stock', val ),
+					} ),
+					el( ToggleControl, {
+						label: __( 'Search by Product SKU', 'ajax-filter-posts' ),
+						checked: !! config.query?.search_by_sku,
+						onChange: ( val ) => updateConfigSection( 'query', 'search_by_sku', val ),
+						help: __( 'Allow visitor search bars to match product SKUs in addition to titles and descriptions.', 'ajax-filter-posts' ),
+					} )
+				)
 		);
 	}
 
@@ -1892,13 +2896,35 @@
 			setConfig( ( prev ) => {
 				const current = prev.facets ? [ ...prev.facets ] : [];
 				const defaultTax = metadata.taxonomies?.[ 0 ]?.name || 'category';
-				current.push( {
+				const defaultHeadingMap = {
+					search: '',
+					'woo-price-range': __( 'Price Range', 'ajax-filter-posts' ),
+					'woo-attribute-swatches': __( 'Filter by Attribute', 'ajax-filter-posts' ),
+					'woo-rating-filter': __( 'Customer Rating', 'ajax-filter-posts' ),
+					'woo-status-toggles': __( 'Availability & Deals', 'ajax-filter-posts' ),
+					'woo-sort-dropdown': __( 'Sort By', 'ajax-filter-posts' ),
+					'active-filters': __( 'Active Filters', 'ajax-filter-posts' ),
+				};
+				const newFacet = {
 					type: type,
-					taxonomy: defaultTax,
-					heading: type === 'search' ? '' : __( 'Categories', 'ajax-filter-posts' ),
+					taxonomy: type === 'woo-attribute-swatches' ? 'product_cat' : defaultTax,
+					heading: defaultHeadingMap[ type ] !== undefined ? defaultHeadingMap[ type ] : __( 'Categories', 'ajax-filter-posts' ),
 					show_all: true,
 					all_label: __( 'All', 'ajax-filter-posts' ),
-				} );
+				};
+				if ( type === 'woo-price-range' ) {
+					newFacet.min_price = 0;
+					newFacet.max_price = 500;
+					newFacet.step = 5;
+				} else if ( type === 'woo-attribute-swatches' ) {
+					newFacet.swatch_style = 'auto';
+					newFacet.multi_select = true;
+				} else if ( type === 'woo-status-toggles' ) {
+					newFacet.show_on_sale = true;
+					newFacet.show_in_stock = true;
+					newFacet.show_featured = true;
+				}
+				current.push( newFacet );
 				return { ...prev, facets: current };
 			} );
 			setExpandedIdx( facets.length );
@@ -1942,6 +2968,12 @@
 			{ id: 'reset', label: __( 'Reset Button', 'ajax-filter-posts' ), icon: 'undo' },
 			{ id: 'multi-select', label: __( 'Multi-Select (Pro)', 'ajax-filter-posts' ), icon: 'list-view', isPro: true },
 			{ id: 'date-range', label: __( 'Date Range (Pro)', 'ajax-filter-posts' ), icon: 'calendar', isPro: true },
+			{ id: 'woo-price-range', label: __( 'WooCommerce Price Range Slider (Pro)', 'ajax-filter-posts' ), icon: 'money-alt', isPro: true },
+			{ id: 'woo-attribute-swatches', label: __( 'WooCommerce Attribute Swatches (Pro)', 'ajax-filter-posts' ), icon: 'art', isPro: true },
+			{ id: 'woo-rating-filter', label: __( 'WooCommerce Star Rating Filter (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', isPro: true },
+			{ id: 'woo-status-toggles', label: __( 'WooCommerce Sale / Stock / Featured Toggles (Pro)', 'ajax-filter-posts' ), icon: 'yes-alt', isPro: true },
+			{ id: 'woo-sort-dropdown', label: __( 'WooCommerce Sort Dropdown (Pro)', 'ajax-filter-posts' ), icon: 'sort', isPro: true },
+			{ id: 'active-filters', label: __( 'Active Filter Chips Bar (Pro)', 'ajax-filter-posts' ), icon: 'tag', isPro: true },
 		];
 
 		return el(
@@ -2052,11 +3084,11 @@
 								el(
 									'div',
 									{ className: 'gm-facet-detail-body' },
-									facet.type.startsWith( 'taxonomy' ) &&
+									( facet.type.startsWith( 'taxonomy' ) || facet.type === 'multi-select' || facet.type === 'woo-attribute-swatches' ) &&
 										el( SelectControl, {
-											label: __( 'Taxonomy Source', 'ajax-filter-posts' ),
+											label: __( 'Taxonomy / Attribute Source', 'ajax-filter-posts' ),
 											value: facet.taxonomy || 'category',
-											options: ( metadata.taxonomies || [] ).map( ( t ) => ( { label: t.label, value: t.name } ) ),
+											options: ( metadata.taxonomies || [] ).map( ( t ) => ( { label: t.label + ' (' + t.name + ')', value: t.name } ) ),
 											onChange: ( val ) => updateFacet( idx, 'taxonomy', val ),
 										} ),
 									el( TextControl, {
@@ -2079,6 +3111,70 @@
 													value: facet.all_label || __( 'All', 'ajax-filter-posts' ),
 													onChange: ( val ) => updateFacet( idx, 'all_label', val ),
 												} )
+										),
+									facet.type === 'woo-price-range' &&
+										el(
+											Fragment,
+											null,
+											el( TextControl, {
+												label: __( 'Minimum Price', 'ajax-filter-posts' ),
+												type: 'number',
+												value: facet.min_price !== undefined ? facet.min_price : 0,
+												onChange: ( val ) => updateFacet( idx, 'min_price', Number( val ) || 0 ),
+											} ),
+											el( TextControl, {
+												label: __( 'Maximum Price', 'ajax-filter-posts' ),
+												type: 'number',
+												value: facet.max_price !== undefined ? facet.max_price : 500,
+												onChange: ( val ) => updateFacet( idx, 'max_price', Number( val ) || 500 ),
+											} ),
+											el( TextControl, {
+												label: __( 'Price Step', 'ajax-filter-posts' ),
+												type: 'number',
+												value: facet.step !== undefined ? facet.step : 5,
+												onChange: ( val ) => updateFacet( idx, 'step', Math.max( 1, Number( val ) || 1 ) ),
+											} )
+										),
+									facet.type === 'woo-attribute-swatches' &&
+										el(
+											Fragment,
+											null,
+											el( SelectControl, {
+												label: __( 'Swatch Display Style', 'ajax-filter-posts' ),
+												value: facet.swatch_style || 'auto',
+												options: [
+													{ label: __( 'Auto-Detect (Color / Image / Label)', 'ajax-filter-posts' ), value: 'auto' },
+													{ label: __( 'Color Circles', 'ajax-filter-posts' ), value: 'color' },
+													{ label: __( 'Image Swatches', 'ajax-filter-posts' ), value: 'image' },
+													{ label: __( 'Label Pills', 'ajax-filter-posts' ), value: 'pills' },
+												],
+												onChange: ( val ) => updateFacet( idx, 'swatch_style', val ),
+											} ),
+											el( ToggleControl, {
+												label: __( 'Allow Multiple Swatch Selection', 'ajax-filter-posts' ),
+												checked: facet.multi_select !== false,
+												onChange: ( val ) => updateFacet( idx, 'multi_select', val ),
+											} )
+										),
+									facet.type === 'woo-status-toggles' &&
+										el(
+											Fragment,
+											null,
+											el( ToggleControl, {
+												label: __( 'Show "On Sale" Toggle', 'ajax-filter-posts' ),
+												checked: facet.show_on_sale !== false,
+												onChange: ( val ) => updateFacet( idx, 'show_on_sale', val ),
+											} ),
+											el( ToggleControl, {
+												label: __( 'Show "In Stock Only" Toggle', 'ajax-filter-posts' ),
+												checked: facet.show_in_stock !== false,
+												onChange: ( val ) => updateFacet( idx, 'show_in_stock', val ),
+											} ),
+											el( ToggleControl, {
+												label: __( 'Show "Featured" Toggle', 'ajax-filter-posts' ),
+												checked: facet.show_featured !== false,
+												onChange: ( val ) => updateFacet( idx, 'show_featured', val ),
+											} )
 										)
 								)
 						);
@@ -2475,9 +3571,9 @@
 				},
 			},
 			{
-				id: 'superhero-djs-grid',
-				title: __( 'Superhero DJs Video Grid (Pro)', 'ajax-filter-posts' ),
-				desc: __( 'Dark neon aesthetic 3-column video routine grid with glowing accents and auto-paging infinite stream.', 'ajax-filter-posts' ),
+				id: 'cinematic-video-grid',
+				title: __( 'Cinematic Video Showcase Grid (Pro)', 'ajax-filter-posts' ),
+				desc: __( 'Dark neon aesthetic 3-column video showcase grid with glowing accents and auto-paging infinite stream.', 'ajax-filter-posts' ),
 				icon: 'format-video',
 				tag: __( '3 Cols • Video Grid', 'ajax-filter-posts' ),
 				isPro: true,
@@ -2486,7 +3582,7 @@
 				row_gap: 28,
 				pagination: {
 					type: 'infinite',
-					loading_text: __( 'Loading more DJ routines...', 'ajax-filter-posts' ),
+					loading_text: __( 'Loading more videos...', 'ajax-filter-posts' ),
 				},
 				card: {
 					layoutMode: 'vertical',
@@ -3954,6 +5050,7 @@
 							isPro: initData.isPro,
 							customCss: config.custom_code?.css || config.custom_css || '',
 							showToast: showToast,
+							config: config,
 						} ),
 
 						// Right Drawer / Panel: Contextual Inspector
@@ -4023,6 +5120,7 @@
 						config: config,
 						blocks: blocks,
 						gridId: gridId,
+						metadata: metadata,
 					} ),
 
 				// Fixed Toast Notification Container (Bottom-Right, Zero Layout Shift)
