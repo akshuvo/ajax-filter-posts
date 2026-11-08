@@ -115,6 +115,12 @@
 					} else {
 						this.state.facets[ taxonomy ] = [ termId ];
 					}
+
+					// Sync any sibling dropdown for the same taxonomy
+					const siblingSelect = this.filtersWrap.querySelector( `.gm-filter-select[data-taxonomy="${taxonomy}"]` );
+					if ( siblingSelect ) {
+						siblingSelect.value = String( termId );
+					}
 				}
 
 				this.state.page = 1;
@@ -136,6 +142,14 @@
 				} else {
 					this.state.facets[ taxonomy ] = [ termId ];
 				}
+
+				// Sync any sibling tabs for the same taxonomy
+				this.filtersWrap.querySelectorAll( `.gm-facet[data-taxonomy="${taxonomy}"] .gm-filter-btn` ).forEach( ( b ) => {
+					const bTermId = parseInt( b.getAttribute( 'data-term-id' ), 10 );
+					const isActive = bTermId === termId;
+					b.classList.toggle( 'gm-active', isActive );
+					b.setAttribute( 'aria-selected', isActive ? 'true' : 'false' );
+				} );
 
 				this.state.page = 1;
 				this.updateActiveFiltersBar();

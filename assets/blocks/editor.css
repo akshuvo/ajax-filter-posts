@@ -25,19 +25,22 @@
 	border-color: #3b82f6 !important;
 }
 
-/* Horizontal Card Preview */
+/* Horizontal Card Preview (Direct Children Only) */
 .gm-editor-card--horizontal {
 	display: flex !important;
 	flex-direction: row !important;
 	align-items: stretch !important;
 }
 
-.gm-editor-card--horizontal .block-editor-block-list__layout {
+.gm-editor-card--horizontal > .block-editor-inner-blocks,
+.gm-editor-card--horizontal > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal > .block-editor-block-list__layout {
 	display: flex !important;
 	flex-direction: row !important;
 	align-items: stretch !important;
 	gap: 16px !important;
 	width: 100% !important;
+	min-width: 0 !important;
 }
 
 .gm-editor-card--horizontal-reverse {
@@ -46,41 +49,111 @@
 	align-items: stretch !important;
 }
 
-.gm-editor-card--horizontal-reverse .block-editor-block-list__layout {
+.gm-editor-card--horizontal-reverse > .block-editor-inner-blocks,
+.gm-editor-card--horizontal-reverse > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse > .block-editor-block-list__layout {
 	display: flex !important;
 	flex-direction: row-reverse !important;
 	align-items: stretch !important;
 	gap: 16px !important;
 	width: 100% !important;
+	min-width: 0 !important;
 }
 
-.gm-editor-card--horizontal .block-editor-block-list__layout > [data-type="gridmaster/featured-image"],
-.gm-editor-card--horizontal-reverse .block-editor-block-list__layout > [data-type="gridmaster/featured-image"] {
+/* Media Column (Featured Image or Card Video) */
+.gm-editor-card--horizontal > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="gridmaster/featured-image"],
+.gm-editor-card--horizontal > .block-editor-block-list__layout > [data-type="gridmaster/featured-image"],
+.gm-editor-card--horizontal > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="gridmaster-pro/card-video"],
+.gm-editor-card--horizontal > .block-editor-block-list__layout > [data-type="gridmaster-pro/card-video"],
+.gm-editor-card--horizontal-reverse > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="gridmaster/featured-image"],
+.gm-editor-card--horizontal-reverse > .block-editor-block-list__layout > [data-type="gridmaster/featured-image"],
+.gm-editor-card--horizontal-reverse > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="gridmaster-pro/card-video"],
+.gm-editor-card--horizontal-reverse > .block-editor-block-list__layout > [data-type="gridmaster-pro/card-video"] {
 	flex: 0 0 var(--gm-card-media-width, 35%) !important;
 	max-width: var(--gm-card-media-width, 35%) !important;
 	width: var(--gm-card-media-width, 35%) !important;
+	min-width: 0 !important;
 	margin-bottom: 0 !important;
 }
 
-.gm-editor-card--horizontal .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]),
-.gm-editor-card--horizontal-reverse .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]) {
-	flex: 1 !important;
+.gm-editor-card--horizontal [data-type="gridmaster/featured-image"] .gm-placeholder-img,
+.gm-editor-card--horizontal-reverse [data-type="gridmaster/featured-image"] .gm-placeholder-img {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* Content Column (non-media direct child, typically core/group) */
+.gm-editor-card--horizontal > .block-editor-inner-blocks > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]),
+.gm-editor-card--horizontal > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]),
+.gm-editor-card--horizontal-reverse > .block-editor-inner-blocks > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]),
+.gm-editor-card--horizontal-reverse > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]) {
+	flex: 1 1 0% !important;
 	min-width: 0 !important;
+	width: 0 !important;
+}
+
+/* Ensure inner core/group layout inside horizontal cards flows vertically as standard blocks */
+.gm-editor-card--horizontal .wp-block-group:not(.is-layout-flex) > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal .wp-block-group:not(.is-layout-flex) > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse .wp-block-group:not(.is-layout-flex) > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse .wp-block-group:not(.is-layout-flex) > .block-editor-block-list__layout {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: stretch !important;
+	gap: 8px !important;
+	width: 100% !important;
+}
+
+/* Inside the vertical content column, each block takes full width of that column */
+.gm-editor-card--horizontal .wp-block-group:not(.is-layout-flex) > .block-editor-inner-blocks > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal .wp-block-group:not(.is-layout-flex) > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal-reverse .wp-block-group:not(.is-layout-flex) > .block-editor-inner-blocks > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal-reverse .wp-block-group:not(.is-layout-flex) > .block-editor-block-list__layout > * {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex: 0 0 auto !important;
+}
+
+/* Preserve nested flex row layouts (e.g. Add to Cart + Quote button row or Date + Reading time row) */
+.gm-editor-card--horizontal .wp-block-group.is-layout-flex,
+.gm-editor-card--horizontal [data-type="core/group"].is-layout-flex,
+.gm-editor-card--horizontal-reverse .wp-block-group.is-layout-flex,
+.gm-editor-card--horizontal-reverse [data-type="core/group"].is-layout-flex {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+.gm-editor-card--horizontal .wp-block-group.is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal .wp-block-group.is-layout-flex > .block-editor-block-list__layout,
+.gm-editor-card--horizontal [data-type="core/group"].is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal [data-type="core/group"].is-layout-flex > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse .wp-block-group.is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse .wp-block-group.is-layout-flex > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse [data-type="core/group"].is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--horizontal-reverse [data-type="core/group"].is-layout-flex > .block-editor-block-list__layout {
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	gap: 10px !important;
+	width: 100% !important;
+}
+
+.gm-editor-card--horizontal .wp-block-group.is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal .wp-block-group.is-layout-flex > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal-reverse .wp-block-group.is-layout-flex > .block-editor-inner-blocks > .block-editor-block-list__layout > *,
+.gm-editor-card--horizontal-reverse .wp-block-group.is-layout-flex > .block-editor-block-list__layout > * {
+	flex: 0 0 auto !important;
+	width: auto !important;
 }
 
 /* Overlay Card Preview */
 .gm-editor-card--overlay {
 	position: relative !important;
 	overflow: hidden !important;
-	width: 340px !important;
+	width: 100% !important;
 	max-width: 100% !important;
-	height: 580px !important;
-	min-height: 580px !important;
-	max-height: 580px !important;
-	margin: 20px auto !important;
-	border-radius: 20px !important;
-	background: #0f172a !important;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
+	box-sizing: border-box !important;
 	display: flex !important;
 	flex-direction: column !important;
 	justify-content: flex-end !important;
@@ -90,17 +163,18 @@
 	content: '' !important;
 	position: absolute !important;
 	inset: 0 !important;
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.92) 100%) !important;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.92) 100%) !important;
 	pointer-events: none !important;
 	z-index: 2 !important;
 	border-radius: inherit !important;
 }
 
-/* Gutenberg Layout Container: must fill the 580px card height */
-.gm-editor-card--overlay .block-editor-inner-blocks,
-.gm-editor-card--overlay .block-editor-inner-blocks > .block-editor-block-list__layout {
+/* Gutenberg Layout Container in Overlay Mode */
+.gm-editor-card--overlay > .block-editor-inner-blocks,
+.gm-editor-card--overlay > .block-editor-inner-blocks > .block-editor-block-list__layout,
+.gm-editor-card--overlay > .block-editor-block-list__layout {
 	height: 100% !important;
-	min-height: 100% !important;
+	min-height: inherit !important;
 	display: flex !important;
 	flex-direction: column !important;
 	justify-content: flex-end !important;
@@ -108,6 +182,22 @@
 	box-sizing: border-box !important;
 	margin: 0 !important;
 	padding: 0 !important;
+	gap: 10px !important;
+}
+
+/* Direct children above gradient */
+.gm-editor-card--overlay > .block-editor-inner-blocks > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]):not([data-type="gridmaster/badge"]):not([data-type="gridmaster-pro/badge"]),
+.gm-editor-card--overlay > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]):not([data-type="gridmaster/badge"]):not([data-type="gridmaster-pro/badge"]) {
+	position: relative !important;
+	z-index: 5 !important;
+}
+
+/* Push foreground content to bottom */
+.gm-editor-card--overlay > .block-editor-inner-blocks > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]):not([data-type="gridmaster/badge"]):not([data-type="gridmaster-pro/badge"]):first-of-type,
+.gm-editor-card--overlay > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="core/group"]:last-child,
+.gm-editor-card--overlay > .block-editor-block-list__layout > :not([data-type="gridmaster/featured-image"]):not([data-type="gridmaster-pro/card-video"]):not([data-type="gridmaster/badge"]):not([data-type="gridmaster-pro/badge"]):first-of-type,
+.gm-editor-card--overlay > .block-editor-block-list__layout > [data-type="core/group"]:last-child {
+	margin-top: auto !important;
 }
 
 /* RESET all nested layouts inside groups so they don't blow up */
@@ -241,42 +331,54 @@
 .gm-editor-card--overlay .gm-field-title h2,
 .gm-editor-card--overlay .gm-field-title h3,
 .gm-editor-card--overlay .gm-field-title h4,
+.gm-editor-card--overlay .gm-field-title h5,
+.gm-editor-card--overlay .gm-field-title h6,
 .gm-editor-card--overlay .gm-field-title a {
 	color: #ffffff !important;
-	font-size: 17px !important;
-	font-weight: 700 !important;
-	margin: 0 !important;
-	line-height: 1.35 !important;
-	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+	font-weight: 700;
+	margin: 0;
+	line-height: 1.35;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .gm-editor-card--overlay .gm-field-author,
 .gm-editor-card--overlay .gm-field-author a,
 .gm-editor-card--overlay .gm-field-author span {
 	color: #ffffff !important;
-	font-size: 13px !important;
-	font-weight: 600 !important;
-	margin: 0 !important;
-	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .gm-editor-card--overlay .gm-field-excerpt p {
 	color: #cbd5e1 !important;
-	font-size: 12.5px !important;
-	line-height: 1.4 !important;
-	margin: 0 !important;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
+	line-height: 1.4;
+	margin: 0;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .gm-editor-card--overlay .gm-field-date,
 .gm-editor-card--overlay .gm-field-date time {
 	color: #94a3b8 !important;
-	font-size: 12px !important;
-	margin: 0 !important;
+	margin: 0;
 }
 
 .gm-editor-card--overlay [data-type="gridmaster-pro/bookmark-button"] {
 	color: #ffffff !important;
+}
+
+/* Dark Card Aesthetic Text Support */
+.gm-editor-card--dark .gm-field-title :is(h1, h2, h3, h4, h5, h6, a) {
+	color: #ffffff;
+}
+.gm-editor-card--dark .gm-field-excerpt :is(p, span) {
+	color: #cbd5e1;
+}
+.gm-editor-card--dark .gm-field-date :is(time, span),
+.gm-editor-card--dark .gm-field-author :is(span, a),
+.gm-editor-card--dark .gm-field-reading-time {
+	color: #94a3b8;
 }
 
 .gm-editor-card--overlay .gm-author-avatar-img,

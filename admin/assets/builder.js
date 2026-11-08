@@ -454,6 +454,7 @@
 			'gridmaster-pro/bookmark-button': { title: __( 'Bookmark (Pro)', 'ajax-filter-posts' ), icon: 'heart' },
 			'core/group': { title: __( 'Group', 'ajax-filter-posts' ), icon: 'layout' },
 			'core/columns': { title: __( 'Columns', 'ajax-filter-posts' ), icon: 'columns' },
+			'core/column': { title: __( 'Column', 'ajax-filter-posts' ), icon: 'column' },
 			'core/spacer': { title: __( 'Spacer', 'ajax-filter-posts' ), icon: 'image-flip-vertical' },
 			'core/separator': { title: __( 'Separator', 'ajax-filter-posts' ), icon: 'minus' },
 		};
@@ -1176,7 +1177,7 @@
 					createBlock( 'gridmaster/badge', { text: __( 'Editorial', 'ajax-filter-posts' ), backgroundColor: '#f1f5f9', textColor: '#475569' } ),
 					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '22px', isLink: true } ),
 					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
-						createBlock( 'gridmaster/author-avatar', { size: 32, borderRadius: '50%' } ),
+						createBlock( 'gridmaster/author-avatar', { avatarSize: 32, borderRadius: '50%' } ),
 						createBlock( 'gridmaster/post-author', {} ),
 						createBlock( 'gridmaster/reading-time', {} ),
 					] ),
@@ -1202,7 +1203,7 @@
 					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
 					createBlock( 'gridmaster/excerpt', { length: 18 } ),
 					createBlock( 'core/group', { layout: { type: 'flex', alignItems: 'center' } }, [
-						createBlock( 'gridmaster/author-avatar', { size: 28, borderRadius: '50%' } ),
+						createBlock( 'gridmaster/author-avatar', { avatarSize: 28, borderRadius: '50%' } ),
 						createBlock( 'gridmaster/post-author', {} ),
 						createBlock( 'gridmaster/post-date', { format: 'M j, Y' } ),
 					] ),
@@ -1383,7 +1384,7 @@
 						createBlock( 'gridmaster/reading-time', {} ),
 					] ),
 					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', color: '#f8fafc', isLink: true } ),
-					createBlock( 'gridmaster/excerpt', { length: 16 } ),
+					createBlock( 'gridmaster/excerpt', { length: 16, color: '#cbd5e1' } ),
 					createBlock( 'gridmaster/read-more', { text: __( 'Explore Article', 'ajax-filter-posts' ), backgroundColor: '#2563eb', textColor: '#ffffff', borderRadius: '6px' } ),
 				],
 			},
@@ -1421,14 +1422,14 @@
 					createBlock( 'gridmaster/read-more', { text: __( 'View Project →', 'ajax-filter-posts' ), backgroundColor: 'transparent', textColor: '#0f172a' } ),
 				],
 			},
-			// 19. E-Commerce Product Starter (Free)
+			// 19. E-Commerce Product Starter (Pro)
 			{
 				id: 'ecommerce-product',
-				title: __( 'E-Commerce Product Starter', 'ajax-filter-posts' ),
+				title: __( 'E-Commerce Product Starter (Pro)', 'ajax-filter-posts' ),
 				desc: __( 'Sale badge, 1:1 product thumbnail, product category, title, price, and AJAX Add to Cart button.', 'ajax-filter-posts' ),
 				icon: 'cart',
 				category: 'WooCommerce',
-				isPro: false,
+				isPro: true,
 				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
 				getBlocks: () => [
 					createBlock( 'gridmaster/badge', { badgeType: 'sale', text: __( 'Sale!', 'ajax-filter-posts' ), backgroundColor: '#ef4444', textColor: '#ffffff' } ),
@@ -1542,7 +1543,7 @@
 				icon: 'list-view',
 				category: 'WooCommerce',
 				isPro: true,
-				cardAttrs: { layoutMode: 'horizontal', layoutDirection: 'horizontal', mediaWidth: '22%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				cardAttrs: { layoutMode: 'horizontal', mediaWidth: '22%', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: 'none', backgroundColor: '#ffffff', hoverEffect: 'lift' },
 				getBlocks: () => [
 					createBlock( 'gridmaster/featured-image', { size: 'medium', aspectRatio: '1/1', borderRadius: '6px' } ),
 					createBlock( 'core/group', { style: { spacing: { padding: { top: '0px', bottom: '0px', left: '16px', right: '0px' } } } }, [
@@ -1820,11 +1821,16 @@
 						'div',
 						{ className: 'gm-popover-header-title-row' },
 						el( 'span', { className: 'dashicons dashicons-layout' } ),
-						el( 'h3', { className: 'gm-popover-title' }, __( 'Card Layouts Library', 'ajax-filter-posts' ) ),
+						el( 'h3', { className: 'gm-popover-title' }, __( 'Card Templates Library', 'ajax-filter-posts' ) ),
 						el(
 							'span',
 							{ className: 'gm-popover-count-pill' },
-							sprintf( __( '%d pre-built designs', 'ajax-filter-posts' ), templates.length )
+							sprintf( __( '%d pre-built templates', 'ajax-filter-posts' ), templates.length )
+						),
+						el(
+							'span',
+							{ className: 'gm-popover-scope-pill' },
+							__( 'Single Card Blueprint', 'ajax-filter-posts' )
 						)
 					),
 					el( Button, {
@@ -1845,7 +1851,7 @@
 						type: 'text',
 						className: 'gm-search-input',
 						placeholder: sprintf(
-							__( 'Search %d pre-built card designs (e.g. video, reel, list, deal)...', 'ajax-filter-posts' ),
+							__( 'Search %d card templates (e.g. video, reel, list, deal)...', 'ajax-filter-posts' ),
 							templates.length
 						),
 						value: searchTerm,
@@ -1893,7 +1899,7 @@
 								'div',
 								{ className: 'gm-popover-empty-state' },
 								el( 'span', { className: 'dashicons dashicons-search' } ),
-								el( 'p', { className: 'gm-empty-title' }, __( 'No matching card layouts found', 'ajax-filter-posts' ) ),
+								el( 'p', { className: 'gm-empty-title' }, __( 'No matching card templates found', 'ajax-filter-posts' ) ),
 								el( 'p', { className: 'gm-empty-hint' }, __( 'Try searching for video, reel, list, or deal, or click the "All" tab.', 'ajax-filter-posts' ) ),
 								searchTerm &&
 									el(
@@ -1934,7 +1940,7 @@
 												}
 											},
 											title: isCardDisabled
-												? __( 'Pro card layout — upgrade GridMaster to unlock', 'ajax-filter-posts' )
+												? __( 'Pro card template — upgrade GridMaster to unlock', 'ajax-filter-posts' )
 												: ( t.desc || t.title ),
 										},
 										// 1. Visual Mini Wireframe Graphic
@@ -1974,7 +1980,7 @@
 												},
 												isCardDisabled
 													? __( 'Pro Only 🔒', 'ajax-filter-posts' )
-													: __( 'Apply Layout', 'ajax-filter-posts' ) + ' →'
+													: __( 'Apply Template', 'ajax-filter-posts' ) + ' →'
 											)
 										)
 									);
@@ -2001,6 +2007,9 @@
 		const canvasCss = customCss
 			? customCss.replace( /\{\{GRID\}\}|\{\{GRID_ID\}\}|\{\{grid\}\}/g, '.gm-card-canvas-paper' )
 			: '';
+
+		const rootCard = rootBlocks.length > 0 && rootBlocks[ 0 ].name === 'gridmaster/card' ? rootBlocks[ 0 ] : null;
+		const isHorizontalCard = rootCard?.attributes?.layoutMode === 'horizontal' || rootCard?.attributes?.layoutMode === 'horizontal-reverse';
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const [ isTemplatesOpen, setIsTemplatesOpen ] = useState( false );
@@ -2032,7 +2041,7 @@
 			if ( tpl.isPro && ! isPro ) return;
 
 			if ( rootCard && rootCard.innerBlocks && rootCard.innerBlocks.length > 0 ) {
-				if ( ! window.confirm( __( 'Replace current card blocks with this prebuilt layout?', 'ajax-filter-posts' ) ) ) {
+				if ( ! window.confirm( __( 'Replace current card blocks with this prebuilt template?', 'ajax-filter-posts' ) ) ) {
 					return;
 				}
 			}
@@ -2066,7 +2075,7 @@
 				insertBlock( newCard );
 			}
 			if ( showToast ) {
-				showToast( sprintf( __( 'Applied "%s" card layout.', 'ajax-filter-posts' ), tpl.title || tpl.name ), 'success', 'layout' );
+				showToast( sprintf( __( 'Applied "%s" card template.', 'ajax-filter-posts' ), tpl.title || tpl.name ), 'success', 'layout' );
 			}
 		};
 
@@ -2193,7 +2202,7 @@
 							className: 'gm-card-templates-btn' + ( isTemplatesOpen ? ' is-active' : '' ),
 						},
 						el( 'span', { className: 'dashicons dashicons-layout' } ),
-						' ' + __( 'Card Layouts', 'ajax-filter-posts' ) + ' ▼'
+						' ' + __( 'Card Templates', 'ajax-filter-posts' ) + ' ▼'
 					),
 					isTemplatesOpen &&
 						el( CardTemplatesPopover, {
@@ -2220,7 +2229,7 @@
 				),
 				el(
 					'div',
-					{ className: 'gm-card-canvas-paper', ref: paperRef },
+					{ className: 'gm-card-canvas-paper' + ( isHorizontalCard ? ' gm-card-canvas-paper--horizontal' : '' ), ref: paperRef },
 					canvasCss && el( 'style', { id: 'gm-builder-canvas-custom-css' }, canvasCss ),
 					el(
 						BlockTools,
@@ -3259,7 +3268,7 @@
 	 */
 	function LayoutTab( props ) {
 		const { config, setConfig, updateConfigSection, isPro, showToast } = props;
-		const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
+		const { updateBlockAttributes, replaceInnerBlocks } = useDispatch( 'core/block-editor' );
 		const rootCardBlock = useSelect( ( select ) => {
 			const blocks = select( 'core/block-editor' ).getBlocks();
 			return blocks.length > 0 && blocks[ 0 ].name === 'gridmaster/card' ? blocks[ 0 ] : null;
@@ -3627,7 +3636,7 @@
 		const applyPreset = ( preset ) => {
 			setActivePresetId( preset.id );
 			if ( showToast ) {
-				showToast( sprintf( __( 'Applied "%s" layout preset.', 'ajax-filter-posts' ), preset.title ), 'success', 'layout' );
+				showToast( sprintf( __( 'Applied "%s" grid preset.', 'ajax-filter-posts' ), preset.title ), 'success', 'layout' );
 			}
 			setConfig( ( prev ) => {
 				const nextLayout = {
@@ -3654,6 +3663,37 @@
 			} );
 			if ( rootCardBlock && preset.card ) {
 				updateBlockAttributes( rootCardBlock.clientId, { ...preset.card } );
+
+				// If applying a horizontal preset to a card with multiple un-grouped non-media blocks,
+				// wrap them into a core/group so they neatly stack in a column next to the media.
+				const isHorizontalPreset = preset.card.layoutMode === 'horizontal' || preset.card.layoutMode === 'horizontal-reverse';
+				const innerBlocks = rootCardBlock.innerBlocks || [];
+				if ( isHorizontalPreset && innerBlocks.length > 1 && replaceInnerBlocks ) {
+					const hasGroupWrapper = innerBlocks.length === 2 &&
+						( innerBlocks[ 0 ].name === 'core/group' || innerBlocks[ 1 ].name === 'core/group' );
+					if ( ! hasGroupWrapper ) {
+						const mediaBlocks = [];
+						const contentBlocks = [];
+						innerBlocks.forEach( ( b ) => {
+							if ( b.name === 'gridmaster/featured-image' || b.name === 'gridmaster-pro/card-video' ) {
+								mediaBlocks.push( b );
+							} else {
+								contentBlocks.push( b );
+							}
+						} );
+						if ( contentBlocks.length > 0 ) {
+							const padLeft = preset.card.layoutMode === 'horizontal' ? '16px' : '0px';
+							const padRight = preset.card.layoutMode === 'horizontal-reverse' ? '16px' : '0px';
+							const groupBlock = createBlock( 'core/group', {
+								style: { spacing: { padding: { top: '0px', bottom: '0px', left: padLeft, right: padRight } } },
+							}, contentBlocks );
+							const newBlocks = preset.card.layoutMode === 'horizontal-reverse'
+								? [ groupBlock, ...mediaBlocks ]
+								: [ ...mediaBlocks, groupBlock ];
+							replaceInnerBlocks( rootCardBlock.clientId, newBlocks );
+						}
+					}
+				}
 			}
 		};
 
@@ -3860,8 +3900,8 @@
 			el(
 				'div',
 				{ className: 'gm-settings-card' },
-				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-art' } ), ' ' + __( 'Design & Layout Presets', 'ajax-filter-posts' ) ),
-				el( 'p', { className: 'gm-preset-intro' }, __( 'Choose a pre-styled foundation for your grid layout and card aesthetics. You can further customize any setting below.', 'ajax-filter-posts' ) ),
+				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-grid-view' } ), ' ' + __( 'Grid & Feed Presets', 'ajax-filter-posts' ) ),
+				el( 'p', { className: 'gm-preset-intro' }, __( 'Choose a pre-styled foundation for your grid architecture (responsive columns, gaps, and feed type). Does not overwrite your card blocks.', 'ajax-filter-posts' ) ),
 				el(
 					'div',
 					{ className: 'gm-presets-grid' },

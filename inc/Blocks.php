@@ -477,6 +477,25 @@ class Blocks {
 
 		$classes = array( 'gm-card', 'gm-card--' . $layout_mode, 'gm-card-hover--' . $hover_fx );
 
+		$is_dark = ( 'overlay' === $layout_mode );
+		if ( ! $is_dark && ! empty( $bg ) ) {
+			$hex = ltrim( $bg, '#' );
+			if ( 3 === strlen( $hex ) ) {
+				$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
+				$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
+				$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
+				$is_dark = ( ( $r * 299 + $g * 587 + $b * 114 ) / 1000 ) < 128;
+			} elseif ( 6 === strlen( $hex ) ) {
+				$r = hexdec( substr( $hex, 0, 2 ) );
+				$g = hexdec( substr( $hex, 2, 2 ) );
+				$b = hexdec( substr( $hex, 4, 2 ) );
+				$is_dark = ( ( $r * 299 + $g * 587 + $b * 114 ) / 1000 ) < 128;
+			}
+		}
+		if ( $is_dark ) {
+			$classes[] = 'gm-card--dark';
+		}
+
 		$style = sprintf(
 			'background-color:%s;padding:%s;border-radius:%s;box-shadow:%s;',
 			esc_attr( $bg ),

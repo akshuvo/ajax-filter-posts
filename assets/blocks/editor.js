@@ -21,6 +21,25 @@
 		return Number.isFinite( num ) ? num : defaultVal;
 	};
 
+	// Helper: detect if hex color is dark
+	const isColorDark = ( color ) => {
+		if ( ! color || typeof color !== 'string' ) return false;
+		const hex = color.trim().replace( '#', '' );
+		if ( hex.length === 3 ) {
+			const r = parseInt( hex[ 0 ] + hex[ 0 ], 16 );
+			const g = parseInt( hex[ 1 ] + hex[ 1 ], 16 );
+			const b = parseInt( hex[ 2 ] + hex[ 2 ], 16 );
+			return ( r * 299 + g * 587 + b * 114 ) / 1000 < 128;
+		}
+		if ( hex.length === 6 ) {
+			const r = parseInt( hex.substring( 0, 2 ), 16 );
+			const g = parseInt( hex.substring( 2, 4 ), 16 );
+			const b = parseInt( hex.substring( 4, 6 ), 16 );
+			return ( r * 299 + g * 587 + b * 114 ) / 1000 < 128;
+		}
+		return false;
+	};
+
 	// Modern, compact Color Control with circular swatch, clear trigger, and popover
 	const ColorControl = ( { label, value, onChange } ) => {
 		const [ isOpen, setIsOpen ] = useState( false );
@@ -1142,8 +1161,9 @@
 				position: 'relative',
 				'--gm-card-media-width': attributes.mediaWidth || '35%',
 			};
+			const isDark = isOverlay || isColorDark( attributes.backgroundColor );
 			const blockProps = useBlockProps( {
-				className: 'gm-editor-card gm-editor-card--' + ( attributes.layoutMode || 'vertical' ),
+				className: 'gm-editor-card gm-editor-card--' + ( attributes.layoutMode || 'vertical' ) + ( isDark ? ' gm-editor-card--dark' : '' ),
 				style: cardStyle,
 			} );
 

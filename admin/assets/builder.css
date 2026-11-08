@@ -664,6 +664,17 @@ body.gm-focus-mode #wpcontent {
 	color: var(--gm-secondary, #646970);
 }
 
+.gm-popover-scope-pill {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 2px 8px;
+	border-radius: 12px;
+	background: #eff6ff;
+	color: #2563eb;
+	border: 1px solid #bfdbfe;
+	letter-spacing: 0.1px;
+}
+
 .gm-popover-close-btn {
 	color: #94a3b8 !important;
 	min-width: 28px !important;
@@ -1431,6 +1442,13 @@ body.gm-focus-mode #wpcontent {
 	width: 100%;
 	max-width: 440px;
 	background: transparent;
+	transition: max-width 0.25s ease;
+}
+
+.gm-card-canvas-paper.gm-card-canvas-paper--horizontal,
+.gm-card-canvas-paper:has(.gm-editor-card--horizontal),
+.gm-card-canvas-paper:has(.gm-editor-card--horizontal-reverse) {
+	max-width: 780px;
 }
 
 /* Right Panel: Contextual Inspector */
