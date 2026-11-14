@@ -52,6 +52,7 @@
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	container-type: inline-size;
 }
 
 .gm-v2-grid .gm-card {
@@ -100,6 +101,12 @@
 	max-width: var(--gm-card-media-width, 35%);
 	margin-bottom: 0;
 	margin-right: 20px;
+	align-self: flex-start;
+}
+
+.gm-v2-grid .gm-card--horizontal > .gm-field-featured-image img,
+.gm-v2-grid .gm-card--horizontal-reverse > .gm-field-featured-image img {
+	height: auto;
 }
 
 .gm-v2-grid .gm-card--horizontal > *:not(.gm-field-featured-image) {
@@ -118,6 +125,7 @@
 	max-width: var(--gm-card-media-width, 35%);
 	margin-bottom: 0;
 	margin-left: 20px;
+	align-self: flex-start;
 }
 
 .gm-v2-grid .gm-card--horizontal-reverse > *:not(.gm-field-featured-image) {
@@ -125,7 +133,72 @@
 	min-width: 0;
 }
 
-/* Responsive collapse for horizontal cards on tablet / mobile */
+/* Container query: automatically collapse horizontal cards when narrow (e.g. multi-column grids or mobile) */
+@container (max-width: 440px) {
+	.gm-v2-grid .gm-card--horizontal,
+	.gm-v2-grid .gm-card--horizontal-reverse {
+		flex-direction: column !important;
+	}
+
+	.gm-v2-grid .gm-card--horizontal > .gm-field-featured-image,
+	.gm-v2-grid .gm-card--horizontal-reverse > .gm-field-featured-image {
+		flex: 0 0 auto !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		margin-bottom: 14px !important;
+	}
+
+	.gm-v2-grid .gm-card--horizontal > *:not(.gm-field-featured-image),
+	.gm-v2-grid .gm-card--horizontal-reverse > *:not(.gm-field-featured-image) {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+/* Force multi-column desktop grids (>= 3 columns) to stack horizontal cards */
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse {
+	flex-direction: column !important;
+}
+
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse > .gm-field-featured-image {
+	flex: 0 0 auto !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	margin-bottom: 14px !important;
+}
+
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image) {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	width: 100% !important;
+}
+
+/* Responsive fallback collapse for horizontal cards on tablet / mobile */
 @media (max-width: 768px) {
 	.gm-v2-grid .gm-card--horizontal,
 	.gm-v2-grid .gm-card--horizontal-reverse {
@@ -134,12 +207,60 @@
 
 	.gm-v2-grid .gm-card--horizontal > .gm-field-featured-image,
 	.gm-v2-grid .gm-card--horizontal-reverse > .gm-field-featured-image {
-		flex: 0 0 100%;
+		flex: 0 0 auto;
+		width: 100%;
 		max-width: 100%;
 		margin-left: 0;
 		margin-right: 0;
 		margin-bottom: 14px;
 	}
+
+	.gm-v2-grid .gm-card--horizontal > *:not(.gm-field-featured-image),
+	.gm-v2-grid .gm-card--horizontal-reverse > *:not(.gm-field-featured-image) {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+/* Force multi-column desktop grids (>= 3 columns) to stack horizontal cards */
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal,
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse {
+	flex-direction: column !important;
+}
+
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse > .gm-field-featured-image,
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse > .gm-field-featured-image {
+	flex: 0 0 auto !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	margin-bottom: 14px !important;
+}
+
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:3"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:4"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:5"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image),
+.gm-v2-grid[style*="--gm-cols-lg:6"] .gm-card--horizontal-reverse > *:not(.gm-field-featured-image) {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	width: 100% !important;
 }
 
 /* Layout Mode: Overlay (Hero Cover Card) */
@@ -272,6 +393,15 @@
 	color: #4b5563;
 	font-size: 14px;
 	line-height: 1.6;
+}
+
+.gm-v2-grid .gm-card--vertical .gm-field-excerpt {
+	flex-grow: 1;
+}
+
+.gm-v2-grid .gm-card--vertical .gm-field-read-more,
+.gm-v2-grid .gm-card--vertical .gm-field-add-to-cart {
+	margin-top: auto;
 }
 
 .gm-v2-grid .gm-field-excerpt p {
@@ -442,7 +572,7 @@
 .gm-v2-grid .gm-filters-wrap {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: flex-end;
 	gap: 16px;
 	margin-bottom: 24px;
 }
@@ -450,6 +580,32 @@
 .gm-v2-grid .gm-facet {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+	.gm-v2-grid .gm-filters-wrap {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+
+	.gm-v2-grid .gm-facet {
+		width: 100%;
+	}
+
+	.gm-v2-grid .gm-facet-search,
+	.gm-v2-grid .gm-search-box,
+	.gm-v2-grid .gm-filter-search {
+		width: 100%;
+		min-width: 0;
+	}
+
+	.gm-v2-grid .gm-filter-select {
+		width: 100%;
+		min-width: 0;
+	}
+}
 }
 
 .gm-v2-grid .gm-facet-title {

@@ -546,7 +546,7 @@ class Blocks {
 
 		$img_style = sprintf(
 			'width:100%%;height:%s;object-fit:%s;border-radius:%s;%s',
-			'auto' === $aspect ? 'auto' : '100%',
+			'auto',
 			esc_attr( $fit ),
 			esc_attr( $radius ),
 			'auto' !== $aspect ? 'aspect-ratio:' . esc_attr( $aspect ) . ';' : ''
@@ -643,7 +643,7 @@ class Blocks {
 
 		if ( $is_link ) {
 			$image_html = sprintf(
-				'<a href="%s" aria-label="%s" style="display:block;height:100%%;">%s</a>',
+				'<a href="%s" aria-label="%s" style="display:block;">%s</a>',
 				esc_url( get_permalink( $post_id ) ),
 				esc_attr( get_the_title( $post_id ) ),
 				$image_html

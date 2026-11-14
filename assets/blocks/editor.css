@@ -74,12 +74,13 @@
 	width: var(--gm-card-media-width, 35%) !important;
 	min-width: 0 !important;
 	margin-bottom: 0 !important;
+	align-self: flex-start !important;
 }
 
 .gm-editor-card--horizontal [data-type="gridmaster/featured-image"] .gm-placeholder-img,
 .gm-editor-card--horizontal-reverse [data-type="gridmaster/featured-image"] .gm-placeholder-img {
 	width: 100% !important;
-	height: 100% !important;
+	height: auto !important;
 }
 
 /* Content Column (non-media direct child, typically core/group) */

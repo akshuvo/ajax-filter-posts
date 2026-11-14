@@ -36,9 +36,8 @@ async function captureScreenshot(target, filename, category = 'general', options
   }
 
   const sanitized = filename.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
-  const finalFilename = sanitized.includes('mobile') || sanitized.includes('tablet') || sanitized.includes('desktop')
-    ? sanitized
-    : `${sanitized}${deviceSuffix}`;
+  const baseName = sanitized.replace(/-(desktop|tablet|mobile)$/, '');
+  const finalFilename = `${baseName}${deviceSuffix}`;
 
   const filepath = path.join(categoryDir, `${finalFilename}.png`);
 
