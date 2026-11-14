@@ -51,8 +51,12 @@ class Grid_Repository {
 				'end_text'        => __( 'No more posts', 'ajax-filter-posts' ),
 			),
 			'layout'     => array(
-				'type'       => 'grid', // 'grid' or 'slider'
-				'columns'    => array(
+				'type'                => 'grid', // 'grid', 'masonry', 'metro', 'slider', 'reels'
+				'filter_position'     => 'top', // 'top', 'left_sidebar', 'right_sidebar', 'drawer'
+				'sidebar_width'       => 280,
+				'sticky_sidebar'      => false,
+				'drawer_button_label' => __( 'Filters', 'ajax-filter-posts' ),
+				'columns'             => array(
 					'xs' => 1,
 					'sm' => 2,
 					'md' => 3,

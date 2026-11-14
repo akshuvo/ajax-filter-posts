@@ -171,6 +171,10 @@ $is_pro                = function_exists( 'gridmaster_is_pro' ) && gridmaster_is
 				</div>
 			</form>
 
+			<button type="button" id="gm-import-grid-trigger" class="gm-btn gm-btn-secondary gm-btn-has-icon">
+				<span class="dashicons dashicons-upload"></span>
+				<span><?php esc_html_e( 'Import JSON', 'ajax-filter-posts' ); ?></span>
+			</button>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster-builder' ) ); ?>" class="gm-btn gm-btn-primary gm-btn-has-icon">
 				<span class="dashicons dashicons-plus-alt2"></span>
 				<span><?php esc_html_e( 'Add New Grid', 'ajax-filter-posts' ); ?></span>
@@ -281,6 +285,9 @@ $is_pro                = function_exists( 'gridmaster_is_pro' ) && gridmaster_is
 										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=duplicate&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-duplicate" title="<?php esc_attr_e( 'Duplicate Grid', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Duplicate Grid', 'ajax-filter-posts' ); ?>">
 											<span class="dashicons dashicons-admin-page"></span>
 										</a>
+										<button type="button" class="gm-action-icon-btn gm-action-export" data-grid-id="<?php echo esc_attr( $grid->id ); ?>" data-grid-slug="<?php echo esc_attr( sanitize_title( $grid->title ? $grid->title : 'grid-' . $grid->id ) ); ?>" title="<?php esc_attr_e( 'Export JSON', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Export JSON', 'ajax-filter-posts' ); ?>">
+											<span class="dashicons dashicons-download"></span>
+										</button>
 
 										<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=delete&id=' . $grid->id ), 'gm_grid_action' ) ); ?>" class="gm-action-icon-btn gm-action-delete" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this grid? This action cannot be undone.', 'ajax-filter-posts' ); ?>');" title="<?php esc_attr_e( 'Delete Grid', 'ajax-filter-posts' ); ?>" aria-label="<?php esc_attr_e( 'Delete Grid', 'ajax-filter-posts' ); ?>">
 											<span class="dashicons dashicons-trash"></span>
@@ -444,5 +451,185 @@ $is_pro                = function_exists( 'gridmaster_is_pro' ) && gridmaster_is
 	} else {
 		initCopyButtons();
 	}
+
+	var gmRestUrl   = <?php echo wp_json_encode( esc_url_raw( rest_url( 'gridmaster/v2/' ) ) ); ?>;
+	var gmRestNonce = <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>;
+
+	function initExportImport() {
+		document.querySelectorAll('.gm-action-export').forEach(function(btn) {
+			btn.addEventListener('click', function() {
+				var id   = this.getAttribute('data-grid-id');
+				var slug = this.getAttribute('data-grid-slug') || ('grid-' + id);
+				btn.disabled = true;
+
+				fetch(gmRestUrl + 'grids/' + id + '/export', {
+					method: 'GET',
+					headers: { 'X-WP-Nonce': gmRestNonce }
+				})
+				.then(function(res) {
+					if (!res.ok) throw new Error('Export failed (' + res.status + ')');
+					return res.json();
+				})
+				.then(function(payload) {
+					var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+					var url  = URL.createObjectURL(blob);
+					var a    = document.createElement('a');
+					a.href = url;
+					a.download = slug + '.gridmaster.json';
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+					setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+				})
+				.catch(function(err) {
+					alert(err.message || 'Could not export grid.');
+				})
+				.finally(function() {
+					btn.disabled = false;
+				});
+			});
+		});
+
+		var triggerBtn = document.getElementById('gm-import-grid-trigger');
+		var modal      = document.getElementById('gm-import-modal');
+		var closeBtn   = document.getElementById('gm-import-close');
+		var fileInput  = document.getElementById('gm-import-file');
+		var textArea   = document.getElementById('gm-import-json-text');
+		var submitBtn  = document.getElementById('gm-import-submit');
+		var statusEl   = document.getElementById('gm-import-status');
+
+		if (!triggerBtn || !modal) return;
+
+		function setModalOpen(open) {
+			modal.style.display = open ? 'block' : 'none';
+			modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+			if (open && statusEl) {
+				statusEl.textContent = '';
+				statusEl.className = 'gm-import-status';
+			}
+		}
+
+		triggerBtn.addEventListener('click', function() {
+			setModalOpen(true);
+		});
+
+		if (closeBtn) {
+			closeBtn.addEventListener('click', function() {
+				setModalOpen(false);
+			});
+		}
+
+		modal.addEventListener('click', function(e) {
+			if (e.target === modal) setModalOpen(false);
+		});
+
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape' && modal.style.display === 'block') {
+				setModalOpen(false);
+			}
+		});
+
+		if (fileInput && textArea) {
+			fileInput.addEventListener('change', function() {
+				var file = fileInput.files && fileInput.files[0];
+				if (!file) return;
+				var reader = new FileReader();
+				reader.onload = function(evt) {
+					textArea.value = String(evt.target.result || '');
+				};
+				reader.readAsText(file);
+			});
+		}
+
+		if (submitBtn && textArea) {
+			submitBtn.addEventListener('click', function() {
+				var raw = (textArea.value || '').trim();
+				if (!raw) {
+					if (statusEl) {
+						statusEl.textContent = '<?php echo esc_js( __( 'Please select a JSON file or paste exported JSON first.', 'ajax-filter-posts' ) ); ?>';
+						statusEl.style.color = '#dc2626';
+					}
+					return;
+				}
+
+				var parsed;
+				try {
+					parsed = JSON.parse(raw);
+				} catch (err) {
+					if (statusEl) {
+						statusEl.textContent = '<?php echo esc_js( __( 'Invalid JSON syntax.', 'ajax-filter-posts' ) ); ?>';
+						statusEl.style.color = '#dc2626';
+					}
+					return;
+				}
+
+				submitBtn.disabled = true;
+				if (statusEl) {
+					statusEl.textContent = '<?php echo esc_js( __( 'Importing...', 'ajax-filter-posts' ) ); ?>';
+					statusEl.style.color = '#475569';
+				}
+
+				fetch(gmRestUrl + 'grids/import', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': gmRestNonce
+					},
+					body: JSON.stringify(parsed)
+				})
+				.then(function(res) {
+					return res.json().then(function(body) {
+						if (!res.ok) throw new Error((body && body.message) || 'Import failed');
+						return body;
+					});
+				})
+				.then(function(body) {
+					if (statusEl) {
+						statusEl.textContent = '<?php echo esc_js( __( 'Imported successfully! Reloading…', 'ajax-filter-posts' ) ); ?> (' + (body.imported || 1) + ')';
+						statusEl.style.color = '#059669';
+					}
+					setTimeout(function() { window.location.reload(); }, 500);
+				})
+				.catch(function(err) {
+					if (statusEl) {
+						statusEl.textContent = err.message || '<?php echo esc_js( __( 'Import failed.', 'ajax-filter-posts' ) ); ?>';
+						statusEl.style.color = '#dc2626';
+					}
+				})
+				.finally(function() {
+					submitBtn.disabled = false;
+				});
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initExportImport);
+	} else {
+		initExportImport();
+	}
 })();
 </script>
+
+<div id="gm-import-modal" class="gm-modal-wrap" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="gm-import-modal-title">
+	<div class="gm-modal-inner">
+		<button type="button" id="gm-import-close" class="gm-modal-close" aria-label="<?php esc_attr_e( 'Close modal', 'ajax-filter-posts' ); ?>">
+			<span class="dashicons dashicons-no-alt"></span>
+		</button>
+		<div class="gm-modal-body" style="text-align:left;padding:28px 30px;">
+			<h2 id="gm-import-modal-title" style="margin:0 0 6px;"><?php esc_html_e( 'Import GridMaster Grid JSON', 'ajax-filter-posts' ); ?></h2>
+			<p class="description" style="margin:0 0 16px;"><?php esc_html_e( 'Upload a .gridmaster.json file exported from another site or paste the JSON payload below.', 'ajax-filter-posts' ); ?></p>
+			<div style="margin-bottom:14px;">
+				<input type="file" id="gm-import-file" accept=".json,application/json" style="width:100%;" />
+			</div>
+			<textarea id="gm-import-json-text" rows="8" placeholder="{&quot;format&quot;:&quot;gridmaster-grid-v2&quot;,&quot;grid&quot;:{...}}" style="width:100%;font-family:monospace;font-size:12px;padding:10px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box;"></textarea>
+			<div id="gm-import-status" class="gm-import-status" style="min-height:20px;margin:10px 0;font-size:13px;font-weight:500;"></div>
+			<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+				<button type="button" id="gm-import-submit" class="gm-btn gm-btn-primary">
+					<span class="dashicons dashicons-upload"></span>
+					<span><?php esc_html_e( 'Import Grid', 'ajax-filter-posts' ); ?></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

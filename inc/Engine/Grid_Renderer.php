@@ -15,6 +15,136 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Grid_Renderer {
 
 	/**
+	 * Extracts sanitized runtime filter & pagination parameters from URL query vars (`gm_*`).
+	 *
+	 * @param array|null $raw_query Optional query vars (defaults to $_GET).
+	 * @return array
+	 */
+	public static function extract_url_runtime_params( $raw_query = null ) {
+		if ( null === $raw_query ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$raw_query = isset( $_GET ) && is_array( $_GET ) ? wp_unslash( $_GET ) : array();
+		}
+		if ( empty( $raw_query ) || ! is_array( $raw_query ) ) {
+			return array();
+		}
+
+		$params   = array();
+		$reserved = array(
+			'gm_q',
+			'gm_paged',
+			'gm_sort',
+			'gm_min_price',
+			'gm_max_price',
+			'gm_rating',
+			'gm_sale',
+			'gm_stock',
+			'gm_featured',
+			'gm_from',
+			'gm_to',
+		);
+
+		if ( ! empty( $raw_query['gm_q'] ) ) {
+			$params['search'] = sanitize_text_field( (string) $raw_query['gm_q'] );
+		}
+		if ( ! empty( $raw_query['gm_paged'] ) ) {
+			$paged = absint( $raw_query['gm_paged'] );
+			if ( $paged > 1 ) {
+				$params['paged'] = $paged;
+			}
+		}
+		if ( ! empty( $raw_query['gm_sort'] ) ) {
+			$params['orderby'] = sanitize_key( (string) $raw_query['gm_sort'] );
+		}
+		if ( isset( $raw_query['gm_min_price'] ) && '' !== $raw_query['gm_min_price'] ) {
+			$params['min_price'] = floatval( $raw_query['gm_min_price'] );
+		}
+		if ( isset( $raw_query['gm_max_price'] ) && '' !== $raw_query['gm_max_price'] ) {
+			$params['max_price'] = floatval( $raw_query['gm_max_price'] );
+		}
+		if ( ! empty( $raw_query['gm_rating'] ) ) {
+			$rating = absint( $raw_query['gm_rating'] );
+			if ( $rating > 0 ) {
+				$params['min_rating'] = $rating;
+			}
+		}
+		if ( ! empty( $raw_query['gm_sale'] ) && in_array( (string) $raw_query['gm_sale'], array( '1', 'true' ), true ) ) {
+			$params['on_sale'] = true;
+		}
+		if ( ! empty( $raw_query['gm_stock'] ) && in_array( (string) $raw_query['gm_stock'], array( '1', 'true' ), true ) ) {
+			$params['in_stock'] = true;
+		}
+		if ( ! empty( $raw_query['gm_featured'] ) && in_array( (string) $raw_query['gm_featured'], array( '1', 'true' ), true ) ) {
+			$params['featured'] = true;
+		}
+		if ( ! empty( $raw_query['gm_from'] ) ) {
+			$params['date_from'] = sanitize_text_field( (string) $raw_query['gm_from'] );
+		}
+		if ( ! empty( $raw_query['gm_to'] ) ) {
+			$params['date_to'] = sanitize_text_field( (string) $raw_query['gm_to'] );
+		}
+
+		foreach ( $raw_query as $key => $value ) {
+			if ( ! is_string( $key ) || 0 !== strpos( $key, 'gm_' ) || in_array( $key, $reserved, true ) || '' === $value ) {
+				continue;
+			}
+			if ( 0 === strpos( $key, 'gm_meta_' ) ) {
+				$meta_key = sanitize_key( substr( $key, strlen( 'gm_meta_' ) ) );
+				if ( $meta_key ) {
+					$params['meta'][ $meta_key ] = sanitize_text_field( (string) $value );
+				}
+				continue;
+			}
+			$taxonomy = sanitize_key( substr( $key, 3 ) );
+			if ( $taxonomy ) {
+				$parts    = is_array( $value ) ? $value : explode( ',', (string) $value );
+				$term_ids = array_values( array_filter( array_map( 'absint', $parts ) ) );
+				if ( ! empty( $term_ids ) ) {
+					$params['facets'][ $taxonomy ] = $term_ids;
+				}
+			}
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Captures sanitized current page/archive context for AJAX preservation.
+	 *
+	 * @return array
+	 */
+	public static function capture_page_context() {
+		$context = array();
+		if ( function_exists( 'is_singular' ) && is_singular() ) {
+			$post_id = absint( get_queried_object_id() );
+			if ( $post_id > 0 ) {
+				$context['post_id']   = $post_id;
+				$context['post_type'] = sanitize_key( get_post_type( $post_id ) );
+			}
+		}
+		if ( function_exists( 'is_category' ) && ( is_category() || is_tag() || is_tax() ) ) {
+			$q_obj = get_queried_object();
+			if ( $q_obj instanceof \WP_Term ) {
+				$context['term_id']  = (int) $q_obj->term_id;
+				$context['taxonomy'] = sanitize_key( $q_obj->taxonomy );
+			}
+		}
+		if ( function_exists( 'is_author' ) && is_author() ) {
+			$author_id = absint( get_queried_object_id() );
+			if ( $author_id > 0 ) {
+				$context['author_id'] = $author_id;
+			}
+		}
+		if ( function_exists( 'is_search' ) && is_search() ) {
+			$search_q = get_search_query( false );
+			if ( $search_q ) {
+				$context['search_query'] = sanitize_text_field( $search_q );
+			}
+		}
+		return $context;
+	}
+
+	/**
 	 * Renders a grid by numeric ID.
 	 *
 	 * @param int   $grid_id Grid ID.
@@ -71,72 +201,46 @@ class Grid_Renderer {
 		}
 		$block_content = ! empty( $grid->block_content ) ? $grid->block_content : Grid_Repository::default_block_content();
 
+		$url_hydrated = false;
+		if ( empty( $runtime_params ) && ! is_admin() ) {
+			$url_params = self::extract_url_runtime_params();
+			if ( ! empty( $url_params ) ) {
+				$runtime_params = $url_params;
+				$url_hydrated   = true;
+			}
+		}
+
 		// Execute query.
 		$query = Query_Builder::execute( $config['query'], $runtime_params );
 
-		// Compile CSS custom properties for responsive columns, gaps, and styles.
-		$css_vars = self::compile_css_vars( $config['layout'] );
+		$extra_attrs = array();
+		if ( ! empty( $url_hydrated ) ) {
+			$extra_attrs['data-url-hydrated'] = '1';
+		}
 
-		$layout_type = ! empty( $config['layout']['type'] ) ? $config['layout']['type'] : 'grid';
-		$is_slider   = 'slider' === $layout_type || 'carousel' === $layout_type;
-		$is_reels    = 'reels' === $layout_type || 'shorts' === $layout_type;
-		$slider_cfg  = ! empty( $config['layout']['slider'] ) ? $config['layout']['slider'] : array();
+		$needs_context = ( ! empty( $config['query']['context_mode'] ) && 'default' !== $config['query']['context_mode'] ) || ! empty( $config['query']['exclude_current'] );
+		if ( $needs_context ) {
+			$context_data = ! empty( $runtime_params['context'] ) && is_array( $runtime_params['context'] )
+				? $runtime_params['context']
+				: self::capture_page_context();
+			if ( ! empty( $context_data ) ) {
+				$extra_attrs['data-context'] = wp_json_encode( $context_data );
+			}
+		}
 
-		$wrapper_classes = array( 'gm-grid-wrapper', 'gm-v2-grid' );
-		$wrapper_attrs   = array(
-			'id'           => 'gm-grid-' . $grid_id,
-			'data-grid-id' => (string) $grid_id,
-			'style'        => $css_vars,
+		$output = self::render_configured_grid(
+			$query,
+			$config,
+			$block_content,
+			$grid_id,
+			$runtime_params,
+			false,
+			! empty( $grid->title ) ? $grid->title : '',
+			$extra_attrs
 		);
 
-		if ( $is_slider ) {
-			$wrapper_classes[]                    = 'gm-layout-slider';
-			$wrapper_attrs['data-layout']        = 'slider';
-			$wrapper_attrs['data-slider-config'] = wp_json_encode( $slider_cfg );
-			$wrapper_attrs['role']                = 'region';
-			$wrapper_attrs['aria-roledescription'] = 'carousel';
-			$wrapper_attrs['aria-label']          = ! empty( $grid->title ) ? $grid->title : __( 'Post Carousel', 'ajax-filter-posts' );
-		} elseif ( $is_reels ) {
-			$reels_cfg                            = ! empty( $config['layout']['reels'] ) ? $config['layout']['reels'] : array();
-			$wrapper_classes[]                    = 'gm-layout-reels';
-			$wrapper_attrs['data-layout']        = 'reels';
-			$wrapper_attrs['data-nav-position']  = ! empty( $reels_cfg['nav_position'] ) ? $reels_cfg['nav_position'] : 'outside';
-			$wrapper_attrs['role']                = 'region';
-			$wrapper_attrs['aria-roledescription'] = 'feed';
-			$wrapper_attrs['aria-label']          = ! empty( $grid->title ) ? $grid->title : __( 'Vertical Video Reels Feed', 'ajax-filter-posts' );
-		}
-
-		$attrs_rendered = '';
-		foreach ( $wrapper_attrs as $attr_k => $attr_v ) {
-			$attrs_rendered .= ' ' . esc_attr( $attr_k ) . '="' . esc_attr( $attr_v ) . '"';
-		}
-
-		ob_start();
-		?>
-		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"<?php echo $attrs_rendered; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-			<?php
-			// Render Top Filters Area.
-			if ( ! empty( $config['facets'] ) ) {
-				echo Filter_Registry::render_facets( $config['facets'], $grid_id, $runtime_params ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-
-			echo self::render_grid_items_markup( $query, $block_content, $config['layout'], $grid_id, ! empty( $grid->title ) ? $grid->title : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-			// Render Pagination Area (only for standard grid).
-			if ( ! $is_slider ) {
-				$pagination_type = ! empty( $config['pagination']['type'] ) ? $config['pagination']['type'] : 'numbered';
-				if ( 'none' !== $pagination_type && $query->max_num_pages > 1 ) {
-					echo Pagination_Registry::render( $pagination_type, $query, $config['pagination'], $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				}
-			}
-
-			// Render Scoped Custom CSS and Custom Scripts.
-			echo self::render_custom_code( $config, $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			?>
-		</div>
-		<?php
 		unset( $rendering_grids[ $grid_id ] );
-		return ob_get_clean();
+		return $output;
 	}
 
 	/**
@@ -154,21 +258,67 @@ class Grid_Renderer {
 		$posts_per_page = isset( $preview_query_config['posts_per_page'] ) ? absint( $preview_query_config['posts_per_page'] ) : 6;
 		$preview_query_config['posts_per_page'] = min( 6, max( 1, $posts_per_page ) );
 
-		$query    = Query_Builder::execute( $preview_query_config, $runtime_params );
+		$query = Query_Builder::execute( $preview_query_config, $runtime_params );
+
+		return self::render_configured_grid(
+			$query,
+			$config,
+			$block_content,
+			$grid_id,
+			$runtime_params,
+			true,
+			__( 'Preview Carousel', 'ajax-filter-posts' ),
+			array( 'data-preview-mode' => '1' )
+		);
+	}
+
+	/**
+	 * Shared renderer for live grids and builder previews, supporting top/sidebar/drawer filter layouts and grid/masonry/metro/slider/reels modes.
+	 *
+	 * @param \WP_Query $query          Executed query.
+	 * @param array     $config         Full grid configuration.
+	 * @param string    $block_content  Gutenberg card markup.
+	 * @param int       $grid_id        Grid ID.
+	 * @param array     $runtime_params Active filter/page runtime params.
+	 * @param bool      $is_preview     True for preview mode.
+	 * @param string    $grid_title     Optional accessible title.
+	 * @param array     $extra_attrs    Additional wrapper attributes.
+	 * @return string HTML output.
+	 */
+	private static function render_configured_grid( $query, $config, $block_content, $grid_id, $runtime_params, $is_preview = false, $grid_title = '', $extra_attrs = array() ) {
 		$layout   = isset( $config['layout'] ) ? $config['layout'] : array();
 		$css_vars = self::compile_css_vars( $layout );
 
-		$layout_type = ! empty( $layout['type'] ) ? $layout['type'] : 'grid';
-		$is_slider   = 'slider' === $layout_type || 'carousel' === $layout_type;
-		$is_reels    = 'reels' === $layout_type || 'shorts' === $layout_type;
-		$slider_cfg  = ! empty( $layout['slider'] ) ? $layout['slider'] : array();
+		$layout_type     = ! empty( $layout['type'] ) ? sanitize_key( $layout['type'] ) : 'grid';
+		$is_slider       = 'slider' === $layout_type || 'carousel' === $layout_type;
+		$is_reels        = 'reels' === $layout_type || 'shorts' === $layout_type;
+		$slider_cfg      = ! empty( $layout['slider'] ) ? $layout['slider'] : array();
+		$filter_position = ! empty( $layout['filter_position'] ) && in_array( $layout['filter_position'], array( 'top', 'left_sidebar', 'right_sidebar', 'drawer' ), true )
+			? $layout['filter_position']
+			: 'top';
+		$sticky_sidebar  = ! empty( $layout['sticky_sidebar'] );
+		$drawer_label    = ! empty( $layout['drawer_button_label'] ) ? sanitize_text_field( $layout['drawer_button_label'] ) : __( 'Filters', 'ajax-filter-posts' );
 
-		$wrapper_classes = array( 'gm-grid-wrapper', 'gm-v2-grid', 'gm-preview-grid' );
-		$wrapper_attrs   = array(
-			'id'                => 'gm-grid-' . $grid_id,
-			'data-grid-id'      => (string) $grid_id,
-			'data-preview-mode' => '1',
-			'style'             => $css_vars,
+		$wrapper_classes = array(
+			'gm-grid-wrapper',
+			'gm-v2-grid',
+			'gm-filter-pos-' . str_replace( '_', '-', $filter_position ),
+		);
+		if ( $is_preview ) {
+			$wrapper_classes[] = 'gm-preview-grid';
+		}
+		if ( $sticky_sidebar && in_array( $filter_position, array( 'left_sidebar', 'right_sidebar' ), true ) ) {
+			$wrapper_classes[] = 'gm-sidebar-sticky';
+		}
+
+		$wrapper_attrs = array_merge(
+			array(
+				'id'                   => 'gm-grid-' . $grid_id,
+				'data-grid-id'         => (string) $grid_id,
+				'data-filter-position' => $filter_position,
+				'style'                => $css_vars,
+			),
+			$extra_attrs
 		);
 
 		if ( $is_slider ) {
@@ -177,7 +327,7 @@ class Grid_Renderer {
 			$wrapper_attrs['data-slider-config'] = wp_json_encode( $slider_cfg );
 			$wrapper_attrs['role']                = 'region';
 			$wrapper_attrs['aria-roledescription'] = 'carousel';
-			$wrapper_attrs['aria-label']          = __( 'Live Carousel Preview', 'ajax-filter-posts' );
+			$wrapper_attrs['aria-label']          = $grid_title ? $grid_title : ( $is_preview ? __( 'Live Carousel Preview', 'ajax-filter-posts' ) : __( 'Post Carousel', 'ajax-filter-posts' ) );
 		} elseif ( $is_reels ) {
 			$reels_cfg                            = ! empty( $layout['reels'] ) ? $layout['reels'] : array();
 			$wrapper_classes[]                    = 'gm-layout-reels';
@@ -185,7 +335,16 @@ class Grid_Renderer {
 			$wrapper_attrs['data-nav-position']  = ! empty( $reels_cfg['nav_position'] ) ? $reels_cfg['nav_position'] : 'outside';
 			$wrapper_attrs['role']                = 'region';
 			$wrapper_attrs['aria-roledescription'] = 'feed';
-			$wrapper_attrs['aria-label']          = __( 'Live Reels Feed Preview', 'ajax-filter-posts' );
+			$wrapper_attrs['aria-label']          = $grid_title ? $grid_title : ( $is_preview ? __( 'Live Reels Feed Preview', 'ajax-filter-posts' ) : __( 'Vertical Video Reels Feed', 'ajax-filter-posts' ) );
+		} elseif ( 'masonry' === $layout_type ) {
+			$wrapper_classes[]            = 'gm-layout-masonry';
+			$wrapper_attrs['data-layout'] = 'masonry';
+		} elseif ( 'metro' === $layout_type ) {
+			$wrapper_classes[]            = 'gm-layout-metro';
+			$wrapper_attrs['data-layout'] = 'metro';
+		} else {
+			$wrapper_classes[]            = 'gm-layout-grid';
+			$wrapper_attrs['data-layout'] = 'grid';
 		}
 
 		$attrs_rendered = '';
@@ -193,27 +352,64 @@ class Grid_Renderer {
 			$attrs_rendered .= ' ' . esc_attr( $attr_k ) . '="' . esc_attr( $attr_v ) . '"';
 		}
 
+		$has_facets        = ! empty( $config['facets'] ) && is_array( $config['facets'] );
+		$facets_html       = $has_facets ? Filter_Registry::render_facets( $config['facets'], $grid_id, $runtime_params, $is_preview, $layout ) : '';
+		$has_split_wrapper = $has_facets && in_array( $filter_position, array( 'left_sidebar', 'right_sidebar', 'drawer' ), true );
+
+		$pagination_cfg  = ! empty( $config['pagination'] ) ? $config['pagination'] : array();
+		$pagination_type = ! empty( $pagination_cfg['type'] ) ? $pagination_cfg['type'] : 'numbered';
+		$pagination_html = '';
+		if ( ! $is_slider && 'none' !== $pagination_type && class_exists( 'GridMaster\Pagination\Pagination_Registry' ) && $query->max_num_pages > 1 ) {
+			$pagination_html = Pagination_Registry::render( $pagination_type, $query, $pagination_cfg, $grid_id );
+		}
+
+		$items_html = self::render_grid_items_markup(
+			$query,
+			$block_content,
+			$layout,
+			$grid_id,
+			$grid_title ? $grid_title : ( $is_preview ? __( 'Preview Carousel', 'ajax-filter-posts' ) : '' )
+		);
+
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>"<?php echo $attrs_rendered; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-			<?php
-			if ( ! empty( $config['facets'] ) ) {
-				echo Filter_Registry::render_facets( $config['facets'], $grid_id, $runtime_params, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
+			<?php if ( $has_split_wrapper ) : ?>
+				<div class="gm-filter-drawer-bar">
+					<button type="button" class="gm-filter-drawer-toggle" aria-expanded="false" aria-controls="gm-filters-<?php echo esc_attr( $grid_id ); ?>">
+						<span class="dashicons dashicons-filter" aria-hidden="true"></span>
+						<span class="gm-drawer-toggle-label"><?php echo esc_html( $drawer_label ); ?></span>
+						<span class="gm-drawer-count" hidden>0</span>
+					</button>
+				</div>
+				<div class="gm-grid-shell">
+					<div class="gm-filters-drawer-backdrop" hidden></div>
+					<?php
+					if ( 'right_sidebar' !== $filter_position ) {
+						echo $facets_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+					?>
+					<div class="gm-grid-main">
+						<?php
+						echo $items_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $pagination_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						?>
+					</div>
+					<?php
+					if ( 'right_sidebar' === $filter_position ) {
+						echo $facets_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+					?>
+				</div>
+			<?php else : ?>
+				<?php
+				echo $facets_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $items_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $pagination_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
+			<?php endif; ?>
 
-			echo self::render_grid_items_markup( $query, $block_content, $layout, $grid_id, __( 'Preview Carousel', 'ajax-filter-posts' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
-			// Render Pagination Area in preview if configured (only for grid).
-			if ( ! $is_slider ) {
-				$pagination_type = ! empty( $config['pagination']['type'] ) ? $config['pagination']['type'] : 'numbered';
-				if ( 'none' !== $pagination_type && class_exists( 'GridMaster\Pagination\Pagination_Registry' ) && $query->max_num_pages > 1 ) {
-					echo Pagination_Registry::render( $pagination_type, $query, $config['pagination'], $grid_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				}
-			}
-
-			// Render Scoped Custom CSS and Custom Scripts in preview.
-			echo self::render_custom_code( $config, $grid_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			?>
+			<?php echo self::render_custom_code( $config, $grid_id, $is_preview ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -418,6 +614,11 @@ class Grid_Renderer {
 			return '';
 		}
 
+		$parsed_block = self::prune_conditional_blocks( $parsed_block, $post_id, $post_type, $grid_id );
+		if ( null === $parsed_block ) {
+			return '';
+		}
+
 		// Contextual evaluation for core/shortcode block
 		if ( 'core/shortcode' === $parsed_block['blockName'] ) {
 			$raw = ! empty( $parsed_block['attrs']['text'] ) ? $parsed_block['attrs']['text'] : ( ! empty( $parsed_block['innerHTML'] ) ? strip_tags( $parsed_block['innerHTML'] ) : '' );
@@ -466,6 +667,129 @@ class Grid_Renderer {
 	}
 
 	/**
+	 * Evaluates a card block's conditional visibility rules (`gmVisibility` attribute).
+	 *
+	 * @param array  $parsed_block Parsed Gutenberg block array.
+	 * @param int    $post_id      Current loop post ID.
+	 * @param string $post_type    Current loop post type.
+	 * @param int    $grid_id      Grid ID.
+	 * @return bool True if the block should render, false to omit it.
+	 */
+	public static function should_render_card_block( $parsed_block, $post_id, $post_type, $grid_id ) {
+		$should_render = true;
+		$visibility    = ! empty( $parsed_block['attrs']['gmVisibility'] ) && is_array( $parsed_block['attrs']['gmVisibility'] )
+			? $parsed_block['attrs']['gmVisibility']
+			: array();
+		$rule          = isset( $visibility['rule'] ) ? sanitize_key( $visibility['rule'] ) : 'always';
+
+		switch ( $rule ) {
+			case 'logged_in':
+				$should_render = is_user_logged_in();
+				break;
+
+			case 'logged_out':
+				$should_render = ! is_user_logged_in();
+				break;
+
+			case 'has_thumbnail':
+				$should_render = has_post_thumbnail( $post_id );
+				break;
+
+			case 'meta_not_empty':
+			case 'meta_empty':
+				$meta_key = isset( $visibility['metaKey'] ) ? sanitize_text_field( (string) $visibility['metaKey'] ) : '';
+				if ( '' !== $meta_key ) {
+					$val      = get_post_meta( $post_id, $meta_key, true );
+					$has_val  = ( '' !== $val && null !== $val && false !== $val && array() !== $val );
+					$should_render = ( 'meta_not_empty' === $rule ) ? $has_val : ! $has_val;
+				}
+				break;
+
+			case 'meta_equals':
+				$meta_key = isset( $visibility['metaKey'] ) ? sanitize_text_field( (string) $visibility['metaKey'] ) : '';
+				if ( '' !== $meta_key ) {
+					$expected      = isset( $visibility['metaValue'] ) ? (string) $visibility['metaValue'] : '';
+					$actual        = get_post_meta( $post_id, $meta_key, true );
+					$should_render = (string) $actual === $expected;
+				}
+				break;
+
+			case 'in_taxonomy':
+				$taxonomy  = isset( $visibility['taxonomy'] ) ? sanitize_key( (string) $visibility['taxonomy'] ) : '';
+				$term_slug = isset( $visibility['termSlug'] ) ? sanitize_text_field( (string) $visibility['termSlug'] ) : '';
+				if ( '' !== $taxonomy && '' !== $term_slug ) {
+					$should_render = has_term( is_numeric( $term_slug ) ? absint( $term_slug ) : $term_slug, $taxonomy, $post_id );
+				}
+				break;
+		}
+
+		/**
+		 * Filters whether a block inside a GridMaster card should be rendered for the current post.
+		 *
+		 * @param bool   $should_render Computed visibility boolean.
+		 * @param array  $parsed_block  Parsed block structure.
+		 * @param int    $post_id       Current loop post ID.
+		 * @param string $post_type     Current loop post type.
+		 * @param int    $grid_id       Grid ID.
+		 */
+		return (bool) apply_filters( 'gridmaster_should_render_card_block', $should_render, $parsed_block, $post_id, $post_type, $grid_id );
+	}
+
+	/**
+	 * Recursively prunes hidden blocks and aligns innerContent slots before WP_Block instantiation.
+	 *
+	 * @param array  $parsed_block Parsed block array.
+	 * @param int    $post_id      Post ID.
+	 * @param string $post_type    Post Type.
+	 * @param int    $grid_id      Grid ID.
+	 * @return array|null Pruned block array or null if hidden.
+	 */
+	private static function prune_conditional_blocks( $parsed_block, $post_id, $post_type, $grid_id ) {
+		if ( ! self::should_render_card_block( $parsed_block, $post_id, $post_type, $grid_id ) ) {
+			return null;
+		}
+
+		if ( empty( $parsed_block['innerBlocks'] ) || ! is_array( $parsed_block['innerBlocks'] ) ) {
+			return $parsed_block;
+		}
+
+		if ( ! empty( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
+			$new_inner_blocks  = array();
+			$new_inner_content = array();
+			$block_idx         = 0;
+
+			foreach ( $parsed_block['innerContent'] as $chunk ) {
+				if ( null === $chunk ) {
+					if ( isset( $parsed_block['innerBlocks'][ $block_idx ] ) ) {
+						$pruned_child = self::prune_conditional_blocks( $parsed_block['innerBlocks'][ $block_idx ], $post_id, $post_type, $grid_id );
+						if ( null !== $pruned_child ) {
+							$new_inner_blocks[]  = $pruned_child;
+							$new_inner_content[] = null;
+						}
+					}
+					++$block_idx;
+				} else {
+					$new_inner_content[] = $chunk;
+				}
+			}
+
+			$parsed_block['innerBlocks']  = $new_inner_blocks;
+			$parsed_block['innerContent'] = $new_inner_content;
+		} else {
+			$filtered = array();
+			foreach ( $parsed_block['innerBlocks'] as $child ) {
+				$pruned_child = self::prune_conditional_blocks( $child, $post_id, $post_type, $grid_id );
+				if ( null !== $pruned_child ) {
+					$filtered[] = $pruned_child;
+				}
+			}
+			$parsed_block['innerBlocks'] = $filtered;
+		}
+
+		return $parsed_block;
+	}
+
+	/**
 	 * Compiles layout configuration into CSS custom properties.
 	 *
 	 * @param array $layout Layout config array.
@@ -495,9 +819,10 @@ class Grid_Renderer {
 		$nav_hover_bg    = ! empty( $reels_cfg['nav_hover_bg'] ) ? $reels_cfg['nav_hover_bg'] : 'rgba(30, 30, 30, 0.95)';
 		$nav_hover_color = ! empty( $reels_cfg['nav_hover_color'] ) ? $reels_cfg['nav_hover_color'] : '#ffffff';
 		$nav_size        = ! empty( $reels_cfg['nav_size'] ) ? absint( $reels_cfg['nav_size'] ) : 48;
+		$sidebar_width   = ! empty( $layout['sidebar_width'] ) ? max( 180, min( 480, absint( $layout['sidebar_width'] ) ) ) : 280;
 
 		return sprintf(
-			'--gm-cols-xs:%d;--gm-cols-sm:%d;--gm-cols-md:%d;--gm-cols-lg:%d;--gm-cols-xl:%d;--gm-slides-xs:%d;--gm-slides-sm:%d;--gm-slides-md:%d;--gm-slides-lg:%d;--gm-slides-xl:%d;--gm-col-gap:%dpx;--gm-row-gap:%dpx;--gm-reels-btn-bg:%s;--gm-reels-btn-color:%s;--gm-reels-btn-hover-bg:%s;--gm-reels-btn-hover-color:%s;--gm-reels-btn-size:%dpx;',
+			'--gm-cols-xs:%d;--gm-cols-sm:%d;--gm-cols-md:%d;--gm-cols-lg:%d;--gm-cols-xl:%d;--gm-slides-xs:%d;--gm-slides-sm:%d;--gm-slides-md:%d;--gm-slides-lg:%d;--gm-slides-xl:%d;--gm-col-gap:%dpx;--gm-row-gap:%dpx;--gm-sidebar-width:%dpx;--gm-reels-btn-bg:%s;--gm-reels-btn-color:%s;--gm-reels-btn-hover-bg:%s;--gm-reels-btn-hover-color:%s;--gm-reels-btn-size:%dpx;',
 			$xs,
 			$sm,
 			$md,
@@ -510,6 +835,7 @@ class Grid_Renderer {
 			$s_xl,
 			$col_gap,
 			$row_gap,
+			$sidebar_width,
 			esc_attr( $nav_bg ),
 			esc_attr( $nav_color ),
 			esc_attr( $nav_hover_bg ),

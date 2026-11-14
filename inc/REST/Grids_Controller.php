@@ -191,6 +191,28 @@ class Grids_Controller extends \WP_REST_Controller {
 				'permission_callback' => array( $this, 'get_items_permissions_check' ),
 			)
 		);
+
+		// Export a grid configuration and Gutenberg card template as portable JSON.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/export',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'export_item' ),
+				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+			)
+		);
+
+		// Import one or more grids from portable JSON.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/import',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'import_items' ),
+				'permission_callback' => array( $this, 'create_item_permissions_check' ),
+			)
+		);
 	}
 
 	/**
@@ -402,6 +424,160 @@ class Grids_Controller extends \WP_REST_Controller {
 	}
 
 	/**
+	 * Exports a grid's configuration and Gutenberg card markup as portable JSON.
+	 *
+	 * @param \WP_REST_Request $request REST request instance.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function export_item( $request ) {
+		$id   = absint( $request['id'] );
+		$grid = Grid_Repository::get( $id );
+
+		if ( ! $grid ) {
+			return new \WP_Error( 'grid_not_found', __( 'Grid not found.', 'ajax-filter-posts' ), array( 'status' => 404 ) );
+		}
+
+		$payload = array(
+			'format'         => 'gridmaster-grid-v2',
+			'schema_version' => 2,
+			'exported_at'    => gmdate( 'c' ),
+			'plugin_version' => defined( 'GRIDMASTER_VERSION' ) ? GRIDMASTER_VERSION : '2.0.0',
+			'grid'           => array(
+				'title'         => (string) $grid->title,
+				'config'        => is_array( $grid->config ) ? $grid->config : Grid_Repository::default_config(),
+				'block_content' => isset( $grid->block_content ) ? (string) $grid->block_content : '',
+			),
+		);
+
+		return rest_ensure_response( $payload );
+	}
+
+	/**
+	 * Imports one or more grids from portable JSON payloads.
+	 *
+	 * @param \WP_REST_Request $request REST request instance.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function import_items( $request ) {
+		$raw = $request->get_json_params();
+		if ( empty( $raw ) ) {
+			$raw = $request->get_param( 'payload' );
+			if ( is_string( $raw ) ) {
+				$raw = json_decode( $raw, true );
+			}
+		}
+
+		if ( ! is_array( $raw ) ) {
+			return new \WP_Error( 'invalid_import_payload', __( 'Invalid JSON import payload.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+
+		$entries = array();
+		if ( isset( $raw['grids'] ) && is_array( $raw['grids'] ) ) {
+			$entries = $raw['grids'];
+		} elseif ( isset( $raw['grid'] ) && is_array( $raw['grid'] ) ) {
+			$entries = array( $raw['grid'] );
+		} elseif ( isset( $raw['title'] ) || isset( $raw['config'] ) || isset( $raw['block_content'] ) ) {
+			$entries = array( $raw );
+		} else {
+			return new \WP_Error( 'invalid_import_schema', __( 'Unrecognized GridMaster export schema.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+
+		if ( empty( $entries ) ) {
+			return new \WP_Error( 'empty_import', __( 'Import payload does not contain any grids.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+
+		$defaults = Grid_Repository::default_config();
+		$imported = array();
+
+		foreach ( $entries as $entry ) {
+			if ( ! is_array( $entry ) ) {
+				continue;
+			}
+
+			$config = isset( $entry['config'] ) ? $entry['config'] : array();
+			if ( is_string( $config ) ) {
+				$config = json_decode( $config, true );
+			}
+			$has_block_content = isset( $entry['block_content'] ) && is_string( $entry['block_content'] );
+
+			if ( ! is_array( $config ) && ! $has_block_content ) {
+				continue;
+			}
+
+			$config = $this->merge_config_defaults( $defaults, is_array( $config ) ? $config : array() );
+
+			if ( ! current_user_can( 'unfiltered_html' ) ) {
+				if ( isset( $config['custom_code']['js'] ) ) {
+					$config['custom_code']['js'] = '';
+				}
+				if ( isset( $config['custom_js'] ) ) {
+					$config['custom_js'] = '';
+				}
+			}
+
+			$title = ! empty( $entry['title'] )
+				? sanitize_text_field( (string) $entry['title'] )
+				: __( 'Imported Grid', 'ajax-filter-posts' );
+
+			$block_content = $has_block_content ? $entry['block_content'] : Grid_Repository::default_block_content();
+
+			$saved_id = Grid_Repository::save(
+				array(
+					'id'               => 0,
+					'title'            => $title,
+					'config'           => $config,
+					'block_content'    => $block_content,
+					'migration_status' => 'new_builder',
+					'schema_version'   => 2,
+				)
+			);
+
+			if ( ! is_wp_error( $saved_id ) && $saved_id ) {
+				$created = Grid_Repository::get( $saved_id );
+				if ( $created ) {
+					$imported[] = $created;
+				}
+			}
+		}
+
+		if ( empty( $imported ) ) {
+			return new \WP_Error( 'invalid_grid_entry', __( 'No valid grid entries could be imported.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'imported' => count( $imported ),
+				'ids'      => array_map(
+					function ( $g ) {
+						return (int) $g->id;
+					},
+					$imported
+				),
+				'grids'    => $imported,
+			),
+			201
+		);
+	}
+
+	/**
+	 * Recursively merges missing default config keys into imported configs.
+	 *
+	 * @param array $defaults Default associative config array.
+	 * @param array $config   Imported config array.
+	 * @return array Merged config.
+	 */
+	private function merge_config_defaults( array $defaults, array $config ) {
+		foreach ( $defaults as $key => $default_val ) {
+			if ( ! array_key_exists( $key, $config ) ) {
+				$config[ $key ] = $default_val;
+			} elseif ( is_array( $default_val ) && ! empty( $default_val ) && is_array( $config[ $key ] ) ) {
+				$config[ $key ] = $this->merge_config_defaults( $default_val, $config[ $key ] );
+			}
+		}
+		return $config;
+	}
+
+	/**
 	 * Extracts and sanitizes runtime filter, sort, search, and pagination parameters from a REST request.
 	 *
 	 * @param \WP_REST_Request $request REST request instance.
@@ -436,6 +612,29 @@ class Grids_Controller extends \WP_REST_Controller {
 		$raw_min_price = $request->get_param( 'min_price' );
 		$raw_max_price = $request->get_param( 'max_price' );
 
+		$raw_context = $request->get_param( 'context' );
+		$context     = array();
+		if ( is_array( $raw_context ) ) {
+			if ( ! empty( $raw_context['post_id'] ) ) {
+				$context['post_id'] = absint( $raw_context['post_id'] );
+			}
+			if ( ! empty( $raw_context['post_type'] ) ) {
+				$context['post_type'] = sanitize_key( $raw_context['post_type'] );
+			}
+			if ( ! empty( $raw_context['term_id'] ) ) {
+				$context['term_id'] = absint( $raw_context['term_id'] );
+			}
+			if ( ! empty( $raw_context['taxonomy'] ) ) {
+				$context['taxonomy'] = sanitize_key( $raw_context['taxonomy'] );
+			}
+			if ( ! empty( $raw_context['author_id'] ) ) {
+				$context['author_id'] = absint( $raw_context['author_id'] );
+			}
+			if ( ! empty( $raw_context['search_query'] ) ) {
+				$context['search_query'] = sanitize_text_field( $raw_context['search_query'] );
+			}
+		}
+
 		return array(
 			'paged'      => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
 			'facets'     => $facets,
@@ -451,6 +650,7 @@ class Grids_Controller extends \WP_REST_Controller {
 			'date_from'  => $request->get_param( 'date_from' ) ? sanitize_text_field( $request->get_param( 'date_from' ) ) : '',
 			'date_to'    => $request->get_param( 'date_to' ) ? sanitize_text_field( $request->get_param( 'date_to' ) ) : '',
 			'bookmarks'  => $bookmarks,
+			'context'    => $context,
 		);
 	}
 
@@ -468,10 +668,18 @@ class Grids_Controller extends \WP_REST_Controller {
 
 		$html = Grid_Renderer::render_grid( $grid_id, $runtime_params );
 
-		return rest_ensure_response( array(
-			'html'    => $html,
-			'success' => true,
-		) );
+		$response_data = apply_filters(
+			'gridmaster_rest_render_response',
+			array(
+				'html'    => $html,
+				'success' => true,
+			),
+			$grid_id,
+			$runtime_params,
+			$request
+		);
+
+		return rest_ensure_response( $response_data );
 	}
 
 	/**
@@ -591,9 +799,27 @@ class Grids_Controller extends \WP_REST_Controller {
 			);
 		}
 
+		$author_users = get_users( array(
+			'capability' => array( 'edit_posts' ),
+			'orderby'    => 'display_name',
+			'order'      => 'ASC',
+			'number'     => 100,
+			'fields'     => array( 'ID', 'display_name' ),
+		) );
+		$formatted_authors = array();
+		if ( is_array( $author_users ) ) {
+			foreach ( $author_users as $u ) {
+				$formatted_authors[] = array(
+					'id'   => (int) $u->ID,
+					'name' => $u->display_name,
+				);
+			}
+		}
+
 		return rest_ensure_response( array(
 			'post_types'  => $formatted_pts,
 			'taxonomies'  => $formatted_tax,
+			'authors'     => $formatted_authors,
 			'pro_active'  => defined( 'GM_PRO_VERSION' ) || defined( 'GRIDMASTER_PRO_VERSION' ),
 			'pro_css_url' => defined( 'GM_PRO_URL' ) ? GM_PRO_URL . 'assets/css/frontend.css' : ( defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ? GRIDMASTER_PRO_ASSETS_URL . '/css/frontend.css' : '' ),
 			'pro_js_url'  => defined( 'GM_PRO_URL' ) ? GM_PRO_URL . 'assets/frontend.js' : ( defined( 'GRIDMASTER_PRO_ASSETS_URL' ) ? GRIDMASTER_PRO_ASSETS_URL . '/frontend.js' : '' ),

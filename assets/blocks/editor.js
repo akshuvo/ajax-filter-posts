@@ -759,6 +759,128 @@
 			: defaultAllowedBlocks;
 	};
 
+	// Conditional Visibility inspector controls for all GridMaster card & field blocks.
+	const isConditionalVisibilityTarget = ( blockName ) => {
+		if ( typeof blockName !== 'string' ) return false;
+		if ( blockName === 'gridmaster/grid' || blockName === 'gridmaster-pro/wishlist-drawer' ) return false;
+		return blockName.indexOf( 'gridmaster/' ) === 0 || blockName.indexOf( 'gridmaster-pro/' ) === 0;
+	};
+
+	if ( wp.hooks && wp.hooks.addFilter ) {
+		wp.hooks.addFilter(
+			'blocks.registerBlockType',
+			'gridmaster/conditional-visibility-attr',
+			( settings, name ) => {
+				if ( ! isConditionalVisibilityTarget( name ) ) {
+					return settings;
+				}
+				return {
+					...settings,
+					attributes: {
+						...( settings.attributes || {} ),
+						gmVisibility: {
+							type: 'object',
+							default: {},
+						},
+					},
+				};
+			}
+		);
+
+		if ( wp.compose && wp.compose.createHigherOrderComponent ) {
+			const withConditionalVisibility = wp.compose.createHigherOrderComponent(
+				( BlockEdit ) => ( props ) => {
+					if ( ! isConditionalVisibilityTarget( props.name ) ) {
+						return el( BlockEdit, props );
+					}
+
+					const vis = ( props.attributes && props.attributes.gmVisibility ) || {};
+					const rule = vis.rule || 'always';
+					const updateVis = ( key, value ) => {
+						props.setAttributes( {
+							gmVisibility: {
+								...vis,
+								[ key ]: value,
+							},
+						} );
+					};
+
+					return el(
+						Fragment,
+						null,
+						el( BlockEdit, props ),
+						el(
+							InspectorControls,
+							null,
+							el(
+								PanelBody,
+								{
+									title: rule !== 'always'
+										? __( 'Conditional Visibility (Active)', 'ajax-filter-posts' )
+										: __( 'Conditional Visibility', 'ajax-filter-posts' ),
+									initialOpen: rule !== 'always',
+								},
+								el( SelectControl, {
+									label: __( 'Display Condition', 'ajax-filter-posts' ),
+									value: rule,
+									options: [
+										{ label: __( 'Always visible', 'ajax-filter-posts' ), value: 'always' },
+										{ label: __( 'Logged-in users only', 'ajax-filter-posts' ), value: 'logged_in' },
+										{ label: __( 'Logged-out guests only', 'ajax-filter-posts' ), value: 'logged_out' },
+										{ label: __( 'Post has featured image', 'ajax-filter-posts' ), value: 'has_thumbnail' },
+										{ label: __( 'Custom field is not empty', 'ajax-filter-posts' ), value: 'meta_not_empty' },
+										{ label: __( 'Custom field is empty', 'ajax-filter-posts' ), value: 'meta_empty' },
+										{ label: __( 'Custom field equals value', 'ajax-filter-posts' ), value: 'meta_equals' },
+										{ label: __( 'Post has taxonomy term', 'ajax-filter-posts' ), value: 'in_taxonomy' },
+									],
+									onChange: ( val ) => updateVis( 'rule', val ),
+								} ),
+								( rule === 'meta_not_empty' || rule === 'meta_empty' || rule === 'meta_equals' ) &&
+									el( TextControl, {
+										label: __( 'Meta Key', 'ajax-filter-posts' ),
+										placeholder: 'e.g. _featured or badge_label',
+										value: vis.metaKey || '',
+										onChange: ( val ) => updateVis( 'metaKey', val ),
+									} ),
+								rule === 'meta_equals' &&
+									el( TextControl, {
+										label: __( 'Expected Meta Value', 'ajax-filter-posts' ),
+										placeholder: 'e.g. yes or 1',
+										value: vis.metaValue || '',
+										onChange: ( val ) => updateVis( 'metaValue', val ),
+									} ),
+								rule === 'in_taxonomy' &&
+									el(
+										Fragment,
+										null,
+										el( TextControl, {
+											label: __( 'Taxonomy Slug', 'ajax-filter-posts' ),
+											placeholder: 'category',
+											value: vis.taxonomy || 'category',
+											onChange: ( val ) => updateVis( 'taxonomy', val ),
+										} ),
+										el( TextControl, {
+											label: __( 'Term Slug or ID', 'ajax-filter-posts' ),
+											placeholder: 'e.g. featured',
+											value: vis.termSlug || '',
+											onChange: ( val ) => updateVis( 'termSlug', val ),
+										} )
+									)
+							)
+						)
+					);
+				},
+				'withConditionalVisibility'
+			);
+
+			wp.hooks.addFilter(
+				'editor.BlockEdit',
+				'gridmaster/conditional-visibility-controls',
+				withConditionalVisibility
+			);
+		}
+	}
+
 	// ==========================================
 	// 1. Grid Embed Block (gridmaster/grid)
 	// ==========================================

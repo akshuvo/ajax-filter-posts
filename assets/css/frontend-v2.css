@@ -606,7 +606,6 @@
 		min-width: 0;
 	}
 }
-}
 
 .gm-v2-grid .gm-facet-title {
 	font-size: 14px;
@@ -790,6 +789,17 @@
 	background: #2563eb;
 	color: #ffffff;
 	border-color: #2563eb;
+}
+
+.gm-v2-grid .gm-page-ellipsis {
+	min-width: 28px;
+	height: 38px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: #6b7280;
+	font-size: 14px;
+	user-select: none;
 }
 
 /* Load More & Infinite Spinner */
@@ -1792,4 +1802,260 @@
 
 .gm-clear-all-filters:hover {
 	color: #b91c1c;
+}
+
+/* ==============================================
+   8. Sidebar Split Layouts & Off-Canvas Filter Drawer
+   ============================================== */
+.gm-v2-grid .gm-filter-drawer-bar {
+	display: none;
+	margin-bottom: 16px;
+}
+
+.gm-v2-grid .gm-filter-drawer-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 16px;
+	border-radius: 8px;
+	border: 1px solid #d1d5db;
+	background: #ffffff;
+	color: #1f2937;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.gm-v2-grid .gm-filter-drawer-toggle:hover {
+	border-color: #2563eb;
+	color: #2563eb;
+}
+
+.gm-v2-grid .gm-drawer-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: #2563eb;
+	color: #ffffff;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.gm-v2-grid .gm-filters-drawer-header {
+	display: none;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 12px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #e5e7eb;
+	width: 100%;
+}
+
+.gm-v2-grid .gm-filters-drawer-title {
+	font-size: 16px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.gm-v2-grid .gm-filter-drawer-close {
+	background: #f3f4f6;
+	border: none;
+	border-radius: 6px;
+	width: 32px;
+	height: 32px;
+	font-size: 20px;
+	line-height: 1;
+	color: #374151;
+	cursor: pointer;
+}
+
+.gm-v2-grid .gm-grid-shell {
+	display: block;
+}
+
+.gm-v2-grid .gm-grid-main {
+	min-width: 0;
+}
+
+/* Desktop Sidebar Split */
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-grid-shell {
+	display: grid;
+	grid-template-columns: var(--gm-sidebar-width, 280px) minmax(0, 1fr);
+	gap: 28px;
+	align-items: start;
+}
+
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-grid-shell {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--gm-sidebar-width, 280px);
+	gap: 28px;
+	align-items: start;
+}
+
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filters-wrap,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filters-wrap {
+	flex-direction: column;
+	align-items: stretch;
+	margin-bottom: 0;
+	padding: 18px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+}
+
+.gm-v2-grid.gm-sidebar-sticky .gm-filters-wrap {
+	position: sticky;
+	top: 32px;
+}
+
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-facet,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-facet {
+	width: 100%;
+}
+
+/* Always Off-Canvas Drawer Mode */
+.gm-v2-grid.gm-filter-pos-drawer .gm-filter-drawer-bar {
+	display: flex;
+}
+
+.gm-v2-grid.gm-filter-pos-drawer .gm-filters-wrap,
+.gm-v2-grid.gm-drawer-mobile .gm-filters-wrap {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: min(360px, 88vw);
+	max-width: 100vw;
+	margin: 0;
+	padding: 24px 20px;
+	background: #ffffff;
+	box-shadow: 4px 0 30px rgba(0, 0, 0, 0.22);
+	z-index: 99999;
+	overflow-y: auto;
+	flex-direction: column;
+	align-items: stretch;
+	flex-wrap: nowrap;
+	transform: translateX(-105%);
+	transition: transform 0.25s ease;
+	border-radius: 0;
+}
+
+.gm-v2-grid.gm-filter-pos-drawer .gm-filters-wrap.is-open,
+.gm-v2-grid.gm-drawer-mobile .gm-filters-wrap.is-open {
+	transform: translateX(0);
+}
+
+.gm-v2-grid.gm-filter-pos-drawer .gm-filters-drawer-header,
+.gm-v2-grid.gm-drawer-mobile .gm-filters-drawer-header {
+	display: flex;
+}
+
+.gm-v2-grid .gm-filters-drawer-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.52);
+	z-index: 99998;
+}
+
+@media (max-width: 899px) {
+	.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filter-drawer-bar,
+	.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filter-drawer-bar {
+		display: flex;
+	}
+
+	.gm-v2-grid.gm-filter-pos-left-sidebar .gm-grid-shell,
+	.gm-v2-grid.gm-filter-pos-right-sidebar .gm-grid-shell {
+		display: block;
+	}
+
+	.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filters-wrap,
+	.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filters-wrap {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: min(360px, 88vw);
+		margin: 0;
+		padding: 24px 20px;
+		background: #ffffff;
+		border: none;
+		border-radius: 0;
+		box-shadow: 4px 0 30px rgba(0, 0, 0, 0.22);
+		z-index: 99999;
+		overflow-y: auto;
+		flex-direction: column;
+		align-items: stretch;
+		flex-wrap: nowrap;
+		transform: translateX(-105%);
+		transition: transform 0.25s ease;
+	}
+
+	.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filters-wrap.is-open,
+	.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filters-wrap.is-open {
+		transform: translateX(0);
+	}
+
+	.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filters-drawer-header,
+	.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filters-drawer-header {
+		display: flex;
+	}
+}
+
+/* ==============================================
+   9. True Masonry & Metro Mosaic Grid Layouts
+   ============================================== */
+.gm-v2-grid.gm-layout-masonry .gm-grid-items {
+	grid-auto-rows: 1px;
+	row-gap: 0 !important;
+	column-gap: var(--gm-col-gap, 30px);
+	align-items: start;
+}
+
+.gm-v2-grid.gm-layout-masonry .gm-grid-item {
+	height: auto !important;
+	align-self: start;
+}
+
+.gm-v2-grid.gm-layout-masonry .gm-card {
+	height: auto !important;
+}
+
+.gm-v2-grid.gm-layout-metro .gm-grid-items {
+	grid-auto-flow: dense;
+	grid-auto-rows: minmax(220px, auto);
+}
+
+@media (min-width: 768px) {
+	.gm-v2-grid.gm-layout-metro:not([style*="--gm-cols-lg:1"]) .gm-grid-item:nth-child(5n + 1) {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+
+	.gm-v2-grid.gm-layout-metro:not([style*="--gm-cols-lg:1"]) .gm-grid-item:nth-child(5n + 4) {
+		grid-column: span 2;
+	}
+
+	.gm-v2-grid.gm-layout-metro .gm-grid-item:nth-child(5n + 1) .gm-field-featured-image {
+		flex: 1 1 auto;
+	}
+
+	.gm-v2-grid.gm-layout-metro .gm-grid-item:nth-child(5n + 1) .gm-card-img {
+		height: 100%;
+		min-height: 240px;
+		object-fit: cover;
+	}
+}
+
+.gm-v2-grid .gm-term-empty {
+	opacity: 0.45;
+}
+
+.gm-v2-grid .gm-term-hidden {
+	display: none !important;
 }

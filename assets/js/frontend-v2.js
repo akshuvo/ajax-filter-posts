@@ -41,10 +41,21 @@
 			this.metaTimeout = null;
 
 			this.initFilters();
+			this.initFilterDrawer();
 			this.initPagination();
 			this.initInfiniteScroll();
 			this.initSlider();
 			this.initVerticalReels();
+			this.initMasonry();
+
+			const hadUrlParams = this.hydrateFromUrl();
+			if ( hadUrlParams && this.container.getAttribute( 'data-url-hydrated' ) !== '1' && ! this.isPreviewMode() ) {
+				this.fetchResults( false );
+			}
+		}
+
+		isPreviewMode() {
+			return this.container.getAttribute( 'data-preview-mode' ) === '1' || !! window.__gm_preview_mode;
 		}
 
 		initFilters() {
@@ -152,13 +163,14 @@
 				} );
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
-			// 3. Checkboxes & Pro Multi-Select Pills
+			// 3. Checkboxes & Pro Multi-Select Pills (<input> and <button>)
 			this.filtersWrap.addEventListener( 'change', ( e ) => {
-				const checkbox = e.target.closest( '.gm-filter-checkbox, .gm-filter-checkbox-pill' );
+				const checkbox = e.target.closest( 'input.gm-filter-checkbox, input.gm-filter-checkbox-pill' );
 				if ( ! checkbox ) return;
 
 				const taxonomy = checkbox.getAttribute( 'data-taxonomy' );
@@ -169,9 +181,9 @@
 
 				const checked = Array.from(
 					this.filtersWrap.querySelectorAll(
-						`.gm-filter-checkbox[data-taxonomy="${taxonomy}"]:checked, .gm-filter-checkbox-pill[data-taxonomy="${taxonomy}"]:checked`
+						`input.gm-filter-checkbox[data-taxonomy="${taxonomy}"]:checked, input.gm-filter-checkbox-pill[data-taxonomy="${taxonomy}"]:checked`
 					)
-				).map( ( cb ) => parseInt( cb.value, 10 ) );
+				).map( ( cb ) => parseInt( cb.value, 10 ) ).filter( Boolean );
 
 				if ( checked.length === 0 ) {
 					delete this.state.facets[ taxonomy ];
@@ -180,6 +192,42 @@
 				}
 
 				this.state.page = 1;
+				this.syncUrl();
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
+
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const pillBtn = e.target.closest( 'button.gm-filter-checkbox-pill' );
+				if ( ! pillBtn ) return;
+
+				const taxonomy = pillBtn.getAttribute( 'data-taxonomy' ) || pillBtn.closest( '.gm-facet' )?.getAttribute( 'data-taxonomy' );
+				if ( ! taxonomy ) return;
+
+				const isActive = ! pillBtn.classList.contains( 'gm-active' );
+				pillBtn.classList.toggle( 'gm-active', isActive );
+				pillBtn.setAttribute( 'aria-pressed', isActive ? 'true' : 'false' );
+
+				const selectedIds = [];
+				this.filtersWrap
+					.querySelectorAll(
+						`button.gm-filter-checkbox-pill[data-taxonomy="${taxonomy}"].gm-active, input.gm-filter-checkbox[data-taxonomy="${taxonomy}"]:checked, input.gm-filter-checkbox-pill[data-taxonomy="${taxonomy}"]:checked`
+					)
+					.forEach( ( el ) => {
+						const id = parseInt( el.getAttribute( 'data-term-id' ) || el.value, 10 );
+						if ( id && ! selectedIds.includes( id ) ) {
+							selectedIds.push( id );
+						}
+					} );
+
+				if ( selectedIds.length === 0 ) {
+					delete this.state.facets[ taxonomy ];
+				} else {
+					this.state.facets[ taxonomy ] = selectedIds;
+				}
+
+				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
@@ -199,11 +247,12 @@
 				}
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
 
-			// 5. Keyword search (debounced)
+			// 5. Keyword search (debounced) + Clear button
 			const searchInput = this.filtersWrap.querySelector( '.gm-filter-search' );
 			if ( searchInput ) {
 				searchInput.addEventListener( 'input', ( e ) => {
@@ -211,11 +260,24 @@
 					this.searchTimeout = setTimeout( () => {
 						this.state.search = e.target.value.trim();
 						this.state.page = 1;
+						this.syncUrl();
 						this.updateActiveFiltersBar();
 						this.fetchResults( false );
 					}, 350 );
 				} );
 			}
+			this.filtersWrap.addEventListener( 'click', ( e ) => {
+				const clearSearch = e.target.closest( '.gm-search-clear' );
+				if ( ! clearSearch ) return;
+				if ( searchInput ) {
+					searchInput.value = '';
+				}
+				this.state.search = '';
+				this.state.page = 1;
+				this.syncUrl();
+				this.updateActiveFiltersBar();
+				this.fetchResults( false );
+			} );
 
 			// 6. WooCommerce Price Range Slider & Number Inputs (.gm-facet-price-range)
 			this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( priceFacet ) => {
@@ -241,6 +303,7 @@
 					this.state.min_price = low <= absMin ? '' : low;
 					this.state.max_price = high >= absMax ? '' : high;
 					this.state.page = 1;
+					this.syncUrl();
 					this.updateActiveFiltersBar();
 					clearTimeout( this.priceTimeout );
 					this.priceTimeout = setTimeout( () => {
@@ -374,6 +437,7 @@
 				}
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
@@ -383,7 +447,7 @@
 				const toggleBtn = e.target.closest( '.gm-status-toggle-btn' );
 				if ( ! toggleBtn ) return;
 
-				const statusKey = toggleBtn.getAttribute( 'data-status' );
+				const statusKey = toggleBtn.getAttribute( 'data-status' ) || toggleBtn.getAttribute( 'data-status-key' );
 				if ( ! [ 'on_sale', 'in_stock', 'featured' ].includes( statusKey ) ) return;
 
 				const nextVal = ! this.state[ statusKey ];
@@ -392,6 +456,7 @@
 				toggleBtn.setAttribute( 'aria-pressed', nextVal ? 'true' : 'false' );
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
@@ -403,6 +468,7 @@
 
 				this.state.orderby = sortSelect.value || '';
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
@@ -421,6 +487,7 @@
 				}
 
 				this.state.page = 1;
+				this.syncUrl();
 				this.updateActiveFiltersBar();
 				this.fetchResults( false );
 			} );
@@ -430,7 +497,7 @@
 				const metaInput = e.target.closest( '.gm-meta-input' );
 				if ( ! metaInput ) return;
 
-				const metaKey = metaInput.getAttribute( 'data-meta-key' );
+				const metaKey = metaInput.getAttribute( 'data-meta-key' ) || metaInput.closest( '[data-meta-key]' )?.getAttribute( 'data-meta-key' );
 				if ( ! metaKey ) return;
 
 				clearTimeout( this.metaTimeout );
@@ -442,6 +509,7 @@
 						delete this.state.meta[ metaKey ];
 					}
 					this.state.page = 1;
+					this.syncUrl();
 					this.updateActiveFiltersBar();
 					this.fetchResults( false );
 				}, 300 );
@@ -522,7 +590,7 @@
 						} );
 					} else if ( chipType === 'status' && chipKey ) {
 						this.state[ chipKey ] = false;
-						this.filtersWrap.querySelectorAll( `.gm-status-toggle-btn[data-status="${chipKey}"]` ).forEach( ( b ) => {
+						this.filtersWrap.querySelectorAll( `.gm-status-toggle-btn[data-status="${chipKey}"], .gm-status-toggle-btn[data-status-key="${chipKey}"]` ).forEach( ( b ) => {
 							b.classList.remove( 'gm-active' );
 							b.setAttribute( 'aria-pressed', 'false' );
 						} );
@@ -535,7 +603,9 @@
 						this.filtersWrap.querySelectorAll( '.gm-date-from, .gm-date-to' ).forEach( ( d ) => ( d.value = '' ) );
 					} else if ( chipType === 'meta' && chipKey ) {
 						delete this.state.meta[ chipKey ];
-						this.filtersWrap.querySelectorAll( `.gm-meta-input[data-meta-key="${chipKey}"]` ).forEach( ( m ) => ( m.value = '' ) );
+						this.filtersWrap
+							.querySelectorAll( `.gm-meta-input[data-meta-key="${chipKey}"], .gm-facet-meta[data-meta-key="${chipKey}"] .gm-meta-input` )
+							.forEach( ( m ) => ( m.value = '' ) );
 					}
 
 					this.state.page = 1;
@@ -581,8 +651,13 @@
 				this.filtersWrap.querySelectorAll( '.gm-filter-select' ).forEach( ( s ) => ( s.value = '0' ) );
 				this.filtersWrap.querySelectorAll( '.gm-woo-sort-select' ).forEach( ( s ) => ( s.value = '' ) );
 				this.filtersWrap.querySelectorAll( '.gm-filter-checkbox, .gm-filter-checkbox-pill' ).forEach( ( c ) => {
-					c.checked = false;
-					c.closest( '.gm-pill-option, label' )?.classList.remove( 'gm-active' );
+					if ( c.tagName === 'INPUT' ) {
+						c.checked = false;
+						c.closest( '.gm-pill-option, label' )?.classList.remove( 'gm-active' );
+					} else {
+						c.classList.remove( 'gm-active' );
+						c.setAttribute( 'aria-pressed', 'false' );
+					}
 				} );
 				this.filtersWrap.querySelectorAll( '.gm-filter-radio' ).forEach( ( r ) => {
 					r.checked = parseInt( r.value, 10 ) === 0;
@@ -648,7 +723,11 @@
 						`.gm-filter-checkbox[data-taxonomy="${tax}"][value="${termId}"], .gm-filter-checkbox-pill[data-taxonomy="${tax}"][value="${termId}"]`
 					);
 					if ( btnEl ) {
-						label = btnEl.getAttribute( 'data-label' ) || btnEl.getAttribute( 'title' ) || btnEl.textContent.trim();
+						label =
+							btnEl.getAttribute( 'data-label' ) ||
+							btnEl.querySelector( '.gm-pill-label, .gm-swatch-label' )?.textContent.trim() ||
+							btnEl.getAttribute( 'title' ) ||
+							btnEl.textContent.trim();
 					} else if ( optEl ) {
 						label = optEl.textContent.trim();
 					} else if ( cbEl ) {
@@ -733,6 +812,157 @@
 				clearBtn.style.display = chips.length > 0 ? '' : 'none';
 			}
 			bar.classList.toggle( 'has-active-filters', chips.length > 0 );
+			this.updateDrawerFilterBadge( chips.length );
+		}
+
+		updateDrawerFilterBadge( count ) {
+			const badge = this.container.querySelector( '.gm-drawer-count' );
+			if ( ! badge ) return;
+			let activeCount = typeof count === 'number' ? count : 0;
+			if ( typeof count !== 'number' ) {
+				Object.keys( this.state.facets || {} ).forEach( ( k ) => {
+					if ( Array.isArray( this.state.facets[ k ] ) ) {
+						activeCount += this.state.facets[ k ].length;
+					}
+				} );
+				if ( this.state.search ) activeCount++;
+				if ( this.state.min_price !== '' || this.state.max_price !== '' ) activeCount++;
+				if ( this.state.min_rating > 0 ) activeCount++;
+				if ( this.state.on_sale ) activeCount++;
+				if ( this.state.in_stock ) activeCount++;
+				if ( this.state.featured ) activeCount++;
+				if ( this.state.date_from || this.state.date_to ) activeCount++;
+				activeCount += Object.keys( this.state.meta || {} ).length;
+			}
+			badge.textContent = String( activeCount );
+			badge.hidden = activeCount === 0;
+		}
+
+		initFilterDrawer() {
+			const toggleBtn = this.container.querySelector( '.gm-filter-drawer-toggle' );
+			const closeBtn = this.container.querySelector( '.gm-filter-drawer-close' );
+			const backdrop = this.container.querySelector( '.gm-filters-drawer-backdrop' );
+			if ( ! toggleBtn || ! this.filtersWrap ) return;
+
+			const openDrawer = () => {
+				this.filtersWrap.classList.add( 'is-open' );
+				toggleBtn.setAttribute( 'aria-expanded', 'true' );
+				if ( backdrop ) backdrop.hidden = false;
+				( closeBtn || this.filtersWrap ).focus?.();
+			};
+
+			const closeDrawer = () => {
+				this.filtersWrap.classList.remove( 'is-open' );
+				toggleBtn.setAttribute( 'aria-expanded', 'false' );
+				if ( backdrop ) backdrop.hidden = true;
+			};
+
+			toggleBtn.addEventListener( 'click', () => {
+				if ( this.filtersWrap.classList.contains( 'is-open' ) ) {
+					closeDrawer();
+				} else {
+					openDrawer();
+				}
+			} );
+
+			if ( closeBtn ) closeBtn.addEventListener( 'click', closeDrawer );
+			if ( backdrop ) backdrop.addEventListener( 'click', closeDrawer );
+
+			this.container.addEventListener( 'keydown', ( e ) => {
+				if ( e.key === 'Escape' && this.filtersWrap.classList.contains( 'is-open' ) ) {
+					closeDrawer();
+					toggleBtn.focus?.();
+				}
+			} );
+
+			this.updateDrawerFilterBadge();
+		}
+
+		updateFacetCounts( facetCounts, hideEmptyMap = {} ) {
+			if ( ! this.filtersWrap || ! facetCounts || typeof facetCounts !== 'object' ) return;
+
+			Object.keys( facetCounts ).forEach( ( tax ) => {
+				const counts = facetCounts[ tax ] || {};
+				const hideEmpty = !! hideEmptyMap[ tax ];
+				const activeSet = new Set( Array.isArray( this.state.facets[ tax ] ) ? this.state.facets[ tax ] : [] );
+
+				// Checkboxes & Radios
+				this.filtersWrap
+					.querySelectorAll( `.gm-facet[data-taxonomy="${tax}"] input.gm-filter-checkbox, .gm-facet[data-taxonomy="${tax}"] input.gm-filter-radio` )
+					.forEach( ( inp ) => {
+						const tid = parseInt( inp.value, 10 );
+						if ( ! tid || ! Object.prototype.hasOwnProperty.call( counts, String( tid ) ) ) return;
+						const count = parseInt( counts[ String( tid ) ], 10 ) || 0;
+						const isActive = activeSet.has( tid ) || inp.checked;
+						const label = inp.closest( 'label' );
+						if ( label ) {
+							const countEl = label.querySelector( '.gm-term-count' );
+							if ( countEl ) {
+								countEl.textContent = '(' + count + ')';
+							}
+							label.classList.toggle( 'gm-term-empty', count === 0 );
+							label.classList.toggle( 'gm-term-hidden', hideEmpty && count === 0 && ! isActive );
+						}
+					} );
+
+				// Dropdown options
+				this.filtersWrap.querySelectorAll( `select.gm-filter-select[data-taxonomy="${tax}"] option` ).forEach( ( opt ) => {
+					const tid = parseInt( opt.value, 10 );
+					if ( ! tid || ! Object.prototype.hasOwnProperty.call( counts, String( tid ) ) ) return;
+					if ( ! opt.dataset.baseLabel ) {
+						opt.dataset.baseLabel = opt.textContent.replace( /\s*\(\d+\)\s*$/, '' ).trim();
+					}
+					const count = parseInt( counts[ String( tid ) ], 10 ) || 0;
+					const isActive = activeSet.has( tid ) || opt.selected;
+					opt.textContent = opt.dataset.baseLabel + ' (' + count + ')';
+					opt.disabled = count === 0 && ! isActive;
+					opt.hidden = hideEmpty && count === 0 && ! isActive;
+				} );
+
+				// Multi-select pills
+				this.filtersWrap.querySelectorAll( `button.gm-filter-checkbox-pill[data-taxonomy="${tax}"]` ).forEach( ( pill ) => {
+					const tid = parseInt( pill.getAttribute( 'data-term-id' ), 10 );
+					if ( ! tid || ! Object.prototype.hasOwnProperty.call( counts, String( tid ) ) ) return;
+					const count = parseInt( counts[ String( tid ) ], 10 ) || 0;
+					const isActive = activeSet.has( tid ) || pill.classList.contains( 'gm-active' );
+					const countEl = pill.querySelector( '.gm-pill-count' );
+					if ( countEl ) {
+						countEl.textContent = String( count );
+					}
+					pill.classList.toggle( 'gm-term-empty', count === 0 );
+					pill.classList.toggle( 'gm-term-hidden', hideEmpty && count === 0 && ! isActive );
+					pill.disabled = count === 0 && ! isActive;
+				} );
+
+				// Swatches
+				this.filtersWrap.querySelectorAll( `.gm-swatch-filter-btn[data-taxonomy="${tax}"]` ).forEach( ( sw ) => {
+					const tid = parseInt( sw.getAttribute( 'data-term-id' ), 10 );
+					if ( ! tid || ! Object.prototype.hasOwnProperty.call( counts, String( tid ) ) ) return;
+					const count = parseInt( counts[ String( tid ) ], 10 ) || 0;
+					const isActive = activeSet.has( tid ) || sw.classList.contains( 'gm-active' );
+					const countEl = sw.querySelector( '.gm-swatch-count' );
+					if ( countEl ) {
+						countEl.textContent = '(' + count + ')';
+					}
+					sw.classList.toggle( 'gm-term-empty', count === 0 );
+					sw.classList.toggle( 'gm-term-hidden', hideEmpty && count === 0 && ! isActive );
+					sw.disabled = count === 0 && ! isActive;
+				} );
+
+				// Tabs
+				this.filtersWrap.querySelectorAll( `.gm-facet-tabs[data-taxonomy="${tax}"] .gm-filter-btn[data-term-id]` ).forEach( ( tab ) => {
+					const tid = parseInt( tab.getAttribute( 'data-term-id' ), 10 );
+					if ( ! tid || ! Object.prototype.hasOwnProperty.call( counts, String( tid ) ) ) return;
+					const count = parseInt( counts[ String( tid ) ], 10 ) || 0;
+					const isActive = activeSet.has( tid ) || tab.classList.contains( 'gm-active' );
+					const countEl = tab.querySelector( '.gm-term-count' );
+					if ( countEl ) {
+						countEl.textContent = '(' + count + ')';
+					}
+					tab.classList.toggle( 'gm-term-empty', count === 0 );
+					tab.classList.toggle( 'gm-term-hidden', hideEmpty && count === 0 && ! isActive );
+				} );
+			} );
 		}
 
 		initPagination() {
@@ -743,6 +973,7 @@
 					const page = parseInt( pageBtn.getAttribute( 'data-page' ), 10 );
 					if ( page && page !== this.state.page ) {
 						this.state.page = page;
+						this.syncUrl();
 						this.fetchResults( false );
 						this.container.scrollIntoView( { behavior: 'smooth', block: 'start' } );
 					}
@@ -807,6 +1038,17 @@
 				}
 			} catch ( e ) {}
 			
+			let gridContext = {};
+			try {
+				const rawCtx = this.container.getAttribute( 'data-context' );
+				if ( rawCtx ) {
+					const parsedCtx = JSON.parse( rawCtx );
+					if ( parsedCtx && typeof parsedCtx === 'object' ) {
+						gridContext = parsedCtx;
+					}
+				}
+			} catch ( e ) {}
+
 			let url;
 			let payload = {
 				page: this.state.page,
@@ -823,6 +1065,7 @@
 				date_from: this.state.date_from,
 				date_to: this.state.date_to,
 				bookmarks: guestBookmarks,
+				context: gridContext,
 			};
 
 			if ( isPreview && window.__gm_preview_data ) {
@@ -890,13 +1133,18 @@
 								currentPagination.remove();
 							}
 						} else if ( newPagination ) {
-							this.container.appendChild( newPagination );
+							( this.container.querySelector( '.gm-grid-main' ) || this.container ).appendChild( newPagination );
 						}
 
 						// Re-observe if infinite scroll
 						this.initInfiniteScroll();
 						this.initSlider();
 						this.initVerticalReels();
+						this.layoutMasonry();
+
+						if ( data.facet_counts ) {
+							this.updateFacetCounts( data.facet_counts, data.facet_hide_empty || {} );
+						}
 
 						// Dispatch loaded event for Pro blocks and external widgets
 						document.dispatchEvent( new CustomEvent( 'gridmaster_loaded_posts', { detail: { gridId: this.gridId } } ) );
@@ -956,51 +1204,276 @@
 		}
 
 		syncUrl() {
+			if ( this.isPreviewMode() ) {
+				return;
+			}
 			try {
 				const url = new URL( window.location.href );
-				let changed = false;
+				const prevUrlStr = url.toString();
 
-				if ( this.state.search ) {
-					url.searchParams.set( 'gm_q', this.state.search );
-					changed = true;
-				} else if ( url.searchParams.has( 'gm_q' ) ) {
-					url.searchParams.delete( 'gm_q' );
-					changed = true;
-				}
+				const setOrDelete = ( key, val ) => {
+					if ( val !== undefined && val !== null && val !== '' ) {
+						url.searchParams.set( key, String( val ) );
+					} else {
+						url.searchParams.delete( key );
+					}
+				};
 
-				Object.keys( this.state.facets ).forEach( ( tax ) => {
-					const vals = this.state.facets[ tax ];
-					if ( Array.isArray( vals ) && vals.length > 0 ) {
-						url.searchParams.set( 'gm_' + tax, vals.join( ',' ) );
-						changed = true;
-					} else if ( url.searchParams.has( 'gm_' + tax ) ) {
-						url.searchParams.delete( 'gm_' + tax );
-						changed = true;
+				setOrDelete( 'gm_q', this.state.search );
+				setOrDelete( 'gm_paged', this.state.page > 1 ? this.state.page : '' );
+				setOrDelete( 'gm_sort', this.state.orderby );
+				setOrDelete( 'gm_min_price', this.state.min_price !== '' ? this.state.min_price : '' );
+				setOrDelete( 'gm_max_price', this.state.max_price !== '' ? this.state.max_price : '' );
+				setOrDelete( 'gm_rating', this.state.min_rating > 0 ? this.state.min_rating : '' );
+				setOrDelete( 'gm_sale', this.state.on_sale ? '1' : '' );
+				setOrDelete( 'gm_stock', this.state.in_stock ? '1' : '' );
+				setOrDelete( 'gm_featured', this.state.featured ? '1' : '' );
+				setOrDelete( 'gm_from', this.state.date_from );
+				setOrDelete( 'gm_to', this.state.date_to );
+
+				// Persist meta filters (`gm_meta_<key>`) and remove stale meta params
+				const activeMetaKeys = new Set();
+				Object.keys( this.state.meta || {} ).forEach( ( metaKey ) => {
+					const val = this.state.meta[ metaKey ];
+					if ( val !== undefined && val !== null && val !== '' ) {
+						const paramKey = 'gm_meta_' + metaKey;
+						url.searchParams.set( paramKey, String( val ) );
+						activeMetaKeys.add( paramKey );
 					}
 				} );
 
+				// Persist taxonomy facets (`gm_<taxonomy>`)
+				const activeFacetKeys = new Set();
+				Object.keys( this.state.facets || {} ).forEach( ( tax ) => {
+					const vals = this.state.facets[ tax ];
+					if ( Array.isArray( vals ) && vals.length > 0 ) {
+						const paramKey = 'gm_' + tax;
+						url.searchParams.set( paramKey, vals.join( ',' ) );
+						activeFacetKeys.add( paramKey );
+					}
+				} );
+
+				const reservedParams = new Set( [
+					'gm_q',
+					'gm_paged',
+					'gm_sort',
+					'gm_min_price',
+					'gm_max_price',
+					'gm_rating',
+					'gm_sale',
+					'gm_stock',
+					'gm_featured',
+					'gm_from',
+					'gm_to',
+				] );
+
 				for ( const param of Array.from( url.searchParams.keys() ) ) {
-					if ( param.startsWith( 'gm_' ) && param !== 'gm_q' && param !== 'gm_paged' ) {
-						const tax = param.replace( 'gm_', '' );
-						if ( ! this.state.facets[ tax ] || this.state.facets[ tax ].length === 0 ) {
+					if ( ! param.startsWith( 'gm_' ) || reservedParams.has( param ) ) {
+						continue;
+					}
+					if ( param.startsWith( 'gm_meta_' ) ) {
+						if ( ! activeMetaKeys.has( param ) ) {
 							url.searchParams.delete( param );
-							changed = true;
 						}
+					} else if ( ! activeFacetKeys.has( param ) ) {
+						url.searchParams.delete( param );
 					}
 				}
 
-				if ( this.state.page > 1 ) {
-					url.searchParams.set( 'gm_paged', this.state.page );
-					changed = true;
-				} else if ( url.searchParams.has( 'gm_paged' ) ) {
-					url.searchParams.delete( 'gm_paged' );
-					changed = true;
-				}
-
-				if ( changed ) {
-					window.history.replaceState( null, '', url.toString() );
+				const nextUrlStr = url.toString();
+				if ( nextUrlStr !== prevUrlStr ) {
+					window.history.replaceState( null, '', nextUrlStr );
 				}
 			} catch ( e ) {}
+		}
+
+		hydrateFromUrl() {
+			if ( this.isPreviewMode() ) {
+				return false;
+			}
+			try {
+				const params = new URLSearchParams( window.location.search );
+				let hasAny = false;
+				const reservedParams = new Set( [
+					'gm_q',
+					'gm_paged',
+					'gm_sort',
+					'gm_min_price',
+					'gm_max_price',
+					'gm_rating',
+					'gm_sale',
+					'gm_stock',
+					'gm_featured',
+					'gm_from',
+					'gm_to',
+				] );
+
+				const q = params.get( 'gm_q' );
+				if ( q ) {
+					this.state.search = q.trim();
+					const searchInput = this.filtersWrap?.querySelector( '.gm-filter-search' );
+					if ( searchInput ) searchInput.value = this.state.search;
+					hasAny = true;
+				}
+
+				const paged = parseInt( params.get( 'gm_paged' ) || '', 10 );
+				if ( paged && paged > 1 ) {
+					this.state.page = paged;
+					hasAny = true;
+				}
+
+				const sort = params.get( 'gm_sort' );
+				if ( sort ) {
+					this.state.orderby = sort;
+					const sortSelect = this.filtersWrap?.querySelector( '.gm-woo-sort-select' );
+					if ( sortSelect ) sortSelect.value = sort;
+					hasAny = true;
+				}
+
+				const minPrice = params.get( 'gm_min_price' );
+				const maxPrice = params.get( 'gm_max_price' );
+				if ( minPrice !== null && minPrice !== '' ) {
+					this.state.min_price = parseFloat( minPrice );
+					hasAny = true;
+				}
+				if ( maxPrice !== null && maxPrice !== '' ) {
+					this.state.max_price = parseFloat( maxPrice );
+					hasAny = true;
+				}
+				if ( ( minPrice !== null && minPrice !== '' ) || ( maxPrice !== null && maxPrice !== '' ) ) {
+					this.filtersWrap?.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
+						const minS = pf.querySelector( '.gm-price-range-min' );
+						const maxS = pf.querySelector( '.gm-price-range-max' );
+						const minI = pf.querySelector( '.gm-price-input-min' );
+						const maxI = pf.querySelector( '.gm-price-input-max' );
+						const fill = pf.querySelector( '.gm-price-range-fill' );
+						const absMin = parseFloat( pf.getAttribute( 'data-min' ) ?? minS?.min ?? 0 );
+						const absMax = parseFloat( pf.getAttribute( 'data-max' ) ?? maxS?.max ?? 500 );
+						const low = this.state.min_price !== '' ? Math.max( absMin, Math.min( absMax, Number( this.state.min_price ) ) ) : absMin;
+						const high = this.state.max_price !== '' ? Math.max( low, Math.min( absMax, Number( this.state.max_price ) ) ) : absMax;
+						if ( minS ) minS.value = String( low );
+						if ( maxS ) maxS.value = String( high );
+						if ( minI ) minI.value = String( low );
+						if ( maxI ) maxI.value = String( high );
+						if ( fill ) {
+							const span = Math.max( 1, absMax - absMin );
+							const leftPct = Math.max( 0, Math.min( 100, ( ( low - absMin ) / span ) * 100 ) );
+							const rightPct = Math.max( 0, Math.min( 100, ( ( high - absMin ) / span ) * 100 ) );
+							fill.style.left = leftPct + '%';
+							fill.style.width = Math.max( 0, rightPct - leftPct ) + '%';
+						}
+					} );
+				}
+
+				const rating = parseInt( params.get( 'gm_rating' ) || '', 10 );
+				if ( rating > 0 ) {
+					this.state.min_rating = rating;
+					this.filtersWrap?.querySelectorAll( '.gm-rating-filter-btn' ).forEach( ( b ) => {
+						const isMatch = parseInt( b.getAttribute( 'data-rating' ) || b.value, 10 ) === rating;
+						b.classList.toggle( 'gm-active', isMatch );
+						b.setAttribute( 'aria-pressed', isMatch ? 'true' : 'false' );
+					} );
+					hasAny = true;
+				}
+
+				[
+					[ 'gm_sale', 'on_sale' ],
+					[ 'gm_stock', 'in_stock' ],
+					[ 'gm_featured', 'featured' ],
+				].forEach( ( [ paramKey, stateKey ] ) => {
+					const raw = params.get( paramKey );
+					if ( raw === '1' || raw === 'true' ) {
+						this.state[ stateKey ] = true;
+						this.filtersWrap
+							?.querySelectorAll( `.gm-status-toggle-btn[data-status="${stateKey}"], .gm-status-toggle-btn[data-status-key="${stateKey}"]` )
+							.forEach( ( b ) => {
+								b.classList.add( 'gm-active' );
+								b.setAttribute( 'aria-pressed', 'true' );
+							} );
+						hasAny = true;
+					}
+				} );
+
+				const dateFrom = params.get( 'gm_from' );
+				const dateTo = params.get( 'gm_to' );
+				if ( dateFrom ) {
+					this.state.date_from = dateFrom;
+					this.filtersWrap?.querySelectorAll( '.gm-date-from' ).forEach( ( d ) => ( d.value = dateFrom ) );
+					hasAny = true;
+				}
+				if ( dateTo ) {
+					this.state.date_to = dateTo;
+					this.filtersWrap?.querySelectorAll( '.gm-date-to' ).forEach( ( d ) => ( d.value = dateTo ) );
+					hasAny = true;
+				}
+
+				params.forEach( ( val, key ) => {
+					if ( ! key.startsWith( 'gm_' ) || reservedParams.has( key ) || ! val ) {
+						return;
+					}
+					if ( key.startsWith( 'gm_meta_' ) ) {
+						const metaKey = key.slice( 'gm_meta_'.length );
+						if ( metaKey ) {
+							this.state.meta[ metaKey ] = val;
+							this.filtersWrap
+								?.querySelectorAll( `.gm-meta-input[data-meta-key="${metaKey}"], .gm-facet-meta[data-meta-key="${metaKey}"] .gm-meta-input` )
+								.forEach( ( m ) => ( m.value = val ) );
+							hasAny = true;
+						}
+						return;
+					}
+
+					const tax = key.slice( 'gm_'.length );
+					const termIds = val
+						.split( ',' )
+						.map( ( id ) => parseInt( id.trim(), 10 ) )
+						.filter( ( id ) => id > 0 );
+					if ( tax && termIds.length > 0 ) {
+						this.state.facets[ tax ] = termIds;
+						hasAny = true;
+
+						if ( this.filtersWrap ) {
+							this.filtersWrap.querySelectorAll( `.gm-facet[data-taxonomy="${tax}"] .gm-filter-btn` ).forEach( ( b ) => {
+								const bId = parseInt( b.getAttribute( 'data-term-id' ), 10 );
+								const match = termIds.includes( bId );
+								b.classList.toggle( 'gm-active', match );
+								b.setAttribute( 'aria-selected', match ? 'true' : 'false' );
+							} );
+							const select = this.filtersWrap.querySelector( `.gm-filter-select[data-taxonomy="${tax}"]` );
+							if ( select ) {
+								select.value = String( termIds[ 0 ] );
+							}
+							this.filtersWrap.querySelectorAll( `input.gm-filter-checkbox[data-taxonomy="${tax}"], input.gm-filter-checkbox-pill[data-taxonomy="${tax}"]` ).forEach( ( cb ) => {
+								const match = termIds.includes( parseInt( cb.value, 10 ) );
+								cb.checked = match;
+								cb.closest( '.gm-pill-option, label' )?.classList.toggle( 'gm-active', match );
+							} );
+							this.filtersWrap.querySelectorAll( `button.gm-filter-checkbox-pill[data-taxonomy="${tax}"]` ).forEach( ( pill ) => {
+								const pId = parseInt( pill.getAttribute( 'data-term-id' ), 10 );
+								const match = termIds.includes( pId );
+								pill.classList.toggle( 'gm-active', match );
+								pill.setAttribute( 'aria-pressed', match ? 'true' : 'false' );
+							} );
+							this.filtersWrap.querySelectorAll( `.gm-filter-radio[data-taxonomy="${tax}"]` ).forEach( ( r ) => {
+								r.checked = termIds.includes( parseInt( r.value, 10 ) );
+							} );
+							this.filtersWrap.querySelectorAll( `.gm-swatch-filter-btn[data-taxonomy="${tax}"]` ).forEach( ( sw ) => {
+								const sId = parseInt( sw.getAttribute( 'data-term-id' ), 10 );
+								const match = termIds.includes( sId );
+								sw.classList.toggle( 'gm-active', match );
+								sw.setAttribute( 'aria-pressed', match ? 'true' : 'false' );
+							} );
+						}
+					}
+				} );
+
+				if ( hasAny ) {
+					this.updateActiveFiltersBar();
+				}
+				return hasAny;
+			} catch ( e ) {
+				return false;
+			}
 		}
 
 		initSlider() {
@@ -1611,6 +2084,54 @@
 				if ( reelObserver ) reelObserver.disconnect();
 			};
 		}
+
+		initMasonry() {
+			const isMasonry = this.container.classList.contains( 'gm-layout-masonry' ) || this.container.getAttribute( 'data-layout' ) === 'masonry';
+			if ( ! isMasonry || ! this.itemsContainer ) return;
+
+			this.layoutMasonry();
+
+			if ( ! this.masonryResizeObserver && typeof ResizeObserver !== 'undefined' ) {
+				this.masonryResizeObserver = new ResizeObserver( () => this.layoutMasonry() );
+				this.masonryResizeObserver.observe( this.itemsContainer );
+			}
+			this.itemsContainer.querySelectorAll( 'img' ).forEach( ( img ) => {
+				if ( ! img.complete && ! img.dataset.gmMasonryBound ) {
+					img.dataset.gmMasonryBound = '1';
+					img.addEventListener( 'load', () => this.layoutMasonry(), { once: true } );
+				}
+			} );
+		}
+
+		layoutMasonry() {
+			const isMasonry = this.container.classList.contains( 'gm-layout-masonry' ) || this.container.getAttribute( 'data-layout' ) === 'masonry';
+			if ( ! isMasonry || ! this.itemsContainer ) return;
+
+			const computed = window.getComputedStyle( this.container );
+			const rowGap = parseInt( computed.getPropertyValue( '--gm-row-gap' ), 10 ) || 24;
+
+			const items = Array.from( this.itemsContainer.querySelectorAll( '.gm-grid-item' ) );
+			items.forEach( ( item ) => {
+				item.style.marginBottom = rowGap + 'px';
+				item.style.gridRowEnd = 'auto';
+			} );
+
+			window.requestAnimationFrame( () => {
+				items.forEach( ( item ) => {
+					const card = item.querySelector( '.gm-card' ) || item;
+					const height = Math.ceil( card.getBoundingClientRect().height );
+					const span = Math.max( 1, height + rowGap );
+					item.style.gridRowEnd = 'span ' + span;
+				} );
+			} );
+
+			this.itemsContainer.querySelectorAll( 'img' ).forEach( ( img ) => {
+				if ( ! img.complete && ! img.dataset.gmMasonryBound ) {
+					img.dataset.gmMasonryBound = '1';
+					img.addEventListener( 'load', () => this.layoutMasonry(), { once: true } );
+				}
+			} );
+		}
 	}
 
 	// Auto-initialize all grids on page load
@@ -1619,11 +2140,12 @@
 			if ( ! activeGrids.has( el ) ) {
 				activeGrids.set( el, new GridInstance( el ) );
 			} else {
-				// Re-init slider or reels if already existing
+				// Re-init slider, reels, or masonry if already existing
 				const inst = activeGrids.get( el );
 				if ( inst ) {
 					if ( inst.initSlider ) inst.initSlider();
 					if ( inst.initVerticalReels ) inst.initVerticalReels();
+					if ( inst.layoutMasonry ) inst.layoutMasonry();
 				}
 			}
 		} );

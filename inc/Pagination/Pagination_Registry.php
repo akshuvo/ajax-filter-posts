@@ -46,9 +46,66 @@ class Pagination_Registry {
 	}
 
 	/**
-	 * Renders numbered pagination links.
+	 * Builds the ordered sequence of page numbers and ellipsis markers for numbered pagination.
+	 *
+	 * @param int $current Current page number (1-indexed).
+	 * @param int $max     Total pages.
+	 * @return array<int|string> Sequence containing integers and '...' strings.
+	 */
+	public static function build_page_sequence( $current, $max ) {
+		$current = max( 1, (int) $current );
+		$max     = max( 1, (int) $max );
+
+		if ( $max <= 7 ) {
+			return range( 1, $max );
+		}
+
+		$candidates = array( 1, $max );
+
+		$win_start = max( 1, $current - 1 );
+		$win_end   = min( $max, $current + 1 );
+		for ( $i = $win_start; $i <= $win_end; $i++ ) {
+			$candidates[] = $i;
+		}
+		if ( $current <= 3 ) {
+			$candidates[] = 2;
+			$candidates[] = 3;
+			$candidates[] = 4;
+		}
+		if ( $current >= $max - 2 ) {
+			$candidates[] = $max - 1;
+			$candidates[] = $max - 2;
+			$candidates[] = $max - 3;
+		}
+
+		$candidates = array_values( array_unique( array_filter( $candidates, function ( $p ) use ( $max ) {
+			return $p >= 1 && $p <= $max;
+		} ) ) );
+		sort( $candidates );
+
+		$sequence = array();
+		$prev     = 0;
+		foreach ( $candidates as $p ) {
+			if ( $prev > 0 ) {
+				$gap = $p - $prev;
+				if ( 2 === $gap ) {
+					$sequence[] = $prev + 1;
+				} elseif ( $gap > 2 ) {
+					$sequence[] = '...';
+				}
+			}
+			$sequence[] = $p;
+			$prev       = $p;
+		}
+
+		return $sequence;
+	}
+
+	/**
+	 * Renders numbered pagination links with ellipsis truncation for large page counts.
 	 */
 	private static function render_numbered( $current, $max, $grid_id ) {
+		$sequence = self::build_page_sequence( $current, $max );
 		ob_start();
 		?>
 		<nav class="gm-pagination gm-pagination-numbered" role="navigation" aria-label="<?php esc_attr_e( 'Grid Pagination', 'ajax-filter-posts' ); ?>">
@@ -56,13 +113,17 @@ class Pagination_Registry {
 				<button type="button" class="gm-page-btn gm-prev-btn" data-page="<?php echo esc_attr( $current - 1 ); ?>" aria-label="<?php esc_attr_e( 'Previous Page', 'ajax-filter-posts' ); ?>">&laquo; <?php esc_html_e( 'Prev', 'ajax-filter-posts' ); ?></button>
 			<?php endif; ?>
 
-			<?php for ( $i = 1; $i <= $max; $i++ ) :
-				$is_current = ( $i === $current );
-				?>
-				<button type="button" class="gm-page-btn<?php echo $is_current ? ' gm-current' : ''; ?>" data-page="<?php echo esc_attr( $i ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Page %d', 'ajax-filter-posts' ), $i ) ); ?>" <?php echo $is_current ? 'aria-current="page"' : ''; ?>>
-					<?php echo esc_html( $i ); ?>
-				</button>
-			<?php endfor; ?>
+			<?php foreach ( $sequence as $item ) : ?>
+				<?php if ( '...' === $item ) : ?>
+					<span class="gm-page-ellipsis" aria-hidden="true">&hellip;</span>
+				<?php else :
+					$is_current = ( (int) $item === (int) $current );
+					?>
+					<button type="button" class="gm-page-btn<?php echo $is_current ? ' gm-current' : ''; ?>" data-page="<?php echo esc_attr( $item ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Page %d', 'ajax-filter-posts' ), $item ) ); ?>" <?php echo $is_current ? 'aria-current="page"' : ''; ?>>
+						<?php echo esc_html( $item ); ?>
+					</button>
+				<?php endif; ?>
+			<?php endforeach; ?>
 
 			<?php if ( $current < $max ) : ?>
 				<button type="button" class="gm-page-btn gm-next-btn" data-page="<?php echo esc_attr( $current + 1 ); ?>" aria-label="<?php esc_attr_e( 'Next Page', 'ajax-filter-posts' ); ?>"><?php esc_html_e( 'Next', 'ajax-filter-posts' ); ?> &raquo;</button>

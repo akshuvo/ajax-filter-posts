@@ -2418,6 +2418,25 @@ body.gm-focus-mode #wpcontent {
 	gap: 8px;
 	margin-block: 12px;
 }
+.gm-meta-query-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-top: 8px;
+}
+.gm-meta-query-row {
+	display: grid;
+	grid-template-columns: 1fr 140px 1fr auto;
+	gap: 10px;
+	align-items: start;
+	padding: 10px 12px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+}
+.gm-meta-query-row .components-base-control {
+	margin-bottom: 0;
+}
 .gm-builder-root, .gm-builder-workspace, .gm-workspace-bounded-body, .gm-card-studio-container {
 	min-height: 0;
 }
@@ -2822,4 +2841,95 @@ body.gridmaster_page_gridmaster-builder .block-editor-block-popover__drop-zone-f
 		opacity: 1;
 		transform: translateY(0) scale(1);
 	}
+}
+
+/* Starter Blueprints Modal */
+.gm-blueprints-modal .components-modal__content {
+	max-width: 780px;
+}
+
+.gm-blueprints-intro {
+	margin: 0 0 16px;
+	color: #475569;
+	font-size: 13.5px;
+}
+
+.gm-blueprints-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+	gap: 14px;
+}
+
+.gm-blueprint-card {
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 16px;
+	background: #ffffff;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 12px;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gm-blueprint-card:hover:not(.is-locked) {
+	border-color: #6366f1;
+	box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
+}
+
+.gm-blueprint-card.is-locked {
+	opacity: 0.72;
+	background: #f8fafc;
+}
+
+.gm-blueprint-card-head {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+}
+
+.gm-blueprint-card-head > .dashicons {
+	font-size: 22px;
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: #eef2ff;
+	color: #4f46e5;
+	flex-shrink: 0;
+}
+
+.gm-blueprint-card-head h4 {
+	margin: 0 0 4px;
+	font-size: 14.5px;
+	color: #0f172a;
+}
+
+.gm-blueprint-card-head p {
+	margin: 0;
+	font-size: 12.5px;
+	line-height: 1.45;
+	color: #64748b;
+}
+
+.gm-blueprint-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.gm-blueprint-tag {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 3px 8px;
+	border-radius: 9999px;
+	background: #f1f5f9;
+	color: #334155;
+}
+
+.gm-blueprint-actions {
+	display: flex;
+	justify-content: flex-end;
 }

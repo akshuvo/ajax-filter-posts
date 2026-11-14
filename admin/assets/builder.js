@@ -2709,8 +2709,9 @@
 	 * Content Tab: Query settings divided into clean logical cards.
 	 */
 	function ContentTab( props ) {
-		const { config, updateConfigSection, metadata } = props;
+		const { config, updateConfigSection, metadata, isPro } = props;
 		const clauses = Array.isArray( config.query?.tax_query ) ? config.query.tax_query : [];
+		const metaClauses = Array.isArray( config.query?.meta_query ) ? config.query.meta_query : [];
 		const clause = clauses[ 0 ] || {};
 		const [ taxonomy, setTaxonomy ] = useState( clause.taxonomy || '' );
 		const [ operator, setOperator ] = useState( clause.operator || 'IN' );
@@ -2757,12 +2758,50 @@
 				{ className: 'gm-settings-card' },
 				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-database' } ), ' ' + __( 'Source', 'ajax-filter-posts' ) ),
 				el( SelectControl, {
-					label: __( 'Post Type', 'ajax-filter-posts' ),
-					value: config.query?.post_type || 'post',
+					label: __( 'Primary Post Type', 'ajax-filter-posts' ),
+					value: Array.isArray( config.query?.post_type ) ? ( config.query.post_type[ 0 ] || 'post' ) : ( config.query?.post_type || 'post' ),
 					options: ( metadata.post_types || [] ).map( ( pt ) => ( { label: pt.label, value: pt.name } ) ),
-					onChange: ( val ) => updateConfigSection( 'query', 'post_type', val ),
-					help: __( 'Select the WordPress post type to display.', 'ajax-filter-posts' ),
+					onChange: ( val ) => {
+						const currentArr = Array.isArray( config.query?.post_type ) ? config.query.post_type : [];
+						if ( currentArr.length > 1 ) {
+							const merged = Array.from( new Set( [ val, ...currentArr.slice( 1 ) ] ) );
+							updateConfigSection( 'query', 'post_type', merged.length === 1 ? merged[ 0 ] : merged );
+						} else {
+							updateConfigSection( 'query', 'post_type', val );
+						}
+					},
+					help: __( 'Select the primary WordPress post type to display.', 'ajax-filter-posts' ),
 				} ),
+				( metadata.post_types || [] ).length > 1 &&
+					el(
+						'div',
+						{ style: { marginBottom: '14px' } },
+						el( 'p', { style: { fontSize: '12px', fontWeight: 600, margin: '0 0 6px' } }, __( 'Include Additional Post Types (Multi-Type Query)', 'ajax-filter-posts' ) ),
+						el(
+							'div',
+							{ style: { display: 'flex', flexWrap: 'wrap', gap: '12px' } },
+							( metadata.post_types || [] ).map( ( pt ) => {
+								const activeList = Array.isArray( config.query?.post_type )
+									? config.query.post_type
+									: [ config.query?.post_type || 'post' ];
+								const primaryType = activeList[ 0 ] || 'post';
+								const isChecked = activeList.includes( pt.name );
+								return el( wp.components.CheckboxControl, {
+									key: pt.name,
+									label: pt.label,
+									checked: isChecked,
+									disabled: pt.name === primaryType,
+									onChange: ( checked ) => {
+										let next = checked
+											? Array.from( new Set( [ ...activeList, pt.name ] ) )
+											: activeList.filter( ( n ) => n !== pt.name || n === primaryType );
+										if ( next.length === 0 ) next = [ primaryType ];
+										updateConfigSection( 'query', 'post_type', next.length === 1 ? next[ 0 ] : next );
+									},
+								} );
+							} )
+						)
+					),
 				el( RangeControl, {
 					label: __( 'Posts Per Page', 'ajax-filter-posts' ),
 					value: config.query?.posts_per_page || 9,
@@ -2770,6 +2809,52 @@
 					max: 50,
 					onChange: ( val ) => updateConfigSection( 'query', 'posts_per_page', val ),
 					help: __( 'Number of posts to query and display per page.', 'ajax-filter-posts' ),
+				} )
+			),
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-admin-site' } ), ' ' + __( 'Context-Aware & Advanced Query', 'ajax-filter-posts' ) ),
+				el( SelectControl, {
+					label: __( 'Dynamic Query Context', 'ajax-filter-posts' ),
+					value: config.query?.context_mode || 'default',
+					options: [
+						{ label: __( 'Standalone / Manual Query (Default)', 'ajax-filter-posts' ), value: 'default' },
+						{ label: __( 'Current Archive Context (Category / Tag / Search / Author)', 'ajax-filter-posts' ), value: 'current_archive' },
+						{ label: __( 'Related Posts (Share Categories/Tags with Current Post)', 'ajax-filter-posts' ), value: 'related_posts' },
+					],
+					onChange: ( val ) => updateConfigSection( 'query', 'context_mode', val ),
+					help: __( 'Inherit terms from archive templates or automatically display related posts matching the viewed entry.', 'ajax-filter-posts' ),
+				} ),
+				el( ToggleControl, {
+					label: __( 'Exclude Current Post', 'ajax-filter-posts' ),
+					checked: !! config.query?.exclude_current,
+					onChange: ( val ) => updateConfigSection( 'query', 'exclude_current', val ),
+					help: __( 'Prevent the currently open post or product from showing up inside this grid.', 'ajax-filter-posts' ),
+				} ),
+				el( ToggleControl, {
+					label: __( 'Ignore Sticky Posts', 'ajax-filter-posts' ),
+					checked: config.query?.ignore_sticky_posts !== false,
+					onChange: ( val ) => updateConfigSection( 'query', 'ignore_sticky_posts', val ),
+				} ),
+				el( TextControl, {
+					label: __( 'Offset (Skip First N Posts)', 'ajax-filter-posts' ),
+					type: 'number',
+					min: 0,
+					value: config.query?.offset !== undefined ? config.query.offset : 0,
+					onChange: ( val ) => updateConfigSection( 'query', 'offset', Math.max( 0, parseInt( val, 10 ) || 0 ) ),
+				} ),
+				el( TextControl, {
+					label: __( 'Include Only Post IDs (Comma-Separated)', 'ajax-filter-posts' ),
+					value: Array.isArray( config.query?.post__in ) ? config.query.post__in.join( ', ' ) : ( config.query?.post__in || '' ),
+					placeholder: 'e.g. 12, 45, 78',
+					onChange: ( val ) => updateConfigSection( 'query', 'post__in', val ),
+				} ),
+				el( TextControl, {
+					label: __( 'Exclude Post IDs (Comma-Separated)', 'ajax-filter-posts' ),
+					value: Array.isArray( config.query?.post__not_in ) ? config.query.post__not_in.join( ', ' ) : ( config.query?.post__not_in || '' ),
+					placeholder: 'e.g. 9, 15',
+					onChange: ( val ) => updateConfigSection( 'query', 'post__not_in', val ),
 				} )
 			),
 			el(
@@ -2818,7 +2903,108 @@
 						'aria-label': __( 'Remove term', 'ajax-filter-posts' ) + ' ' + ( termLabels.current[ id ] || id ),
 					}, ( termLabels.current[ id ] || '#' + id ) + ' ×' ) ) )
 				),
-				clauses.length > 1 && el( 'p', null, __( 'Additional saved taxonomy restrictions are also applied.', 'ajax-filter-posts' ) )
+				clauses.length > 1 && el( 'p', null, __( 'Additional saved taxonomy restrictions are also applied.', 'ajax-filter-posts' ) ),
+				el( SelectControl, {
+					label: __( 'Filter by Author', 'ajax-filter-posts' ),
+					value: config.query?.author ? String( config.query.author ) : '',
+					options: [
+						{ label: __( 'All Authors', 'ajax-filter-posts' ), value: '' },
+						...( metadata.authors || [] ).map( ( a ) => ( { label: a.name + ' (#' + a.id + ')', value: String( a.id ) } ) ),
+					],
+					onChange: ( val ) => updateConfigSection( 'query', 'author', val ? parseInt( val, 10 ) : '' ),
+					help: __( 'Restrict initial query results to posts created by a specific author.', 'ajax-filter-posts' ),
+				} )
+			),
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el(
+					'div',
+					{ style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' } },
+					el( 'h3', { className: 'gm-card-heading', style: { margin: 0 } }, el( 'span', { className: 'dashicons dashicons-admin-generic' } ), ' ' + __( 'Custom Field Query (Meta Query)', 'ajax-filter-posts' ) ),
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							disabled: ! isPro,
+							onClick: () => {
+								const next = [ ...metaClauses, { key: '', compare: '=', value: '' } ];
+								updateConfigSection( 'query', 'meta_query', next );
+							},
+						},
+						'+ ' + __( 'Add Meta Condition', 'ajax-filter-posts' )
+					)
+				),
+				! isPro &&
+					el(
+						Notice,
+						{ status: 'info', isDismissible: false },
+						__( 'Static custom field (meta_query) rules are powered by GridMaster Pro.', 'ajax-filter-posts' )
+					),
+				metaClauses.length === 0
+					? el( 'p', { style: { color: '#64748b', fontSize: '13px', margin: '4px 0 0' } }, __( 'No custom field conditions applied. Add a condition to filter posts by post meta.', 'ajax-filter-posts' ) )
+					: el(
+							'div',
+							{ className: 'gm-meta-query-list' },
+							metaClauses.map( ( mq, idx ) =>
+								el(
+									'div',
+									{ key: idx, className: 'gm-meta-query-row' },
+									el( TextControl, {
+										label: __( 'Meta Key', 'ajax-filter-posts' ),
+										value: mq.key || '',
+										placeholder: 'e.g. featured_flag',
+										onChange: ( val ) => {
+											const next = metaClauses.map( ( item, i ) => ( i === idx ? { ...item, key: val } : item ) );
+											updateConfigSection( 'query', 'meta_query', next );
+										},
+									} ),
+									el( SelectControl, {
+										label: __( 'Compare', 'ajax-filter-posts' ),
+										value: mq.compare || '=',
+										options: [
+											{ label: '= (Equals)', value: '=' },
+											{ label: '!= (Not Equals)', value: '!=' },
+											{ label: '> (Greater Than)', value: '>' },
+											{ label: '>= (Greater / Equal)', value: '>=' },
+											{ label: '< (Less Than)', value: '<' },
+											{ label: '<= (Less / Equal)', value: '<=' },
+											{ label: 'LIKE (Contains)', value: 'LIKE' },
+											{ label: 'NOT LIKE', value: 'NOT LIKE' },
+											{ label: 'IN (Comma List)', value: 'IN' },
+											{ label: 'NOT IN', value: 'NOT IN' },
+											{ label: 'EXISTS', value: 'EXISTS' },
+											{ label: 'NOT EXISTS', value: 'NOT EXISTS' },
+										],
+										onChange: ( val ) => {
+											const next = metaClauses.map( ( item, i ) => ( i === idx ? { ...item, compare: val } : item ) );
+											updateConfigSection( 'query', 'meta_query', next );
+										},
+									} ),
+									! [ 'EXISTS', 'NOT EXISTS' ].includes( ( mq.compare || '=' ).toUpperCase() ) &&
+										el( TextControl, {
+											label: __( 'Value', 'ajax-filter-posts' ),
+											value: mq.value || '',
+											placeholder: __( 'Expected value', 'ajax-filter-posts' ),
+											onChange: ( val ) => {
+												const next = metaClauses.map( ( item, i ) => ( i === idx ? { ...item, value: val } : item ) );
+												updateConfigSection( 'query', 'meta_query', next );
+											},
+										} ),
+									el( Button, {
+										icon: 'trash',
+										isDestructive: true,
+										isSmall: true,
+										label: __( 'Remove meta condition', 'ajax-filter-posts' ),
+										onClick: () => {
+											const next = metaClauses.filter( ( _, i ) => i !== idx );
+											updateConfigSection( 'query', 'meta_query', next );
+										},
+									} )
+								)
+							)
+					  )
 			),
 			el(
 				'div',
@@ -2907,6 +3093,8 @@
 				const defaultTax = metadata.taxonomies?.[ 0 ]?.name || 'category';
 				const defaultHeadingMap = {
 					search: '',
+					'date-range': __( 'Filter by Date', 'ajax-filter-posts' ),
+					'meta-filter': __( 'Filter by Custom Field', 'ajax-filter-posts' ),
 					'woo-price-range': __( 'Price Range', 'ajax-filter-posts' ),
 					'woo-attribute-swatches': __( 'Filter by Attribute', 'ajax-filter-posts' ),
 					'woo-rating-filter': __( 'Customer Rating', 'ajax-filter-posts' ),
@@ -2921,7 +3109,14 @@
 					show_all: true,
 					all_label: __( 'All', 'ajax-filter-posts' ),
 				};
-				if ( type === 'woo-price-range' ) {
+				if ( type === 'taxonomy-tabs' ) {
+					newFacet.style = 'tabs';
+					newFacet.multi_select = false;
+				} else if ( type === 'search' ) {
+					newFacet.placeholder = __( 'Search posts...', 'ajax-filter-posts' );
+				} else if ( type === 'meta-filter' ) {
+					newFacet.meta_key = '';
+				} else if ( type === 'woo-price-range' ) {
 					newFacet.min_price = 0;
 					newFacet.max_price = 500;
 					newFacet.step = 5;
@@ -2973,10 +3168,12 @@
 			{ id: 'taxonomy-tabs', label: __( 'Category Tabs', 'ajax-filter-posts' ), icon: 'tag' },
 			{ id: 'taxonomy-dropdown', label: __( 'Dropdown Filter', 'ajax-filter-posts' ), icon: 'arrow-down-alt2' },
 			{ id: 'taxonomy-checkbox', label: __( 'Checkboxes', 'ajax-filter-posts' ), icon: 'forms' },
+			{ id: 'taxonomy-radio', label: __( 'Radio Buttons', 'ajax-filter-posts' ), icon: 'marker' },
 			{ id: 'search', label: __( 'Search Bar', 'ajax-filter-posts' ), icon: 'search' },
 			{ id: 'reset', label: __( 'Reset Button', 'ajax-filter-posts' ), icon: 'undo' },
 			{ id: 'multi-select', label: __( 'Multi-Select (Pro)', 'ajax-filter-posts' ), icon: 'list-view', isPro: true },
 			{ id: 'date-range', label: __( 'Date Range (Pro)', 'ajax-filter-posts' ), icon: 'calendar', isPro: true },
+			{ id: 'meta-filter', label: __( 'Custom Field / Meta Filter (Pro)', 'ajax-filter-posts' ), icon: 'admin-generic', isPro: true },
 			{ id: 'woo-price-range', label: __( 'WooCommerce Price Range Slider (Pro)', 'ajax-filter-posts' ), icon: 'money-alt', isPro: true },
 			{ id: 'woo-attribute-swatches', label: __( 'WooCommerce Attribute Swatches (Pro)', 'ajax-filter-posts' ), icon: 'art', isPro: true },
 			{ id: 'woo-rating-filter', label: __( 'WooCommerce Star Rating Filter (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', isPro: true },
@@ -3094,21 +3291,68 @@
 									'div',
 									{ className: 'gm-facet-detail-body' },
 									( facet.type.startsWith( 'taxonomy' ) || facet.type === 'multi-select' || facet.type === 'woo-attribute-swatches' ) &&
-										el( SelectControl, {
-											label: __( 'Taxonomy / Attribute Source', 'ajax-filter-posts' ),
-											value: facet.taxonomy || 'category',
-											options: ( metadata.taxonomies || [] ).map( ( t ) => ( { label: t.label + ' (' + t.name + ')', value: t.name } ) ),
-											onChange: ( val ) => updateFacet( idx, 'taxonomy', val ),
-										} ),
+										el(
+											Fragment,
+											null,
+											el( SelectControl, {
+												label: __( 'Taxonomy / Attribute Source', 'ajax-filter-posts' ),
+												value: facet.taxonomy || 'category',
+												options: ( metadata.taxonomies || [] ).map( ( t ) => ( { label: t.label + ' (' + t.name + ')', value: t.name } ) ),
+												onChange: ( val ) => updateFacet( idx, 'taxonomy', val ),
+											} ),
+											isPro &&
+												el( ToggleControl, {
+													label: __( 'Hide Empty Terms on Dynamic Recount (Pro)', 'ajax-filter-posts' ),
+													checked: !! facet.hide_empty_dynamic,
+													onChange: ( val ) => updateFacet( idx, 'hide_empty_dynamic', val ),
+													help: __( 'Automatically hide filter options that drop to 0 matching results after filtering.', 'ajax-filter-posts' ),
+												} )
+										),
 									el( TextControl, {
 										label: __( 'Filter Label / Heading', 'ajax-filter-posts' ),
 										value: facet.heading || '',
 										onChange: ( val ) => updateFacet( idx, 'heading', val ),
 									} ),
+									facet.type === 'meta-filter' &&
+										el( TextControl, {
+											label: __( 'Post Meta Key', 'ajax-filter-posts' ),
+											value: facet.meta_key || '',
+											placeholder: 'e.g. event_city',
+											onChange: ( val ) => updateFacet( idx, 'meta_key', val ),
+											help: __( ' visitors can type a value to filter posts matching this custom field key.', 'ajax-filter-posts' ).trim(),
+										} ),
+									facet.type === 'search' &&
+										el( TextControl, {
+											label: __( 'Search Input Placeholder', 'ajax-filter-posts' ),
+											value: facet.placeholder || __( 'Search posts...', 'ajax-filter-posts' ),
+											onChange: ( val ) => updateFacet( idx, 'placeholder', val ),
+										} ),
+									facet.type === 'taxonomy-radio' &&
+										el( TextControl, {
+											label: __( '"All" Option Label', 'ajax-filter-posts' ),
+											value: facet.all_label || __( 'All', 'ajax-filter-posts' ),
+											onChange: ( val ) => updateFacet( idx, 'all_label', val ),
+										} ),
 									facet.type === 'taxonomy-tabs' &&
 										el(
 											Fragment,
 											null,
+											el( SelectControl, {
+												label: __( 'Tabs Display Style', 'ajax-filter-posts' ),
+												value: facet.style || 'tabs',
+												options: [
+													{ label: __( 'Standard Tabs', 'ajax-filter-posts' ), value: 'tabs' },
+													{ label: __( 'Pill Chips (Wrap)', 'ajax-filter-posts' ), value: 'chips' },
+													{ label: __( 'Pill Chips (Horizontal Scroll)', 'ajax-filter-posts' ), value: 'chips_scroll' },
+												],
+												onChange: ( val ) => updateFacet( idx, 'style', val ),
+											} ),
+											el( ToggleControl, {
+												label: __( 'Allow Multiple Active Tabs', 'ajax-filter-posts' ),
+												checked: !! facet.multi_select,
+												onChange: ( val ) => updateFacet( idx, 'multi_select', val ),
+												help: __( 'Allow visitors to select multiple category tabs simultaneously.', 'ajax-filter-posts' ),
+											} ),
 											el( ToggleControl, {
 												label: __( 'Show "All" Tab', 'ajax-filter-posts' ),
 												checked: facet.show_all !== false,
@@ -3163,6 +3407,11 @@
 												label: __( 'Allow Multiple Swatch Selection', 'ajax-filter-posts' ),
 												checked: facet.multi_select !== false,
 												onChange: ( val ) => updateFacet( idx, 'multi_select', val ),
+											} ),
+											el( ToggleControl, {
+												label: __( 'Show Product / Post Count', 'ajax-filter-posts' ),
+												checked: !! facet.show_count,
+												onChange: ( val ) => updateFacet( idx, 'show_count', val ),
 											} )
 										),
 									facet.type === 'woo-status-toggles' &&
@@ -3458,6 +3707,49 @@
 					borderColor: '#e5e7eb',
 					boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
 					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'masonry-pinterest',
+				title: __( 'Masonry Mosaic', 'ajax-filter-posts' ),
+				desc: __( 'Dynamic staggered variable-height bricks arranged cleanly into crisp vertical columns.', 'ajax-filter-posts' ),
+				icon: 'schedule',
+				tag: __( 'Masonry • 3 Cols', 'ajax-filter-posts' ),
+				layoutType: 'masonry',
+				columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
+				col_gap: 24,
+				row_gap: 24,
+				card: {
+					layoutMode: 'vertical',
+					backgroundColor: '#ffffff',
+					padding: '18px',
+					borderRadius: '10px',
+					borderWidth: '1px',
+					borderColor: '#e2e8f0',
+					boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+					hoverEffect: 'lift',
+				},
+			},
+			{
+				id: 'metro-editorial',
+				title: __( 'Metro Magazine Mosaic', 'ajax-filter-posts' ),
+				desc: __( 'Editorial mosaic grid featuring highlighted 2×2 lead stories packed densely.', 'ajax-filter-posts' ),
+				icon: 'layout',
+				tag: __( 'Metro • 4 Cols', 'ajax-filter-posts' ),
+				layoutType: 'metro',
+				columns: { xs: 1, sm: 2, md: 3, lg: 4, xl: 4 },
+				col_gap: 18,
+				row_gap: 18,
+				card: {
+					layoutMode: 'overlay',
+					minHeight: '220px',
+					backgroundColor: '#1e293b',
+					padding: '20px',
+					borderRadius: '10px',
+					borderWidth: '0px',
+					borderColor: 'transparent',
+					boxShadow: '0 6px 18px rgba(0,0,0,0.14)',
+					hoverEffect: 'zoom',
 				},
 			},
 			{
@@ -3813,7 +4105,13 @@
 		const layoutType = config.layout?.type || 'grid';
 		const isSlider = 'slider' === layoutType || 'carousel' === layoutType;
 		const isReels = 'reels' === layoutType || 'shorts' === layoutType;
+		const isMasonry = 'masonry' === layoutType;
+		const isMetro = 'metro' === layoutType;
 		const isGrid = ! isSlider && ! isReels;
+		const filterPosition = config.layout?.filter_position || 'top';
+		const sidebarWidth = config.layout?.sidebar_width || 280;
+		const stickySidebar = !! config.layout?.sticky_sidebar;
+		const drawerLabel = config.layout?.drawer_button_label || __( 'Filters', 'ajax-filter-posts' );
 		const sliderConfig = config.layout?.slider || {
 			slides_to_show: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 },
 			arrows: true,
@@ -3852,7 +4150,7 @@
 						'button',
 						{
 							type: 'button',
-							className: 'gm-layout-type-option' + ( isGrid ? ' is-active' : '' ),
+							className: 'gm-layout-type-option' + ( isGrid && ! isMasonry && ! isMetro ? ' is-active' : '' ),
 							onClick: () => updateLayoutType( 'grid' ),
 						},
 						el( 'span', { className: 'dashicons dashicons-grid-view gm-layout-type-icon' } ),
@@ -3861,6 +4159,36 @@
 							{ className: 'gm-layout-type-info' },
 							el( 'strong', null, __( 'Standard Post Grid', 'ajax-filter-posts' ) ),
 							el( 'span', null, __( 'Classic responsive grid with columns and pagination.', 'ajax-filter-posts' ) )
+						)
+					),
+					el(
+						'button',
+						{
+							type: 'button',
+							className: 'gm-layout-type-option' + ( isMasonry ? ' is-active' : '' ),
+							onClick: () => updateLayoutType( 'masonry' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-schedule gm-layout-type-icon' } ),
+						el(
+							'div',
+							{ className: 'gm-layout-type-info' },
+							el( 'strong', null, __( 'Masonry Bricks', 'ajax-filter-posts' ) ),
+							el( 'span', null, __( 'Variable-height staggered cards packed vertically without blank gaps.', 'ajax-filter-posts' ) )
+						)
+					),
+					el(
+						'button',
+						{
+							type: 'button',
+							className: 'gm-layout-type-option' + ( isMetro ? ' is-active' : '' ),
+							onClick: () => updateLayoutType( 'metro' ),
+						},
+						el( 'span', { className: 'dashicons dashicons-layout gm-layout-type-icon' } ),
+						el(
+							'div',
+							{ className: 'gm-layout-type-info' },
+							el( 'strong', null, __( 'Metro Mosaic Grid', 'ajax-filter-posts' ) ),
+							el( 'span', null, __( 'Dense magazine mosaic featuring featured multi-column lead cards.', 'ajax-filter-posts' ) )
 						)
 					),
 					el(
@@ -4105,6 +4433,50 @@
 						} )
 					)
 				),
+
+			// Filter Placement & Sidebar / Drawer Settings
+			el(
+				'div',
+				{ className: 'gm-settings-card' },
+				el( 'h3', { className: 'gm-card-heading' }, el( 'span', { className: 'dashicons dashicons-filter' } ), ' ' + __( 'Filter Placement & Mobile Drawer', 'ajax-filter-posts' ) ),
+				el( SelectControl, {
+					label: __( 'Filter Bar Position', 'ajax-filter-posts' ),
+					value: filterPosition,
+					options: [
+						{ label: __( 'Top Bar (Above Grid)', 'ajax-filter-posts' ), value: 'top' },
+						{ label: __( 'Left Sidebar (Split Layout + Mobile Drawer)', 'ajax-filter-posts' ), value: 'left_sidebar' },
+						{ label: __( 'Right Sidebar (Split Layout + Mobile Drawer)', 'ajax-filter-posts' ), value: 'right_sidebar' },
+						{ label: __( 'Off-Canvas Slide Drawer (All Devices)', 'ajax-filter-posts' ), value: 'drawer' },
+					],
+					onChange: ( val ) => updateConfigSection( 'layout', 'filter_position', val ),
+					help: __( 'Display filters inline above results, as a desktop sidebar that collapses to a mobile drawer, or inside an off-canvas slide-over drawer.', 'ajax-filter-posts' ),
+				} ),
+				( filterPosition === 'left_sidebar' || filterPosition === 'right_sidebar' ) &&
+					el(
+						Fragment,
+						null,
+						el( RangeControl, {
+							label: __( 'Sidebar Width (px)', 'ajax-filter-posts' ),
+							value: sidebarWidth,
+							min: 180,
+							max: 480,
+							step: 10,
+							onChange: ( val ) => updateConfigSection( 'layout', 'sidebar_width', val ),
+						} ),
+						el( ToggleControl, {
+							label: __( 'Sticky Filter Sidebar', 'ajax-filter-posts' ),
+							checked: stickySidebar,
+							onChange: ( val ) => updateConfigSection( 'layout', 'sticky_sidebar', val ),
+							help: __( 'Keep the sidebar filters fixed in view while scrolling through long grids.', 'ajax-filter-posts' ),
+						} )
+					),
+				filterPosition !== 'top' &&
+					el( TextControl, {
+						label: __( 'Drawer Toggle Button Label', 'ajax-filter-posts' ),
+						value: drawerLabel,
+						onChange: ( val ) => updateConfigSection( 'layout', 'drawer_button_label', val ),
+					} )
+			),
 
 			// Slider-specific settings
 			isSlider &&
@@ -4588,6 +4960,186 @@
 	}
 
 	/**
+	 * Starter Grid Blueprints Modal (full Query + Facets + Layout + Card presets).
+	 */
+	function StarterBlueprintsModal( props ) {
+		const { onClose, onApply, isPro } = props;
+
+		const blueprints = [
+			{
+				id: 'saas-blog',
+				title: __( 'SaaS Blog & Resource Hub', 'ajax-filter-posts' ),
+				desc: __( 'Category pill tabs, keyword search, sort dropdown, 3-column card grid, and numbered pagination.', 'ajax-filter-posts' ),
+				icon: 'welcome-write-blog',
+				requiresPro: false,
+				tags: [ 'Grid (3 Col)', 'Pills + Search', 'Numbered' ],
+				cardAttrs: { layoutMode: 'vertical', padding: '20px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', boxShadow: '0 6px 18px rgba(15,23,42,0.05)', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				config: {
+					query: { post_type: 'post', posts_per_page: 9, orderby: 'date', order: 'DESC' },
+					facets: [
+						{ id: 'bp_cat', type: 'taxonomy-tabs', taxonomy: 'category', label: __( 'Category', 'ajax-filter-posts' ), style: 'pills', show_all: true, show_count: true },
+						{ id: 'bp_search', type: 'search', label: '', placeholder: __( 'Search articles…', 'ajax-filter-posts' ) },
+						{ id: 'bp_sort', type: 'sort', label: __( 'Sort', 'ajax-filter-posts' ) },
+					],
+					layout: { type: 'grid', filter_position: 'top', columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }, col_gap: 24, row_gap: 24 },
+					pagination: { type: 'numbered', load_more_text: __( 'Load More', 'ajax-filter-posts' ) },
+				},
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '16/9', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'core/group', { layout: { type: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+						createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+						createBlock( 'gridmaster/reading-time', {} ),
+					] ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '19px', isLink: true } ),
+					createBlock( 'gridmaster/excerpt', { length: 18 } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'Read Article', 'ajax-filter-posts' ) } ),
+				],
+			},
+			{
+				id: 'editorial-metro',
+				title: __( 'Editorial Metro Magazine', 'ajax-filter-posts' ),
+				desc: __( 'Asymmetric Metro mosaic featuring a double-span lead story, category tabs, and Load More pagination.', 'ajax-filter-posts' ),
+				icon: 'grid-view',
+				requiresPro: false,
+				tags: [ 'Metro Mosaic', 'Top Tabs', 'Load More' ],
+				cardAttrs: { layoutMode: 'vertical', padding: '18px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				config: {
+					query: { post_type: 'post', posts_per_page: 7, orderby: 'date', order: 'DESC' },
+					facets: [
+						{ id: 'bp_metro_cat', type: 'taxonomy-tabs', taxonomy: 'category', label: __( 'Topics', 'ajax-filter-posts' ), style: 'tabs', show_all: true },
+						{ id: 'bp_metro_search', type: 'search', placeholder: __( 'Filter stories…', 'ajax-filter-posts' ) },
+					],
+					layout: { type: 'metro', filter_position: 'top', columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }, col_gap: 20, row_gap: 20 },
+					pagination: { type: 'load_more', load_more_text: __( 'Load More Stories', 'ajax-filter-posts' ) },
+				},
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'large', aspectRatio: '16/9', borderRadius: '6px', zoomOnHover: true } ),
+					createBlock( 'gridmaster/badge', { text: __( 'Featured', 'ajax-filter-posts' ), backgroundColor: '#4f46e5', textColor: '#ffffff' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '20px', isLink: true } ),
+					createBlock( 'gridmaster/post-date', { format: 'M j, Y' } ),
+					createBlock( 'gridmaster/excerpt', { length: 20 } ),
+				],
+			},
+			{
+				id: 'masonry-portfolio',
+				title: __( 'Masonry Showcase + Filter Drawer', 'ajax-filter-posts' ),
+				desc: __( 'True dynamic masonry heights paired with an off-canvas filter drawer for categories and tags.', 'ajax-filter-posts' ),
+				icon: 'align-left',
+				requiresPro: false,
+				tags: [ 'Masonry', 'Off-Canvas Drawer', 'Checkboxes' ],
+				cardAttrs: { layoutMode: 'vertical', padding: '14px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				config: {
+					query: { post_type: 'post', posts_per_page: 9, orderby: 'date', order: 'DESC' },
+					facets: [
+						{ id: 'bp_m_search', type: 'search', placeholder: __( 'Search showcase…', 'ajax-filter-posts' ) },
+						{ id: 'bp_m_cat', type: 'taxonomy-checkbox', taxonomy: 'category', label: __( 'Categories', 'ajax-filter-posts' ), show_count: true },
+						{ id: 'bp_m_tag', type: 'taxonomy-checkbox', taxonomy: 'post_tag', label: __( 'Tags', 'ajax-filter-posts' ), show_count: true },
+					],
+					layout: { type: 'masonry', filter_position: 'drawer', drawer_button_label: __( 'Filter Showcase', 'ajax-filter-posts' ), columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }, col_gap: 18, row_gap: 18 },
+					pagination: { type: 'numbered' },
+				},
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: 'auto', borderRadius: '6px' } ),
+					createBlock( 'gridmaster/post-terms', { taxonomy: 'category' } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '17px', isLink: true } ),
+					createBlock( 'gridmaster/read-more', { text: __( 'View Details', 'ajax-filter-posts' ) } ),
+				],
+			},
+			{
+				id: 'woo-storefront',
+				title: __( 'WooCommerce Storefront + Sticky Sidebar', 'ajax-filter-posts' ),
+				desc: __( 'Shop catalog grid with sticky left sidebar facets (Price, Rating, Stock Status) and Woo product cards.', 'ajax-filter-posts' ),
+				icon: 'cart',
+				requiresPro: true,
+				tags: [ 'Pro Storefront', 'Left Sidebar', 'Woo Facets' ],
+				cardAttrs: { layoutMode: 'vertical', padding: '16px', borderRadius: '10px', borderWidth: '1px', borderColor: '#e2e8f0', backgroundColor: '#ffffff', hoverEffect: 'lift' },
+				config: {
+					query: { post_type: 'product', posts_per_page: 9, orderby: 'date', order: 'DESC' },
+					facets: [
+						{ id: 'bp_woo_search', type: 'search', placeholder: __( 'Search products…', 'ajax-filter-posts' ) },
+						{ id: 'bp_woo_cat', type: 'taxonomy-checkbox', taxonomy: 'product_cat', label: __( 'Categories', 'ajax-filter-posts' ), show_count: true },
+						{ id: 'bp_woo_price', type: 'price-range', label: __( 'Price Range', 'ajax-filter-posts' ) },
+						{ id: 'bp_woo_status', type: 'woo-status', label: __( 'Availability', 'ajax-filter-posts' ) },
+						{ id: 'bp_woo_rating', type: 'woo-rating', label: __( 'Minimum Rating', 'ajax-filter-posts' ) },
+					],
+					layout: { type: 'grid', filter_position: 'left_sidebar', sidebar_width: 280, sticky_sidebar: true, columns: { xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }, col_gap: 20, row_gap: 20 },
+					pagination: { type: 'numbered' },
+				},
+				getBlocks: () => [
+					createBlock( 'gridmaster/featured-image', { size: 'medium_large', aspectRatio: '1/1', borderRadius: '8px', zoomOnHover: true } ),
+					createBlock( 'gridmaster/title', { tagName: 'h3', fontSize: '16px', isLink: true } ),
+					createBlock( 'gridmaster-pro/woo-price', {} ),
+					createBlock( 'gridmaster-pro/woo-rating', {} ),
+					createBlock( 'gridmaster-pro/woo-add-to-cart', {} ),
+				],
+			},
+		];
+
+		return el(
+			Modal,
+			{
+				title: __( 'Starter Grid Blueprints', 'ajax-filter-posts' ),
+				onRequestClose: onClose,
+				className: 'gm-blueprints-modal',
+			},
+			el(
+				'p',
+				{ className: 'gm-blueprints-intro' },
+				__( 'Apply a complete starting blueprint (Query, Filters, Layout & Card design). You can customize every setting afterwards.', 'ajax-filter-posts' )
+			),
+			el(
+				'div',
+				{ className: 'gm-blueprints-grid' },
+				blueprints.map( ( bp ) => {
+					const locked = bp.requiresPro && ! isPro;
+					return el(
+						'div',
+						{
+							key: bp.id,
+							className: 'gm-blueprint-card' + ( locked ? ' is-locked' : '' ),
+						},
+						el(
+							'div',
+							{ className: 'gm-blueprint-card-head' },
+							el( 'span', { className: 'dashicons dashicons-' + bp.icon } ),
+							el(
+								'div',
+								null,
+								el(
+									'h4',
+									null,
+									bp.title,
+									bp.requiresPro && el( 'span', { className: 'gm-pro-badge', style: { marginLeft: '6px' } }, 'PRO' )
+								),
+								el( 'p', null, bp.desc )
+							)
+						),
+						el(
+							'div',
+							{ className: 'gm-blueprint-tags' },
+							bp.tags.map( ( tag ) => el( 'span', { key: tag, className: 'gm-blueprint-tag' }, tag ) )
+						),
+						el(
+							'div',
+							{ className: 'gm-blueprint-actions' },
+							el(
+								Button,
+								{
+									isPrimary: ! locked,
+									isSecondary: locked,
+									disabled: locked,
+									onClick: () => onApply( bp ),
+								},
+								locked ? __( 'Requires Pro', 'ajax-filter-posts' ) : __( 'Use Blueprint', 'ajax-filter-posts' )
+							)
+						)
+					);
+				} )
+			)
+		);
+	}
+
+	/**
 	 * Main Builder Root Application.
 	 */
 	function BuilderApp() {
@@ -4636,8 +5188,9 @@
 			}, 2800 );
 		}, [] );
 
-		// Preview Modal state
+		// Preview & Blueprints Modal state
 		const [ isPreviewOpen, setIsPreviewOpen ] = useState( false );
+		const [ isBlueprintsOpen, setIsBlueprintsOpen ] = useState( false );
 		const previewBtnRef = useRef( null );
 
 		// Snapshot for dirty tracking (initialized with parsed and serialized blocks for exact whitespace matching)
@@ -4787,6 +5340,25 @@
 				next[ section ] = { ...next[ section ], [ key ]: val };
 				return next;
 			} );
+		};
+
+		const applyStarterBlueprint = ( blueprint ) => {
+			setConfig( ( prev ) => ( {
+				...prev,
+				query: { ...( prev.query || {} ), ...( blueprint.config.query || {} ) },
+				facets: blueprint.config.facets || [],
+				pagination: { ...( prev.pagination || {} ), ...( blueprint.config.pagination || {} ) },
+				layout: { ...( prev.layout || {} ), ...( blueprint.config.layout || {} ) },
+			} ) );
+			if ( ! title || title === __( 'Untitled Grid', 'ajax-filter-posts' ) ) {
+				setTitle( blueprint.title );
+				setEditingTitleVal( blueprint.title );
+			}
+			const baseCardAttrs = ( blocks && blocks[ 0 ] && blocks[ 0 ].name === 'gridmaster/card' && blocks[ 0 ].attributes ) ? blocks[ 0 ].attributes : {};
+			const cardBlock = createBlock( 'gridmaster/card', { ...baseCardAttrs, ...( blueprint.cardAttrs || {} ) }, blueprint.getBlocks() );
+			history.setValue( [ cardBlock ], false );
+			setIsBlueprintsOpen( false );
+			showToast( sprintf( __( 'Applied "%s" blueprint!', 'ajax-filter-posts' ), blueprint.title ) );
 		};
 
 		const metadata = initData.metadata || { post_types: [], taxonomies: [] };
@@ -4944,6 +5516,18 @@
 									)
 							  )
 							: null,
+
+						// Starter Blueprints button
+						el(
+							Button,
+							{
+								isSecondary: true,
+								onClick: () => setIsBlueprintsOpen( true ),
+								className: 'gm-blueprints-trigger-btn',
+							},
+							el( 'span', { className: 'dashicons dashicons-layout' } ),
+							' ' + __( 'Blueprints', 'ajax-filter-posts' )
+						),
 
 						// Preview button
 						el(
@@ -5106,6 +5690,7 @@
 							config: config,
 							updateConfigSection: updateConfigSection,
 							metadata: metadata,
+							isPro: initData.isPro,
 						} ),
 
 					// Tab 3: Filters (Facets)
@@ -5161,6 +5746,14 @@
 						blocks: blocks,
 						gridId: gridId,
 						metadata: metadata,
+					} ),
+
+				// Starter Grid Blueprints Modal
+				isBlueprintsOpen &&
+					el( StarterBlueprintsModal, {
+						onClose: () => setIsBlueprintsOpen( false ),
+						onApply: applyStarterBlueprint,
+						isPro: initData.isPro,
 					} ),
 
 				// Fixed Toast Notification Container (Bottom-Right, Zero Layout Shift)

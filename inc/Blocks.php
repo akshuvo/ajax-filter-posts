@@ -16,6 +16,37 @@ class Blocks {
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_blocks' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
+		if ( function_exists( 'add_filter' ) ) {
+			add_filter( 'register_block_type_args', array( $this, 'inject_visibility_attribute' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * Injects conditional visibility attributes into all GridMaster card & field blocks.
+	 *
+	 * @param array  $args       Block registration args.
+	 * @param string $block_type Block name.
+	 * @return array
+	 */
+	public function inject_visibility_attribute( $args, $block_type ) {
+		if ( ! is_string( $block_type ) ) {
+			return $args;
+		}
+		if ( 'gridmaster/grid' === $block_type || 'gridmaster-pro/wishlist-drawer' === $block_type ) {
+			return $args;
+		}
+		if ( 0 === strpos( $block_type, 'gridmaster/' ) || 0 === strpos( $block_type, 'gridmaster-pro/' ) ) {
+			if ( ! isset( $args['attributes'] ) || ! is_array( $args['attributes'] ) ) {
+				$args['attributes'] = array();
+			}
+			if ( ! isset( $args['attributes']['gmVisibility'] ) ) {
+				$args['attributes']['gmVisibility'] = array(
+					'type'    => 'object',
+					'default' => array(),
+				);
+			}
+		}
+		return $args;
 	}
 
 	/**
@@ -317,7 +348,7 @@ class Blocks {
 		wp_register_script(
 			'gridmaster-blocks-editor',
 			GRIDMASTER_ASSETS . 'blocks/editor.js',
-			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-api-fetch' ),
+			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-i18n', 'wp-api-fetch', 'wp-hooks', 'wp-compose' ),
 			GRIDMASTER_VERSION,
 			true
 		);
