@@ -15,6 +15,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Grid_Renderer {
 
 	/**
+	 * Tracks whether the currently rendering card is the first above-the-fold item for LCP prioritization.
+	 *
+	 * @var bool
+	 */
+	private static $is_rendering_first_card = false;
+
+	/**
+	 * Returns true when rendering the first item on page 1 so media blocks can boost LCP priority.
+	 *
+	 * @return bool
+	 */
+	public static function is_first_card_lcp_eligible() {
+		return self::$is_rendering_first_card;
+	}
+
+	/**
 	 * Extracts sanitized runtime filter & pagination parameters from URL query vars (`gm_*`).
 	 *
 	 * @param array|null $raw_query Optional query vars (defaults to $_GET).
@@ -86,6 +102,20 @@ class Grid_Renderer {
 
 		foreach ( $raw_query as $key => $value ) {
 			if ( ! is_string( $key ) || 0 !== strpos( $key, 'gm_' ) || in_array( $key, $reserved, true ) || '' === $value ) {
+				continue;
+			}
+			if ( 0 === strpos( $key, 'gm_meta_min_' ) ) {
+				$meta_key = sanitize_key( substr( $key, strlen( 'gm_meta_min_' ) ) );
+				if ( $meta_key && is_numeric( $value ) ) {
+					$params['meta_ranges'][ $meta_key ]['min'] = floatval( $value );
+				}
+				continue;
+			}
+			if ( 0 === strpos( $key, 'gm_meta_max_' ) ) {
+				$meta_key = sanitize_key( substr( $key, strlen( 'gm_meta_max_' ) ) );
+				if ( $meta_key && is_numeric( $value ) ) {
+					$params['meta_ranges'][ $meta_key ]['max'] = floatval( $value );
+				}
 				continue;
 			}
 			if ( 0 === strpos( $key, 'gm_meta_' ) ) {
@@ -409,6 +439,7 @@ class Grid_Renderer {
 				?>
 			<?php endif; ?>
 
+			<div class="gm-sr-status screen-reader-text" role="status" aria-live="polite" aria-atomic="true"></div>
 			<?php echo self::render_custom_code( $config, $grid_id, $is_preview ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 		<?php
@@ -571,11 +602,14 @@ class Grid_Renderer {
 			?>
 			<div class="gm-grid-items" aria-live="polite">
 				<?php
+				$paged_num  = max( 1, (int) $query->get( 'paged' ) );
+				$item_index = 0;
 				while ( $query->have_posts() ) :
 					$query->the_post();
 					global $post;
 					$post_id   = get_the_ID();
 					$post_type = get_post_type();
+					self::$is_rendering_first_card = ( 0 === $item_index && 1 === $paged_num );
 					?>
 					<article class="gm-grid-item gm-post-<?php echo esc_attr( $post_id ); ?>" data-post-id="<?php echo esc_attr( $post_id ); ?>">
 						<?php
@@ -585,7 +619,10 @@ class Grid_Renderer {
 						?>
 					</article>
 					<?php
+					self::$is_rendering_first_card = false;
+					++$item_index;
 				endwhile;
+				self::$is_rendering_first_card = false;
 				wp_reset_postdata();
 				?>
 			</div>

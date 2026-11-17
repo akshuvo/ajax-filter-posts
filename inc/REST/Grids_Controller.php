@@ -213,6 +213,34 @@ class Grids_Controller extends \WP_REST_Controller {
 				'permission_callback' => array( $this, 'create_item_permissions_check' ),
 			)
 		);
+
+		// User-saved custom Gutenberg card pattern library.
+		register_rest_route(
+			$this->namespace,
+			'/card-patterns',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_card_patterns' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_card_pattern' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/card-patterns/(?P<pattern_id>[a-zA-Z0-9_-]+)',
+			array(
+				'methods'             => \WP_REST_Server::DELETABLE,
+				'callback'            => array( $this, 'delete_card_pattern' ),
+				'permission_callback' => array( $this, 'create_item_permissions_check' ),
+			)
+		);
 	}
 
 	/**
@@ -578,6 +606,99 @@ class Grids_Controller extends \WP_REST_Controller {
 	}
 
 	/**
+	 * Returns all user-saved reusable card patterns.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_card_patterns() {
+		$patterns = get_option( 'gridmaster_card_patterns', array() );
+		if ( ! is_array( $patterns ) ) {
+			$patterns = array();
+		}
+		return rest_ensure_response( array( 'patterns' => array_values( $patterns ) ) );
+	}
+
+	/**
+	 * Saves a new custom card pattern to the reusable library.
+	 *
+	 * @param \WP_REST_Request $request REST request instance.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function create_card_pattern( $request ) {
+		$title         = sanitize_text_field( (string) $request->get_param( 'title' ) );
+		$block_content = (string) $request->get_param( 'block_content' );
+
+		if ( '' === $title ) {
+			return new \WP_Error( 'missing_title', __( 'Pattern title is required.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+		if ( '' === trim( $block_content ) ) {
+			return new \WP_Error( 'missing_blocks', __( 'Card block content is required.', 'ajax-filter-posts' ), array( 'status' => 400 ) );
+		}
+
+		$patterns = get_option( 'gridmaster_card_patterns', array() );
+		if ( ! is_array( $patterns ) ) {
+			$patterns = array();
+		}
+
+		$pattern_id = 'pat_' . sanitize_key( uniqid( '', false ) );
+		$entry      = array(
+			'id'            => $pattern_id,
+			'title'         => $title,
+			'block_content' => $block_content,
+			'created_at'    => gmdate( 'c' ),
+		);
+
+		array_unshift( $patterns, $entry );
+		$patterns = array_slice( array_values( $patterns ), 0, 50 );
+		update_option( 'gridmaster_card_patterns', $patterns, false );
+
+		return new \WP_REST_Response(
+			array(
+				'pattern'  => $entry,
+				'patterns' => $patterns,
+			),
+			201
+		);
+	}
+
+	/**
+	 * Deletes a saved card pattern by ID.
+	 *
+	 * @param \WP_REST_Request $request REST request instance.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function delete_card_pattern( $request ) {
+		$pattern_id = sanitize_key( (string) $request['pattern_id'] );
+		$patterns   = get_option( 'gridmaster_card_patterns', array() );
+		if ( ! is_array( $patterns ) ) {
+			return new \WP_Error( 'pattern_not_found', __( 'Pattern not found.', 'ajax-filter-posts' ), array( 'status' => 404 ) );
+		}
+
+		$remaining = array();
+		$found     = false;
+		foreach ( $patterns as $pattern ) {
+			if ( isset( $pattern['id'] ) && $pattern['id'] === $pattern_id ) {
+				$found = true;
+				continue;
+			}
+			$remaining[] = $pattern;
+		}
+
+		if ( ! $found ) {
+			return new \WP_Error( 'pattern_not_found', __( 'Pattern not found.', 'ajax-filter-posts' ), array( 'status' => 404 ) );
+		}
+
+		update_option( 'gridmaster_card_patterns', $remaining, false );
+		return rest_ensure_response(
+			array(
+				'deleted'  => true,
+				'id'       => $pattern_id,
+				'patterns' => $remaining,
+			)
+		);
+	}
+
+	/**
 	 * Extracts and sanitizes runtime filter, sort, search, and pagination parameters from a REST request.
 	 *
 	 * @param \WP_REST_Request $request REST request instance.
@@ -602,6 +723,27 @@ class Grids_Controller extends \WP_REST_Controller {
 				$clean_mk = sanitize_key( $mk );
 				if ( '' !== $clean_mk && is_scalar( $mv ) ) {
 					$meta[ $clean_mk ] = sanitize_text_field( (string) $mv );
+				}
+			}
+		}
+
+		$raw_meta_ranges = $request->get_param( 'meta_ranges' );
+		$meta_ranges     = array();
+		if ( is_array( $raw_meta_ranges ) ) {
+			foreach ( $raw_meta_ranges as $mr_key => $bounds ) {
+				$clean_mrk = sanitize_key( $mr_key );
+				if ( '' === $clean_mrk || ! is_array( $bounds ) ) {
+					continue;
+				}
+				$entry = array();
+				if ( isset( $bounds['min'] ) && '' !== $bounds['min'] && is_numeric( $bounds['min'] ) ) {
+					$entry['min'] = floatval( $bounds['min'] );
+				}
+				if ( isset( $bounds['max'] ) && '' !== $bounds['max'] && is_numeric( $bounds['max'] ) ) {
+					$entry['max'] = floatval( $bounds['max'] );
+				}
+				if ( ! empty( $entry ) ) {
+					$meta_ranges[ $clean_mrk ] = $entry;
 				}
 			}
 		}
@@ -636,21 +778,22 @@ class Grids_Controller extends \WP_REST_Controller {
 		}
 
 		return array(
-			'paged'      => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
-			'facets'     => $facets,
-			'search'     => $request->get_param( 'search' ) ? sanitize_text_field( $request->get_param( 'search' ) ) : '',
-			'orderby'    => $request->get_param( 'orderby' ) ? sanitize_key( $request->get_param( 'orderby' ) ) : '',
-			'min_price'  => ( '' !== $raw_min_price && null !== $raw_min_price ) ? floatval( $raw_min_price ) : '',
-			'max_price'  => ( '' !== $raw_max_price && null !== $raw_max_price ) ? floatval( $raw_max_price ) : '',
-			'min_rating' => $request->get_param( 'min_rating' ) ? absint( $request->get_param( 'min_rating' ) ) : 0,
-			'on_sale'    => ! empty( $request->get_param( 'on_sale' ) ),
-			'in_stock'   => ! empty( $request->get_param( 'in_stock' ) ),
-			'featured'   => ! empty( $request->get_param( 'featured' ) ),
-			'meta'       => $meta,
-			'date_from'  => $request->get_param( 'date_from' ) ? sanitize_text_field( $request->get_param( 'date_from' ) ) : '',
-			'date_to'    => $request->get_param( 'date_to' ) ? sanitize_text_field( $request->get_param( 'date_to' ) ) : '',
-			'bookmarks'  => $bookmarks,
-			'context'    => $context,
+			'paged'       => $request->get_param( 'page' ) ? absint( $request->get_param( 'page' ) ) : 1,
+			'facets'      => $facets,
+			'search'      => $request->get_param( 'search' ) ? sanitize_text_field( $request->get_param( 'search' ) ) : '',
+			'orderby'     => $request->get_param( 'orderby' ) ? sanitize_key( $request->get_param( 'orderby' ) ) : '',
+			'min_price'   => ( '' !== $raw_min_price && null !== $raw_min_price ) ? floatval( $raw_min_price ) : '',
+			'max_price'   => ( '' !== $raw_max_price && null !== $raw_max_price ) ? floatval( $raw_max_price ) : '',
+			'min_rating'  => $request->get_param( 'min_rating' ) ? absint( $request->get_param( 'min_rating' ) ) : 0,
+			'on_sale'     => ! empty( $request->get_param( 'on_sale' ) ),
+			'in_stock'    => ! empty( $request->get_param( 'in_stock' ) ),
+			'featured'    => ! empty( $request->get_param( 'featured' ) ),
+			'meta'        => $meta,
+			'meta_ranges' => $meta_ranges,
+			'date_from'   => $request->get_param( 'date_from' ) ? sanitize_text_field( $request->get_param( 'date_from' ) ) : '',
+			'date_to'     => $request->get_param( 'date_to' ) ? sanitize_text_field( $request->get_param( 'date_to' ) ) : '',
+			'bookmarks'   => $bookmarks,
+			'context'     => $context,
 		);
 	}
 

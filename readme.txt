@@ -4,7 +4,7 @@ Tags: post grid, ajax filter, infinite scroll, pagination, taxonomy filter
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.4.18
+Stable tag: 3.4.25
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,6 +172,13 @@ Email [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for custom reque
 8. Post Grid Master Grid & Filter Style 3 (Free)
 
 == Changelog ==
+
+= 3.4.25 =
+* Added: GridMaster 2.0 visual Gutenberg Card Studio Builder, responsive card layouts, and live preview modal.
+* Added: Sidebar split & off-canvas mobile filter drawer (`left_sidebar`, `right_sidebar`, `drawer`), Masonry & Metro mosaic layouts, Starter Blueprints, and User-Saved Card Pattern Library.
+* Added: Context-aware `Query_Builder` (`offset` pagination, multi-`post_type`, `post__in`, `post__not_in`, `exclude_current`, `current_archive`, `related_posts`), deep-link `gm_*` URL hydration, smart ellipsis pagination, and Card Block Conditional Visibility (`gmVisibility`).
+* Added: Portable Grid JSON Export & Import (`GET /grids/<id>/export`, `POST /grids/import`) and improved Accessibility (live SR status announcements) + first-card LCP image prioritization.
+* Security: Enforced `manage_options` capability guard, strict action allowlist, and recursive request sanitization on `gridmaster_ajax` (`FREE-01`), plus full v2 runtime packaging inventory.
 
 = 3.4.18 =
 - Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.

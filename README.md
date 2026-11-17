@@ -5,7 +5,7 @@ Tags: post grid, ajax filter, infinite scroll, pagination, filter
 Requires at least: 5.8  
 Tested up to: 7.1  
 Requires PHP: 7.4  
-Stable tag: 3.4.18
+Stable tag: 3.4.25
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,11 @@ Upgrade to **Post Grid Master Pro** to unlock more advanced tools and layout fle
 3. Pagination Preview
 
 ## Changelog
+
+= 3.4.25 =
+- Added: GridMaster 2.0 Gutenberg Card Studio Builder, Starter Blueprints, and User-Saved Card Patterns.
+- Added: Sidebar/drawer filter placement, Masonry & Metro mosaic layouts, context-aware queries, URL deep-linking, ellipsis pagination, JSON Export/Import, Card Conditional Visibility, and SR/LCP accessibility improvements.
+- Security: Enforced `manage_options` capability guard, action allowlist, and input sanitization on `gridmaster_ajax`.
 
 = 3.4.18 =
 - Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.

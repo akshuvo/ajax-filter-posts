@@ -27,9 +27,24 @@ class Legacy_Migrator {
 		$attrs = ! empty( $grid->attributes ) ? (array) $grid->attributes : array();
 
 		// 1. Build Query Config
-		$post_type      = ! empty( $attrs['post_type'] ) ? sanitize_key( $attrs['post_type'] ) : 'post';
+		$raw_pt = ! empty( $attrs['post_type'] ) ? $attrs['post_type'] : 'post';
+		if ( is_string( $raw_pt ) && false !== strpos( $raw_pt, ',' ) ) {
+			$post_type = array_values( array_unique( array_filter( array_map( 'sanitize_key', explode( ',', $raw_pt ) ) ) ) );
+		} elseif ( is_array( $raw_pt ) ) {
+			$post_type = array_values( array_unique( array_filter( array_map( 'sanitize_key', $raw_pt ) ) ) );
+		} else {
+			$post_type = sanitize_key( (string) $raw_pt );
+		}
+		if ( empty( $post_type ) ) {
+			$post_type = 'post';
+		} elseif ( is_array( $post_type ) && 1 === count( $post_type ) ) {
+			$post_type = $post_type[0];
+		}
+
 		$posts_per_page = isset( $attrs['posts_per_page'] ) && '' !== $attrs['posts_per_page'] ? absint( $attrs['posts_per_page'] ) : 10;
-		$orderby        = ! empty( $attrs['orderby'] ) ? sanitize_key( $attrs['orderby'] ) : 'date';
+		$raw_orderby    = ! empty( $attrs['orderby'] ) ? sanitize_text_field( (string) $attrs['orderby'] ) : 'date';
+		$orderby_token  = strtok( trim( $raw_orderby ), ' ' );
+		$orderby        = $orderby_token ? sanitize_key( $orderby_token ) : 'date';
 		$order          = ! empty( $attrs['order'] ) ? strtoupper( sanitize_key( $attrs['order'] ) ) : 'DESC';
 		$taxonomy       = ! empty( $attrs['taxonomy'] ) ? sanitize_key( $attrs['taxonomy'] ) : 'category';
 
@@ -47,17 +62,27 @@ class Legacy_Migrator {
 			}
 		}
 
-		$hide_empty = ! empty( $attrs['hide_empty'] ) && ( '1' === (string) $attrs['hide_empty'] || 'yes' === (string) $attrs['hide_empty'] );
+		$hide_empty      = ! empty( $attrs['hide_empty'] ) && ( '1' === (string) $attrs['hide_empty'] || 'yes' === (string) $attrs['hide_empty'] );
+		$offset          = ! empty( $attrs['offset'] ) ? absint( $attrs['offset'] ) : 0;
+		$author          = ! empty( $attrs['author'] ) ? absint( $attrs['author'] ) : '';
+		$exclude_current = ! empty( $attrs['exclude_current'] ) && in_array( (string) $attrs['exclude_current'], array( '1', 'yes', 'true' ), true );
+		$post_in         = ! empty( $attrs['post__in'] ) ? ( is_array( $attrs['post__in'] ) ? implode( ',', array_map( 'absint', $attrs['post__in'] ) ) : sanitize_text_field( (string) $attrs['post__in'] ) ) : '';
+		$post_not_in     = ! empty( $attrs['post__not_in'] ) ? ( is_array( $attrs['post__not_in'] ) ? implode( ',', array_map( 'absint', $attrs['post__not_in'] ) ) : sanitize_text_field( (string) $attrs['post__not_in'] ) ) : '';
 
 		$query_config = array(
-			'post_type'      => $post_type,
-			'posts_per_page' => $posts_per_page,
-			'orderby'        => $orderby,
-			'order'          => $order,
-			'tax_query'      => $tax_query,
-			'author'         => '',
-			'search'         => '',
-			'hide_empty'     => $hide_empty,
+			'post_type'           => $post_type,
+			'posts_per_page'      => $posts_per_page,
+			'orderby'             => $orderby,
+			'order'               => $order,
+			'tax_query'           => $tax_query,
+			'author'              => $author,
+			'search'              => ! empty( $attrs['s'] ) ? sanitize_text_field( (string) $attrs['s'] ) : '',
+			'hide_empty'          => $hide_empty,
+			'offset'              => $offset,
+			'ignore_sticky_posts' => empty( $attrs['ignore_sticky_posts'] ) || ! in_array( (string) $attrs['ignore_sticky_posts'], array( '0', 'no', 'false' ), true ),
+			'exclude_current'     => $exclude_current,
+			'post__in'            => $post_in,
+			'post__not_in'        => $post_not_in,
 		);
 
 		// 2. Build Facets Config
@@ -67,6 +92,10 @@ class Legacy_Migrator {
 			$facet_type   = 'taxonomy-tabs';
 			if ( 'dropdown' === $filter_style || 'style-4' === $filter_style ) {
 				$facet_type = 'taxonomy-dropdown';
+			} elseif ( 'checkbox' === $filter_style ) {
+				$facet_type = 'taxonomy-checkbox';
+			} elseif ( 'radio' === $filter_style ) {
+				$facet_type = 'taxonomy-radio';
 			}
 
 			$facets[] = array(
@@ -74,7 +103,7 @@ class Legacy_Migrator {
 				'taxonomy'  => $taxonomy,
 				'heading'   => ! empty( $attrs['filter_heading'] ) ? sanitize_text_field( $attrs['filter_heading'] ) : '',
 				'show_all'  => ! empty( $attrs['btn_all'] ) && 'no' === $attrs['btn_all'] ? false : true,
-				'all_label' => __( 'All', 'ajax-filter-posts' ),
+				'all_label' => ! empty( $attrs['all_label'] ) ? sanitize_text_field( $attrs['all_label'] ) : __( 'All', 'ajax-filter-posts' ),
 			);
 		}
 
@@ -93,7 +122,7 @@ class Legacy_Migrator {
 
 		$pagination_config = array(
 			'type'           => $pagination_type,
-			'load_more_text' => __( 'Load More', 'ajax-filter-posts' ),
+			'load_more_text' => ! empty( $attrs['load_more_text'] ) ? sanitize_text_field( $attrs['load_more_text'] ) : __( 'Load More', 'ajax-filter-posts' ),
 			'loading_text'   => __( 'Loading...', 'ajax-filter-posts' ),
 			'end_text'       => __( 'No more posts', 'ajax-filter-posts' ),
 		);
@@ -125,10 +154,12 @@ class Legacy_Migrator {
 			$row_gap = is_array( $attrs['grid_row_gap'] ) && isset( $attrs['grid_row_gap']['lg'] ) ? absint( $attrs['grid_row_gap']['lg'] ) : absint( $attrs['grid_row_gap'] );
 		}
 
-		$is_slider = ! empty( $attrs['enable_slider'] ) && 'yes' === $attrs['enable_slider'];
+		$grid_style    = ! empty( $attrs['grid_style'] ) ? $attrs['grid_style'] : 'default';
+		$is_slider     = ! empty( $attrs['enable_slider'] ) && 'yes' === $attrs['enable_slider'];
+		$layout_type   = $is_slider ? 'slider' : ( 'masonry' === $grid_style ? 'masonry' : 'grid' );
 
 		$layout_config = array(
-			'type'       => $is_slider ? 'slider' : 'grid',
+			'type'       => $layout_type,
 			'columns'    => $columns,
 			'col_gap'    => $col_gap ? $col_gap : 30,
 			'row_gap'    => $row_gap ? $row_gap : 30,
@@ -164,7 +195,6 @@ class Legacy_Migrator {
 		}
 
 		// 5. Build Gutenberg Card Block Tree
-		$grid_style    = ! empty( $attrs['grid_style'] ) ? $attrs['grid_style'] : 'default';
 		$block_content = self::get_template_for_legacy_style( $grid_style, $attrs );
 
 		$new_config = array(

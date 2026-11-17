@@ -4,7 +4,7 @@
  * Plugin URI:   http://addonmaster.com
  * Author:       AddonMaster
  * Author URI:   https://addonmaster.com/gridmaster/
- * Version:			3.4.18
+ * Version:			3.4.25
  * Description:  GridMaster is a powerful post filter plugin that allows you create stunning, customizable post grids on your website with its robust support for all post types and taxonomies, versatile pagination options including infinite scroll, and a suite of pre-built grid and filter styles.
  * License:      GPL2
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html

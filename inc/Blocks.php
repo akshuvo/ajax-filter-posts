@@ -585,22 +585,26 @@ class Blocks {
 
 		$image_html = '';
 		$image_src  = '';
+		$is_lcp     = class_exists( '\GridMaster\Engine\Grid_Renderer' ) && \GridMaster\Engine\Grid_Renderer::is_first_card_lcp_eligible();
+		$img_attrs  = array(
+			'style' => $img_style,
+			'class' => 'gm-card-img' . $zoom_class,
+		);
+		if ( $is_lcp ) {
+			$img_attrs['fetchpriority'] = 'high';
+			$img_attrs['loading']       = 'eager';
+			$img_attrs['decoding']      = 'async';
+		}
 
 		// 1. Resolve source based on sourceType
 		if ( 'featured_image' === $source_type ) {
 			if ( has_post_thumbnail( $post_id ) ) {
-				$image_html = get_the_post_thumbnail( $post_id, $size, array(
-					'style' => $img_style,
-					'class' => 'gm-card-img' . $zoom_class,
-				) );
+				$image_html = get_the_post_thumbnail( $post_id, $size, $img_attrs );
 			}
 		} elseif ( 'custom_meta' === $source_type && ! empty( $meta_key ) ) {
 			$meta_val = get_post_meta( $post_id, $meta_key, true );
 			if ( is_numeric( $meta_val ) && $meta_val > 0 ) {
-				$image_html = wp_get_attachment_image( $meta_val, $size, false, array(
-					'style' => $img_style,
-					'class' => 'gm-card-img' . $zoom_class,
-				) );
+				$image_html = wp_get_attachment_image( $meta_val, $size, false, $img_attrs );
 			} elseif ( is_string( $meta_val ) && ! empty( $meta_val ) ) {
 				$image_src = $meta_val;
 			} elseif ( is_array( $meta_val ) && ! empty( $meta_val['url'] ) ) {
@@ -626,21 +630,20 @@ class Blocks {
 				$image_src = $fallback_url;
 			} elseif ( 'featured_image' !== $source_type && has_post_thumbnail( $post_id ) ) {
 				// Secondary fallback to post thumbnail if custom source failed
-				$image_html = get_the_post_thumbnail( $post_id, $size, array(
-					'style' => $img_style,
-					'class' => 'gm-card-img' . $zoom_class,
-				) );
+				$image_html = get_the_post_thumbnail( $post_id, $size, $img_attrs );
 			}
 		}
 
 		// 3. Assemble HTML if resolved via URL
 		if ( empty( $image_html ) && ! empty( $image_src ) ) {
-			$image_html = sprintf(
-				'<img src="%s" alt="%s" style="%s" class="gm-card-img%s" loading="lazy" />',
+			$loading_attr = $is_lcp ? 'loading="eager" fetchpriority="high" decoding="async"' : 'loading="lazy"';
+			$image_html   = sprintf(
+				'<img src="%s" alt="%s" style="%s" class="gm-card-img%s" %s />',
 				esc_url( $image_src ),
 				esc_attr( get_the_title( $post_id ) ),
 				$img_style,
-				$zoom_class
+				$zoom_class,
+				$loading_attr
 			);
 		}
 

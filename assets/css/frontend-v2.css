@@ -1495,15 +1495,17 @@
    WooCommerce & Pro Filter Facets (V2)
    ========================================== */
 
-/* 1. Price Range Slider & Inputs (.gm-facet-price-range) */
-.gm-facet-price-range {
+/* 1. Price & Numeric Meta Range Slider & Inputs (.gm-facet-price-range / .gm-facet-meta-range) */
+.gm-facet-price-range,
+.gm-facet-meta-range {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 	min-width: 220px;
 }
 
-.gm-price-range-slider-wrap {
+.gm-price-range-slider-wrap,
+.gm-price-slider-wrap {
 	position: relative;
 	height: 22px;
 	display: flex;
@@ -1531,7 +1533,9 @@
 }
 
 .gm-price-range-slider-wrap input[type="range"].gm-price-range-min,
-.gm-price-range-slider-wrap input[type="range"].gm-price-range-max {
+.gm-price-range-slider-wrap input[type="range"].gm-price-range-max,
+.gm-price-range-slider-wrap input[type="range"].gm-meta-range-min,
+.gm-price-range-slider-wrap input[type="range"].gm-meta-range-max {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -1573,14 +1577,25 @@
 	cursor: pointer;
 }
 
-.gm-price-inputs {
+.gm-price-inputs,
+.gm-price-inputs-row {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 }
 
+.gm-price-input-box {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 13px;
+	color: #475569;
+}
+
 .gm-price-input-min,
-.gm-price-input-max {
+.gm-price-input-max,
+.gm-meta-input-min,
+.gm-meta-input-max {
 	width: 84px;
 	padding: 6px 10px;
 	border: 1px solid #cbd5e1;
@@ -1588,6 +1603,18 @@
 	font-size: 13px;
 	color: #0f172a;
 	background: #ffffff;
+}
+
+.gm-sr-status {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* 2. Attribute Swatches (.gm-facet-swatches / .gm-swatch-filter-btn) */

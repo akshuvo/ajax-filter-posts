@@ -1363,7 +1363,8 @@ body.gm-focus-mode #wpcontent {
 }
 
 .gm-layout-apply-btn {
-	width: 100%;
+	flex: 1;
+	min-width: 0;
 	padding: 6px 12px;
 	font-size: 11.5px;
 	font-weight: 600;
@@ -1403,9 +1404,30 @@ body.gm-focus-mode #wpcontent {
 }
 
 @media (max-width: 640px) {
-	.gm-more-blocks-popover .components-popover__content {
+	.gm-popover-mega {
+		position: fixed !important;
+		top: 56px !important;
+		left: 10px !important;
+		right: 10px !important;
+		bottom: auto !important;
+		transform: none !important;
 		width: calc(100vw - 20px) !important;
-		max-height: 80vh !important;
+		max-width: calc(100vw - 20px) !important;
+		z-index: 100000 !important;
+	}
+	.gm-popover-mega .components-popover__content {
+		width: 100% !important;
+		max-width: 100% !important;
+		max-height: calc(100vh - 68px) !important;
+		max-height: calc(100dvh - 68px) !important;
+	}
+	.gm-popover-mega-panel {
+		max-height: calc(100vh - 70px);
+		max-height: calc(100dvh - 70px);
+		overflow: hidden;
+	}
+	.gm-popover-scrollable-body {
+		min-height: 160px;
 	}
 	.gm-blocks-grid-2col {
 		grid-template-columns: 1fr !important;
@@ -2932,4 +2954,28 @@ body.gridmaster_page_gridmaster-builder .block-editor-block-popover__drop-zone-f
 .gm-blueprint-actions {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.gm-layout-action-wrap {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.gm-pattern-delete-btn {
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	border-radius: 6px;
+	color: #dc2626;
+	width: 30px;
+	height: 30px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.gm-pattern-delete-btn:hover {
+	background: #fee2e2;
 }

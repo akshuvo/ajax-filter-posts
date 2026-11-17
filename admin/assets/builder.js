@@ -1085,15 +1085,30 @@
 	 * Card Templates Popover component: instant pre-built layouts (horizontal, vertical, overlay, etc.)
 	 */
 	function CardTemplatesPopover( props ) {
-		const { isOpen, onClose, onApplyTemplate, isPro } = props;
+		const { isOpen, onClose, onApplyTemplate, isPro, savedPatterns = [], onDeletePattern } = props;
 		const [ searchTerm, setSearchTerm ] = useState( '' );
 		const [ activeCat, setActiveCat ] = useState( 'All' );
 
 		if ( ! isOpen ) return null;
 
-		const categories = [ 'All', 'Video & Reels', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Social' ];
+		const categories = savedPatterns.length > 0
+			? [ 'All', 'Saved', 'Video & Reels', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Social' ]
+			: [ 'All', 'Video & Reels', 'Editorial', 'List Views', 'Creative', 'WooCommerce', 'Social' ];
+
+		const userPatternCards = ( savedPatterns || [] ).map( ( p ) => ( {
+			id: p.id,
+			patternId: p.id,
+			savedPattern: true,
+			title: p.title,
+			desc: __( 'Custom saved card pattern', 'ajax-filter-posts' ),
+			icon: 'star-filled',
+			category: 'Saved',
+			isPro: false,
+			block_content: p.block_content,
+		} ) );
 
 		const templates = [
+			...userPatternCards,
 			// 1. Standard Vertical Card
 			{
 				id: 'vertical-standard',
@@ -1925,19 +1940,11 @@
 												'gm-layout-card' +
 												( t.isPro ? ' is-pro' : '' ) +
 												( isCardDisabled ? ' is-pro-disabled' : '' ),
-											onClick: () => {
+											onClick: ( e ) => {
+												if ( e.target && e.target.closest( '.gm-pattern-delete-btn' ) ) return;
 												if ( isCardDisabled ) return;
 												onApplyTemplate( t );
 												onClose();
-											},
-											role: 'button',
-											tabIndex: isCardDisabled ? -1 : 0,
-											onKeyDown: ( e ) => {
-												if ( ( e.key === 'Enter' || e.key === ' ' ) && ! isCardDisabled ) {
-													e.preventDefault();
-													onApplyTemplate( t );
-													onClose();
-												}
 											},
 											title: isCardDisabled
 												? __( 'Pro card template — upgrade GridMaster to unlock', 'ajax-filter-posts' )
@@ -1976,12 +1983,27 @@
 														'gm-layout-apply-btn' +
 														( isCardDisabled ? ' is-disabled' : '' ),
 													disabled: isCardDisabled,
-													tabIndex: -1,
 												},
 												isCardDisabled
 													? __( 'Pro Only 🔒', 'ajax-filter-posts' )
 													: __( 'Apply Template', 'ajax-filter-posts' ) + ' →'
-											)
+											),
+											t.savedPattern && onDeletePattern &&
+												el(
+													'button',
+													{
+														type: 'button',
+														className: 'gm-pattern-delete-btn',
+														title: __( 'Delete saved pattern', 'ajax-filter-posts' ),
+														'aria-label': __( 'Delete saved pattern', 'ajax-filter-posts' ),
+														onClick: ( e ) => {
+															e.preventDefault();
+															e.stopPropagation();
+															onDeletePattern( t.patternId );
+														},
+													},
+													el( 'span', { className: 'dashicons dashicons-trash' } )
+												)
 										)
 									);
 								} )
@@ -2013,8 +2035,72 @@
 
 		const [ isMoreOpen, setIsMoreOpen ] = useState( false );
 		const [ isTemplatesOpen, setIsTemplatesOpen ] = useState( false );
+		const [ isSavePatternOpen, setIsSavePatternOpen ] = useState( false );
+		const [ patternName, setPatternName ] = useState( '' );
+		const [ isSavingPattern, setIsSavingPattern ] = useState( false );
+		const [ savedPatterns, setSavedPatterns ] = useState( [] );
 		const moreBtnRef = useRef( null );
 		const templatesBtnRef = useRef( null );
+		const savePatternBtnRef = useRef( null );
+
+		useEffect( () => {
+			if ( ! initData.restUrl ) return;
+			fetch( initData.restUrl + 'card-patterns', {
+				method: 'GET',
+				headers: { 'X-WP-Nonce': initData.nonce || '' },
+			} )
+				.then( readApiResponse )
+				.then( ( body ) => {
+					if ( body && Array.isArray( body.patterns ) ) {
+						setSavedPatterns( body.patterns );
+					}
+				} )
+				.catch( () => {} );
+		}, [] );
+
+		const handleSavePattern = () => {
+			const trimmed = ( patternName || '' ).trim();
+			if ( ! trimmed || isSavingPattern ) return;
+			const blockMarkup = serialize( rootCard ? [ rootCard ] : rootBlocks );
+			setIsSavingPattern( true );
+			fetch( initData.restUrl + 'card-patterns', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': initData.nonce || '',
+				},
+				body: JSON.stringify( { title: trimmed, block_content: blockMarkup } ),
+			} )
+				.then( readApiResponse )
+				.then( ( body ) => {
+					if ( body && Array.isArray( body.patterns ) ) {
+						setSavedPatterns( body.patterns );
+					}
+					setPatternName( '' );
+					setIsSavePatternOpen( false );
+					if ( showToast ) showToast( __( 'Card pattern saved!', 'ajax-filter-posts' ) );
+				} )
+				.catch( () => {
+					if ( showToast ) showToast( __( 'Could not save pattern.', 'ajax-filter-posts' ), 'error', 'warning' );
+				} )
+				.finally( () => setIsSavingPattern( false ) );
+		};
+
+		const handleDeletePattern = ( patternId ) => {
+			if ( ! patternId ) return;
+			fetch( initData.restUrl + 'card-patterns/' + encodeURIComponent( patternId ), {
+				method: 'DELETE',
+				headers: { 'X-WP-Nonce': initData.nonce || '' },
+			} )
+				.then( readApiResponse )
+				.then( ( body ) => {
+					if ( body && Array.isArray( body.patterns ) ) {
+						setSavedPatterns( body.patterns );
+					}
+					if ( showToast ) showToast( __( 'Pattern removed.', 'ajax-filter-posts' ) );
+				} )
+				.catch( () => {} );
+		};
 
 		const addBlock = ( blockName, defaultAttributes = {} ) => {
 			const newBlock = createBlock( blockName, defaultAttributes );
@@ -2046,8 +2132,20 @@
 				}
 			}
 
-			// Generate blocks programmatically with 0 parsing errors
-			const newBlocks = typeof tpl.getBlocks === 'function' ? tpl.getBlocks() : parse( tpl.markup );
+			// Generate blocks programmatically with 0 parsing errors (or restore saved card pattern)
+			let newBlocks;
+			let patternCardAttrs = null;
+			if ( tpl.block_content ) {
+				const parsed = parse( tpl.block_content );
+				if ( parsed.length > 0 && parsed[ 0 ].name === 'gridmaster/card' ) {
+					patternCardAttrs = parsed[ 0 ].attributes || {};
+					newBlocks = parsed[ 0 ].innerBlocks || [];
+				} else {
+					newBlocks = parsed;
+				}
+			} else {
+				newBlocks = typeof tpl.getBlocks === 'function' ? tpl.getBlocks() : parse( tpl.markup );
+			}
 
 			const defaultAttrs = {
 				layoutMode: 'vertical',
@@ -2064,7 +2162,7 @@
 
 			const mergedAttrs = {
 				...defaultAttrs,
-				...( tpl.cardAttrs || {} ),
+				...( patternCardAttrs || tpl.cardAttrs || {} ),
 			};
 
 			if ( rootCard ) {
@@ -2210,7 +2308,54 @@
 							onClose: () => setIsTemplatesOpen( false ),
 							onApplyTemplate: applyCardTemplate,
 							isPro: isPro,
+							savedPatterns: savedPatterns,
+							onDeletePattern: handleDeletePattern,
 						} )
+				),
+				el(
+					'div',
+					{ className: 'gm-save-pattern-wrap', ref: savePatternBtnRef, style: { marginLeft: '6px', position: 'relative' } },
+					el(
+						Button,
+						{
+							isSecondary: true,
+							isSmall: true,
+							onClick: () => {
+								setIsSavePatternOpen( ! isSavePatternOpen );
+								setIsTemplatesOpen( false );
+								setIsMoreOpen( false );
+							},
+							className: 'gm-save-pattern-btn',
+						},
+						el( 'span', { className: 'dashicons dashicons-star-filled' } ),
+						' ' + __( 'Save Pattern', 'ajax-filter-posts' )
+					),
+					isSavePatternOpen &&
+						el(
+							Popover,
+							{
+								className: 'gm-save-pattern-popover',
+								onClose: () => setIsSavePatternOpen( false ),
+								position: 'bottom left',
+							},
+							el(
+								'div',
+								{ style: { padding: '14px', width: '250px' } },
+								el( TextControl, {
+									label: __( 'Pattern Name', 'ajax-filter-posts' ),
+									placeholder: __( 'e.g. Dark Promo Card', 'ajax-filter-posts' ),
+									value: patternName,
+									onChange: setPatternName,
+									autoFocus: true,
+								} ),
+								el(
+									'div',
+									{ style: { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '8px' } },
+									el( Button, { isSecondary: true, isSmall: true, onClick: () => setIsSavePatternOpen( false ) }, __( 'Cancel', 'ajax-filter-posts' ) ),
+									el( Button, { isPrimary: true, isSmall: true, disabled: ! patternName.trim() || isSavingPattern, onClick: handleSavePattern }, __( 'Save', 'ajax-filter-posts' ) )
+								)
+							)
+						)
 				)
 			),
 
@@ -3095,6 +3240,7 @@
 					search: '',
 					'date-range': __( 'Filter by Date', 'ajax-filter-posts' ),
 					'meta-filter': __( 'Filter by Custom Field', 'ajax-filter-posts' ),
+					'meta-range': __( 'Filter by Numeric Range', 'ajax-filter-posts' ),
 					'woo-price-range': __( 'Price Range', 'ajax-filter-posts' ),
 					'woo-attribute-swatches': __( 'Filter by Attribute', 'ajax-filter-posts' ),
 					'woo-rating-filter': __( 'Customer Rating', 'ajax-filter-posts' ),
@@ -3116,6 +3262,13 @@
 					newFacet.placeholder = __( 'Search posts...', 'ajax-filter-posts' );
 				} else if ( type === 'meta-filter' ) {
 					newFacet.meta_key = '';
+				} else if ( type === 'meta-range' ) {
+					newFacet.meta_key = '';
+					newFacet.min_val = '';
+					newFacet.max_val = '';
+					newFacet.step = 1;
+					newFacet.unit_prefix = '';
+					newFacet.unit_suffix = '';
 				} else if ( type === 'woo-price-range' ) {
 					newFacet.min_price = 0;
 					newFacet.max_price = 500;
@@ -3174,6 +3327,7 @@
 			{ id: 'multi-select', label: __( 'Multi-Select (Pro)', 'ajax-filter-posts' ), icon: 'list-view', isPro: true },
 			{ id: 'date-range', label: __( 'Date Range (Pro)', 'ajax-filter-posts' ), icon: 'calendar', isPro: true },
 			{ id: 'meta-filter', label: __( 'Custom Field / Meta Filter (Pro)', 'ajax-filter-posts' ), icon: 'admin-generic', isPro: true },
+			{ id: 'meta-range', label: __( 'Numeric Meta Range Slider (Pro)', 'ajax-filter-posts' ), icon: 'leftright', isPro: true },
 			{ id: 'woo-price-range', label: __( 'WooCommerce Price Range Slider (Pro)', 'ajax-filter-posts' ), icon: 'money-alt', isPro: true },
 			{ id: 'woo-attribute-swatches', label: __( 'WooCommerce Attribute Swatches (Pro)', 'ajax-filter-posts' ), icon: 'art', isPro: true },
 			{ id: 'woo-rating-filter', label: __( 'WooCommerce Star Rating Filter (Pro)', 'ajax-filter-posts' ), icon: 'star-filled', isPro: true },
@@ -3321,6 +3475,58 @@
 											onChange: ( val ) => updateFacet( idx, 'meta_key', val ),
 											help: __( ' visitors can type a value to filter posts matching this custom field key.', 'ajax-filter-posts' ).trim(),
 										} ),
+									facet.type === 'meta-range' &&
+										el(
+											Fragment,
+											null,
+											el( TextControl, {
+												label: __( 'Numeric Meta Key', 'ajax-filter-posts' ),
+												value: facet.meta_key || '',
+												placeholder: 'e.g. area_sqft or year',
+												onChange: ( val ) => updateFacet( idx, 'meta_key', val ),
+												help: __( 'Auto-detects bounds from published posts if Min/Max are left blank.', 'ajax-filter-posts' ),
+											} ),
+											el(
+												'div',
+												{ className: 'gm-columns-row', style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' } },
+												el( TextControl, {
+													label: __( 'Min Bound', 'ajax-filter-posts' ),
+													type: 'number',
+													value: facet.min_val !== undefined ? facet.min_val : '',
+													placeholder: __( 'Auto', 'ajax-filter-posts' ),
+													onChange: ( val ) => updateFacet( idx, 'min_val', val ),
+												} ),
+												el( TextControl, {
+													label: __( 'Max Bound', 'ajax-filter-posts' ),
+													type: 'number',
+													value: facet.max_val !== undefined ? facet.max_val : '',
+													placeholder: __( 'Auto', 'ajax-filter-posts' ),
+													onChange: ( val ) => updateFacet( idx, 'max_val', val ),
+												} ),
+												el( TextControl, {
+													label: __( 'Step', 'ajax-filter-posts' ),
+													type: 'number',
+													value: facet.step !== undefined ? facet.step : 1,
+													onChange: ( val ) => updateFacet( idx, 'step', Math.max( 0.01, Number( val ) || 1 ) ),
+												} )
+											),
+											el(
+												'div',
+												{ className: 'gm-columns-row', style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' } },
+												el( TextControl, {
+													label: __( 'Unit Prefix', 'ajax-filter-posts' ),
+													value: facet.unit_prefix || '',
+													placeholder: '$',
+													onChange: ( val ) => updateFacet( idx, 'unit_prefix', val ),
+												} ),
+												el( TextControl, {
+													label: __( 'Unit Suffix', 'ajax-filter-posts' ),
+													value: facet.unit_suffix || '',
+													placeholder: 'sq ft',
+													onChange: ( val ) => updateFacet( idx, 'unit_suffix', val ),
+												} )
+											)
+										),
 									facet.type === 'search' &&
 										el( TextControl, {
 											label: __( 'Search Input Placeholder', 'ajax-filter-posts' ),
@@ -3436,7 +3642,18 @@
 										)
 								)
 						);
-				  } )
+				  } ),
+			isPro && facets.length > 0 &&
+				el(
+					'div',
+					{ className: 'gm-settings-card', style: { marginTop: '14px' } },
+					el( ToggleControl, {
+						label: __( 'Enable Dynamic Recount Fragment Cache (Pro)', 'ajax-filter-posts' ),
+						checked: config.cache_recounts !== false,
+						onChange: ( val ) => setConfig( ( prev ) => ( { ...prev, cache_recounts: val } ) ),
+						help: __( 'Caches dynamic facet term counts briefly and clears automatically when posts or terms change.', 'ajax-filter-posts' ),
+					} )
+				)
 		);
 	}
 

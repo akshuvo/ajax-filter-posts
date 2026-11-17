@@ -30,6 +30,7 @@
 				in_stock: false,
 				featured: false,
 				meta: {},
+				meta_ranges: {},
 				date_from: '',
 				date_to: '',
 			};
@@ -39,6 +40,7 @@
 			this.searchTimeout = null;
 			this.priceTimeout = null;
 			this.metaTimeout = null;
+			this.metaRangeTimeout = null;
 
 			this.initFilters();
 			this.initFilterDrawer();
@@ -279,37 +281,15 @@
 				this.fetchResults( false );
 			} );
 
-			// 6. WooCommerce Price Range Slider & Number Inputs (.gm-facet-price-range)
-			this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( priceFacet ) => {
-				const minSlider = priceFacet.querySelector( '.gm-price-range-min' );
-				const maxSlider = priceFacet.querySelector( '.gm-price-range-max' );
-				const minInput = priceFacet.querySelector( '.gm-price-input-min' );
-				const maxInput = priceFacet.querySelector( '.gm-price-input-max' );
-				const fillBar = priceFacet.querySelector( '.gm-price-range-fill' );
+			// 6. Dual Range Slider Facets (WooCommerce Price & Numeric Meta Range)
+			const bindDualRange = ( facetEl, sels, onChange ) => {
+				const minSlider = facetEl.querySelector( sels.minSlider );
+				const maxSlider = facetEl.querySelector( sels.maxSlider );
+				const minInput = facetEl.querySelector( sels.minInput );
+				const maxInput = facetEl.querySelector( sels.maxInput );
 
-				const absMin = parseFloat( priceFacet.getAttribute( 'data-min' ) ?? minSlider?.min ?? 0 );
-				const absMax = parseFloat( priceFacet.getAttribute( 'data-max' ) ?? maxSlider?.max ?? 500 );
-
-				const updateFill = ( low, high ) => {
-					if ( ! fillBar ) return;
-					const span = Math.max( 1, absMax - absMin );
-					const leftPct = Math.max( 0, Math.min( 100, ( ( low - absMin ) / span ) * 100 ) );
-					const rightPct = Math.max( 0, Math.min( 100, ( ( high - absMin ) / span ) * 100 ) );
-					fillBar.style.left = leftPct + '%';
-					fillBar.style.width = Math.max( 0, rightPct - leftPct ) + '%';
-				};
-
-				const triggerPriceChange = ( low, high ) => {
-					this.state.min_price = low <= absMin ? '' : low;
-					this.state.max_price = high >= absMax ? '' : high;
-					this.state.page = 1;
-					this.syncUrl();
-					this.updateActiveFiltersBar();
-					clearTimeout( this.priceTimeout );
-					this.priceTimeout = setTimeout( () => {
-						this.fetchResults( false );
-					}, 300 );
-				};
+				const absMin = parseFloat( facetEl.getAttribute( 'data-min' ) ?? minSlider?.min ?? 0 );
+				const absMax = parseFloat( facetEl.getAttribute( 'data-max' ) ?? maxSlider?.max ?? 500 );
 
 				const syncFromSliders = () => {
 					let low = parseFloat( minSlider ? minSlider.value : absMin );
@@ -319,10 +299,8 @@
 						low = high;
 						high = tmp;
 					}
-					if ( minInput ) minInput.value = low;
-					if ( maxInput ) maxInput.value = high;
-					updateFill( low, high );
-					triggerPriceChange( low, high );
+					this.applyDualRangeVisuals( facetEl, sels, low, high );
+					onChange( low, high, absMin, absMax );
 				};
 
 				const syncFromInputs = () => {
@@ -333,10 +311,8 @@
 					if ( low > high ) {
 						low = high;
 					}
-					if ( minSlider ) minSlider.value = low;
-					if ( maxSlider ) maxSlider.value = high;
-					updateFill( low, high );
-					triggerPriceChange( low, high );
+					this.applyDualRangeVisuals( facetEl, sels, low, high );
+					onChange( low, high, absMin, absMax );
 				};
 
 				if ( minSlider ) minSlider.addEventListener( 'input', syncFromSliders );
@@ -344,11 +320,48 @@
 				if ( minInput ) minInput.addEventListener( 'change', syncFromInputs );
 				if ( maxInput ) maxInput.addEventListener( 'change', syncFromInputs );
 
-				// Initialize fill bar position
-				updateFill(
+				this.applyDualRangeVisuals(
+					facetEl,
+					sels,
 					parseFloat( minSlider?.value ?? absMin ),
 					parseFloat( maxSlider?.value ?? absMax )
 				);
+			};
+
+			const priceSels = { minSlider: '.gm-price-range-min', maxSlider: '.gm-price-range-max', minInput: '.gm-price-input-min', maxInput: '.gm-price-input-max' };
+			this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( priceFacet ) => {
+				bindDualRange( priceFacet, priceSels, ( low, high, absMin, absMax ) => {
+					this.state.min_price = low <= absMin ? '' : low;
+					this.state.max_price = high >= absMax ? '' : high;
+					this.state.page = 1;
+					this.syncUrl();
+					this.updateActiveFiltersBar();
+					clearTimeout( this.priceTimeout );
+					this.priceTimeout = setTimeout( () => this.fetchResults( false ), 300 );
+				} );
+			} );
+
+			const metaRangeSels = { minSlider: '.gm-meta-range-min', maxSlider: '.gm-meta-range-max', minInput: '.gm-meta-input-min', maxInput: '.gm-meta-input-max' };
+			this.filtersWrap.querySelectorAll( '.gm-facet-meta-range' ).forEach( ( mrFacet ) => {
+				const metaKey = mrFacet.getAttribute( 'data-meta-key' );
+				if ( ! metaKey ) return;
+				bindDualRange( mrFacet, metaRangeSels, ( low, high, absMin, absMax ) => {
+					const hasMin = low > absMin;
+					const hasMax = high < absMax;
+					if ( ! hasMin && ! hasMax ) {
+						delete this.state.meta_ranges[ metaKey ];
+					} else {
+						this.state.meta_ranges[ metaKey ] = {
+							min: hasMin ? low : '',
+							max: hasMax ? high : '',
+						};
+					}
+					this.state.page = 1;
+					this.syncUrl();
+					this.updateActiveFiltersBar();
+					clearTimeout( this.metaRangeTimeout );
+					this.metaRangeTimeout = setTimeout( () => this.fetchResults( false ), 300 );
+				} );
 			} );
 
 			// 7. WooCommerce Attribute Swatch Filter Buttons (.gm-swatch-filter-btn)
@@ -565,23 +578,10 @@
 					} else if ( chipType === 'price' ) {
 						this.state.min_price = '';
 						this.state.max_price = '';
-						this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
-							const absMin = pf.getAttribute( 'data-min' ) || '0';
-							const absMax = pf.getAttribute( 'data-max' ) || '500';
-							const minS = pf.querySelector( '.gm-price-range-min' );
-							const maxS = pf.querySelector( '.gm-price-range-max' );
-							const minI = pf.querySelector( '.gm-price-input-min' );
-							const maxI = pf.querySelector( '.gm-price-input-max' );
-							const fill = pf.querySelector( '.gm-price-range-fill' );
-							if ( minS ) minS.value = absMin;
-							if ( maxS ) maxS.value = absMax;
-							if ( minI ) minI.value = absMin;
-							if ( maxI ) maxI.value = absMax;
-							if ( fill ) {
-								fill.style.left = '0%';
-								fill.style.width = '100%';
-							}
-						} );
+						this.resetDualRangeUI( '.gm-facet-price-range', { minSlider: '.gm-price-range-min', maxSlider: '.gm-price-range-max', minInput: '.gm-price-input-min', maxInput: '.gm-price-input-max' } );
+					} else if ( chipType === 'meta_range' && chipKey ) {
+						delete this.state.meta_ranges[ chipKey ];
+						this.resetDualRangeUI( `.gm-facet-meta-range[data-meta-key="${chipKey}"]`, { minSlider: '.gm-meta-range-min', maxSlider: '.gm-meta-range-max', minInput: '.gm-meta-input-min', maxInput: '.gm-meta-input-max' } );
 					} else if ( chipType === 'rating' ) {
 						this.state.min_rating = 0;
 						this.filtersWrap.querySelectorAll( '.gm-rating-filter-btn' ).forEach( ( b ) => {
@@ -638,6 +638,7 @@
 			this.state.in_stock = false;
 			this.state.featured = false;
 			this.state.meta = {};
+			this.state.meta_ranges = {};
 			this.state.date_from = '';
 			this.state.date_to = '';
 			this.state.page = 1;
@@ -667,23 +668,8 @@
 					b.classList.toggle( 'gm-active', isAll );
 					b.setAttribute( 'aria-pressed', isAll ? 'true' : 'false' );
 				} );
-				this.filtersWrap.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
-					const absMin = pf.getAttribute( 'data-min' ) || '0';
-					const absMax = pf.getAttribute( 'data-max' ) || '500';
-					const minS = pf.querySelector( '.gm-price-range-min' );
-					const maxS = pf.querySelector( '.gm-price-range-max' );
-					const minI = pf.querySelector( '.gm-price-input-min' );
-					const maxI = pf.querySelector( '.gm-price-input-max' );
-					const fill = pf.querySelector( '.gm-price-range-fill' );
-					if ( minS ) minS.value = absMin;
-					if ( maxS ) maxS.value = absMax;
-					if ( minI ) minI.value = absMin;
-					if ( maxI ) maxI.value = absMax;
-					if ( fill ) {
-						fill.style.left = '0%';
-						fill.style.width = '100%';
-					}
-				} );
+				this.resetDualRangeUI( '.gm-facet-price-range', { minSlider: '.gm-price-range-min', maxSlider: '.gm-price-range-max', minInput: '.gm-price-input-min', maxInput: '.gm-price-input-max' } );
+				this.resetDualRangeUI( '.gm-facet-meta-range', { minSlider: '.gm-meta-range-min', maxSlider: '.gm-meta-range-max', minInput: '.gm-meta-input-min', maxInput: '.gm-meta-input-max' } );
 				this.filtersWrap.querySelectorAll( '.gm-filter-search, .gm-date-from, .gm-date-to, .gm-meta-input' ).forEach( ( inp ) => {
 					inp.value = '';
 				} );
@@ -692,6 +678,36 @@
 			this.syncUrl();
 			this.updateActiveFiltersBar();
 			this.fetchResults( false );
+		}
+
+		applyDualRangeVisuals( facetEl, sels, lowVal, highVal ) {
+			const minS = facetEl.querySelector( sels.minSlider );
+			const maxS = facetEl.querySelector( sels.maxSlider );
+			const minI = facetEl.querySelector( sels.minInput );
+			const maxI = facetEl.querySelector( sels.maxInput );
+			const fill = facetEl.querySelector( '.gm-price-range-fill' );
+			const absMin = parseFloat( facetEl.getAttribute( 'data-min' ) ?? minS?.min ?? 0 );
+			const absMax = parseFloat( facetEl.getAttribute( 'data-max' ) ?? maxS?.max ?? 500 );
+			if ( minS ) minS.value = String( lowVal );
+			if ( maxS ) maxS.value = String( highVal );
+			if ( minI ) minI.value = String( lowVal );
+			if ( maxI ) maxI.value = String( highVal );
+			if ( fill ) {
+				const span = Math.max( 1, absMax - absMin );
+				const leftPct = Math.max( 0, Math.min( 100, ( ( lowVal - absMin ) / span ) * 100 ) );
+				const rightPct = Math.max( 0, Math.min( 100, ( ( highVal - absMin ) / span ) * 100 ) );
+				fill.style.left = leftPct + '%';
+				fill.style.width = Math.max( 0, rightPct - leftPct ) + '%';
+			}
+		}
+
+		resetDualRangeUI( selector, sels ) {
+			if ( ! this.filtersWrap ) return;
+			this.filtersWrap.querySelectorAll( selector ).forEach( ( el ) => {
+				const absMin = parseFloat( el.getAttribute( 'data-min' ) ?? '0' );
+				const absMax = parseFloat( el.getAttribute( 'data-max' ) ?? '500' );
+				this.applyDualRangeVisuals( el, sels, absMin, absMax );
+			} );
 		}
 
 		updateActiveFiltersBar() {
@@ -783,6 +799,21 @@
 				}
 			} );
 
+			// 6b. Numeric Meta Range chips
+			Object.keys( this.state.meta_ranges || {} ).forEach( ( mrKey ) => {
+				const b = this.state.meta_ranges[ mrKey ];
+				if ( b && ( ( b.min !== '' && b.min !== undefined ) || ( b.max !== '' && b.max !== undefined ) ) ) {
+					const lo = b.min !== '' && b.min !== undefined ? b.min : '…';
+					const hi = b.max !== '' && b.max !== undefined ? b.max : '…';
+					chips.push( {
+						type: 'meta_range',
+						key: mrKey,
+						val: `${lo}-${hi}`,
+						label: `${mrKey}: ${lo} – ${hi}`,
+					} );
+				}
+			} );
+
 			// 7. Search keyword chip
 			if ( this.state.search ) {
 				chips.push( { type: 'search', key: 'search', val: this.state.search, label: `"${this.state.search}"` } );
@@ -833,6 +864,7 @@
 				if ( this.state.featured ) activeCount++;
 				if ( this.state.date_from || this.state.date_to ) activeCount++;
 				activeCount += Object.keys( this.state.meta || {} ).length;
+				activeCount += Object.keys( this.state.meta_ranges || {} ).length;
 			}
 			badge.textContent = String( activeCount );
 			badge.hidden = activeCount === 0;
@@ -1062,6 +1094,7 @@
 				in_stock: this.state.in_stock,
 				featured: this.state.featured,
 				meta: this.state.meta,
+				meta_ranges: this.state.meta_ranges,
 				date_from: this.state.date_from,
 				date_to: this.state.date_to,
 				bookmarks: guestBookmarks,
@@ -1144,6 +1177,15 @@
 
 						if ( data.facet_counts ) {
 							this.updateFacetCounts( data.facet_counts, data.facet_hide_empty || {} );
+						}
+
+						// Accessibility announcement for screen readers
+						const srStatus = this.container.querySelector( '.gm-sr-status' );
+						if ( srStatus ) {
+							const totalVisible = this.itemsContainer.querySelectorAll( '.gm-grid-item' ).length;
+							srStatus.textContent = totalVisible > 0
+								? `Showing ${totalVisible} ${totalVisible === 1 ? 'item' : 'items'}.`
+								: 'No posts found matching your filters.';
 						}
 
 						// Dispatch loaded event for Pro blocks and external widgets
@@ -1231,7 +1273,7 @@
 				setOrDelete( 'gm_from', this.state.date_from );
 				setOrDelete( 'gm_to', this.state.date_to );
 
-				// Persist meta filters (`gm_meta_<key>`) and remove stale meta params
+				// Persist meta filters (`gm_meta_<key>`) and meta ranges (`gm_meta_min_<key>`, `gm_meta_max_<key>`)
 				const activeMetaKeys = new Set();
 				Object.keys( this.state.meta || {} ).forEach( ( metaKey ) => {
 					const val = this.state.meta[ metaKey ];
@@ -1239,6 +1281,20 @@
 						const paramKey = 'gm_meta_' + metaKey;
 						url.searchParams.set( paramKey, String( val ) );
 						activeMetaKeys.add( paramKey );
+					}
+				} );
+				Object.keys( this.state.meta_ranges || {} ).forEach( ( mrKey ) => {
+					const bounds = this.state.meta_ranges[ mrKey ];
+					if ( ! bounds ) return;
+					if ( bounds.min !== undefined && bounds.min !== '' ) {
+						const pkMin = 'gm_meta_min_' + mrKey;
+						url.searchParams.set( pkMin, String( bounds.min ) );
+						activeMetaKeys.add( pkMin );
+					}
+					if ( bounds.max !== undefined && bounds.max !== '' ) {
+						const pkMax = 'gm_meta_max_' + mrKey;
+						url.searchParams.set( pkMax, String( bounds.max ) );
+						activeMetaKeys.add( pkMax );
 					}
 				} );
 
@@ -1341,27 +1397,13 @@
 					hasAny = true;
 				}
 				if ( ( minPrice !== null && minPrice !== '' ) || ( maxPrice !== null && maxPrice !== '' ) ) {
+					const pSels = { minSlider: '.gm-price-range-min', maxSlider: '.gm-price-range-max', minInput: '.gm-price-input-min', maxInput: '.gm-price-input-max' };
 					this.filtersWrap?.querySelectorAll( '.gm-facet-price-range' ).forEach( ( pf ) => {
-						const minS = pf.querySelector( '.gm-price-range-min' );
-						const maxS = pf.querySelector( '.gm-price-range-max' );
-						const minI = pf.querySelector( '.gm-price-input-min' );
-						const maxI = pf.querySelector( '.gm-price-input-max' );
-						const fill = pf.querySelector( '.gm-price-range-fill' );
-						const absMin = parseFloat( pf.getAttribute( 'data-min' ) ?? minS?.min ?? 0 );
-						const absMax = parseFloat( pf.getAttribute( 'data-max' ) ?? maxS?.max ?? 500 );
+						const absMin = parseFloat( pf.getAttribute( 'data-min' ) ?? '0' );
+						const absMax = parseFloat( pf.getAttribute( 'data-max' ) ?? '500' );
 						const low = this.state.min_price !== '' ? Math.max( absMin, Math.min( absMax, Number( this.state.min_price ) ) ) : absMin;
 						const high = this.state.max_price !== '' ? Math.max( low, Math.min( absMax, Number( this.state.max_price ) ) ) : absMax;
-						if ( minS ) minS.value = String( low );
-						if ( maxS ) maxS.value = String( high );
-						if ( minI ) minI.value = String( low );
-						if ( maxI ) maxI.value = String( high );
-						if ( fill ) {
-							const span = Math.max( 1, absMax - absMin );
-							const leftPct = Math.max( 0, Math.min( 100, ( ( low - absMin ) / span ) * 100 ) );
-							const rightPct = Math.max( 0, Math.min( 100, ( ( high - absMin ) / span ) * 100 ) );
-							fill.style.left = leftPct + '%';
-							fill.style.width = Math.max( 0, rightPct - leftPct ) + '%';
-						}
+						this.applyDualRangeVisuals( pf, pSels, low, high );
 					} );
 				}
 
@@ -1409,6 +1451,28 @@
 
 				params.forEach( ( val, key ) => {
 					if ( ! key.startsWith( 'gm_' ) || reservedParams.has( key ) || ! val ) {
+						return;
+					}
+					if ( key.startsWith( 'gm_meta_min_' ) || key.startsWith( 'gm_meta_max_' ) ) {
+						const isMin = key.startsWith( 'gm_meta_min_' );
+						const mrKey = key.slice( isMin ? 'gm_meta_min_'.length : 'gm_meta_max_'.length );
+						const num = parseFloat( val );
+						if ( mrKey && ! isNaN( num ) ) {
+							if ( ! this.state.meta_ranges[ mrKey ] ) {
+								this.state.meta_ranges[ mrKey ] = { min: '', max: '' };
+							}
+							this.state.meta_ranges[ mrKey ][ isMin ? 'min' : 'max' ] = num;
+							const mrSels = { minSlider: '.gm-meta-range-min', maxSlider: '.gm-meta-range-max', minInput: '.gm-meta-input-min', maxInput: '.gm-meta-input-max' };
+							this.filtersWrap?.querySelectorAll( `.gm-facet-meta-range[data-meta-key="${mrKey}"]` ).forEach( ( mf ) => {
+								const absMin = parseFloat( mf.getAttribute( 'data-min' ) ?? '0' );
+								const absMax = parseFloat( mf.getAttribute( 'data-max' ) ?? '100' );
+								const b = this.state.meta_ranges[ mrKey ];
+								const lo = b.min !== '' ? Math.max( absMin, Math.min( absMax, b.min ) ) : absMin;
+								const hi = b.max !== '' ? Math.max( lo, Math.min( absMax, b.max ) ) : absMax;
+								this.applyDualRangeVisuals( mf, mrSels, lo, hi );
+							} );
+							hasAny = true;
+						}
 						return;
 					}
 					if ( key.startsWith( 'gm_meta_' ) ) {
