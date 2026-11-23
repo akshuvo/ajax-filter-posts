@@ -306,14 +306,6 @@ jQuery(document).ready(function ($) {
 			clearTimeout(noticeTimeout);
 		}
 
-		// Append terms.
-		// $data += '&terms=50,49'; 
-
-		console.log($data)
-
-		// License Form Submit
-		// jQuery('.lmfwppt-license-submit-btn').trigger('click');
-
 		// Ajax
 		jQuery.ajax({
 			type: 'POST',
@@ -329,23 +321,35 @@ jQuery(document).ready(function ($) {
 				// Enable Button
 				$form.find('[type="submit"]').removeAttr('disabled');
 
-				// Success
-				if (response.success) {
-					$form.find('.gm-ajax-response').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
-				} else {
-					$form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>' + response.data.message + '</p></div>');
+				var msg = (response && response.data && response.data.message)
+					? response.data.message
+					: (response && typeof response.data === 'string' ? response.data : 'Saved.');
+				var $notice = jQuery('<div class="notice is-dismissible"><p></p></div>');
+				$notice.addClass(response && response.success ? 'notice-success' : 'notice-error');
+				$notice.find('p').text(msg);
+				$form.find('.gm-ajax-response').empty().append($notice);
+
+				if (response && response.success) {
+					jQuery(document).trigger('gm-ajax-success-' + gmAction, [response.data]);
 				}
 
-				jQuery(document).trigger('gm-ajax-success-' + gmAction, [response.data])
-
 			},
-			error: function (response) {
+			error: function (xhr) {
 
 				// Enable Button
 				$form.find('[type="submit"]').removeAttr('disabled');
 
-				// Error
-				$form.find('.gm-ajax-response').html('<div class="notice notice-error is-dismissible"><p>Something went wrong. Please try again.</p></div>');
+				var errMsg = 'Something went wrong. Please try again.';
+				if (xhr && xhr.responseJSON && xhr.responseJSON.data) {
+					if (typeof xhr.responseJSON.data === 'string') {
+						errMsg = xhr.responseJSON.data;
+					} else if (xhr.responseJSON.data.message) {
+						errMsg = xhr.responseJSON.data.message;
+					}
+				}
+				var $notice = jQuery('<div class="notice notice-error is-dismissible"><p></p></div>');
+				$notice.find('p').text(errMsg);
+				$form.find('.gm-ajax-response').empty().append($notice);
 
 			},
 			complete: function (response) {

@@ -1710,13 +1710,41 @@
 
 .gm-save-status {
 	flex: 1;
+	min-width: 0;
 }
 
 .gm-ajax-response .notice {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
 	margin: 0 !important;
-	padding: 6px 14px !important;
+	padding: 8px 14px !important;
 	border-radius: var(--gm-radius-sm) !important;
-	display: inline-block;
+	box-shadow: none !important;
+	min-height: 36px;
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+.gm-ajax-response .notice.is-dismissible {
+	padding-right: 38px !important;
+}
+
+.gm-ajax-response .notice p {
+	margin: 0 !important;
+	padding: 0 !important;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.gm-ajax-response .notice .notice-dismiss {
+	position: absolute;
+	top: 50%;
+	right: 4px;
+	transform: translateY(-50%);
+	padding: 6px;
+	margin: 0;
+	line-height: 1;
 }
 
 .gm-save-actions {

@@ -21,22 +21,25 @@ class Ajax {
 	public function register_ajax() {
 		$nonce = isset( $_REQUEST['gm_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['gm_nonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'gm-ajax-nonce' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'ajax-filter-posts' ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Invalid nonce.', 'ajax-filter-posts' ) ), 403 );
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Insufficient permissions.', 'ajax-filter-posts' ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'ajax-filter-posts' ) ), 403 );
 		}
 
-		$action = isset( $_REQUEST['gm-action'] ) ? sanitize_title( wp_unslash( $_REQUEST['gm-action'] ) ) : '';
+		$action = isset( $_REQUEST['gm-action'] ) ? sanitize_key( wp_unslash( $_REQUEST['gm-action'] ) ) : '';
 		$allowed_actions = array(
+			'save_settings' => 'save_settings',
 			'save-settings' => 'save_settings',
+			'save_grid'     => 'save_grid',
 			'save-grid'     => 'save_grid',
+			'list_grids'    => 'list_grids',
 			'list-grids'    => 'list_grids',
 		);
 
 		if ( ! $action || ! isset( $allowed_actions[ $action ] ) ) {
-			wp_send_json_error( __( 'Invalid action', 'ajax-filter-posts' ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'ajax-filter-posts' ) ), 400 );
 		}
 
 		// Include the admin functions.

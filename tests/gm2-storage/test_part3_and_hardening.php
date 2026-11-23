@@ -123,7 +123,7 @@ try {
 		array( $ajax_ctrl, 'register_ajax' ),
 		array(
 			'gm_nonce'           => $adm_nonce,
-			'gm-action'          => 'save-settings',
+			'gm-action'          => 'save_settings',
 			'gridmaster_options' => array(
 				'debug-mode'                 => 'yes',
 				'disable-nonce-check'        => 'bogus_val',
@@ -132,7 +132,7 @@ try {
 		)
 	);
 	$saved_opt = get_option( 'gridmaster_settings', array() );
-	$expect( ! empty( $ok_act['success'] ) && 'yes' === ( $saved_opt['debug-mode'] ?? '' ) && 'no' === ( $saved_opt['disable-nonce-check'] ?? '' ), 'FREE-01: save-settings sanitizes radio options cleanly.' );
+	$expect( ! empty( $ok_act['success'] ) && 'yes' === ( $saved_opt['debug-mode'] ?? '' ) && 'no' === ( $saved_opt['disable-nonce-check'] ?? '' ), 'FREE-01: save_settings sanitizes radio options cleanly.' );
 
 	// =========================================================================
 	// 2. PRO-02 & PRO-03 Security & Setting Parity: Taxonomies + License Refresh
