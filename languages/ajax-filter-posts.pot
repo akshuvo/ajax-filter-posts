@@ -1,22 +1,22 @@
-# Copyright (C) 2025 AddonMaster
+# Copyright (C) 2026 AddonMaster
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Grid Master - Post Grid Solution with Ajax Filter 3.4.13\n"
+"Project-Id-Version: Post Grid Master — Post Grids & AJAX Filters 3.4.25\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajax-filter-posts\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-12T21:54:22+00:00\n"
+"POT-Creation-Date: 2026-11-16T03:15:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ajax-filter-posts\n"
 
 #. Plugin Name of the plugin
 #: ajax-filter-posts.php
-msgid "Post Grid Master - Post Grid Solution with Ajax Filter"
+msgid "Post Grid Master — Post Grids & AJAX Filters"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -52,7 +52,7 @@ msgid "Choose an option"
 msgstr ""
 
 #: admin/admin-functions.php:319
-#: admin/views/build-grid.php:475
+#: admin/views/build-grid.php:551
 msgid "Select Taxonomy"
 msgstr ""
 
@@ -63,8 +63,8 @@ msgid " (Available in Pro)"
 msgstr ""
 
 #: admin/admin-functions.php:321
-#: admin/views/build-grid.php:71
-#: admin/views/build-grid.php:526
+#: admin/views/build-grid.php:147
+#: admin/views/build-grid.php:602
 msgid "Auto Select"
 msgstr ""
 
@@ -77,47 +77,60 @@ msgid "Custom"
 msgstr ""
 
 #: admin/Admin.php:46
-#: admin/views/admin.php:66
+#: admin/views/admin.php:87
+#: admin/views/admin.php:145
 msgid "GridMaster"
 msgstr ""
 
+#: admin/Admin.php:48
+#: admin/views/admin.php:22
+#: admin/views/admin.php:117
+#: admin/views/my-grids.php:140
+#: admin/assets/builder.js:5658
+msgid "All Grids"
+msgstr ""
+
+#: admin/Admin.php:49
+#: admin/views/admin.php:29
+#: admin/views/admin.php:164
+#: admin/views/my-grids.php:180
+msgid "Add New Grid"
+msgstr ""
+
 #: admin/Admin.php:50
-#: admin/views/admin.php:20
-msgid "Welcome"
+#: admin/views/admin.php:36
+#: admin/views/admin.php:89
+msgid "Legacy Builder"
 msgstr ""
 
-#: admin/Admin.php:56
-#: admin/views/admin.php:27
-#: admin/views/my-grids.php:25
-msgid "My Grids"
-msgstr ""
-
-#: admin/Admin.php:61
-#: admin/views/admin.php:41
-msgid "Grid Builder"
-msgstr ""
-
-#: admin/Admin.php:67
-#: admin/views/admin.php:48
-#: ajax-filter-posts.php:143
+#: admin/Admin.php:51
+#: admin/views/admin.php:45
+#: ajax-filter-posts.php:196
 msgid "Settings"
 msgstr ""
 
+#: admin/Admin.php:52
+#: admin/views/admin.php:52
+msgid "Free vs Pro"
+msgstr ""
+
 #. translators: %s: review url.
-#: admin/Admin.php:94
+#: admin/Admin.php:77
+#, php-format
 msgid "If you like <strong>GridMaster</strong> please support us by giving it a %s rating. A huge thanks in advance!"
 msgstr ""
 
 #. translators: 1: live chat. 2: ticket url.
-#: admin/Admin.php:122
+#: admin/Admin.php:105
+#, php-format
 msgid "Stuck somewhere? Need help? %1$s or %2$s"
 msgstr ""
 
-#: admin/Admin.php:123
+#: admin/Admin.php:106
 msgid "Live chat(Pro only)"
 msgstr ""
 
-#: admin/Admin.php:124
+#: admin/Admin.php:107
 msgid "Submit a ticket"
 msgstr ""
 
@@ -125,524 +138,1615 @@ msgstr ""
 msgid "Invalid nonce"
 msgstr ""
 
-#: admin/Ajax.php:29
+#: admin/Ajax.php:28
+msgid "Insufficient permissions."
+msgstr ""
+
+#: admin/Ajax.php:39
 msgid "Invalid action"
 msgstr ""
 
-#: admin/Ajax.php:69
+#: admin/Ajax.php:118
 msgid "Settings Saved Successfully"
 msgstr ""
 
-#: admin/Ajax.php:125
+#: admin/Ajax.php:174
 msgid "Grid Saved Successfully"
 msgstr ""
 
 #. translators: %s: random words
 #: admin/Grids.php:175
+#, php-format
 msgid "GridMaster #%s"
 msgstr ""
 
-#: admin/views/admin.php:55
-msgid "Free vs Pro"
+#: admin/views/admin.php:41
+msgid "DEPRECATED"
 msgstr ""
 
-#: admin/views/admin.php:67
-msgid "Your ultimate tool for crafting visually stunning, customizable, and user-friendly post grids with ease."
+#: admin/views/admin.php:57
+msgid "PRO"
 msgstr ""
 
-#: admin/views/admin.php:78
+#: admin/views/admin.php:98
 msgid "Sample Grid #"
 msgstr ""
 
-#: admin/views/admin.php:81
+#: admin/views/admin.php:103
 msgid "Enter grid title"
 msgstr ""
 
-#: admin/views/admin.php:84
+#: admin/views/admin.php:108
 msgid "Embed"
 msgstr ""
 
-#: admin/views/admin.php:86
+#: admin/views/admin.php:112
 msgid "Update Grid"
 msgstr ""
 
-#: admin/views/admin.php:87
-#: admin/views/build-grid.php:902
+#: admin/views/admin.php:113
+#: admin/views/build-grid.php:978
 msgid "Save Grid"
 msgstr ""
 
-#: admin/views/admin.php:88
+#: admin/views/admin.php:114
 msgid "You have some unsaved changes."
 msgstr ""
 
+#: admin/views/admin.php:148
+msgid "PRO ACTIVE"
+msgstr ""
+
+#: admin/views/admin.php:150
+msgid "FREE"
+msgstr ""
+
+#: admin/views/admin.php:153
+msgid "Next-generation post grid builder with visual card designer & live AJAX filters."
+msgstr ""
+
+#: admin/views/admin.php:158
+msgid "View Documentation"
+msgstr ""
+
+#: admin/views/admin.php:160
+msgid "Docs & Tutorials"
+msgstr ""
+
+#: admin/views/admin.php:218
+msgid "Requested view file not found."
+msgstr ""
+
 #: admin/views/build-grid.php:26
-msgid "Grid Options"
+#: admin/assets/builder.js:6003
+msgid "Dismiss"
+msgstr ""
+
+#: admin/views/build-grid.php:37
+msgid "Notice: Retired Feature"
+msgstr ""
+
+#: admin/views/build-grid.php:38
+msgid "Legacy Builder is Being Discontinued"
 msgstr ""
 
 #: admin/views/build-grid.php:40
-msgid "Select Grid Style"
+msgid "New post grids should no longer be created using the legacy builder. GridMaster 2.0 provides a modern Gutenberg block editor with live card styling, query loops, and facet filters."
 msgstr ""
 
-#: admin/views/build-grid.php:54
-msgid "Select Post Type"
+#: admin/views/build-grid.php:46
+msgid "Create Grid with Modern Block Editor"
 msgstr ""
 
-#: admin/views/build-grid.php:68
-msgid "Post Type Advanced Selection"
+#: admin/views/build-grid.php:47
+msgid "Recommended"
 msgstr ""
 
-#: admin/views/build-grid.php:70
-msgid "None"
+#: admin/views/build-grid.php:51
+msgid "Return to All Grids"
+msgstr ""
+
+#: admin/views/build-grid.php:57
+msgid "I understand, continue with legacy builder (Deprecated)"
+msgstr ""
+
+#: admin/views/build-grid.php:76
+msgid "Legacy Builder is Deprecated & Will Be Discontinued"
+msgstr ""
+
+#: admin/views/build-grid.php:78
+msgid "This builder is kept strictly for backward compatibility with existing legacy grids. It will be completely removed in an upcoming release. Please use the modern Visual Block Editor for all new grids."
 msgstr ""
 
 #: admin/views/build-grid.php:86
-msgid "Posts Per Page"
+msgid "Migrate to Block Editor"
 msgstr ""
 
-#: admin/views/build-grid.php:101
-msgid "Order By"
+#: admin/views/build-grid.php:91
+msgid "Use Modern Block Editor"
 msgstr ""
 
-#: admin/views/build-grid.php:103
-msgid "Date"
+#: admin/views/build-grid.php:102
+msgid "Grid Options"
 msgstr ""
 
-#: admin/views/build-grid.php:104
-#: admin/views/my-grids.php:31
-msgid "Title"
+#: admin/views/build-grid.php:116
+msgid "Select Grid Style"
 msgstr ""
 
-#: admin/views/build-grid.php:105
-msgid "Random"
+#: admin/views/build-grid.php:130
+msgid "Select Post Type"
 msgstr ""
 
-#: admin/views/build-grid.php:106
-msgid "Comment Count"
-msgstr ""
-
-#: admin/views/build-grid.php:107
-msgid "Modified"
-msgstr ""
-
-#: admin/views/build-grid.php:108
-msgid "ID"
-msgstr ""
-
-#: admin/views/build-grid.php:109
-msgid "Author"
-msgstr ""
-
-#: admin/views/build-grid.php:110
-msgid "Name"
-msgstr ""
-
-#: admin/views/build-grid.php:111
-msgid "Type"
-msgstr ""
-
-#: admin/views/build-grid.php:112
-msgid "Parent"
-msgstr ""
-
-#: admin/views/build-grid.php:113
-msgid "Menu Order"
-msgstr ""
-
-#: admin/views/build-grid.php:114
-msgid "Meta Value"
-msgstr ""
-
-#: admin/views/build-grid.php:115
-msgid "Meta Value Number"
-msgstr ""
-
-#: admin/views/build-grid.php:129
-msgid "Order"
-msgstr ""
-
-#: admin/views/build-grid.php:131
-msgid "Descending"
-msgstr ""
-
-#: admin/views/build-grid.php:132
-msgid "Ascending"
+#: admin/views/build-grid.php:144
+msgid "Post Type Advanced Selection"
 msgstr ""
 
 #: admin/views/build-grid.php:146
-msgid "Show content from"
+#: admin/assets/builder.js:2517
+#: admin/assets/builder.js:3680
+#: assets/blocks/editor.js:1337
+#: assets/blocks/editor.js:1370
+msgid "None"
 msgstr ""
 
-#: admin/views/build-grid.php:148
-msgid "Post Excerpt"
+#: admin/views/build-grid.php:162
+#: admin/assets/builder.js:2959
+msgid "Posts Per Page"
 msgstr ""
 
-#: admin/views/build-grid.php:149
-msgid "Post Content"
+#: admin/views/build-grid.php:177
+#: admin/assets/builder.js:3167
+msgid "Order By"
 msgstr ""
 
-#: admin/views/build-grid.php:163
-msgid "Excerpt Type"
-msgstr ""
-
-#: admin/views/build-grid.php:165
-msgid "Words"
-msgstr ""
-
-#: admin/views/build-grid.php:166
-msgid "Characters"
+#: admin/views/build-grid.php:179
+msgid "Date"
 msgstr ""
 
 #: admin/views/build-grid.php:180
-msgid "Excerpt Length"
+#: admin/assets/builder.js:2207
+msgid "Title"
 msgstr ""
 
-#: admin/views/build-grid.php:193
-msgid "Show Read More"
+#: admin/views/build-grid.php:181
+#: admin/assets/builder.js:3173
+msgid "Random"
 msgstr ""
 
-#: admin/views/build-grid.php:195
-#: admin/views/build-grid.php:268
-#: admin/views/build-grid.php:415
-#: admin/views/build-grid.php:455
-#: admin/views/build-grid.php:510
-#: admin/views/build-grid.php:542
-#: admin/views/build-grid.php:573
-#: admin/views/build-grid.php:604
-#: admin/views/build-grid.php:661
-#: admin/views/build-grid.php:677
-#: admin/views/build-grid.php:693
-#: admin/views/build-grid.php:721
-#: admin/views/build-grid.php:737
-#: admin/views/build-grid.php:753
-#: admin/views/build-grid.php:815
-msgid "Yes"
+#: admin/views/build-grid.php:182
+#: admin/assets/builder.js:3174
+msgid "Comment Count"
 msgstr ""
 
-#: admin/views/build-grid.php:196
-#: admin/views/build-grid.php:269
-#: admin/views/build-grid.php:416
-#: admin/views/build-grid.php:456
-#: admin/views/build-grid.php:511
-#: admin/views/build-grid.php:543
-#: admin/views/build-grid.php:574
-#: admin/views/build-grid.php:603
-#: admin/views/build-grid.php:660
-#: admin/views/build-grid.php:676
-#: admin/views/build-grid.php:692
-#: admin/views/build-grid.php:720
-#: admin/views/build-grid.php:736
-#: admin/views/build-grid.php:752
-#: admin/views/build-grid.php:816
-msgid "No"
+#: admin/views/build-grid.php:183
+msgid "Modified"
 msgstr ""
 
-#: admin/views/build-grid.php:210
-msgid "Read More Text"
+#: admin/views/build-grid.php:184
+#: admin/views/my-grids.php:191
+msgid "ID"
 msgstr ""
 
-#: admin/views/build-grid.php:212
-#: inc/functions.php:138
-#: templates/grid/default.php:9
-#: templates/grid/style-2.php:9
-#: templates/grid/style-3.php:18
-msgid "Read More"
+#: admin/views/build-grid.php:185
+msgid "Author"
+msgstr ""
+
+#: admin/views/build-grid.php:186
+msgid "Name"
+msgstr ""
+
+#: admin/views/build-grid.php:187
+msgid "Type"
+msgstr ""
+
+#: admin/views/build-grid.php:188
+msgid "Parent"
+msgstr ""
+
+#: admin/views/build-grid.php:189
+#: admin/assets/builder.js:3172
+msgid "Menu Order"
+msgstr ""
+
+#: admin/views/build-grid.php:190
+msgid "Meta Value"
+msgstr ""
+
+#: admin/views/build-grid.php:191
+msgid "Meta Value Number"
+msgstr ""
+
+#: admin/views/build-grid.php:205
+msgid "Order"
+msgstr ""
+
+#: admin/views/build-grid.php:207
+msgid "Descending"
+msgstr ""
+
+#: admin/views/build-grid.php:208
+msgid "Ascending"
 msgstr ""
 
 #: admin/views/build-grid.php:222
-msgid "Grid Image Size"
+msgid "Show content from"
 msgstr ""
 
-#: admin/views/build-grid.php:237
-msgid "Image Width"
+#: admin/views/build-grid.php:224
+#: assets/blocks/editor.js:1641
+#: assets/blocks/editor.js:1698
+msgid "Post Excerpt"
 msgstr ""
 
-#: admin/views/build-grid.php:251
-msgid "Image Height"
+#: admin/views/build-grid.php:225
+msgid "Post Content"
 msgstr ""
 
-#: admin/views/build-grid.php:266
-msgid "Apply Link on Thumbnail"
+#: admin/views/build-grid.php:239
+msgid "Excerpt Type"
 msgstr ""
 
-#: admin/views/build-grid.php:285
-msgid "Link Thumbnail To"
+#: admin/views/build-grid.php:241
+msgid "Words"
 msgstr ""
 
-#: admin/views/build-grid.php:287
-msgid "Post Link"
+#: admin/views/build-grid.php:242
+msgid "Characters"
+msgstr ""
+
+#: admin/views/build-grid.php:256
+msgid "Excerpt Length"
+msgstr ""
+
+#: admin/views/build-grid.php:269
+msgid "Show Read More"
+msgstr ""
+
+#: admin/views/build-grid.php:271
+#: admin/views/build-grid.php:344
+#: admin/views/build-grid.php:491
+#: admin/views/build-grid.php:531
+#: admin/views/build-grid.php:586
+#: admin/views/build-grid.php:618
+#: admin/views/build-grid.php:649
+#: admin/views/build-grid.php:680
+#: admin/views/build-grid.php:737
+#: admin/views/build-grid.php:753
+#: admin/views/build-grid.php:769
+#: admin/views/build-grid.php:797
+#: admin/views/build-grid.php:813
+#: admin/views/build-grid.php:829
+#: admin/views/build-grid.php:891
+msgid "Yes"
+msgstr ""
+
+#: admin/views/build-grid.php:272
+#: admin/views/build-grid.php:345
+#: admin/views/build-grid.php:492
+#: admin/views/build-grid.php:532
+#: admin/views/build-grid.php:587
+#: admin/views/build-grid.php:619
+#: admin/views/build-grid.php:650
+#: admin/views/build-grid.php:679
+#: admin/views/build-grid.php:736
+#: admin/views/build-grid.php:752
+#: admin/views/build-grid.php:768
+#: admin/views/build-grid.php:796
+#: admin/views/build-grid.php:812
+#: admin/views/build-grid.php:828
+#: admin/views/build-grid.php:892
+msgid "No"
+msgstr ""
+
+#: admin/views/build-grid.php:286
+msgid "Read More Text"
 msgstr ""
 
 #: admin/views/build-grid.php:288
+#: inc/Blocks.php:766
+#: inc/functions.php:138
+#: inc/Migration/Legacy_Migrator.php:245
+#: templates/grid/default.php:9
+#: templates/grid/style-2.php:9
+#: templates/grid/style-3.php:18
+#: admin/assets/builder.js:1125
+#: admin/assets/builder.js:1384
+#: admin/assets/builder.js:2244
+#: assets/blocks/editor.js:1404
+#: assets/blocks/editor.js:1762
+#: assets/blocks/editor.js:1833
+msgid "Read More"
+msgstr ""
+
+#: admin/views/build-grid.php:298
+msgid "Grid Image Size"
+msgstr ""
+
+#: admin/views/build-grid.php:313
+msgid "Image Width"
+msgstr ""
+
+#: admin/views/build-grid.php:327
+msgid "Image Height"
+msgstr ""
+
+#: admin/views/build-grid.php:342
+msgid "Apply Link on Thumbnail"
+msgstr ""
+
+#: admin/views/build-grid.php:361
+msgid "Link Thumbnail To"
+msgstr ""
+
+#: admin/views/build-grid.php:363
+msgid "Post Link"
+msgstr ""
+
+#: admin/views/build-grid.php:364
 msgid "Image Link"
 msgstr ""
 
-#: admin/views/build-grid.php:305
+#: admin/views/build-grid.php:381
 msgid "Heading Tag"
 msgstr ""
 
-#: admin/views/build-grid.php:307
+#: admin/views/build-grid.php:383
 msgid "Select Tag"
 msgstr ""
 
-#: admin/views/build-grid.php:320
+#: admin/views/build-grid.php:396
 msgid "Select the heading tag for the post title."
 msgstr ""
 
-#: admin/views/build-grid.php:330
+#: admin/views/build-grid.php:406
 msgid "Heading Font Size"
 msgstr ""
 
-#: admin/views/build-grid.php:340
+#: admin/views/build-grid.php:416
 msgid "Set the font size for the post title in different devices."
 msgstr ""
 
-#: admin/views/build-grid.php:353
+#: admin/views/build-grid.php:429
 msgid "Column Gap"
 msgstr ""
 
-#: admin/views/build-grid.php:366
+#: admin/views/build-grid.php:442
 msgid "Row Gap"
 msgstr ""
 
-#: admin/views/build-grid.php:379
+#: admin/views/build-grid.php:455
 msgid "Item Per Row"
 msgstr ""
 
-#: admin/views/build-grid.php:400
+#: admin/views/build-grid.php:476
 msgid "Filter Options"
 msgstr ""
 
-#: admin/views/build-grid.php:430
+#: admin/views/build-grid.php:506
 msgid "Filter Style"
 msgstr ""
 
-#: admin/views/build-grid.php:434
+#: admin/views/build-grid.php:510
 #: inc/functions.php:153
 msgid "Style 1 (Default)"
 msgstr ""
 
-#: admin/views/build-grid.php:435
+#: admin/views/build-grid.php:511
 #: inc/functions.php:154
 msgid "Style 2 (New)"
 msgstr ""
 
-#: admin/views/build-grid.php:436
+#: admin/views/build-grid.php:512
 #: inc/functions.php:155
 msgid "Style 3 (New)"
 msgstr ""
 
-#: admin/views/build-grid.php:437
+#: admin/views/build-grid.php:513
 msgid "Style 4 (New)"
 msgstr ""
 
-#: admin/views/build-grid.php:453
+#: admin/views/build-grid.php:529
 msgid "Show All Button"
 msgstr ""
 
-#: admin/views/build-grid.php:495
-#: admin/views/build-grid.php:496
+#: admin/views/build-grid.php:571
+#: admin/views/build-grid.php:572
 msgid "Select Terms"
 msgstr ""
 
-#: admin/views/build-grid.php:508
+#: admin/views/build-grid.php:584
 msgid "Hide Empty Terms"
 msgstr ""
 
-#: admin/views/build-grid.php:523
+#: admin/views/build-grid.php:599
 msgid "Initial Term on Page Load"
 msgstr ""
 
-#: admin/views/build-grid.php:525
+#: admin/views/build-grid.php:601
 msgid "All - Default"
 msgstr ""
 
-#: admin/views/build-grid.php:530
+#: admin/views/build-grid.php:606
 msgid "Select the initial term to be selected on page load."
 msgstr ""
 
-#: admin/views/build-grid.php:540
+#: admin/views/build-grid.php:616
 msgid "Allow Multiple Select"
 msgstr ""
 
-#: admin/views/build-grid.php:546
+#: admin/views/build-grid.php:622
 msgid "Allow multiple selection of terms in the filter."
 msgstr ""
 
-#: admin/views/build-grid.php:559
+#: admin/views/build-grid.php:635
 msgid "Add a Filter Heading?"
 msgstr ""
 
-#: admin/views/build-grid.php:561
+#: admin/views/build-grid.php:637
+#: admin/assets/builder.js:5205
 msgid "Category"
 msgstr ""
 
-#: admin/views/build-grid.php:571
+#: admin/views/build-grid.php:647
 msgid "Toggle Filter Items"
 msgstr ""
 
-#: admin/views/build-grid.php:589
+#: admin/views/build-grid.php:665
 msgid "Slider Options"
 msgstr ""
 
-#: admin/views/build-grid.php:601
+#: admin/views/build-grid.php:677
 msgid "Enable Slider"
 msgstr ""
 
-#: admin/views/build-grid.php:620
+#: admin/views/build-grid.php:696
 msgid "Slides to Show"
 msgstr ""
 
-#: admin/views/build-grid.php:639
+#: admin/views/build-grid.php:715
 msgid "Slides to Scroll"
 msgstr ""
 
-#: admin/views/build-grid.php:658
+#: admin/views/build-grid.php:734
 msgid "Show Prev/Next Arrows"
 msgstr ""
 
-#: admin/views/build-grid.php:674
+#: admin/views/build-grid.php:750
 msgid "Show Dots"
 msgstr ""
 
-#: admin/views/build-grid.php:690
+#: admin/views/build-grid.php:766
+#: admin/assets/builder.js:4774
 msgid "Enable Autoplay"
 msgstr ""
 
-#: admin/views/build-grid.php:706
+#: admin/views/build-grid.php:782
 msgid "Autoplay Speed"
 msgstr ""
 
-#: admin/views/build-grid.php:718
+#: admin/views/build-grid.php:794
 msgid "Pause Autoplay on Hover"
 msgstr ""
 
-#: admin/views/build-grid.php:734
+#: admin/views/build-grid.php:810
 msgid "Infinite loop sliding"
 msgstr ""
 
-#: admin/views/build-grid.php:750
+#: admin/views/build-grid.php:826
 msgid "Enable Center View"
 msgstr ""
 
-#: admin/views/build-grid.php:770
+#: admin/views/build-grid.php:846
 msgid "Pagination Options"
 msgstr ""
 
-#: admin/views/build-grid.php:782
+#: admin/views/build-grid.php:858
 msgid "Pagination Type"
 msgstr ""
 
-#: admin/views/build-grid.php:784
+#: admin/views/build-grid.php:860
+#: assets/blocks/editor.js:73
 msgid "Default"
 msgstr ""
 
-#: admin/views/build-grid.php:785
-#: inc/Shortcode.php:615
+#: admin/views/build-grid.php:861
+#: admin/views/free-vs-pro.php:495
+#: inc/Migration/Legacy_Migrator.php:125
+#: inc/Pagination/Pagination_Registry.php:140
+#: inc/Shortcode.php:629
+#: inc/Storage/Grid_Repository.php:49
+#: admin/assets/builder.js:3716
+#: admin/assets/builder.js:5210
 msgid "Load More"
 msgstr ""
 
-#: admin/views/build-grid.php:797
+#: admin/views/build-grid.php:873
+#: admin/views/free-vs-pro.php:516
 msgid "Infinite Scroll"
 msgstr ""
 
-#: admin/views/build-grid.php:803
+#: admin/views/build-grid.php:879
 msgid "If pagination type is default, this option will be ignored."
 msgstr ""
 
-#: admin/views/build-grid.php:813
+#: admin/views/build-grid.php:889
 msgid "Animation"
 msgstr ""
 
-#: admin/views/build-grid.php:833
+#: admin/views/build-grid.php:909
+#: admin/assets/builder.js:5767
+#: assets/blocks/editor.js:616
 msgid "Preview"
 msgstr ""
 
-#: admin/views/build-grid.php:850
+#: admin/views/build-grid.php:926
 msgid "Scale Down"
 msgstr ""
 
-#: admin/views/build-grid.php:857
+#: admin/views/build-grid.php:933
 msgid "Scale Up"
 msgstr ""
 
-#: admin/views/build-grid.php:860
+#: admin/views/build-grid.php:936
 msgid "Reset Scale"
 msgstr ""
 
-#: admin/views/build-grid.php:898
+#: admin/views/build-grid.php:974
 msgid "Embed Shortcode"
 msgstr ""
 
-#: admin/views/build-grid.php:899
+#: admin/views/build-grid.php:975
 msgid "Copy the shortcode below and paste it into your post, page, or text widget content."
 msgstr ""
 
-#: admin/views/build-grid.php:906
-#: admin/views/build-grid.php:912
+#: admin/views/build-grid.php:982
+#: admin/views/build-grid.php:988
 msgid "Copy Shortcode"
 msgstr ""
 
-#: admin/views/build-grid.php:909
-msgid "Or below one"
+#: admin/views/build-grid.php:985
+msgid "Or Full Attributes Shortcode"
 msgstr ""
 
-#: admin/views/my-grids.php:32
-msgid "Shortcode"
+#: admin/views/builder.php:36
+#: admin/assets/builder.js:5372
+#: admin/assets/builder.js:5373
+#: admin/assets/builder.js:5424
+#: admin/assets/builder.js:5578
+msgid "Untitled Grid"
 msgstr ""
 
-#: admin/views/my-grids.php:33
-msgid "Post Type"
+#: admin/views/builder.php:60
+msgid "Loading GridMaster Gutenberg Builder..."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:28
+msgid "GridMaster Pro is Active on this site!"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:29
+msgid "You have unlocked all premium builder features, 20+ designer templates, advanced multi-filters, and priority updates."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:34
+msgid "Manage License"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:43
+msgid "GridMaster Pro Edition"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:46
+msgid "Supercharge Your Post Grids with Pro Features"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:49
+msgid "Design visual drag-and-drop Gutenberg post cards, display any custom post type, filter content in real-time with AJAX multi-taxonomy filters, and elevate your archive pages with 20+ handcrafted presets."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:54
+msgid "Get GridMaster Pro Today"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:59
+msgid "Jump to Feature Matrix"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:63
+msgid "14-Day Money-Back Guarantee"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:64
+msgid "Automatic 1-Click Updates"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:65
+msgid "100% Risk-Free Secure Purchase"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:75
+#: admin/views/my-grids.php:364
+msgid "Visual Gutenberg Card Designer"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:76
+msgid "Design every pixel of your post card inside the native WordPress block editor. Rearrange titles, featured images, dates, excerpts, badges, custom fields, and buttons with real-time live preview."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:78
+msgid "Drag-and-drop card architecture"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:79
+msgid "Custom fonts, colors, borders & shadows"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:80
+msgid "Pixel-perfect responsive device controls"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:85
+msgid "Most Popular"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:89
+msgid "Advanced Multi-Taxonomy AJAX Filters"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:90
+msgid "Let visitors filter posts, products, and portfolios instantly without reloading the page. Combine multiple categories, tags, custom taxonomies, and live search bar with zero lag."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:92
+msgid "Real-time AJAX filtering without page refresh"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:93
+msgid "Buttons, dropdowns, pills, badges & search bar"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:94
+msgid "Multi-select with AND / OR criteria logic"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:102
+msgid "20+ Designer Layouts & Presets"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:103
+msgid "Transform your site with professional layouts: equal height grids, Pinterest-style masonry, metro layouts, and responsive touch-enabled carousel sliders with smooth animations."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:105
+msgid "20+ handcrafted designer templates"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:106
+msgid "Masonry, Metro, Grid, Slider & List views"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:107
+msgid "12+ modern hover and transition effects"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:118
+msgid "Side-by-Side Comparison"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:120
+msgid "Free vs Pro Feature Matrix"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:121
+msgid "Explore the powerful capabilities unlocked with GridMaster Pro. Select a category below or search for a specific feature."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:126
+msgid "Upgrade to Pro Now"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:135
+msgid "All Features"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:140
+msgid "Card Builder & CPT"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:144
+msgid "AJAX Filters & Search"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:148
+msgid "Pagination & Scroll"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:152
+msgid "Styling & Effects"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:156
+msgid "Updates & Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:162
+msgid "Filter features (e.g. WooCommerce, ACF, Infinite Scroll)..."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:163
+#: admin/views/my-grids.php:169
+#: inc/Facets/Handlers/Search_Input.php:30
+#: admin/assets/builder.js:286
+#: admin/assets/builder.js:1883
+msgid "Clear search"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:174
+msgid "Feature Matrix"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:175
+msgid "Capability / Feature"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:176
+msgid "Detailed breakdown of core features & limitations"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:181
+msgid "Standard Free"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:182
+msgid "GridMaster Core"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:183
+msgid "Basic grid essentials for regular posts"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:186
+msgid "Included Free"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:194
+msgid "RECOMMENDED"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:196
+msgid "GridMaster Pro"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:197
+msgid "Unlimited potential for creators & developers"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:200
+msgid "Upgrade to Pro ↗"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:212
+msgid "Gutenberg Card Builder & Content Types"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:220
+msgid "Gutenberg Visual Card Builder"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:221
+msgid "Design custom post cards with drag & drop WordPress blocks, layout controls, and real-time live preview."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:225
+msgid "Starter Template Card"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:230
+msgid "Full Visual Card Builder"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:231
+msgid "Visual Editor"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:238
+msgid "Custom Post Types (CPT) Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:239
+msgid "Display custom post types: Portfolios, Case Studies, Testimonials, Recipes, Events, CPT UI & Pods."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:245
+msgid "Standard Blog Posts Only"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:251
+msgid "Any Public Post Type"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:252
+#: admin/views/free-vs-pro.php:383
+msgid "Unlimited"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:259
+msgid "WooCommerce Products Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:260
+msgid "Create dynamic product catalogs with price tags, sales badges, star ratings, and Add to Cart buttons."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:266
+#: admin/views/free-vs-pro.php:287
+#: admin/views/free-vs-pro.php:376
+#: admin/views/free-vs-pro.php:397
+#: admin/views/free-vs-pro.php:488
+#: admin/views/free-vs-pro.php:509
+#: admin/views/free-vs-pro.php:561
+msgid "Not Available"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:272
+msgid "Full WooCommerce Integration"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:273
+msgid "WooCommerce"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:280
+msgid "Advanced Custom Fields (ACF) & Meta"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:281
+msgid "Extract and display custom meta fields, ACF text, images, badges, and custom taxonomy terms on cards."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:293
+msgid "Full ACF & Post Meta Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:294
+msgid "ACF Ready"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:301
+msgid "Multi-Format Layout Engines"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:302
+msgid "Render cards in Equal Height Grid, Masonry (Pinterest style), Metro layout, Carousel Slider, or List view."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:306
+msgid "Standard Grid Only"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:311
+msgid "Grid, Masonry, Metro, Slider, List"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:312
+msgid "5 Layouts"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:319
+msgid "Pre-Built Designer Layout Presets"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:320
+msgid "Instantly apply ready-made, professionally crafted post card designs with zero coding required."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:324
+msgid "2 Basic Templates"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:329
+msgid "20+ Premium Designer Presets"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:330
+msgid "20+ Presets"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:340
+msgid "Instant AJAX Filtering & Search Controls"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:348
+msgid "Category Live Filtering (Zero Reload)"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:349
+msgid "Filter posts by category on the fly without refreshing the page."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:355
+msgid "Single Taxonomy Only"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:361
+msgid "Multi-Taxonomy Live Filtering"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:362
+msgid "Multi-Filter"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:369
+msgid "Custom Taxonomies, Tags & Attributes"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:370
+msgid "Filter by post tags, product categories, brands, locations, or any custom registered taxonomy."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:382
+msgid "Unlimited Custom Taxonomies"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:390
+msgid "Real-Time AJAX Live Search Bar"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:391
+msgid "Instant search bar tied directly to grid filtering, updating results as the visitor types."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:403
+msgid "Instant Live AJAX Search Bar"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:404
+msgid "Instant Search"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:411
+msgid "Multiple Filter UI Styles"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:412
+msgid "Render filters as segmented buttons, select dropdowns, modern pill chips, or count badges."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:416
+msgid "Basic Button Style"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:421
+msgid "Buttons, Dropdowns, Badges, Pills"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:422
+msgid "4 Filter Styles"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:429
+msgid "Multi-Select Criteria Logic"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:430
+msgid "Allow visitors to select multiple terms simultaneously using AND / OR logical operators."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:436
+msgid "Single Term Only"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:442
+msgid "Supported (AND / OR Logic)"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:443
+msgid "Multi-Select"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:453
+msgid "Pagination & Content Loading Methods"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:461
+msgid "Standard Numbered Pagination"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:462
+msgid "Classic 1, 2, 3 page navigation with smooth AJAX post loading."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:468
+msgid "Numbered Pages"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:474
+msgid "Numbered Pages with Custom Styles"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:481
+msgid "AJAX \"Load More\" Button"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:482
+msgid "Load next batch of posts seamlessly with a single click, custom button label, and loading spinner."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:494
+msgid "AJAX Load More with Custom Spinners"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:502
+msgid "AJAX Seamless Infinite Scroll"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:503
+msgid "Automatically loads more cards as the visitor scrolls down the page for modern magazine experiences."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:515
+msgid "Automated Infinite Scroll Loading"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:523
+msgid "Next / Previous Pagination"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:524
+msgid "Simple Next and Previous page navigation controls with custom arrow icons."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:530
+msgid "Supported"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:536
+msgid "Supported with Custom Buttons"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:546
+msgid "Styling, Typography & Hover Animations"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:554
+msgid "Taxonomy Custom Colors & Icons"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:555
+msgid "Assign custom background colors and icons to individual categories and tags on card badges."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:567
+msgid "Custom Colors & Icons Per Term"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:568
+msgid "Badges"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:575
+msgid "Card Hover Animations & Transitions"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:576
+msgid "Image zoom, 3D tilt, overlay fade, slide-up captions, shadow lift, and glassmorphism styling."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:580
+msgid "Basic Hover Only"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:585
+msgid "12+ Modern Designer Animations"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:586
+msgid "12+ Effects"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:593
+msgid "Granular Responsive Breakpoint Tuning"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:594
+msgid "Control columns and gaps separately for Desktop (XL), Laptop (LG), Tablet (MD), Mobile Landscape (SM), and Mobile (XS)."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:598
+msgid "Basic Desktop / Mobile"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:603
+msgid "5 Independent Breakpoint Levels"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:604
+msgid "Responsive"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:614
+msgid "Updates, Maintenance & Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:622
+msgid "Plugin Updates & New Features"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:623
+msgid "Automated new feature releases, performance optimizations, bugfixes, and security patches."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:627
+msgid "WordPress.org Directory"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:632
+msgid "Automatic 1-Click Dashboard Updates"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:633
+msgid "Priority"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:640
+msgid "Customer Support & Live Assistance"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:641
+msgid "Direct access to senior developers and support specialists for setup guidance and troubleshooting."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:645
+msgid "Community Forum"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:650
+msgid "Priority 24/7 Ticket & Live Chat Support"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:651
+msgid "24/7 Priority"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:663
+msgid "100% Risk Free"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:664
+msgid "Ready to Build Stunning, High-Converting Post Grids?"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:665
+msgid "Join thousands of professional designers, developers, and agency owners who craft exceptional post grids with GridMaster Pro. Get instant access today with our 100% money-back guarantee."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:669
+msgid "Upgrade to GridMaster Pro Now"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:673
+msgid "Already Purchased? Access My Account"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:681
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:684
+msgid "Will my existing grids keep working when I upgrade to Pro?"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:685
+msgid "Yes, absolutely! GridMaster Pro is 100% backward-compatible with the free version. All your existing grids, shortcodes, and builder layouts will remain completely intact and instantly gain access to Pro features."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:688
+msgid "Can I display WooCommerce products and Custom Post Types?"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:689
+msgid "Yes! GridMaster Pro supports standard posts, pages, WooCommerce products, portfolios, testimonials, and any custom post type registered on your WordPress installation (including ACF, CPT UI, and Pods)."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:692
+msgid "How do updates work for GridMaster Pro?"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:693
+msgid "Once you enter your license key in the Settings tab, updates appear directly inside your WordPress Plugins dashboard, just like any other plugin. You can update with a single click."
+msgstr ""
+
+#: admin/views/free-vs-pro.php:696
+msgid "What is your refund policy?"
+msgstr ""
+
+#: admin/views/free-vs-pro.php:697
+msgid "We offer an unconditional 14-day money-back guarantee. If GridMaster Pro does not meet your project needs, simply submit a ticket to our support team and we will issue a full refund promptly."
+msgstr ""
+
+#: admin/views/my-grids.php:22
+msgid "Grid deleted successfully."
+msgstr ""
+
+#: admin/views/my-grids.php:26
+msgid "Grid duplicated successfully."
 msgstr ""
 
 #: admin/views/my-grids.php:34
-msgid "Taxonomy"
+msgid "Legacy grid migrated to GridMaster 2.0 successfully!"
 msgstr ""
 
-#: admin/views/my-grids.php:35
+#: admin/views/my-grids.php:41
+msgid "Grid rolled back to legacy renderer."
+msgstr ""
+
+#: admin/views/my-grids.php:82
+msgid "Total Grids"
+msgstr ""
+
+#: admin/views/my-grids.php:85
+msgid "Active"
+msgstr ""
+
+#: admin/views/my-grids.php:95
+msgid "Gutenberg v2 Grids"
+msgstr ""
+
+#: admin/views/my-grids.php:98
+msgid "Modern Engine"
+msgstr ""
+
+#: admin/views/my-grids.php:108
+msgid "Converted / Legacy"
+msgstr ""
+
+#: admin/views/my-grids.php:112
+#, php-format
+msgid "%d need migrate"
+msgstr ""
+
+#: admin/views/my-grids.php:114
+msgid "Modernized"
+msgstr ""
+
+#: admin/views/my-grids.php:125
+msgid "Edition Status"
+msgstr ""
+
+#: admin/views/my-grids.php:127
+msgid "Pro Active"
+msgstr ""
+
+#: admin/views/my-grids.php:127
+msgid "Free Tier"
+msgstr ""
+
+#: admin/views/my-grids.php:129
+msgid "Features"
+msgstr ""
+
+#: admin/views/my-grids.php:129
+msgid "Upgrade ↗"
+msgstr ""
+
+#: admin/views/my-grids.php:144
+#: admin/views/my-grids.php:253
+msgid "Gutenberg v2"
+msgstr ""
+
+#: admin/views/my-grids.php:148
+#: admin/views/my-grids.php:248
+msgid "Converted v2"
+msgstr ""
+
+#: admin/views/my-grids.php:153
+#: admin/views/my-grids.php:243
+msgid "Legacy 1.x"
+msgstr ""
+
+#: admin/views/my-grids.php:167
+msgid "Search grids by title..."
+msgstr ""
+
+#: admin/views/my-grids.php:176
+msgid "Import JSON"
+msgstr ""
+
+#: admin/views/my-grids.php:192
+msgid "Grid Title & Layout"
+msgstr ""
+
+#: admin/views/my-grids.php:193
+#: admin/assets/builder.js:140
+#: admin/assets/builder.js:436
+#: admin/assets/builder.js:438
+#: assets/blocks/editor.js:2510
+#: assets/blocks/editor.js:2531
+msgid "Shortcode"
+msgstr ""
+
+#: admin/views/my-grids.php:194
+msgid "Builder Engine"
+msgstr ""
+
+#: admin/views/my-grids.php:195
+msgid "Last Updated"
+msgstr ""
+
+#: admin/views/my-grids.php:196
 msgid "Actions"
 msgstr ""
 
-#: admin/views/my-grids.php:60
-msgid "You didn't save any grid yet!"
+#: admin/views/my-grids.php:207
+#: inc/Integrations/Embed_Helper.php:46
+#: inc/REST/Grids_Controller.php:998
+#, php-format
+msgid "Grid #%d"
 msgstr ""
 
-#: admin/views/my-grids.php:61
+#: admin/views/my-grids.php:216
+msgid "Click to edit grid"
+msgstr ""
+
+#: admin/views/my-grids.php:221
+msgid "Legacy 1.x Renderer"
+msgstr ""
+
+#: admin/views/my-grids.php:223
+msgid "Gutenberg Post Card Builder"
+msgstr ""
+
+#: admin/views/my-grids.php:231
+msgid "Click Copy to clipboard"
+msgstr ""
+
+#: admin/views/my-grids.php:232
+msgid "Copy shortcode to clipboard"
+msgstr ""
+
+#: admin/views/my-grids.php:234
+msgid "Copy"
+msgstr ""
+
+#: admin/views/my-grids.php:269
+msgid "Edit in Builder"
+msgstr ""
+
+#: admin/views/my-grids.php:271
+msgid "Edit"
+msgstr ""
+
+#: admin/views/my-grids.php:276
+msgid "Convert to Gutenberg v2 Builder"
+msgstr ""
+
+#: admin/views/my-grids.php:276
+msgid "Migrate to Gutenberg v2"
+msgstr ""
+
+#: admin/views/my-grids.php:280
+msgid "Roll back this grid to the legacy renderer?"
+msgstr ""
+
+#: admin/views/my-grids.php:280
+msgid "Roll back to legacy renderer"
+msgstr ""
+
+#: admin/views/my-grids.php:280
+msgid "Rollback to legacy renderer"
+msgstr ""
+
+#: admin/views/my-grids.php:285
+msgid "Duplicate Grid"
+msgstr ""
+
+#: admin/views/my-grids.php:288
+msgid "Export JSON"
+msgstr ""
+
+#: admin/views/my-grids.php:292
+msgid "Are you sure you want to delete this grid? This action cannot be undone."
+msgstr ""
+
+#: admin/views/my-grids.php:292
+msgid "Delete Grid"
+msgstr ""
+
+#: admin/views/my-grids.php:306
+#, php-format
+msgid "Showing page %1$d of %2$d (%3$d total grids)"
+msgstr ""
+
+#: admin/views/my-grids.php:335
+msgid "No Post Grids Found"
+msgstr ""
+
+#: admin/views/my-grids.php:338
+msgid "No grids matched your active filter or search terms. Try clearing filters to view all grids."
+msgstr ""
+
+#: admin/views/my-grids.php:340
+msgid "Get started by creating your first post grid using our visual drag-and-drop Gutenberg card builder."
+msgstr ""
+
+#: admin/views/my-grids.php:346
+msgid "Clear Filter & Search"
+msgstr ""
+
+#: admin/views/my-grids.php:351
 msgid "Create Your First Grid"
 msgstr ""
 
-#: admin/views/settings.php:16
+#: admin/views/my-grids.php:365
+msgid "Customize card layouts with native WordPress block components. Add title, image, meta, custom fields, and buttons."
+msgstr ""
+
+#: admin/views/my-grids.php:367
+msgid "Launch Card Builder →"
+msgstr ""
+
+#: admin/views/my-grids.php:377
+msgid "Embed Anywhere with Shortcodes"
+msgstr ""
+
+#: admin/views/my-grids.php:378
+msgid "Paste [gridmaster id=\"...\"] into any post, page, Elementor layout, or block editor template to render your grids."
+msgstr ""
+
+#: admin/views/my-grids.php:380
+msgid "View Shortcode Guide →"
+msgstr ""
+
+#: admin/views/my-grids.php:390
+msgid "Need Help or Have Questions?"
+msgstr ""
+
+#: admin/views/my-grids.php:391
+msgid "Access our documentation, video tutorials, or reach out to our dedicated support team for quick assistance."
+msgstr ""
+
+#: admin/views/my-grids.php:393
+msgid "Get Support →"
+msgstr ""
+
+#: admin/views/my-grids.php:549
+msgid "Please select a JSON file or paste exported JSON first."
+msgstr ""
+
+#: admin/views/my-grids.php:560
+msgid "Invalid JSON syntax."
+msgstr ""
+
+#: admin/views/my-grids.php:568
+msgid "Importing..."
+msgstr ""
+
+#: admin/views/my-grids.php:588
+msgid "Imported successfully! Reloading…"
+msgstr ""
+
+#: admin/views/my-grids.php:595
+msgid "Import failed."
+msgstr ""
+
+#: admin/views/my-grids.php:616
+msgid "Close modal"
+msgstr ""
+
+#: admin/views/my-grids.php:620
+msgid "Import GridMaster Grid JSON"
+msgstr ""
+
+#: admin/views/my-grids.php:621
+msgid "Upload a .gridmaster.json file exported from another site or paste the JSON payload below."
+msgstr ""
+
+#: admin/views/my-grids.php:630
+msgid "Import Grid"
+msgstr ""
+
+#: admin/views/settings.php:29
+msgid "Plugin Settings"
+msgstr ""
+
+#: admin/views/settings.php:30
+msgid "Configure system preferences, caching options, taxonomy enhancements, and license activation."
+msgstr ""
+
+#: admin/views/settings.php:35
+msgid "GridMaster Pro Enabled"
+msgstr ""
+
+#: admin/views/settings.php:35
+msgid "GridMaster Free Edition"
+msgstr ""
+
+#: admin/views/settings.php:49
+msgid "General & Performance"
+msgstr ""
+
+#: admin/views/settings.php:50
+msgid "Control query debugging and frontend security checks."
+msgstr ""
+
+#: admin/views/settings.php:58
 msgid "Debug Mode"
 msgstr ""
 
-#: admin/views/settings.php:22
-msgid "Enable debug mode to see the notices generated by the plugin."
+#: admin/views/settings.php:60
+msgid "Displays diagnostic notices and query execution details in the console for troubleshooting grid rendering and AJAX responses."
 msgstr ""
 
-#: admin/views/settings.php:34
+#: admin/views/settings.php:67
+msgid "Disabled"
+msgstr ""
+
+#: admin/views/settings.php:71
+msgid "Enabled"
+msgstr ""
+
+#: admin/views/settings.php:80
 msgid "Disable Nonce Check"
 msgstr ""
 
-#: admin/views/settings.php:40
-msgid "Disable if you are facing any issues with the nonce check."
+#: admin/views/settings.php:82
+msgid "Bypasses nonce validation on frontend AJAX filter & pagination requests. Enable this if page caching plugins (such as WP Rocket, LiteSpeed, or Cloudflare) serve expired nonces to visitors."
 msgstr ""
 
-#: admin/views/settings.php:54
+#: admin/views/settings.php:89
+msgid "Check Nonces (Recommended)"
+msgstr ""
+
+#: admin/views/settings.php:93
+msgid "Disable Nonce Validation"
+msgstr ""
+
+#: admin/views/settings.php:108
+msgid "Taxonomy Badge Options"
+msgstr ""
+
+#: admin/views/settings.php:109
+msgid "Disable custom icon and color controls for specific taxonomies."
+msgstr ""
+
+#: admin/views/settings.php:116
 msgid "Disable Icon & Color Options on Taxonomies"
 msgstr ""
 
-#: admin/views/settings.php:55
-msgid "Disable icon and color options from Taxonomies."
+#: admin/views/settings.php:118
+msgid "Select which taxonomies should hide custom icon and color fields on their term edit screens."
 msgstr ""
 
-#: admin/views/settings.php:69
+#: admin/views/settings.php:160
 msgid "License Activation"
 msgstr ""
 
-#: admin/views/settings.php:70
-msgid "Enter your license key to activate GridMaster Pro."
+#: admin/views/settings.php:161
+msgid "Manage your GridMaster Pro license to enable automatic one-click updates and priority technical support."
 msgstr ""
 
-#: admin/views/settings.php:83
+#: admin/views/settings.php:174
+msgid "Find license in My Account"
+msgstr ""
+
+#: admin/views/settings.php:177
+msgid "Purchase extra licenses"
+msgstr ""
+
+#: admin/views/settings.php:183
+msgid "Upgrade to GridMaster Pro to unlock License Management"
+msgstr ""
+
+#: admin/views/settings.php:184
+msgid "Gain access to visual Gutenberg card builder, 20+ premium presets, live AJAX search, and infinite scroll."
+msgstr ""
+
+#: admin/views/settings.php:187
+msgid "Explore Pro Features →"
+msgstr ""
+
+#: admin/views/settings.php:206
 msgid "Save Changes"
 msgstr ""
 
@@ -778,8 +1882,271 @@ msgstr ""
 msgid "Live Chat"
 msgstr ""
 
-#: ajax-filter-posts.php:146
-msgid "Get GridMaster Pro"
+#: ajax-filter-posts.php:199
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: inc/Blocks.php:372
+#: inc/Integrations/Embed_Helper.php:36
+msgid "— Select a Grid —"
+msgstr ""
+
+#: inc/Blocks.php:488
+msgid "Please select a GridMaster grid."
+msgstr ""
+
+#: inc/Blocks.php:731
+msgid "There is no excerpt because this is a protected post."
+msgstr ""
+
+#: inc/Blocks.php:841
+msgid "Admin"
+msgstr ""
+
+#: inc/Blocks.php:933
+#, php-format
+msgid "%s Comment"
+msgid_plural "%s Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/Blocks.php:1005
+#, php-format
+msgid "Posts by %s"
+msgstr ""
+
+#: inc/Blocks.php:1099
+#, php-format
+msgid "Format: %s"
+msgstr ""
+
+#: inc/Blocks.php:1124
+msgid "Share on X"
+msgstr ""
+
+#: inc/Blocks.php:1129
+msgid "Share on Facebook"
+msgstr ""
+
+#: inc/Blocks.php:1134
+msgid "Share on LinkedIn"
+msgstr ""
+
+#: inc/Blocks.php:1140
+msgid "Copy Link"
+msgstr ""
+
+#: inc/Blocks.php:1182
+#: inc/Blocks.php:1184
+#: inc/Blocks.php:1189
+#: inc/Blocks.php:1208
+#: admin/assets/builder.js:1450
+msgid "Sale!"
+msgstr ""
+
+#: inc/Blocks.php:1221
+#: admin/assets/builder.js:1177
+#: admin/assets/builder.js:5242
+msgid "Featured"
+msgstr ""
+
+#: inc/Blocks.php:1324
+#: admin/assets/builder.js:157
+#: admin/assets/builder.js:441
+#: admin/assets/builder.js:1455
+#: admin/assets/builder.js:1491
+#: admin/assets/builder.js:1548
+#: admin/assets/builder.js:2264
+#: admin/assets/builder.js:2267
+#: assets/blocks/editor.js:2692
+#: assets/blocks/editor.js:2777
+msgid "Add to Cart"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:300
+#: inc/Engine/Grid_Renderer.php:401
+msgid "Preview Carousel"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:330
+#: inc/Facets/Filter_Registry.php:59
+#: inc/Storage/Grid_Repository.php:58
+#: admin/assets/builder.js:4339
+#: admin/assets/builder.js:5799
+msgid "Filters"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:360
+msgid "Live Carousel Preview"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:360
+msgid "Post Carousel"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:368
+msgid "Live Reels Feed Preview"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:368
+msgid "Vertical Video Reels Feed"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:474
+msgid "No posts found matching the criteria."
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:486
+msgid "This is a carousel with post cards. Use the previous and next buttons or arrow keys to navigate."
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:489
+#: inc/Engine/Grid_Renderer.php:491
+msgid "Previous cards"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:495
+msgid "Carousel slides"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:504
+#, php-format
+msgid "card %1$d of %2$d"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:518
+#: inc/Engine/Grid_Renderer.php:520
+msgid "Next cards"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:526
+msgid "Slide selection"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:531
+msgid "Pause carousel autoplay"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:533
+msgid "Pause autoplay"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:541
+#: admin/assets/builder.js:4303
+#: admin/assets/builder.js:4327
+#: admin/assets/builder.js:4595
+msgid "You're All Caught Up!"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:546
+msgid "Vertical video reels feed. Swipe up or down, or use the arrow buttons or keys to navigate reels one by one."
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:548
+msgid "Vertical video reels feed"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:557
+#, php-format
+msgid "Reel %1$d of %2$d: %3$s"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:570
+msgid "End of reels feed"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:576
+msgid "You've watched all available video reels."
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:579
+msgid "Watch Again"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:588
+msgid "Reel navigation"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:589
+#: inc/Engine/Grid_Renderer.php:591
+msgid "Previous reel"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:593
+#: inc/Engine/Grid_Renderer.php:595
+msgid "Next reel"
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:986
+#: admin/assets/builder.js:47
+msgid "Could not load posts. Please retry."
+msgstr ""
+
+#: inc/Engine/Grid_Renderer.php:987
+#: admin/assets/builder.js:48
+#: admin/assets/builder.js:5715
+msgid "Retry"
+msgstr ""
+
+#: inc/Facets/Filter_Registry.php:63
+msgid "Grid Filters"
+msgstr ""
+
+#: inc/Facets/Filter_Registry.php:67
+msgid "Close filters"
+msgstr ""
+
+#: inc/Facets/Handlers/Reset_Button.php:16
+msgid "Reset Filters Button"
+msgstr ""
+
+#: inc/Facets/Handlers/Reset_Button.php:20
+msgid "Reset Filters"
+msgstr ""
+
+#: inc/Facets/Handlers/Reset_Button.php:25
+msgid "Reset all filters"
+msgstr ""
+
+#: inc/Facets/Handlers/Search_Input.php:16
+msgid "Keyword Search Input"
+msgstr ""
+
+#: inc/Facets/Handlers/Search_Input.php:20
+#: admin/assets/builder.js:3270
+#: admin/assets/builder.js:3541
+msgid "Search posts..."
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Checkbox.php:16
+msgid "Taxonomy Checkboxes"
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Dropdown.php:16
+msgid "Taxonomy Dropdown"
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Dropdown.php:22
+msgid "All Categories"
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Radio.php:16
+msgid "Taxonomy Radio Buttons"
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Radio.php:22
+#: inc/Facets/Handlers/Taxonomy_Tabs.php:23
+#: inc/functions.php:332
+#: inc/Migration/Legacy_Migrator.php:106
+#: admin/assets/builder.js:182
+#: admin/assets/builder.js:3264
+#: admin/assets/builder.js:3547
+#: admin/assets/builder.js:3578
+msgid "All"
+msgstr ""
+
+#: inc/Facets/Handlers/Taxonomy_Tabs.php:16
+msgid "Taxonomy Tabs / Buttons"
 msgstr ""
 
 #: inc/functions.php:28
@@ -791,6 +2158,8 @@ msgid "Small"
 msgstr ""
 
 #: inc/functions.php:40
+#: admin/assets/builder.js:2519
+#: assets/blocks/editor.js:1372
 msgid "Medium"
 msgstr ""
 
@@ -852,47 +2221,3838 @@ msgstr ""
 
 #. translators: %s: post date
 #: inc/functions.php:212
+#, php-format
 msgctxt "post date"
 msgid "Posted on %s"
 msgstr ""
 
 #. translators: %s: post author
 #: inc/functions.php:258
+#, php-format
 msgctxt "post author"
 msgid "Posted by %s"
 msgstr ""
 
 #. translators: 1: comment number, 2: title.
 #: inc/functions.php:283
+#, php-format
 msgctxt "comments title"
 msgid "%1$s Comment"
 msgid_plural "%1$s Comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/functions.php:332
-msgid "All"
+#: inc/Integrations/Beaver/Grid_Module.php:23
+#: inc/Integrations/Beaver/Grid_Module.php:25
+#: inc/Integrations/Bricks/Grid_Element.php:40
+#: inc/Integrations/Elementor/Grid_Widget.php:28
+#: inc/Integrations/Elementor/Loader.php:35
+#: inc/Integrations/Embed_Helper.php:180
+#: inc/Integrations/Widget/Grid_Widget.php:22
+#: inc/Integrations/WPBakery/Loader.php:37
+#: inc/Integrations/WPBakery/Loader.php:39
+#: assets/blocks/editor.js:889
+#: assets/blocks/editor.js:1146
+msgid "Post Grid Master"
+msgstr ""
+
+#: inc/Integrations/Beaver/Grid_Module.php:24
+#: inc/Integrations/Widget/Grid_Widget.php:24
+#: inc/Integrations/WPBakery/Loader.php:40
+msgid "Display a saved Post Grid Master layout."
+msgstr ""
+
+#: inc/Integrations/Beaver/Loader.php:36
+#: inc/Integrations/Elementor/Grid_Widget.php:81
+msgid "Grid Settings"
+msgstr ""
+
+#: inc/Integrations/Beaver/Loader.php:40
+#: inc/Integrations/Bricks/Grid_Element.php:73
+#: inc/Integrations/Elementor/Grid_Widget.php:91
+#: inc/Integrations/WPBakery/Loader.php:45
+#: assets/blocks/editor.js:1073
+#: assets/blocks/editor.js:1151
+msgid "Select Grid"
+msgstr ""
+
+#: inc/Integrations/Beaver/Loader.php:60
+#: inc/Integrations/Bricks/Grid_Element.php:90
+#: inc/Integrations/Elementor/Grid_Widget.php:122
+msgid "Create New Grid in GridMaster"
+msgstr ""
+
+#: inc/Integrations/Beaver/Loader.php:67
+#: inc/Integrations/Bricks/Grid_Element.php:97
+#: inc/Integrations/Elementor/Grid_Widget.php:129
+#: assets/blocks/editor.js:1127
+msgid "Manage All Grids"
+msgstr ""
+
+#: inc/Integrations/Beaver/Loader.php:83
+msgid "General"
+msgstr ""
+
+#: inc/Integrations/Bricks/Grid_Element.php:78
+#: inc/Integrations/Elementor/Grid_Widget.php:96
+#: inc/Integrations/WPBakery/Loader.php:49
+msgid "Choose a saved GridMaster layout to display."
+msgstr ""
+
+#: inc/Integrations/Elementor/Grid_Widget.php:105
+msgid "Edit Selected Grid ↗"
+msgstr ""
+
+#: inc/Integrations/Elementor/Loader.php:79
+msgid "Please select a grid first."
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:43
+msgid "Legacy"
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:175
+#: inc/Integrations/Widget/Grid_Widget.php:82
+#: assets/blocks/editor.js:1116
+#: assets/blocks/editor.js:1169
+msgid "Create New Grid"
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:181
+msgid "Please select a grid from the widget settings panel."
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:193
+#, php-format
+msgid "Grid #%d Not Found"
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:194
+msgid "This grid may have been deleted or the ID is invalid."
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:211
+msgid "Edit in GridMaster (opens in new tab)"
+msgstr ""
+
+#: inc/Integrations/Embed_Helper.php:212
+msgid "Edit Grid"
+msgstr ""
+
+#: inc/Integrations/Widget/Grid_Widget.php:61
+msgid "Title:"
+msgstr ""
+
+#: inc/Integrations/Widget/Grid_Widget.php:65
+msgid "Select Grid:"
+msgstr ""
+
+#: inc/Integrations/Widget/Grid_Widget.php:79
+msgid "Edit this grid"
+msgstr ""
+
+#: inc/Migration/Legacy_Migrator.php:24
+#: inc/REST/Grids_Controller.php:306
+#: inc/REST/Grids_Controller.php:355
+#: inc/REST/Grids_Controller.php:465
+#: inc/REST/Grids_Controller.php:985
+#: inc/Storage/Grid_Repository.php:209
+msgid "Grid not found."
+msgstr ""
+
+#: inc/Migration/Legacy_Migrator.php:126
+#: inc/Pagination/Pagination_Registry.php:141
+#: inc/Storage/Grid_Repository.php:50
+msgid "Loading..."
+msgstr ""
+
+#: inc/Migration/Legacy_Migrator.php:127
+#: inc/Storage/Grid_Repository.php:51
+msgid "No more posts"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:111
+msgid "Grid Pagination"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:113
+msgid "Previous Page"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:113
+msgid "Prev"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:122
+#, php-format
+msgid "Page %d"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:129
+msgid "Next Page"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:129
+#: inc/Pagination/Pagination_Registry.php:189
+msgid "Next"
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:164
+msgid "Loading more posts..."
+msgstr ""
+
+#: inc/Pagination/Pagination_Registry.php:186
+msgid "Previous"
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:397
+msgid "Could not delete grid."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:499
+msgid "Invalid JSON import payload."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:510
+msgid "Unrecognized GridMaster export schema."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:514
+msgid "Import payload does not contain any grids."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:548
+msgid "Imported Grid"
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:572
+msgid "No valid grid entries could be imported."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:632
+msgid "Pattern title is required."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:635
+msgid "Card block content is required."
+msgstr ""
+
+#: inc/REST/Grids_Controller.php:674
+#: inc/REST/Grids_Controller.php:688
+msgid "Pattern not found."
 msgstr ""
 
 #. translators: %s: upgrade url
 #: inc/Shortcode.php:79
+#, php-format
 msgid "<strong>Admin Notice:</strong> You need to upgrade to <a href=\"%s\" target=\"_blank\">GridMaster Pro</a> in order to use <strong>Advanced Post Type Selection</strong> feature."
 msgstr ""
 
 #. translators: %s: upgrade url
-#: inc/Shortcode.php:260
+#: inc/Shortcode.php:274
+#, php-format
 msgid "<strong>Admin Notice:</strong> You need to upgrade to <a href=\"%s\" target=\"_blank\">GridMaster Pro</a> in order to use custom taxonomy filters with selected terms."
 msgstr ""
 
-#: inc/Shortcode.php:630
+#: inc/Shortcode.php:644
 msgid "No posts found"
 msgstr ""
 
 #. translators: %s: template file
-#: inc/Shortcode.php:662
+#: inc/Shortcode.php:676
+#, php-format
 msgid "Template file not found: %s <br>"
+msgstr ""
+
+#: inc/Shortcode.php:730
+msgid "Invalid request. Nonce verification failed."
+msgstr ""
+
+#: inc/Storage/Grid_Repository.php:183
+#, php-format
+msgid "Grid #%s"
+msgstr ""
+
+#: inc/Storage/Grid_Repository.php:253
+msgid "Could not update grid in database."
+msgstr ""
+
+#: inc/Storage/Grid_Repository.php:283
+msgid "Could not insert grid into database."
+msgstr ""
+
+#: inc/Storage/Grid_Repository.php:326
+msgid "Source grid not found."
+msgstr ""
+
+#: inc/Storage/Grid_Repository.php:331
+#, php-format
+msgid "%s (Copy)"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:30
+msgctxt "post type general name"
+msgid "Grid Layouts"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:31
+msgctxt "post type singular name"
+msgid "Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:32
+msgctxt "admin menu"
+msgid "Grid Layouts"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:33
+msgctxt "add new on admin bar"
+msgid "Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:34
+msgctxt "layout"
+msgid "Add New"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:35
+msgid "Add New Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:36
+msgid "New Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:37
+msgid "Edit Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:38
+msgid "View Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:39
+msgid "All Grid Layouts"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:40
+msgid "Search Grid Layouts"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:41
+msgid "No grid layouts found."
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:42
+msgid "No grid layouts found in Trash."
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:79
+msgid "Grid Layout"
+msgstr ""
+
+#: inc/Storage/Layout_CPT.php:99
+msgid "Invalid layout post ID."
 msgstr ""
 
 #: templates/grid/style-3.php:11
 msgid "on"
+msgstr ""
+
+#: admin/assets/builder.js:54
+msgid "Your session expired. Your edits are still here. Sign in in another tab, then retry."
+msgstr ""
+
+#: admin/assets/builder.js:55
+msgid "The request failed. Please retry."
+msgstr ""
+
+#: admin/assets/builder.js:110
+msgid "Content & Editorial"
+msgstr ""
+
+#: admin/assets/builder.js:112
+#: admin/assets/builder.js:425
+#: assets/blocks/editor.js:1845
+msgid "Post Date"
+msgstr ""
+
+#: admin/assets/builder.js:112
+msgid "Display published post date"
+msgstr ""
+
+#: admin/assets/builder.js:113
+#: admin/assets/builder.js:426
+#: assets/blocks/editor.js:2199
+msgid "Modified Date"
+msgstr ""
+
+#: admin/assets/builder.js:113
+msgid "Display updated date for modified posts"
+msgstr ""
+
+#: admin/assets/builder.js:114
+#: admin/assets/builder.js:427
+#: assets/blocks/editor.js:2037
+msgid "Reading Time"
+msgstr ""
+
+#: admin/assets/builder.js:114
+msgid "Estimated read time calculated from post content"
+msgstr ""
+
+#: admin/assets/builder.js:115
+#: admin/assets/builder.js:428
+#: assets/blocks/editor.js:1903
+msgid "Post Author"
+msgstr ""
+
+#: admin/assets/builder.js:115
+msgid "Author name and byline"
+msgstr ""
+
+#: admin/assets/builder.js:116
+#: admin/assets/builder.js:429
+#: assets/blocks/editor.js:2122
+msgid "Author Avatar"
+msgstr ""
+
+#: admin/assets/builder.js:116
+msgid "Author Gravatar photo with link"
+msgstr ""
+
+#: admin/assets/builder.js:117
+msgid "Categories & Terms"
+msgstr ""
+
+#: admin/assets/builder.js:117
+msgid "Display assigned taxonomy terms"
+msgstr ""
+
+#: admin/assets/builder.js:118
+#: assets/blocks/editor.js:1965
+msgid "Custom Field / Meta"
+msgstr ""
+
+#: admin/assets/builder.js:118
+msgid "Custom post meta field value"
+msgstr ""
+
+#: admin/assets/builder.js:119
+#: admin/assets/builder.js:435
+#: assets/blocks/editor.js:2018
+msgid "Comments Count"
+msgstr ""
+
+#: admin/assets/builder.js:119
+msgid "Number of comments on the post"
+msgstr ""
+
+#: admin/assets/builder.js:123
+msgid "Media & Badges"
+msgstr ""
+
+#: admin/assets/builder.js:125
+#: admin/assets/builder.js:170
+msgid "Card Video Player (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:125
+msgid "Inline video player or preview on click/hover/loop"
+msgstr ""
+
+#: admin/assets/builder.js:126
+#: admin/assets/builder.js:169
+#: admin/assets/builder.js:452
+#: assets/blocks/editor.js:2859
+msgid "Video Lightbox (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:126
+#: admin/assets/builder.js:169
+msgid "Video play button with modal popup"
+msgstr ""
+
+#: admin/assets/builder.js:127
+#: assets/blocks/editor.js:2277
+msgid "Post Format Icon"
+msgstr ""
+
+#: admin/assets/builder.js:127
+msgid "Dynamic icon for video, audio, or gallery formats"
+msgstr ""
+
+#: admin/assets/builder.js:128
+#: assets/blocks/editor.js:2394
+msgid "Custom Badge"
+msgstr ""
+
+#: admin/assets/builder.js:128
+msgid "Static or meta-driven custom badge"
+msgstr ""
+
+#: admin/assets/builder.js:132
+msgid "Engagement & Social"
+msgstr ""
+
+#: admin/assets/builder.js:134
+#: admin/assets/builder.js:432
+#: assets/blocks/editor.js:2365
+msgid "Social Share"
+msgstr ""
+
+#: admin/assets/builder.js:134
+msgid "One-click social sharing buttons"
+msgstr ""
+
+#: admin/assets/builder.js:138
+msgid "Advanced & Embeds"
+msgstr ""
+
+#: admin/assets/builder.js:140
+msgid "Execute WordPress shortcodes with dynamic tags like {post_id}"
+msgstr ""
+
+#: admin/assets/builder.js:141
+#: admin/assets/builder.js:437
+#: assets/blocks/editor.js:2560
+msgid "Custom HTML"
+msgstr ""
+
+#: admin/assets/builder.js:141
+msgid "Embed custom HTML markup with dynamic post tags"
+msgstr ""
+
+#: admin/assets/builder.js:145
+msgid "Layout & Structure"
+msgstr ""
+
+#: admin/assets/builder.js:147
+msgid "Group Container"
+msgstr ""
+
+#: admin/assets/builder.js:147
+msgid "Group inner blocks with flex or grid layout"
+msgstr ""
+
+#: admin/assets/builder.js:148
+#: admin/assets/builder.js:456
+msgid "Columns"
+msgstr ""
+
+#: admin/assets/builder.js:148
+msgid "Multi-column container for badges or metadata"
+msgstr ""
+
+#: admin/assets/builder.js:149
+#: admin/assets/builder.js:458
+msgid "Spacer"
+msgstr ""
+
+#: admin/assets/builder.js:149
+msgid "Add vertical whitespace"
+msgstr ""
+
+#: admin/assets/builder.js:150
+#: admin/assets/builder.js:459
+msgid "Separator"
+msgstr ""
+
+#: admin/assets/builder.js:150
+msgid "Horizontal divider line"
+msgstr ""
+
+#: admin/assets/builder.js:154
+msgid "WooCommerce & Pro Elements"
+msgstr ""
+
+#: admin/assets/builder.js:156
+#: admin/assets/builder.js:440
+#: assets/blocks/editor.js:2621
+msgid "Product Price"
+msgstr ""
+
+#: admin/assets/builder.js:156
+msgid "WooCommerce regular and sale price"
+msgstr ""
+
+#: admin/assets/builder.js:157
+msgid "AJAX add-to-cart button"
+msgstr ""
+
+#: admin/assets/builder.js:158
+msgid "Sale Badge"
+msgstr ""
+
+#: admin/assets/builder.js:158
+msgid "Dynamic Sale or -% badge for products."
+msgstr ""
+
+#: admin/assets/builder.js:159
+msgid "Product Action Bar"
+msgstr ""
+
+#: admin/assets/builder.js:159
+msgid "Floating Wishlist, Quick View, Compare & Cart icons."
+msgstr ""
+
+#: admin/assets/builder.js:160
+#: admin/assets/builder.js:443
+msgid "Variation Swatches"
+msgstr ""
+
+#: admin/assets/builder.js:160
+msgid "Color, image & label swatches with live image swap."
+msgstr ""
+
+#: admin/assets/builder.js:161
+#: admin/assets/builder.js:444
+msgid "Compare Button"
+msgstr ""
+
+#: admin/assets/builder.js:161
+msgid "Side-by-side product comparison drawer & table (Native / WPC / YITH)."
+msgstr ""
+
+#: admin/assets/builder.js:162
+#: admin/assets/builder.js:445
+#: admin/assets/builder.js:1609
+msgid "Request a Quote"
+msgstr ""
+
+#: admin/assets/builder.js:162
+msgid "Product enquiry / B2B quote modal button (Native / YITH / WPC)."
+msgstr ""
+
+#: admin/assets/builder.js:163
+#: admin/assets/builder.js:446
+msgid "Product Meta & Specs"
+msgstr ""
+
+#: admin/assets/builder.js:163
+msgid "SKU, Brand, Weight, Dimensions & key spec attributes."
+msgstr ""
+
+#: admin/assets/builder.js:164
+msgid "Product Badge (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:164
+msgid "Dynamic badges like New, Featured, or Sale"
+msgstr ""
+
+#: admin/assets/builder.js:165
+msgid "Star Rating (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:165
+msgid "Customer review star ratings"
+msgstr ""
+
+#: admin/assets/builder.js:166
+#: assets/blocks/editor.js:2817
+msgid "Stock Status (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:166
+msgid "Product inventory status and low stock alert"
+msgstr ""
+
+#: admin/assets/builder.js:167
+#: assets/blocks/editor.js:2831
+msgid "Sale Countdown (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:167
+msgid "Live countdown timer for scheduled sales"
+msgstr ""
+
+#: admin/assets/builder.js:168
+#: admin/assets/builder.js:451
+#: assets/blocks/editor.js:2845
+msgid "Quick View (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:168
+msgid "Modal quick preview trigger"
+msgstr ""
+
+#: admin/assets/builder.js:170
+msgid "Inline video player, preview on click/hover, or vertical shorts loop"
+msgstr ""
+
+#: admin/assets/builder.js:171
+#: assets/blocks/editor.js:2873
+msgid "Bookmark / Wishlist (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:171
+msgid "Save post to visitor favorites"
+msgstr ""
+
+#: admin/assets/builder.js:250
+msgid "Card Blocks Library"
+msgstr ""
+
+#: admin/assets/builder.js:254
+#, js-format
+msgid "%d blocks"
+msgstr ""
+
+#: admin/assets/builder.js:259
+#: admin/assets/builder.js:1853
+#: assets/blocks/editor.js:111
+msgid "Close"
+msgstr ""
+
+#: admin/assets/builder.js:274
+msgid "Search blocks (e.g. date, video, price, rating)..."
+msgstr ""
+
+#: admin/assets/builder.js:320
+msgid "No matching blocks found"
+msgstr ""
+
+#: admin/assets/builder.js:321
+msgid "Try another keyword or select the \"All\" category tab."
+msgstr ""
+
+#: admin/assets/builder.js:330
+#: admin/assets/builder.js:1927
+msgid "Clear Search"
+msgstr ""
+
+#: admin/assets/builder.js:365
+msgid "Pro element — upgrade GridMaster to unlock"
+msgstr ""
+
+#: admin/assets/builder.js:419
+msgid "Card Container"
+msgstr ""
+
+#: admin/assets/builder.js:420
+#: admin/assets/builder.js:3171
+#: admin/assets/builder.js:4867
+#: assets/blocks/editor.js:1567
+msgid "Post Title"
+msgstr ""
+
+#: admin/assets/builder.js:421
+#: assets/blocks/editor.js:1420
+#: assets/blocks/editor.js:1554
+msgid "Featured Image"
+msgstr ""
+
+#: admin/assets/builder.js:422
+#: admin/assets/builder.js:423
+#: admin/assets/builder.js:2237
+msgid "Excerpt"
+msgstr ""
+
+#: admin/assets/builder.js:424
+msgid "Button (Read More)"
+msgstr ""
+
+#: admin/assets/builder.js:430
+msgid "Categories / Terms"
+msgstr ""
+
+#: admin/assets/builder.js:431
+msgid "Format Icon"
+msgstr ""
+
+#: admin/assets/builder.js:433
+msgid "Badge"
+msgstr ""
+
+#: admin/assets/builder.js:434
+msgid "Custom Meta"
+msgstr ""
+
+#: admin/assets/builder.js:439
+msgid "HTML"
+msgstr ""
+
+#: admin/assets/builder.js:442
+msgid "Action Bar"
+msgstr ""
+
+#: admin/assets/builder.js:447
+#: assets/blocks/editor.js:2789
+msgid "Badge (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:448
+msgid "Rating (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:449
+msgid "Stock (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:450
+msgid "Countdown (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:453
+msgid "Card Video (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:454
+msgid "Bookmark (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:455
+msgid "Group"
+msgstr ""
+
+#: admin/assets/builder.js:457
+msgid "Column"
+msgstr ""
+
+#: admin/assets/builder.js:495
+msgid "List View"
+msgstr ""
+
+#: admin/assets/builder.js:503
+msgid "Close List View"
+msgstr ""
+
+#: admin/assets/builder.js:511
+msgid "No blocks in card."
+msgstr ""
+
+#: admin/assets/builder.js:526
+msgid "Canvas"
+msgstr ""
+
+#: admin/assets/builder.js:562
+#, js-format
+msgid "Drop inside the highlighted %s."
+msgstr ""
+
+#: admin/assets/builder.js:563
+#, js-format
+msgid "Drop at the blue line in %s."
+msgstr ""
+
+#: admin/assets/builder.js:564
+msgid "Move over the card to find a drop position."
+msgstr ""
+
+#: admin/assets/builder.js:565
+msgid "Drag by the block handle; follow the blue drop line."
+msgstr ""
+
+#: admin/assets/builder.js:1103
+msgid "Custom saved card pattern"
+msgstr ""
+
+#: admin/assets/builder.js:1115
+msgid "Standard Vertical Card"
+msgstr ""
+
+#: admin/assets/builder.js:1116
+msgid "Classic blog card with 16:9 featured image on top, title, date, excerpt and read more."
+msgstr ""
+
+#: admin/assets/builder.js:1131
+msgid "Horizontal List (Media Left)"
+msgstr ""
+
+#: admin/assets/builder.js:1132
+msgid "Side-by-side list view with image on the left (35%) and content column on the right."
+msgstr ""
+
+#: admin/assets/builder.js:1152
+msgid "Horizontal List (Media Right)"
+msgstr ""
+
+#: admin/assets/builder.js:1153
+msgid "Reversed list view with content on the left and image on the right."
+msgstr ""
+
+#: admin/assets/builder.js:1170
+msgid "Hero Overlay (Cover Image)"
+msgstr ""
+
+#: admin/assets/builder.js:1171
+msgid "Full bleed background image with dark scrim gradient and text overlay."
+msgstr ""
+
+#: admin/assets/builder.js:1180
+msgid "Explore Post"
+msgstr ""
+
+#: admin/assets/builder.js:1186
+msgid "Editorial & Magazine Card"
+msgstr ""
+
+#: admin/assets/builder.js:1187
+msgid "Category badge, bold title, author avatar byline row, excerpt, and social share bar."
+msgstr ""
+
+#: admin/assets/builder.js:1192
+msgid "Editorial"
+msgstr ""
+
+#: admin/assets/builder.js:1207
+msgid "Modern Tech / SaaS Card"
+msgstr ""
+
+#: admin/assets/builder.js:1208
+msgid "Category pill badge, reading time, bold title, author byline row, and clean hover lift."
+msgstr ""
+
+#: admin/assets/builder.js:1230
+msgid "Compact List Row"
+msgstr ""
+
+#: admin/assets/builder.js:1231
+msgid "Minimal horizontal row with square thumbnail, title, and date for dense news feeds or sidebars."
+msgstr ""
+
+#: admin/assets/builder.js:1246
+msgid "Ultra Compact Feed Row"
+msgstr ""
+
+#: admin/assets/builder.js:1247
+msgid "60px rounded thumbnail with category pill and inline title for ticker or sidebar lists."
+msgstr ""
+
+#: admin/assets/builder.js:1262
+msgid "Split 50/50 Feature Card"
+msgstr ""
+
+#: admin/assets/builder.js:1263
+msgid "Side-by-side 50/50 split with generous padding, large heading, excerpt, and action button."
+msgstr ""
+
+#: admin/assets/builder.js:1270
+msgid "Featured Story"
+msgstr ""
+
+#: admin/assets/builder.js:1277
+msgid "Continue Story"
+msgstr ""
+
+#: admin/assets/builder.js:1284
+msgid "Minimalist Text-Only"
+msgstr ""
+
+#: admin/assets/builder.js:1285
+msgid "Text-driven opinion/essay card without featured image."
+msgstr ""
+
+#: admin/assets/builder.js:1294
+msgid "Read Full Article"
+msgstr ""
+
+#: admin/assets/builder.js:1300
+msgid "Floating Overlapping Box (Legacy Style 2)"
+msgstr ""
+
+#: admin/assets/builder.js:1301
+msgid "Featured image with overlapping white content box and centered typography."
+msgstr ""
+
+#: admin/assets/builder.js:1311
+#: admin/assets/builder.js:1343
+msgid "Continue Reading"
+msgstr ""
+
+#: admin/assets/builder.js:1318
+msgid "Centered Aesthetic (Legacy Style 3)"
+msgstr ""
+
+#: admin/assets/builder.js:1319
+msgid "Tall 4:3 rounded image, centered title, excerpt, and styled read more link."
+msgstr ""
+
+#: admin/assets/builder.js:1328
+msgid "Read Story →"
+msgstr ""
+
+#: admin/assets/builder.js:1334
+msgid "Bottom Meta Bar (Legacy Style 1)"
+msgstr ""
+
+#: admin/assets/builder.js:1335
+msgid "Featured image, title, excerpt, read more, and separate bottom metadata divider bar."
+msgstr ""
+
+#: admin/assets/builder.js:1353
+msgid "Inset Border Card (Legacy Style 4)"
+msgstr ""
+
+#: admin/assets/builder.js:1354
+msgid "Bordered card with inset depth, title first, author & comments meta, excerpt, and button."
+msgstr ""
+
+#: admin/assets/builder.js:1367
+msgid "View Full Post"
+msgstr ""
+
+#: admin/assets/builder.js:1373
+msgid "Date-First Magazine (Legacy Style 9)"
+msgstr ""
+
+#: admin/assets/builder.js:1374
+msgid "Prominent formatted date header at top, category badge, image, and read more."
+msgstr ""
+
+#: admin/assets/builder.js:1390
+msgid "Dark Slate Aesthetic"
+msgstr ""
+
+#: admin/assets/builder.js:1391
+msgid "Deep midnight slate card with blue glow hover, white typography, and category pill."
+msgstr ""
+
+#: admin/assets/builder.js:1398
+msgid "Tech"
+msgstr ""
+
+#: admin/assets/builder.js:1403
+msgid "Explore Article"
+msgstr ""
+
+#: admin/assets/builder.js:1409
+msgid "Masonry Story Card"
+msgstr ""
+
+#: admin/assets/builder.js:1410
+msgid "Variable-height card with natural ratio photo, full story excerpt, date, and comments."
+msgstr ""
+
+#: admin/assets/builder.js:1428
+msgid "Creative Portfolio & Project"
+msgstr ""
+
+#: admin/assets/builder.js:1429
+msgid "3:2 media aspect ratio with clean zoom effect, project title, categories, and direct action link."
+msgstr ""
+
+#: admin/assets/builder.js:1437
+msgid "View Project →"
+msgstr ""
+
+#: admin/assets/builder.js:1443
+msgid "E-Commerce Product Starter (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1444
+msgid "Sale badge, 1:1 product thumbnail, product category, title, price, and AJAX Add to Cart button."
+msgstr ""
+
+#: admin/assets/builder.js:1461
+msgid "Product Quick View & Badge (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1462
+msgid "Product badge, 1:1 image, quick view modal trigger button, title, and price."
+msgstr ""
+
+#: admin/assets/builder.js:1468
+msgid "Sale"
+msgstr ""
+
+#: admin/assets/builder.js:1470
+msgid "Quick View"
+msgstr ""
+
+#: admin/assets/builder.js:1478
+msgid "Product Horizontal Row (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1479
+msgid "Side-by-side product row with 30% square image, star rating, price, and Add to Cart."
+msgstr ""
+
+#: admin/assets/builder.js:1498
+msgid "Flash Sale & Countdown (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1499
+msgid "Urgency-driven deal card with discount % badge, countdown timer boxes, stock progress bar, and Add to Cart."
+msgstr ""
+
+#: admin/assets/builder.js:1505
+msgid "⚡ LIMITED DEAL"
+msgstr ""
+
+#: admin/assets/builder.js:1511
+msgid "Claim Deal"
+msgstr ""
+
+#: admin/assets/builder.js:1517
+msgid "Fashion & Apparel Hover Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1518
+msgid "3:4 portrait fashion image with 2nd gallery image hover swap, floating action bar (Wishlist, Quick View, Compare), title, price, and variation swatches."
+msgstr ""
+
+#: admin/assets/builder.js:1534
+msgid "Electronics & Tech Spec Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1535
+msgid "1:1 product media, SKU & Brand specs, star rating, title, stock status, price with discount badge, and Add to Cart + Compare row."
+msgstr ""
+
+#: admin/assets/builder.js:1556
+msgid "Wholesale / B2B Quick-Order Row (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1557
+msgid "Horizontal B2B quick-order row (22% media) with SKU & Brand, variation swatches, stock status, quantity stepper Add to Cart, and Request a Quote."
+msgstr ""
+
+#: admin/assets/builder.js:1580
+msgid "Grocery / Instant-Stepper Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1581
+msgid "Discount % badge, 1:1 image, weight/dimensions meta, product title, price, and full-width quantity stepper Add to Cart."
+msgstr ""
+
+#: admin/assets/builder.js:1598
+msgid "B2B Catalog & Quote Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1599
+msgid "Price-free B2B industrial catalog card with 4:3 image, SKU & spec attributes, short excerpt, and full-width Request a Quote button."
+msgstr ""
+
+#: admin/assets/builder.js:1615
+msgid "Wishlist & Favorites Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1616
+msgid "Heart wishlist toggle button, 1:1 product photo, star rating, title, price, stock status, and full-width Add to Cart button."
+msgstr ""
+
+#: admin/assets/builder.js:1634
+msgid "Video & Media Spotlight (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1635
+msgid "Format icon, featured media, video lightbox trigger popup, and reading time."
+msgstr ""
+
+#: admin/assets/builder.js:1643
+msgid "Watch Video"
+msgstr ""
+
+#: admin/assets/builder.js:1651
+msgid "Podcast & Audio Episode (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1652
+msgid "Audio episode badge, media thumbnail, episode title, host author, and listen button."
+msgstr ""
+
+#: admin/assets/builder.js:1658
+msgid "🎧 PODCAST EPISODE"
+msgstr ""
+
+#: admin/assets/builder.js:1665
+msgid "▶ Listen Episode"
+msgstr ""
+
+#: admin/assets/builder.js:1671
+msgid "Social & Wishlist Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1672
+msgid "Category badge and bookmark toggle in top header row, image, title, and social share bar."
+msgstr ""
+
+#: admin/assets/builder.js:1691
+msgid "Video Showcase & Course (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1692
+msgid "Dark neon 16:9 card with inline video player preview, glowing play button, difficulty level badge, title, and lesson link."
+msgstr ""
+
+#: admin/assets/builder.js:1707
+msgid "MEDIUM"
+msgstr ""
+
+#: admin/assets/builder.js:1712
+msgid "Start this lesson →"
+msgstr ""
+
+#: admin/assets/builder.js:1718
+msgid "TikTok / Reels / Shorts 9:16 (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1719
+msgid "Full portrait 9:16 vertical card with auto-looping muted teaser, sound toggle, creator avatar, and engagement actions."
+msgstr ""
+
+#: admin/assets/builder.js:1732
+msgid "🔥 REEL"
+msgstr ""
+
+#: admin/assets/builder.js:1749
+msgid "Instagram 1:1 Square Video (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1750
+msgid "Clean 1:1 square media card with video indicator badge and hover preview or lightbox trigger."
+msgstr ""
+
+#: admin/assets/builder.js:1772
+msgid "YouTube Channel Video Card (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:1773
+msgid "16:9 video thumbnail with duration badge, channel author avatar, video title, and lightbox watch button."
+msgstr ""
+
+#: admin/assets/builder.js:1839
+msgid "Card Templates Library"
+msgstr ""
+
+#: admin/assets/builder.js:1843
+#, js-format
+msgid "%d pre-built templates"
+msgstr ""
+
+#: admin/assets/builder.js:1848
+msgid "Single Card Blueprint"
+msgstr ""
+
+#: admin/assets/builder.js:1869
+#, js-format
+msgid "Search %d card templates (e.g. video, reel, list, deal)..."
+msgstr ""
+
+#: admin/assets/builder.js:1917
+msgid "No matching card templates found"
+msgstr ""
+
+#: admin/assets/builder.js:1918
+msgid "Try searching for video, reel, list, or deal, or click the \"All\" tab."
+msgstr ""
+
+#: admin/assets/builder.js:1958
+msgid "Pro card template — upgrade GridMaster to unlock"
+msgstr ""
+
+#: admin/assets/builder.js:1997
+msgid "Pro Only 🔒"
+msgstr ""
+
+#: admin/assets/builder.js:1998
+msgid "Apply Template"
+msgstr ""
+
+#: admin/assets/builder.js:2006
+#: admin/assets/builder.js:2007
+msgid "Delete saved pattern"
+msgstr ""
+
+#: admin/assets/builder.js:2089
+msgid "Card pattern saved!"
+msgstr ""
+
+#: admin/assets/builder.js:2092
+msgid "Could not save pattern."
+msgstr ""
+
+#: admin/assets/builder.js:2108
+msgid "Pattern removed."
+msgstr ""
+
+#: admin/assets/builder.js:2138
+msgid "Replace current card blocks with this prebuilt template?"
+msgstr ""
+
+#: admin/assets/builder.js:2184
+#, js-format
+msgid "Applied \"%s\" card template."
+msgstr ""
+
+#: admin/assets/builder.js:2217
+msgid "Image"
+msgstr ""
+
+#: admin/assets/builder.js:2227
+msgid "Video (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:2247
+msgid "Button"
+msgstr ""
+
+#: admin/assets/builder.js:2257
+msgid "Price"
+msgstr ""
+
+#: admin/assets/builder.js:2285
+msgid "More blocks"
+msgstr ""
+
+#: admin/assets/builder.js:2311
+msgid "Card Templates"
+msgstr ""
+
+#: admin/assets/builder.js:2339
+msgid "Save Pattern"
+msgstr ""
+
+#: admin/assets/builder.js:2353
+msgid "Pattern Name"
+msgstr ""
+
+#: admin/assets/builder.js:2354
+msgid "e.g. Dark Promo Card"
+msgstr ""
+
+#: admin/assets/builder.js:2362
+#: admin/assets/builder.js:5683
+msgid "Cancel"
+msgstr ""
+
+#: admin/assets/builder.js:2363
+msgid "Save"
+msgstr ""
+
+#: admin/assets/builder.js:2379
+msgid "Design one card. It repeats for every matching post."
+msgstr ""
+
+#: admin/assets/builder.js:2450
+msgid "Select parent Card Container"
+msgstr ""
+
+#: admin/assets/builder.js:2452
+#: admin/assets/builder.js:5797
+msgid "Card"
+msgstr ""
+
+#: admin/assets/builder.js:2457
+msgid "Card Styles"
+msgstr ""
+
+#: admin/assets/builder.js:2465
+msgid "Close Inspector"
+msgstr ""
+
+#: admin/assets/builder.js:2478
+msgid "Card Surface"
+msgstr ""
+
+#: admin/assets/builder.js:2482
+#: assets/blocks/editor.js:1346
+#: assets/blocks/editor.js:1819
+#: assets/blocks/editor.js:2330
+#: assets/blocks/editor.js:2466
+#: assets/blocks/editor.js:2743
+msgid "Background Color"
+msgstr ""
+
+#: admin/assets/builder.js:2492
+#: assets/blocks/editor.js:1351
+#: assets/blocks/editor.js:2309
+msgid "Padding (px)"
+msgstr ""
+
+#: admin/assets/builder.js:2503
+#: assets/blocks/editor.js:1359
+msgid "Corner Radius (px)"
+msgstr ""
+
+#: admin/assets/builder.js:2514
+#: assets/blocks/editor.js:1367
+msgid "Box Shadow"
+msgstr ""
+
+#: admin/assets/builder.js:2518
+#: assets/blocks/editor.js:1371
+msgid "Subtle (Low)"
+msgstr ""
+
+#: admin/assets/builder.js:2520
+#: assets/blocks/editor.js:1373
+msgid "Elevated (High)"
+msgstr ""
+
+#: admin/assets/builder.js:2529
+#: assets/blocks/editor.js:1378
+msgid "Border Width (px)"
+msgstr ""
+
+#: admin/assets/builder.js:2540
+#: assets/blocks/editor.js:1387
+msgid "Border Color"
+msgstr ""
+
+#: admin/assets/builder.js:2600
+msgid "The preview response was empty. Please retry."
+msgstr ""
+
+#: admin/assets/builder.js:2691
+#: assets/blocks/editor.js:144
+#: assets/blocks/editor.js:420
+msgid "Desktop"
+msgstr ""
+
+#: admin/assets/builder.js:2692
+#: assets/blocks/editor.js:420
+msgid "Tablet"
+msgstr ""
+
+#: admin/assets/builder.js:2693
+msgid "Mobile"
+msgstr ""
+
+#: admin/assets/builder.js:2699
+msgid "Popup blocked by browser. Please allow popups for this site."
+msgstr ""
+
+#: admin/assets/builder.js:2759
+#: assets/blocks/editor.js:313
+msgid "Preview device"
+msgstr ""
+
+#: admin/assets/builder.js:2783
+msgid "Refresh preview"
+msgstr ""
+
+#: admin/assets/builder.js:2786
+msgid "Refresh"
+msgstr ""
+
+#: admin/assets/builder.js:2793
+msgid "Open preview in new tab"
+msgstr ""
+
+#: admin/assets/builder.js:2797
+msgid "Open in new tab"
+msgstr ""
+
+#: admin/assets/builder.js:2806
+msgid "Live preview"
+msgstr ""
+
+#: admin/assets/builder.js:2807
+msgid "Untitled grid"
+msgstr ""
+
+#: admin/assets/builder.js:2824
+msgid "Preview is out of date. Click Refresh to update."
+msgstr ""
+
+#: admin/assets/builder.js:2842
+msgid "Rendering grid preview..."
+msgstr ""
+
+#: admin/assets/builder.js:2847
+msgid "Grid preview"
+msgstr ""
+
+#: admin/assets/builder.js:2852
+msgid "Showing current editor settings."
+msgstr ""
+
+#: admin/assets/builder.js:2853
+msgid "Preview viewport width"
+msgstr ""
+
+#: admin/assets/builder.js:2912
+msgid "Source"
+msgstr ""
+
+#: admin/assets/builder.js:2914
+msgid "Primary Post Type"
+msgstr ""
+
+#: admin/assets/builder.js:2926
+msgid "Select the primary WordPress post type to display."
+msgstr ""
+
+#: admin/assets/builder.js:2932
+msgid "Include Additional Post Types (Multi-Type Query)"
+msgstr ""
+
+#: admin/assets/builder.js:2964
+msgid "Number of posts to query and display per page."
+msgstr ""
+
+#: admin/assets/builder.js:2970
+msgid "Context-Aware & Advanced Query"
+msgstr ""
+
+#: admin/assets/builder.js:2972
+msgid "Dynamic Query Context"
+msgstr ""
+
+#: admin/assets/builder.js:2975
+msgid "Standalone / Manual Query (Default)"
+msgstr ""
+
+#: admin/assets/builder.js:2976
+msgid "Current Archive Context (Category / Tag / Search / Author)"
+msgstr ""
+
+#: admin/assets/builder.js:2977
+msgid "Related Posts (Share Categories/Tags with Current Post)"
+msgstr ""
+
+#: admin/assets/builder.js:2980
+msgid "Inherit terms from archive templates or automatically display related posts matching the viewed entry."
+msgstr ""
+
+#: admin/assets/builder.js:2983
+msgid "Exclude Current Post"
+msgstr ""
+
+#: admin/assets/builder.js:2986
+msgid "Prevent the currently open post or product from showing up inside this grid."
+msgstr ""
+
+#: admin/assets/builder.js:2989
+msgid "Ignore Sticky Posts"
+msgstr ""
+
+#: admin/assets/builder.js:2994
+msgid "Offset (Skip First N Posts)"
+msgstr ""
+
+#: admin/assets/builder.js:3001
+msgid "Include Only Post IDs (Comma-Separated)"
+msgstr ""
+
+#: admin/assets/builder.js:3007
+msgid "Exclude Post IDs (Comma-Separated)"
+msgstr ""
+
+#: admin/assets/builder.js:3016
+msgid "Include / Exclude"
+msgstr ""
+
+#: admin/assets/builder.js:3021
+msgid "Visitor filters narrow this selection. You can set initial inclusions or exclusions below."
+msgstr ""
+
+#: admin/assets/builder.js:3024
+msgid "Filter by Taxonomy Source"
+msgstr ""
+
+#: admin/assets/builder.js:3028
+msgid "All (No initial filter)"
+msgstr ""
+
+#: admin/assets/builder.js:3032
+msgid "Remove selected terms before changing the source."
+msgstr ""
+
+#: admin/assets/builder.js:3036
+msgid "Match selected terms"
+msgstr ""
+
+#: admin/assets/builder.js:3039
+msgid "Include any selected term"
+msgstr ""
+
+#: admin/assets/builder.js:3040
+msgid "Exclude selected terms"
+msgstr ""
+
+#: admin/assets/builder.js:3041
+msgid "Include all selected terms"
+msgstr ""
+
+#: admin/assets/builder.js:3046
+msgid "Add a term"
+msgstr ""
+
+#: admin/assets/builder.js:3050
+msgid "Loading terms…"
+msgstr ""
+
+#: admin/assets/builder.js:3050
+msgid "Type to search. Visitor filters keep these base restrictions."
+msgstr ""
+
+#: admin/assets/builder.js:3056
+msgid "Remove term"
+msgstr ""
+
+#: admin/assets/builder.js:3059
+msgid "Additional saved taxonomy restrictions are also applied."
+msgstr ""
+
+#: admin/assets/builder.js:3061
+msgid "Filter by Author"
+msgstr ""
+
+#: admin/assets/builder.js:3064
+msgid "All Authors"
+msgstr ""
+
+#: admin/assets/builder.js:3068
+msgid "Restrict initial query results to posts created by a specific author."
+msgstr ""
+
+#: admin/assets/builder.js:3077
+msgid "Custom Field Query (Meta Query)"
+msgstr ""
+
+#: admin/assets/builder.js:3089
+msgid "Add Meta Condition"
+msgstr ""
+
+#: admin/assets/builder.js:3096
+msgid "Static custom field (meta_query) rules are powered by GridMaster Pro."
+msgstr ""
+
+#: admin/assets/builder.js:3099
+msgid "No custom field conditions applied. Add a condition to filter posts by post meta."
+msgstr ""
+
+#: admin/assets/builder.js:3108
+#: assets/blocks/editor.js:840
+#: assets/blocks/editor.js:1987
+#: assets/blocks/editor.js:2442
+msgid "Meta Key"
+msgstr ""
+
+#: admin/assets/builder.js:3117
+msgid "Compare"
+msgstr ""
+
+#: admin/assets/builder.js:3140
+msgid "Value"
+msgstr ""
+
+#: admin/assets/builder.js:3142
+msgid "Expected value"
+msgstr ""
+
+#: admin/assets/builder.js:3152
+msgid "Remove meta condition"
+msgstr ""
+
+#: admin/assets/builder.js:3165
+msgid "Ordering"
+msgstr ""
+
+#: admin/assets/builder.js:3170
+msgid "Publish Date"
+msgstr ""
+
+#: admin/assets/builder.js:3175
+msgid "WooCommerce: Price (Low to High)"
+msgstr ""
+
+#: admin/assets/builder.js:3176
+msgid "WooCommerce: Price (High to Low)"
+msgstr ""
+
+#: admin/assets/builder.js:3177
+msgid "WooCommerce: Best Selling (Popularity)"
+msgstr ""
+
+#: admin/assets/builder.js:3178
+msgid "WooCommerce: Average Rating"
+msgstr ""
+
+#: admin/assets/builder.js:3179
+msgid "WooCommerce: SKU"
+msgstr ""
+
+#: admin/assets/builder.js:3184
+msgid "Direction"
+msgstr ""
+
+#: admin/assets/builder.js:3187
+msgid "Descending (Newest first)"
+msgstr ""
+
+#: admin/assets/builder.js:3188
+msgid "Ascending (Oldest first)"
+msgstr ""
+
+#: admin/assets/builder.js:3201
+msgid "WooCommerce Product Query Settings"
+msgstr ""
+
+#: admin/assets/builder.js:3204
+msgid "Product Filter Preset"
+msgstr ""
+
+#: admin/assets/builder.js:3207
+msgid "All Products"
+msgstr ""
+
+#: admin/assets/builder.js:3208
+msgid "On Sale Products Only"
+msgstr ""
+
+#: admin/assets/builder.js:3209
+msgid "Featured Products Only"
+msgstr ""
+
+#: admin/assets/builder.js:3210
+msgid "Best Selling Products"
+msgstr ""
+
+#: admin/assets/builder.js:3211
+msgid "Top Rated Products"
+msgstr ""
+
+#: admin/assets/builder.js:3212
+msgid "In-Stock Products Only"
+msgstr ""
+
+#: admin/assets/builder.js:3213
+msgid "User Wishlist / Saved Products"
+msgstr ""
+
+#: admin/assets/builder.js:3218
+msgid "Hide Out-of-Stock Products"
+msgstr ""
+
+#: admin/assets/builder.js:3223
+msgid "Search by Product SKU"
+msgstr ""
+
+#: admin/assets/builder.js:3226
+msgid "Allow visitor search bars to match product SKUs in addition to titles and descriptions."
+msgstr ""
+
+#: admin/assets/builder.js:3249
+msgid "Filter by Date"
+msgstr ""
+
+#: admin/assets/builder.js:3250
+msgid "Filter by Custom Field"
+msgstr ""
+
+#: admin/assets/builder.js:3251
+msgid "Filter by Numeric Range"
+msgstr ""
+
+#: admin/assets/builder.js:3252
+#: admin/assets/builder.js:5286
+msgid "Price Range"
+msgstr ""
+
+#: admin/assets/builder.js:3253
+msgid "Filter by Attribute"
+msgstr ""
+
+#: admin/assets/builder.js:3254
+msgid "Customer Rating"
+msgstr ""
+
+#: admin/assets/builder.js:3255
+msgid "Availability & Deals"
+msgstr ""
+
+#: admin/assets/builder.js:3256
+msgid "Sort By"
+msgstr ""
+
+#: admin/assets/builder.js:3257
+msgid "Active Filters"
+msgstr ""
+
+#: admin/assets/builder.js:3262
+#: admin/assets/builder.js:5260
+#: admin/assets/builder.js:5285
+msgid "Categories"
+msgstr ""
+
+#: admin/assets/builder.js:3329
+msgid "Category Tabs"
+msgstr ""
+
+#: admin/assets/builder.js:3330
+msgid "Dropdown Filter"
+msgstr ""
+
+#: admin/assets/builder.js:3331
+msgid "Checkboxes"
+msgstr ""
+
+#: admin/assets/builder.js:3332
+msgid "Radio Buttons"
+msgstr ""
+
+#: admin/assets/builder.js:3333
+msgid "Search Bar"
+msgstr ""
+
+#: admin/assets/builder.js:3334
+msgid "Reset Button"
+msgstr ""
+
+#: admin/assets/builder.js:3335
+msgid "Multi-Select (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3336
+msgid "Date Range (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3337
+msgid "Custom Field / Meta Filter (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3338
+msgid "Numeric Meta Range Slider (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3339
+msgid "WooCommerce Price Range Slider (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3340
+msgid "WooCommerce Attribute Swatches (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3341
+msgid "WooCommerce Star Rating Filter (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3342
+msgid "WooCommerce Sale / Stock / Featured Toggles (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3343
+msgid "WooCommerce Sort Dropdown (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3344
+msgid "Active Filter Chips Bar (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3363
+msgid "Add Filter"
+msgstr ""
+
+#: admin/assets/builder.js:3400
+msgid "No filters configured yet"
+msgstr ""
+
+#: admin/assets/builder.js:3401
+msgid "Add category tabs, dropdowns, checkboxes, or a search bar above."
+msgstr ""
+
+#: admin/assets/builder.js:3426
+msgid "Move filter up"
+msgstr ""
+
+#: admin/assets/builder.js:3433
+msgid "Move filter down"
+msgstr ""
+
+#: admin/assets/builder.js:3440
+msgid "Remove filter"
+msgstr ""
+
+#: admin/assets/builder.js:3446
+msgid "Collapse"
+msgstr ""
+
+#: admin/assets/builder.js:3446
+msgid "Expand"
+msgstr ""
+
+#: admin/assets/builder.js:3460
+msgid "Taxonomy / Attribute Source"
+msgstr ""
+
+#: admin/assets/builder.js:3467
+msgid "Hide Empty Terms on Dynamic Recount (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3470
+msgid "Automatically hide filter options that drop to 0 matching results after filtering."
+msgstr ""
+
+#: admin/assets/builder.js:3474
+msgid "Filter Label / Heading"
+msgstr ""
+
+#: admin/assets/builder.js:3480
+msgid "Post Meta Key"
+msgstr ""
+
+#: admin/assets/builder.js:3484
+msgid " visitors can type a value to filter posts matching this custom field key."
+msgstr ""
+
+#: admin/assets/builder.js:3491
+msgid "Numeric Meta Key"
+msgstr ""
+
+#: admin/assets/builder.js:3495
+msgid "Auto-detects bounds from published posts if Min/Max are left blank."
+msgstr ""
+
+#: admin/assets/builder.js:3501
+msgid "Min Bound"
+msgstr ""
+
+#: admin/assets/builder.js:3504
+#: admin/assets/builder.js:3511
+msgid "Auto"
+msgstr ""
+
+#: admin/assets/builder.js:3508
+msgid "Max Bound"
+msgstr ""
+
+#: admin/assets/builder.js:3515
+msgid "Step"
+msgstr ""
+
+#: admin/assets/builder.js:3525
+msgid "Unit Prefix"
+msgstr ""
+
+#: admin/assets/builder.js:3531
+msgid "Unit Suffix"
+msgstr ""
+
+#: admin/assets/builder.js:3540
+msgid "Search Input Placeholder"
+msgstr ""
+
+#: admin/assets/builder.js:3546
+msgid "\"All\" Option Label"
+msgstr ""
+
+#: admin/assets/builder.js:3555
+msgid "Tabs Display Style"
+msgstr ""
+
+#: admin/assets/builder.js:3558
+msgid "Standard Tabs"
+msgstr ""
+
+#: admin/assets/builder.js:3559
+msgid "Pill Chips (Wrap)"
+msgstr ""
+
+#: admin/assets/builder.js:3560
+msgid "Pill Chips (Horizontal Scroll)"
+msgstr ""
+
+#: admin/assets/builder.js:3565
+msgid "Allow Multiple Active Tabs"
+msgstr ""
+
+#: admin/assets/builder.js:3568
+msgid "Allow visitors to select multiple category tabs simultaneously."
+msgstr ""
+
+#: admin/assets/builder.js:3571
+msgid "Show \"All\" Tab"
+msgstr ""
+
+#: admin/assets/builder.js:3577
+msgid "\"All\" Tab Label"
+msgstr ""
+
+#: admin/assets/builder.js:3587
+msgid "Minimum Price"
+msgstr ""
+
+#: admin/assets/builder.js:3593
+msgid "Maximum Price"
+msgstr ""
+
+#: admin/assets/builder.js:3599
+msgid "Price Step"
+msgstr ""
+
+#: admin/assets/builder.js:3610
+msgid "Swatch Display Style"
+msgstr ""
+
+#: admin/assets/builder.js:3613
+msgid "Auto-Detect (Color / Image / Label)"
+msgstr ""
+
+#: admin/assets/builder.js:3614
+msgid "Color Circles"
+msgstr ""
+
+#: admin/assets/builder.js:3615
+msgid "Image Swatches"
+msgstr ""
+
+#: admin/assets/builder.js:3616
+msgid "Label Pills"
+msgstr ""
+
+#: admin/assets/builder.js:3621
+msgid "Allow Multiple Swatch Selection"
+msgstr ""
+
+#: admin/assets/builder.js:3626
+msgid "Show Product / Post Count"
+msgstr ""
+
+#: admin/assets/builder.js:3636
+msgid "Show \"On Sale\" Toggle"
+msgstr ""
+
+#: admin/assets/builder.js:3641
+msgid "Show \"In Stock Only\" Toggle"
+msgstr ""
+
+#: admin/assets/builder.js:3646
+msgid "Show \"Featured\" Toggle"
+msgstr ""
+
+#: admin/assets/builder.js:3659
+msgid "Enable Dynamic Recount Fragment Cache (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3662
+msgid "Caches dynamic facet term counts briefly and clears automatically when posts or terms change."
+msgstr ""
+
+#: admin/assets/builder.js:3676
+msgid "Page numbers"
+msgstr ""
+
+#: admin/assets/builder.js:3676
+msgid "Traditional numbered pagination (1, 2, 3...)"
+msgstr ""
+
+#: admin/assets/builder.js:3677
+msgid "Previous / Next"
+msgstr ""
+
+#: admin/assets/builder.js:3677
+msgid "Simple forward and back navigation links"
+msgstr ""
+
+#: admin/assets/builder.js:3678
+msgid "Load more"
+msgstr ""
+
+#: admin/assets/builder.js:3678
+msgid "Interactive button to load the next set of posts"
+msgstr ""
+
+#: admin/assets/builder.js:3679
+msgid "Infinite scroll"
+msgstr ""
+
+#: admin/assets/builder.js:3679
+msgid "Automatically load posts when scrolling to bottom"
+msgstr ""
+
+#: admin/assets/builder.js:3680
+msgid "Display fixed count without pagination controls"
+msgstr ""
+
+#: admin/assets/builder.js:3689
+msgid "Pagination Mode"
+msgstr ""
+
+#: admin/assets/builder.js:3715
+msgid "Load More Button Text"
+msgstr ""
+
+#: admin/assets/builder.js:3726
+msgid "Loading Indicator Text"
+msgstr ""
+
+#: admin/assets/builder.js:3727
+msgid "Loading more..."
+msgstr ""
+
+#: admin/assets/builder.js:3733
+msgid "⚡ Auto-paging is active: new posts and reels automatically stream in as visitors scroll down the feed (TikTok, Shorts & Instagram style)."
+msgstr ""
+
+#: admin/assets/builder.js:3755
+msgid "Modern Clean"
+msgstr ""
+
+#: admin/assets/builder.js:3756
+msgid "Balanced 3-column card grid with crisp borders and soft elevation."
+msgstr ""
+
+#: admin/assets/builder.js:3758
+#: admin/assets/builder.js:3799
+#: admin/assets/builder.js:3901
+msgid "3 Cols • 24px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3775
+msgid "Horizontal List View"
+msgstr ""
+
+#: admin/assets/builder.js:3776
+msgid "Side-by-side list view with 35% media on the left and full-width rows."
+msgstr ""
+
+#: admin/assets/builder.js:3778
+msgid "2 Cols • 24px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3796
+msgid "Hero Overlay (Cover)"
+msgstr ""
+
+#: admin/assets/builder.js:3797
+msgid "Full bleed background image cards with gradient scrim and white text."
+msgstr ""
+
+#: admin/assets/builder.js:3817
+msgid "Elevated Cards"
+msgstr ""
+
+#: admin/assets/builder.js:3818
+msgid "Rich floating cards with generous rounding and smooth ambient depth."
+msgstr ""
+
+#: admin/assets/builder.js:3820
+msgid "3 Cols • 32px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3837
+msgid "News & Magazine"
+msgstr ""
+
+#: admin/assets/builder.js:3838
+msgid "Dense 4-column compact grid engineered for high-volume content feeds."
+msgstr ""
+
+#: admin/assets/builder.js:3840
+msgid "4 Cols • 16px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3857
+msgid "Compact List (Sidebar)"
+msgstr ""
+
+#: admin/assets/builder.js:3858
+msgid "Single-column dense horizontal row layout for sidebars or widgets."
+msgstr ""
+
+#: admin/assets/builder.js:3860
+msgid "1 Col • 12px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3878
+msgid "Minimalist"
+msgstr ""
+
+#: admin/assets/builder.js:3879
+msgid "Lightweight flush design without borders, ideal for portfolios and galleries."
+msgstr ""
+
+#: admin/assets/builder.js:3881
+msgid "3 Cols • 20px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3898
+msgid "Dark Aesthetic"
+msgstr ""
+
+#: admin/assets/builder.js:3899
+msgid "High-contrast slate dark cards with glowing borders and deep contrast."
+msgstr ""
+
+#: admin/assets/builder.js:3918
+msgid "E-Commerce (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:3919
+msgid "Optimized product showcase grid with tight padding and 4 columns."
+msgstr ""
+
+#: admin/assets/builder.js:3921
+msgid "4 Cols • 20px Gap"
+msgstr ""
+
+#: admin/assets/builder.js:3939
+msgid "Masonry Mosaic"
+msgstr ""
+
+#: admin/assets/builder.js:3940
+msgid "Dynamic staggered variable-height bricks arranged cleanly into crisp vertical columns."
+msgstr ""
+
+#: admin/assets/builder.js:3942
+msgid "Masonry • 3 Cols"
+msgstr ""
+
+#: admin/assets/builder.js:3960
+msgid "Metro Magazine Mosaic"
+msgstr ""
+
+#: admin/assets/builder.js:3961
+msgid "Editorial mosaic grid featuring highlighted 2×2 lead stories packed densely."
+msgstr ""
+
+#: admin/assets/builder.js:3963
+msgid "Metro • 4 Cols"
+msgstr ""
+
+#: admin/assets/builder.js:3982
+msgid "Accessible Carousel"
+msgstr ""
+
+#: admin/assets/builder.js:3983
+msgid "Touch & keyboard accessible carousel with smooth scroll snap, dots & arrows."
+msgstr ""
+
+#: admin/assets/builder.js:3985
+msgid "Slider • 3 Slides"
+msgstr ""
+
+#: admin/assets/builder.js:4012
+msgid "Autoplay Hero Carousel"
+msgstr ""
+
+#: admin/assets/builder.js:4013
+msgid "Continuous animated carousel with accessible pause control & cover overlay cards."
+msgstr ""
+
+#: admin/assets/builder.js:4015
+msgid "Autoplay • 2 Slides"
+msgstr ""
+
+#: admin/assets/builder.js:4043
+msgid "TikTok / Reels 9:16 Feed (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:4044
+msgid "Vertical 4-column 9:16 portrait video feed with auto-paging on scroll and dark overlay cards."
+msgstr ""
+
+#: admin/assets/builder.js:4046
+msgid "4 Cols • 9:16 Infinite"
+msgstr ""
+
+#: admin/assets/builder.js:4053
+msgid "Streaming next reels..."
+msgstr ""
+
+#: admin/assets/builder.js:4069
+msgid "Reels & Shorts Carousel (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:4070
+msgid "Horizontal swipeable vertical reel carousel (5 slides desktop, 2 mobile) with scroll snap."
+msgstr ""
+
+#: admin/assets/builder.js:4072
+msgid "Slider • 5 Vertical Reels"
+msgstr ""
+
+#: admin/assets/builder.js:4101
+msgid "Cinematic Video Showcase Grid (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:4102
+msgid "Dark neon aesthetic 3-column video showcase grid with glowing accents and auto-paging infinite stream."
+msgstr ""
+
+#: admin/assets/builder.js:4104
+msgid "3 Cols • Video Grid"
+msgstr ""
+
+#: admin/assets/builder.js:4111
+msgid "Loading more videos..."
+msgstr ""
+
+#: admin/assets/builder.js:4126
+msgid "YouTube / FB Reels Snap Feed (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:4127
+msgid "Full-portrait 9:16 vertical snap feed. Swipe top-to-bottom one-by-one with up/down navigation and auto-paging."
+msgstr ""
+
+#: admin/assets/builder.js:4129
+msgid "Vertical Snap • 1 by 1"
+msgstr ""
+
+#: admin/assets/builder.js:4137
+msgid "Loading next reel..."
+msgstr ""
+
+#: admin/assets/builder.js:4156
+#, js-format
+msgid "Applied \"%s\" grid preset."
+msgstr ""
+
+#: admin/assets/builder.js:4370
+msgid "Layout Type"
+msgstr ""
+
+#: admin/assets/builder.js:4385
+msgid "Standard Post Grid"
+msgstr ""
+
+#: admin/assets/builder.js:4386
+msgid "Classic responsive grid with columns and pagination."
+msgstr ""
+
+#: admin/assets/builder.js:4400
+msgid "Masonry Bricks"
+msgstr ""
+
+#: admin/assets/builder.js:4401
+msgid "Variable-height staggered cards packed vertically without blank gaps."
+msgstr ""
+
+#: admin/assets/builder.js:4415
+msgid "Metro Mosaic Grid"
+msgstr ""
+
+#: admin/assets/builder.js:4416
+msgid "Dense magazine mosaic featuring featured multi-column lead cards."
+msgstr ""
+
+#: admin/assets/builder.js:4430
+msgid "Accessible Carousel / Slider"
+msgstr ""
+
+#: admin/assets/builder.js:4431
+msgid "WCAG compliant touch & arrow slider with scroll snap."
+msgstr ""
+
+#: admin/assets/builder.js:4445
+msgid "Vertical Reel Snap Feed (Pro)"
+msgstr ""
+
+#: admin/assets/builder.js:4446
+msgid "One-by-one vertical swipe feed for YouTube Shorts, Reels, and TikTok."
+msgstr ""
+
+#: admin/assets/builder.js:4456
+msgid "Grid & Feed Presets"
+msgstr ""
+
+#: admin/assets/builder.js:4457
+msgid "Choose a pre-styled foundation for your grid architecture (responsive columns, gaps, and feed type). Does not overwrite your card blocks."
+msgstr ""
+
+#: admin/assets/builder.js:4494
+msgid "Vertical Reel Snap Feed Settings"
+msgstr ""
+
+#: admin/assets/builder.js:4495
+msgid "Displays posts in a single-column 9:16 portrait vertical snap feed (like YouTube Shorts, Facebook Reels, and TikTok). Users can swipe top-to-bottom, click the up/down arrow buttons, or use the keyboard arrow keys."
+msgstr ""
+
+#: admin/assets/builder.js:4497
+msgid "Pro Tip: "
+msgstr ""
+
+#: admin/assets/builder.js:4498
+msgid "Pair this layout with Card Video set to \"Autoplay Loop\" and Infinite Scroll pagination for continuous reel streaming."
+msgstr ""
+
+#: admin/assets/builder.js:4506
+msgid "Next / Previous Navigation Buttons"
+msgstr ""
+
+#: admin/assets/builder.js:4508
+msgid "Show Floating Up/Down Arrow Buttons"
+msgstr ""
+
+#: admin/assets/builder.js:4509
+msgid "Displays floating circular buttons on the reel for jumping to previous/next reels with one click."
+msgstr ""
+
+#: admin/assets/builder.js:4518
+msgid "Button Placement"
+msgstr ""
+
+#: admin/assets/builder.js:4521
+msgid "Outside Right (Desktop Floating)"
+msgstr ""
+
+#: admin/assets/builder.js:4522
+msgid "Inside Right (Card Overlay)"
+msgstr ""
+
+#: admin/assets/builder.js:4527
+msgid "Button Size (px)"
+msgstr ""
+
+#: admin/assets/builder.js:4540
+msgid "Button Background"
+msgstr ""
+
+#: admin/assets/builder.js:4549
+msgid "Arrow / Icon Color"
+msgstr ""
+
+#: admin/assets/builder.js:4562
+msgid "Hover Background"
+msgstr ""
+
+#: admin/assets/builder.js:4571
+msgid "Hover Icon Color"
+msgstr ""
+
+#: admin/assets/builder.js:4585
+msgid "End of Feed (\"All Caught Up\") Card"
+msgstr ""
+
+#: admin/assets/builder.js:4586
+msgid "Displays an attractive celebration screen when the user has viewed every reel in the feed."
+msgstr ""
+
+#: admin/assets/builder.js:4588
+msgid "Show \"All Caught Up\" Card at End of Reels"
+msgstr ""
+
+#: admin/assets/builder.js:4594
+msgid "End Screen Heading"
+msgstr ""
+
+#: admin/assets/builder.js:4610
+msgid "Responsive Grid Columns"
+msgstr ""
+
+#: admin/assets/builder.js:4615
+msgid "Desktop Columns"
+msgstr ""
+
+#: admin/assets/builder.js:4622
+msgid "Tablet Columns"
+msgstr ""
+
+#: admin/assets/builder.js:4629
+msgid "Mobile Columns"
+msgstr ""
+
+#: admin/assets/builder.js:4642
+msgid "Grid Gaps & Spacing"
+msgstr ""
+
+#: admin/assets/builder.js:4644
+msgid "Column Gap (px)"
+msgstr ""
+
+#: admin/assets/builder.js:4649
+msgid "Horizontal gap between grid post cards. Supports 0px for compact flush grids."
+msgstr ""
+
+#: admin/assets/builder.js:4652
+msgid "Row Gap (px)"
+msgstr ""
+
+#: admin/assets/builder.js:4657
+msgid "Vertical gap between grid rows. Supports 0px."
+msgstr ""
+
+#: admin/assets/builder.js:4666
+msgid "Filter Placement & Mobile Drawer"
+msgstr ""
+
+#: admin/assets/builder.js:4668
+msgid "Filter Bar Position"
+msgstr ""
+
+#: admin/assets/builder.js:4671
+msgid "Top Bar (Above Grid)"
+msgstr ""
+
+#: admin/assets/builder.js:4672
+msgid "Left Sidebar (Split Layout + Mobile Drawer)"
+msgstr ""
+
+#: admin/assets/builder.js:4673
+msgid "Right Sidebar (Split Layout + Mobile Drawer)"
+msgstr ""
+
+#: admin/assets/builder.js:4674
+msgid "Off-Canvas Slide Drawer (All Devices)"
+msgstr ""
+
+#: admin/assets/builder.js:4677
+msgid "Display filters inline above results, as a desktop sidebar that collapses to a mobile drawer, or inside an off-canvas slide-over drawer."
+msgstr ""
+
+#: admin/assets/builder.js:4684
+msgid "Sidebar Width (px)"
+msgstr ""
+
+#: admin/assets/builder.js:4692
+msgid "Sticky Filter Sidebar"
+msgstr ""
+
+#: admin/assets/builder.js:4695
+msgid "Keep the sidebar filters fixed in view while scrolling through long grids."
+msgstr ""
+
+#: admin/assets/builder.js:4700
+msgid "Drawer Toggle Button Label"
+msgstr ""
+
+#: admin/assets/builder.js:4715
+msgid "Responsive Slides Per View"
+msgstr ""
+
+#: admin/assets/builder.js:4720
+msgid "Desktop Slides"
+msgstr ""
+
+#: admin/assets/builder.js:4727
+msgid "Tablet Slides"
+msgstr ""
+
+#: admin/assets/builder.js:4734
+msgid "Mobile Slides"
+msgstr ""
+
+#: admin/assets/builder.js:4747
+msgid "Carousel Navigation & Controls"
+msgstr ""
+
+#: admin/assets/builder.js:4749
+msgid "Navigation Arrows"
+msgstr ""
+
+#: admin/assets/builder.js:4750
+msgid "Show Previous / Next arrow buttons with accessible screen reader announcements."
+msgstr ""
+
+#: admin/assets/builder.js:4755
+msgid "Dots Pagination (Tablist)"
+msgstr ""
+
+#: admin/assets/builder.js:4756
+msgid "Show accessible slide indicator dots at the bottom of the slider."
+msgstr ""
+
+#: admin/assets/builder.js:4761
+msgid "Infinite Wrap (Continuous)"
+msgstr ""
+
+#: admin/assets/builder.js:4762
+msgid "When reaching the end, wrap smoothly to the first slide."
+msgstr ""
+
+#: admin/assets/builder.js:4772
+msgid "Autoplay & Motion"
+msgstr ""
+
+#: admin/assets/builder.js:4775
+msgid "Automatically advance slides at a set interval. Respects system prefers-reduced-motion."
+msgstr ""
+
+#: admin/assets/builder.js:4781
+msgid "Autoplay Interval (ms)"
+msgstr ""
+
+#: admin/assets/builder.js:4790
+msgid "Pause on Hover & Keyboard Focus"
+msgstr ""
+
+#: admin/assets/builder.js:4791
+msgid "Recommended for WCAG accessibility compliance."
+msgstr ""
+
+#: admin/assets/builder.js:4801
+msgid "Slide Spacing"
+msgstr ""
+
+#: admin/assets/builder.js:4803
+msgid "Slide Gap (px)"
+msgstr ""
+
+#: admin/assets/builder.js:4808
+msgid "Space between slider cards. Supports 0px for contiguous slides."
+msgstr ""
+
+#: admin/assets/builder.js:4836
+#, js-format
+msgid "Inserted \"%s\" snippet into Custom CSS."
+msgstr ""
+
+#: admin/assets/builder.js:4844
+#, js-format
+msgid "Inserted \"%s\" snippet into Custom JavaScript."
+msgstr ""
+
+#: admin/assets/builder.js:4864
+msgid "Scoped Grid Wrapper"
+msgstr ""
+
+#: admin/assets/builder.js:4865
+msgid "Post Card Container"
+msgstr ""
+
+#: admin/assets/builder.js:4866
+msgid "Featured Media"
+msgstr ""
+
+#: admin/assets/builder.js:4868
+msgid "Filter Buttons"
+msgstr ""
+
+#: admin/assets/builder.js:4869
+msgid "Pagination Controls"
+msgstr ""
+
+#: admin/assets/builder.js:4876
+msgid "Hover 3D Lift & Shadow"
+msgstr ""
+
+#: admin/assets/builder.js:4881
+msgid "Modern Glassmorphism"
+msgstr ""
+
+#: admin/assets/builder.js:4886
+msgid "Gradient Filter Active Pills"
+msgstr ""
+
+#: admin/assets/builder.js:4891
+msgid "Smooth Media Zoom on Hover"
+msgstr ""
+
+#: admin/assets/builder.js:4896
+msgid "Soft Neumorphic Card"
+msgstr ""
+
+#: admin/assets/builder.js:4905
+msgid "Card Click Event / Analytics Tracking"
+msgstr ""
+
+#: admin/assets/builder.js:4910
+msgid "Staggered Fade-In Card Animation"
+msgstr ""
+
+#: admin/assets/builder.js:4915
+msgid "Auto Open External Links in New Tab"
+msgstr ""
+
+#: admin/assets/builder.js:4932
+msgid "Custom CSS Styles & JavaScript Lifecycle Scripts"
+msgstr ""
+
+#: admin/assets/builder.js:4937
+msgid "Write custom CSS rules to modify or invent out-of-the-box card styles, hover animations, filter gradients, and responsive layouts. Use custom JavaScript to bind interactive behaviors that execute on render and re-trigger automatically on AJAX filter/pagination updates."
+msgstr ""
+
+#: admin/assets/builder.js:4952
+msgid "Custom CSS Stylesheet"
+msgstr ""
+
+#: admin/assets/builder.js:4960
+msgid "Target Selectors (Click to Insert):"
+msgstr ""
+
+#: admin/assets/builder.js:4984
+msgid "Out-of-the-Box Style Presets:"
+msgstr ""
+
+#: admin/assets/builder.js:5023
+msgid "Scope macro: Use "
+msgstr ""
+
+#: admin/assets/builder.js:5025
+msgid " to automatically prefix rules with #gm-grid-"
+msgstr ""
+
+#: admin/assets/builder.js:5027
+msgid "Live in Card canvas & preview"
+msgstr ""
+
+#: admin/assets/builder.js:5042
+msgid "Custom JavaScript / Lifecycle Scripts"
+msgstr ""
+
+#: admin/assets/builder.js:5053
+msgid "Security Notice: Your current WordPress user role cannot edit raw JavaScript (unfiltered_html capability required). Custom CSS remains fully functional."
+msgstr ""
+
+#: admin/assets/builder.js:5060
+msgid "Starter Script Snippets:"
+msgstr ""
+
+#: admin/assets/builder.js:5101
+msgid "Lifecycle parameters: "
+msgstr ""
+
+#: admin/assets/builder.js:5105
+msgid ". Runs on DOM ready and gridmaster_loaded_posts events."
+msgstr ""
+
+#: admin/assets/builder.js:5107
+msgid "Protected in isolated IIFE wrapper"
+msgstr ""
+
+#: admin/assets/builder.js:5136
+msgid "Edit history"
+msgstr ""
+
+#: admin/assets/builder.js:5142
+msgid "Undo"
+msgstr ""
+
+#: admin/assets/builder.js:5149
+msgid "Redo"
+msgstr ""
+
+#: admin/assets/builder.js:5160
+msgid "Toggle List View"
+msgstr ""
+
+#: admin/assets/builder.js:5170
+msgid "Exit Focus Mode"
+msgstr ""
+
+#: admin/assets/builder.js:5170
+msgid "Enter Focus Mode"
+msgstr ""
+
+#: admin/assets/builder.js:5181
+msgid "Toggle Settings Panel"
+msgstr ""
+
+#: admin/assets/builder.js:5196
+msgid "SaaS Blog & Resource Hub"
+msgstr ""
+
+#: admin/assets/builder.js:5197
+msgid "Category pill tabs, keyword search, sort dropdown, 3-column card grid, and numbered pagination."
+msgstr ""
+
+#: admin/assets/builder.js:5206
+msgid "Search articles…"
+msgstr ""
+
+#: admin/assets/builder.js:5207
+msgid "Sort"
+msgstr ""
+
+#: admin/assets/builder.js:5220
+msgid "Read Article"
+msgstr ""
+
+#: admin/assets/builder.js:5225
+msgid "Editorial Metro Magazine"
+msgstr ""
+
+#: admin/assets/builder.js:5226
+msgid "Asymmetric Metro mosaic featuring a double-span lead story, category tabs, and Load More pagination."
+msgstr ""
+
+#: admin/assets/builder.js:5234
+msgid "Topics"
+msgstr ""
+
+#: admin/assets/builder.js:5235
+msgid "Filter stories…"
+msgstr ""
+
+#: admin/assets/builder.js:5238
+msgid "Load More Stories"
+msgstr ""
+
+#: admin/assets/builder.js:5250
+msgid "Masonry Showcase + Filter Drawer"
+msgstr ""
+
+#: admin/assets/builder.js:5251
+msgid "True dynamic masonry heights paired with an off-canvas filter drawer for categories and tags."
+msgstr ""
+
+#: admin/assets/builder.js:5259
+msgid "Search showcase…"
+msgstr ""
+
+#: admin/assets/builder.js:5261
+msgid "Tags"
+msgstr ""
+
+#: admin/assets/builder.js:5263
+msgid "Filter Showcase"
+msgstr ""
+
+#: admin/assets/builder.js:5270
+msgid "View Details"
+msgstr ""
+
+#: admin/assets/builder.js:5275
+msgid "WooCommerce Storefront + Sticky Sidebar"
+msgstr ""
+
+#: admin/assets/builder.js:5276
+msgid "Shop catalog grid with sticky left sidebar facets (Price, Rating, Stock Status) and Woo product cards."
+msgstr ""
+
+#: admin/assets/builder.js:5284
+msgid "Search products…"
+msgstr ""
+
+#: admin/assets/builder.js:5287
+msgid "Availability"
+msgstr ""
+
+#: admin/assets/builder.js:5288
+msgid "Minimum Rating"
+msgstr ""
+
+#: admin/assets/builder.js:5306
+msgid "Starter Grid Blueprints"
+msgstr ""
+
+#: admin/assets/builder.js:5313
+msgid "Apply a complete starting blueprint (Query, Filters, Layout & Card design). You can customize every setting afterwards."
+msgstr ""
+
+#: admin/assets/builder.js:5358
+msgid "Requires Pro"
+msgstr ""
+
+#: admin/assets/builder.js:5358
+msgid "Use Blueprint"
+msgstr ""
+
+#: admin/assets/builder.js:5511
+msgid "Grid saved successfully!"
+msgstr ""
+
+#: admin/assets/builder.js:5522
+msgid "Save failed. Please try again."
+msgstr ""
+
+#: admin/assets/builder.js:5527
+msgid "Network error. Could not save grid."
+msgstr ""
+
+#: admin/assets/builder.js:5537
+#, js-format
+msgid "Copied shortcode to clipboard: %s"
+msgstr ""
+
+#: admin/assets/builder.js:5586
+#, js-format
+msgid "Applied \"%s\" blueprint!"
+msgstr ""
+
+#: admin/assets/builder.js:5592
+msgid "All changes saved"
+msgstr ""
+
+#: admin/assets/builder.js:5597
+#: admin/assets/builder.js:5780
+msgid "Saving…"
+msgstr ""
+
+#: admin/assets/builder.js:5601
+msgid "Save failed"
+msgstr ""
+
+#: admin/assets/builder.js:5605
+msgid "Not saved yet"
+msgstr ""
+
+#: admin/assets/builder.js:5609
+msgid "Unsaved changes"
+msgstr ""
+
+#: admin/assets/builder.js:5655
+msgid "Back to All Grids"
+msgstr ""
+
+#: admin/assets/builder.js:5680
+msgid "Grid title"
+msgstr ""
+
+#: admin/assets/builder.js:5682
+msgid "OK"
+msgstr ""
+
+#: admin/assets/builder.js:5694
+msgid "Rename grid"
+msgstr ""
+
+#: admin/assets/builder.js:5740
+msgid "Copied!"
+msgstr ""
+
+#: admin/assets/builder.js:5740
+msgid "Copy shortcode"
+msgstr ""
+
+#: admin/assets/builder.js:5754
+msgid "Blueprints"
+msgstr ""
+
+#: admin/assets/builder.js:5780
+msgid "Save changes"
+msgstr ""
+
+#: admin/assets/builder.js:5780
+msgid "Saved"
+msgstr ""
+
+#: admin/assets/builder.js:5780
+msgid "Save grid"
+msgstr ""
+
+#: admin/assets/builder.js:5798
+msgid "Content"
+msgstr ""
+
+#: admin/assets/builder.js:5800
+msgid "Pagination"
+msgstr ""
+
+#: admin/assets/builder.js:5801
+msgid "Layout"
+msgstr ""
+
+#: admin/assets/builder.js:5802
+msgid "Custom Code"
+msgstr ""
+
+#: admin/assets/builder.js:5864
+msgid "Retry Save"
+msgstr ""
+
+#: admin/assets/builder.js:5887
+msgid "Close editor panel"
+msgstr ""
+
+#: assets/blocks/editor.js:16
+msgid "Select a Grid"
+msgstr ""
+
+#: assets/blocks/editor.js:66
+#, js-format
+msgid "Select %s"
+msgstr ""
+
+#: assets/blocks/editor.js:67
+msgid "Select color"
+msgstr ""
+
+#: assets/blocks/editor.js:82
+msgid "Clear color (reset to default)"
+msgstr ""
+
+#: assets/blocks/editor.js:83
+msgid "Clear color"
+msgstr ""
+
+#: assets/blocks/editor.js:145
+msgid "Tablet (991px and below)"
+msgstr ""
+
+#: assets/blocks/editor.js:146
+msgid "Mobile (767px and below)"
+msgstr ""
+
+#: assets/blocks/editor.js:329
+msgid "Custom override active"
+msgstr ""
+
+#: assets/blocks/editor.js:341
+msgid "Font size unit"
+msgstr ""
+
+#: assets/blocks/editor.js:371
+#, js-format
+msgid "%s value in %s"
+msgstr ""
+
+#: assets/blocks/editor.js:382
+msgid "Reset to default"
+msgstr ""
+
+#: assets/blocks/editor.js:382
+msgid "Reset to inherit"
+msgstr ""
+
+#: assets/blocks/editor.js:383
+msgid "Reset value"
+msgstr ""
+
+#: assets/blocks/editor.js:405
+#, js-format
+msgid "%s slider"
+msgstr ""
+
+#: assets/blocks/editor.js:417
+msgid "Inherits "
+msgstr ""
+
+#: assets/blocks/editor.js:419
+msgid " from "
+msgstr ""
+
+#: assets/blocks/editor.js:428
+#, js-format
+msgid "Custom %s size for %s"
+msgstr ""
+
+#: assets/blocks/editor.js:437
+msgid "Clear override"
+msgstr ""
+
+#: assets/blocks/editor.js:461
+msgid "January"
+msgstr ""
+
+#: assets/blocks/editor.js:462
+msgid "February"
+msgstr ""
+
+#: assets/blocks/editor.js:463
+msgid "March"
+msgstr ""
+
+#: assets/blocks/editor.js:464
+msgid "April"
+msgstr ""
+
+#: assets/blocks/editor.js:465
+#: assets/blocks/editor.js:479
+msgid "May"
+msgstr ""
+
+#: assets/blocks/editor.js:466
+msgid "June"
+msgstr ""
+
+#: assets/blocks/editor.js:467
+msgid "July"
+msgstr ""
+
+#: assets/blocks/editor.js:468
+msgid "August"
+msgstr ""
+
+#: assets/blocks/editor.js:469
+msgid "September"
+msgstr ""
+
+#: assets/blocks/editor.js:470
+msgid "October"
+msgstr ""
+
+#: assets/blocks/editor.js:471
+msgid "November"
+msgstr ""
+
+#: assets/blocks/editor.js:472
+msgid "December"
+msgstr ""
+
+#: assets/blocks/editor.js:475
+msgid "Jan"
+msgstr ""
+
+#: assets/blocks/editor.js:476
+msgid "Feb"
+msgstr ""
+
+#: assets/blocks/editor.js:477
+msgid "Mar"
+msgstr ""
+
+#: assets/blocks/editor.js:478
+msgid "Apr"
+msgstr ""
+
+#: assets/blocks/editor.js:480
+msgid "Jun"
+msgstr ""
+
+#: assets/blocks/editor.js:481
+msgid "Jul"
+msgstr ""
+
+#: assets/blocks/editor.js:482
+msgid "Aug"
+msgstr ""
+
+#: assets/blocks/editor.js:483
+msgid "Sep"
+msgstr ""
+
+#: assets/blocks/editor.js:484
+msgid "Oct"
+msgstr ""
+
+#: assets/blocks/editor.js:485
+msgid "Nov"
+msgstr ""
+
+#: assets/blocks/editor.js:486
+msgid "Dec"
+msgstr ""
+
+#: assets/blocks/editor.js:489
+msgid "Sunday"
+msgstr ""
+
+#: assets/blocks/editor.js:490
+msgid "Monday"
+msgstr ""
+
+#: assets/blocks/editor.js:491
+msgid "Tuesday"
+msgstr ""
+
+#: assets/blocks/editor.js:492
+msgid "Wednesday"
+msgstr ""
+
+#: assets/blocks/editor.js:493
+msgid "Thursday"
+msgstr ""
+
+#: assets/blocks/editor.js:494
+msgid "Friday"
+msgstr ""
+
+#: assets/blocks/editor.js:495
+msgid "Saturday"
+msgstr ""
+
+#: assets/blocks/editor.js:498
+msgid "Sun"
+msgstr ""
+
+#: assets/blocks/editor.js:499
+msgid "Mon"
+msgstr ""
+
+#: assets/blocks/editor.js:500
+msgid "Tue"
+msgstr ""
+
+#: assets/blocks/editor.js:501
+msgid "Wed"
+msgstr ""
+
+#: assets/blocks/editor.js:502
+msgid "Thu"
+msgstr ""
+
+#: assets/blocks/editor.js:503
+msgid "Fri"
+msgstr ""
+
+#: assets/blocks/editor.js:504
+msgid "Sat"
+msgstr ""
+
+#: assets/blocks/editor.js:572
+msgid "Site Default (WordPress Setting)"
+msgstr ""
+
+#: assets/blocks/editor.js:573
+msgid "Custom Format…"
+msgstr ""
+
+#: assets/blocks/editor.js:583
+#: assets/blocks/editor.js:1869
+#: assets/blocks/editor.js:2233
+msgid "Format (PHP date format)"
+msgstr ""
+
+#: assets/blocks/editor.js:607
+msgid "Custom Format String"
+msgstr ""
+
+#: assets/blocks/editor.js:610
+msgid "Enter custom PHP date characters (e.g. Y/m/d, F jS Y)."
+msgstr ""
+
+#: assets/blocks/editor.js:617
+msgid "Site default"
+msgstr ""
+
+#: assets/blocks/editor.js:629
+msgid "Hide PHP Date Format Guide"
+msgstr ""
+
+#: assets/blocks/editor.js:630
+msgid "PHP Date Format Guide & Cheat Sheet"
+msgstr ""
+
+#: assets/blocks/editor.js:636
+msgid "PHP Date Formatting Cheat Sheet"
+msgstr ""
+
+#: assets/blocks/editor.js:646
+msgid "Token"
+msgstr ""
+
+#: assets/blocks/editor.js:647
+msgid "Meaning"
+msgstr ""
+
+#: assets/blocks/editor.js:648
+msgid "Example"
+msgstr ""
+
+#: assets/blocks/editor.js:655
+msgid "Day of month without zeros"
+msgstr ""
+
+#: assets/blocks/editor.js:656
+msgid "Day of month with 2 digits"
+msgstr ""
+
+#: assets/blocks/editor.js:657
+msgid "English ordinal suffix"
+msgstr ""
+
+#: assets/blocks/editor.js:658
+msgid "Full month name"
+msgstr ""
+
+#: assets/blocks/editor.js:659
+msgid "3-letter month abbreviation"
+msgstr ""
+
+#: assets/blocks/editor.js:660
+msgid "Numeric month with 2 digits"
+msgstr ""
+
+#: assets/blocks/editor.js:661
+msgid "Numeric month without zeros"
+msgstr ""
+
+#: assets/blocks/editor.js:662
+msgid "4-digit year"
+msgstr ""
+
+#: assets/blocks/editor.js:663
+msgid "2-digit year"
+msgstr ""
+
+#: assets/blocks/editor.js:664
+msgid "Full weekday name (lowercase L)"
+msgstr ""
+
+#: assets/blocks/editor.js:665
+msgid "3-letter weekday abbreviation"
+msgstr ""
+
+#: assets/blocks/editor.js:666
+msgid "12-hr time with am/pm"
+msgstr ""
+
+#: assets/blocks/editor.js:667
+msgid "24-hr time"
+msgstr ""
+
+#: assets/blocks/editor.js:682
+msgid "Tip: Prepend backslash to escape letters (e.g. \\a\\t for literal \"at\")."
+msgstr ""
+
+#: assets/blocks/editor.js:694
+msgid "WordPress Date & Time Codex Guide ↗"
+msgstr ""
+
+#: assets/blocks/editor.js:703
+msgid "Official PHP date() Manual ↗"
+msgstr ""
+
+#: assets/blocks/editor.js:819
+msgid "Conditional Visibility (Active)"
+msgstr ""
+
+#: assets/blocks/editor.js:820
+msgid "Conditional Visibility"
+msgstr ""
+
+#: assets/blocks/editor.js:824
+msgid "Display Condition"
+msgstr ""
+
+#: assets/blocks/editor.js:827
+msgid "Always visible"
+msgstr ""
+
+#: assets/blocks/editor.js:828
+msgid "Logged-in users only"
+msgstr ""
+
+#: assets/blocks/editor.js:829
+msgid "Logged-out guests only"
+msgstr ""
+
+#: assets/blocks/editor.js:830
+msgid "Post has featured image"
+msgstr ""
+
+#: assets/blocks/editor.js:831
+msgid "Custom field is not empty"
+msgstr ""
+
+#: assets/blocks/editor.js:832
+msgid "Custom field is empty"
+msgstr ""
+
+#: assets/blocks/editor.js:833
+msgid "Custom field equals value"
+msgstr ""
+
+#: assets/blocks/editor.js:834
+msgid "Post has taxonomy term"
+msgstr ""
+
+#: assets/blocks/editor.js:847
+msgid "Expected Meta Value"
+msgstr ""
+
+#: assets/blocks/editor.js:857
+#: assets/blocks/editor.js:1942
+msgid "Taxonomy Slug"
+msgstr ""
+
+#: assets/blocks/editor.js:863
+msgid "Term Slug or ID"
+msgstr ""
+
+#: assets/blocks/editor.js:890
+msgid "Embed a saved Post Grid Master layout with live canvas preview."
+msgstr ""
+
+#: assets/blocks/editor.js:980
+msgid "Failed to load grid preview."
+msgstr ""
+
+#: assets/blocks/editor.js:1053
+msgid "Edit Grid in GridMaster ↗"
+msgstr ""
+
+#: assets/blocks/editor.js:1059
+msgid "Refresh Preview"
+msgstr ""
+
+#: assets/blocks/editor.js:1071
+msgid "Grid Selection"
+msgstr ""
+
+#: assets/blocks/editor.js:1085
+msgid "Engine: "
+msgstr ""
+
+#: assets/blocks/editor.js:1089
+msgid "Legacy (v1)"
+msgstr ""
+
+#: assets/blocks/editor.js:1089
+msgid "GridMaster 2.0"
+msgstr ""
+
+#: assets/blocks/editor.js:1101
+msgid "Edit this grid in GridMaster ↗"
+msgstr ""
+
+#: assets/blocks/editor.js:1147
+msgid "Choose a saved post grid layout to display on this page."
+msgstr ""
+
+#: assets/blocks/editor.js:1190
+#, js-format
+msgid "Loading preview for Grid #%d…"
+msgstr ""
+
+#: assets/blocks/editor.js:1209
+#, js-format
+msgid "Grid #%d was not found. It may have been deleted."
+msgstr ""
+
+#: assets/blocks/editor.js:1251
+msgid "Post Card"
+msgstr ""
+
+#: assets/blocks/editor.js:1252
+msgid "The main container for one post card layout."
+msgstr ""
+
+#: assets/blocks/editor.js:1300
+msgid "Card Layout & Orientation"
+msgstr ""
+
+#: assets/blocks/editor.js:1302
+msgid "Layout Mode"
+msgstr ""
+
+#: assets/blocks/editor.js:1305
+msgid "Vertical (Standard Card)"
+msgstr ""
+
+#: assets/blocks/editor.js:1306
+msgid "Horizontal (Media Left — List)"
+msgstr ""
+
+#: assets/blocks/editor.js:1307
+msgid "Horizontal Reverse (Media Right)"
+msgstr ""
+
+#: assets/blocks/editor.js:1308
+msgid "Overlay (Hero Cover Card)"
+msgstr ""
+
+#: assets/blocks/editor.js:1314
+msgid "Media Column Width (%)"
+msgstr ""
+
+#: assets/blocks/editor.js:1323
+msgid "Minimum Height (px)"
+msgstr ""
+
+#: assets/blocks/editor.js:1331
+msgid "Hover Effect"
+msgstr ""
+
+#: assets/blocks/editor.js:1334
+msgid "Lift on Hover"
+msgstr ""
+
+#: assets/blocks/editor.js:1335
+msgid "Zoom Image on Hover"
+msgstr ""
+
+#: assets/blocks/editor.js:1336
+msgid "Glow / Ambient Shadow"
+msgstr ""
+
+#: assets/blocks/editor.js:1344
+msgid "Card Style"
+msgstr ""
+
+#: assets/blocks/editor.js:1448
+msgid "Image Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1450
+msgid "Image Source"
+msgstr ""
+
+#: assets/blocks/editor.js:1453
+msgid "Featured Image (Default)"
+msgstr ""
+
+#: assets/blocks/editor.js:1454
+msgid "Custom Field / Meta Key (ACF/MetaBox)"
+msgstr ""
+
+#: assets/blocks/editor.js:1455
+msgid "First Image in Post Content"
+msgstr ""
+
+#: assets/blocks/editor.js:1456
+msgid "Post Author Avatar"
+msgstr ""
+
+#: assets/blocks/editor.js:1457
+#: assets/blocks/editor.js:1468
+msgid "Static Image URL"
+msgstr ""
+
+#: assets/blocks/editor.js:1462
+msgid "Meta Key / Custom Field Name"
+msgstr ""
+
+#: assets/blocks/editor.js:1463
+msgid "Enter the custom meta key storing the image ID or URL (e.g. hero_image, banner_url)."
+msgstr ""
+
+#: assets/blocks/editor.js:1473
+msgid "Fallback Image URL (Optional)"
+msgstr ""
+
+#: assets/blocks/editor.js:1474
+msgid "Used if the primary source has no image."
+msgstr ""
+
+#: assets/blocks/editor.js:1479
+msgid "Aspect Ratio"
+msgstr ""
+
+#: assets/blocks/editor.js:1482
+msgid "16:9 Landscape"
+msgstr ""
+
+#: assets/blocks/editor.js:1483
+msgid "9:16 Vertical (Shorts/Reels/TikTok)"
+msgstr ""
+
+#: assets/blocks/editor.js:1484
+msgid "4:5 Portrait (Instagram)"
+msgstr ""
+
+#: assets/blocks/editor.js:1485
+msgid "1:1 Square (Instagram)"
+msgstr ""
+
+#: assets/blocks/editor.js:1486
+msgid "4:3 Standard"
+msgstr ""
+
+#: assets/blocks/editor.js:1487
+msgid "3:2 Classic Photo"
+msgstr ""
+
+#: assets/blocks/editor.js:1488
+msgid "21:9 Cinematic"
+msgstr ""
+
+#: assets/blocks/editor.js:1489
+msgid "Original / Auto"
+msgstr ""
+
+#: assets/blocks/editor.js:1494
+msgid "Object Fit"
+msgstr ""
+
+#: assets/blocks/editor.js:1497
+msgid "Cover (Crop to fill)"
+msgstr ""
+
+#: assets/blocks/editor.js:1498
+msgid "Contain (Show entire image)"
+msgstr ""
+
+#: assets/blocks/editor.js:1503
+msgid "Resolution / Size"
+msgstr ""
+
+#: assets/blocks/editor.js:1515
+#: assets/blocks/editor.js:1812
+#: assets/blocks/editor.js:2317
+#: assets/blocks/editor.js:2735
+msgid "Border Radius (px)"
+msgstr ""
+
+#: assets/blocks/editor.js:1523
+#: assets/blocks/editor.js:1620
+msgid "Link to Post"
+msgstr ""
+
+#: assets/blocks/editor.js:1528
+msgid "Zoom on Card Hover"
+msgstr ""
+
+#: assets/blocks/editor.js:1533
+msgid "Swap to 2nd Product Gallery Image on Hover (WooCommerce)"
+msgstr ""
+
+#: assets/blocks/editor.js:1534
+msgid "Crossfades to the second product gallery image when hovering over a WooCommerce product card."
+msgstr ""
+
+#: assets/blocks/editor.js:1591
+msgid "Title Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1593
+msgid "HTML Tag"
+msgstr ""
+
+#: assets/blocks/editor.js:1607
+#: assets/blocks/editor.js:1671
+#: assets/blocks/editor.js:1728
+#: assets/blocks/editor.js:1804
+#: assets/blocks/editor.js:1874
+#: assets/blocks/editor.js:2088
+#: assets/blocks/editor.js:2238
+#: assets/blocks/editor.js:2447
+#: assets/blocks/editor.js:2649
+msgid "Font Size"
+msgstr ""
+
+#: assets/blocks/editor.js:1615
+#: assets/blocks/editor.js:1679
+#: assets/blocks/editor.js:1736
+#: assets/blocks/editor.js:1824
+#: assets/blocks/editor.js:2096
+#: assets/blocks/editor.js:2246
+#: assets/blocks/editor.js:2471
+#: assets/blocks/editor.js:2748
+msgid "Text Color"
+msgstr ""
+
+#: assets/blocks/editor.js:1629
+msgid "Sample Post Title"
+msgstr ""
+
+#: assets/blocks/editor.js:1662
+#: assets/blocks/editor.js:1719
+msgid "Excerpt Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1664
+#: assets/blocks/editor.js:1721
+msgid "Length (Words)"
+msgstr ""
+
+#: assets/blocks/editor.js:1688
+#: assets/blocks/editor.js:1745
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
+msgstr ""
+
+#: assets/blocks/editor.js:1757
+msgid "Read More Button"
+msgstr ""
+
+#: assets/blocks/editor.js:1797
+#: assets/blocks/editor.js:2717
+msgid "Button Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1799
+msgid "Button Text"
+msgstr ""
+
+#: assets/blocks/editor.js:1867
+msgid "Date Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1882
+msgid "Date Color"
+msgstr ""
+
+#: assets/blocks/editor.js:1922
+msgid "Post Terms / Categories"
+msgstr ""
+
+#: assets/blocks/editor.js:1940
+msgid "Taxonomy Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1985
+msgid "Custom Field Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:1992
+#: assets/blocks/editor.js:2073
+#: assets/blocks/editor.js:2228
+msgid "Prefix"
+msgstr ""
+
+#: assets/blocks/editor.js:1997
+#: assets/blocks/editor.js:2078
+msgid "Suffix"
+msgstr ""
+
+#: assets/blocks/editor.js:2006
+msgid "Custom Field (set key in panel)"
+msgstr ""
+
+#: assets/blocks/editor.js:2063
+msgid "Reading Time Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2065
+msgid "Words Per Minute"
+msgstr ""
+
+#: assets/blocks/editor.js:2083
+msgid "Show Clock Icon"
+msgstr ""
+
+#: assets/blocks/editor.js:2142
+msgid "Avatar Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2144
+msgid "Avatar Size (px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2152
+msgid "Border Radius"
+msgstr ""
+
+#: assets/blocks/editor.js:2155
+msgid "Circle (50%)"
+msgstr ""
+
+#: assets/blocks/editor.js:2156
+msgid "Rounded (8px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2157
+msgid "Slightly Rounded (4px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2158
+#: assets/blocks/editor.js:2461
+msgid "Square (0px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2163
+msgid "Link to Author Profile"
+msgstr ""
+
+#: assets/blocks/editor.js:2226
+msgid "Modified Date Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2251
+msgid "Show only if post was updated"
+msgstr ""
+
+#: assets/blocks/editor.js:2299
+msgid "Format Icon Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2301
+msgid "Icon Size (px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2325
+msgid "Icon Color"
+msgstr ""
+
+#: assets/blocks/editor.js:2424
+msgid "Badge Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2426
+msgid "Badge Type"
+msgstr ""
+
+#: assets/blocks/editor.js:2429
+msgid "Static Text"
+msgstr ""
+
+#: assets/blocks/editor.js:2430
+msgid "Dynamic from Custom Meta"
+msgstr ""
+
+#: assets/blocks/editor.js:2431
+msgid "WooCommerce Sale Badge"
+msgstr ""
+
+#: assets/blocks/editor.js:2432
+msgid "WooCommerce Discount %"
+msgstr ""
+
+#: assets/blocks/editor.js:2437
+msgid "Badge Text"
+msgstr ""
+
+#: assets/blocks/editor.js:2455
+msgid "Corner Style"
+msgstr ""
+
+#: assets/blocks/editor.js:2458
+msgid "Pill (Fully Rounded)"
+msgstr ""
+
+#: assets/blocks/editor.js:2459
+msgid "Rounded (6px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2460
+msgid "Slightly Rounded (3px)"
+msgstr ""
+
+#: assets/blocks/editor.js:2511
+msgid "Insert third-party or custom shortcodes with dynamic post tags."
+msgstr ""
+
+#: assets/blocks/editor.js:2529
+msgid "Shortcode Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2532
+msgid "Supported dynamic tags: {post_id}, {id}, {title}, {permalink}"
+msgstr ""
+
+#: assets/blocks/editor.js:2547
+msgid "[custom_shortcode id=\"{post_id}\"]"
+msgstr ""
+
+#: assets/blocks/editor.js:2561
+msgid "Write custom HTML markup with dynamic post tags."
+msgstr ""
+
+#: assets/blocks/editor.js:2579
+msgid "HTML Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2581
+msgid "Custom HTML Markup"
+msgstr ""
+
+#: assets/blocks/editor.js:2582
+msgid "Supported dynamic tags: {post_id}, {id}, {title}, {permalink}, {date}"
+msgstr ""
+
+#: assets/blocks/editor.js:2597
+msgid "<div>Custom HTML block...</div>"
+msgstr ""
+
+#: assets/blocks/editor.js:2647
+msgid "Price Settings"
+msgstr ""
+
+#: assets/blocks/editor.js:2657
+msgid "Regular Price Color"
+msgstr ""
+
+#: assets/blocks/editor.js:2662
+msgid "Sale Price Color"
+msgstr ""
+
+#: assets/blocks/editor.js:2667
+msgid "Show Strikethrough Regular Price"
+msgstr ""
+
+#: assets/blocks/editor.js:2719
+msgid "Button Text Override"
+msgstr ""
+
+#: assets/blocks/editor.js:2720
+msgid "Auto (WooCommerce)"
+msgstr ""
+
+#: assets/blocks/editor.js:2725
+msgid "Show Cart Icon"
+msgstr ""
+
+#: assets/blocks/editor.js:2730
+msgid "Full Width Button"
+msgstr ""
+
+#: assets/blocks/editor.js:2803
+msgid "Product Rating (Pro)"
+msgstr ""
+
+#: assets/blocks/editor.js:2887
+msgid "Product Action Bar (Pro)"
+msgstr ""
+
+#: assets/blocks/editor.js:2901
+msgid "Variation Swatches (Pro)"
+msgstr ""
+
+#: assets/blocks/editor.js:2915
+msgid "Compare Button (Pro)"
+msgstr ""
+
+#: assets/blocks/editor.js:2929
+msgid "Request a Quote (Pro)"
+msgstr ""
+
+#: assets/blocks/editor.js:2943
+msgid "Product Meta & Specs (Pro)"
 msgstr ""

@@ -35,6 +35,7 @@ class ReleaseTests(unittest.TestCase):
         release.run('git', 'commit', '-qm', 'fixture', cwd=self.source)
 
     def tearDown(self):
+        shutil.rmtree(self.base, ignore_errors=True)
         self.temporary.cleanup()
 
     def build(self):

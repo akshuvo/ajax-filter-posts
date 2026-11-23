@@ -1,5 +1,11 @@
 # Free/Pro compatibility and ownership
 
+## Builder follow-up assessment — 2026-11-05
+
+The drag smoothness follow-up on Free `1324fd1` changes only standalone editor feedback, guide animation and temporary page scroll locking. It retains Gutenberg's native drop destinations and canvas scrolling, with no stored block, hook or frontend changes; no Pro source update is required. Paired Chrome checks and their Free-only/browser limits are recorded in [testing](testing.md#builder-follow-up-verification--2026-11-05).
+
+Inspected Free `05e43f9` and Pro `4820a0a` on `feature/gutenberg-grid-builder-v2`. The follow-up changes Free-owned editor state/layout, searchable public taxonomy metadata, authenticated draft preview documents and v2 request failure handling. Existing grid/query/facet/block shapes and extension hooks are preserved; no companion source change is required. Free-only and paired process tests passed, including 23 draft-preview assertions in each configuration; paired browser checks covered editing and base taxonomy filtering. This does not certify all premium providers or activation/deactivation states. See [testing evidence and limits](testing.md#builder-follow-up-verification--2026-11-05).
+
 Free and Pro are separate Git/release units. This document is the public-side contract; premium implementation belongs in [Pro's own documentation](https://github.com/akshuvo/gridmaster-pro/blob/main/docs/free-pro-compatibility.md) (access may be restricted). Keep this file useful without that access. Do not copy Pro source, license internals, or private requirements here.
 
 ## Responsibility and change routing
@@ -42,3 +48,7 @@ Follow [testing](testing.md): Free alone, both active, both activation orders, F
 ## Documentation maintenance
 
 Each repository has its own `AGENTS.md`, implementation docs, skills, ADR/PRD indexes and ideas. Maintain Free's public API here and reference it from Pro. Keep only the relevant compatibility summary in both; do not duplicate architecture documents. Cross-repository links use repository URLs so independent checkouts work; if a branch moves, update links with the corresponding change. Discovery branch names describe the baseline, not a mandate for future branches.
+
+## Proposed GridMaster 2.0 design
+
+The [initial redesign package](gridmaster-2.0/README.md) records new proposals dated 2026-11-04. It does not replace the observed runtime contracts above or certify a new version pair; no redesign feature is implemented by those documents.

@@ -18,14 +18,90 @@ $attr = isset( $grid->attributes ) ? $grid->attributes : array();
 // Nonce.
 $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 ?>
-<form class="container-fluid gm-container metabox-holder pt-0 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
+
+<?php if ( empty( $grid_id ) ) : ?>
+<!-- Blocker Confirmation Modal for New Grids -->
+<div id="gm-legacy-blocker-modal" class="gm-modal-wrap gm-blocker-modal-wrap" style="display: flex;">
+	<div class="gm-modal-inner gm-blocker-modal-inner">
+		<button type="button" class="gm-blocker-close-btn gm-dismiss-blocker" aria-label="<?php esc_attr_e( 'Dismiss', 'ajax-filter-posts' ); ?>">
+			<span class="dashicons dashicons-no-alt"></span>
+		</button>
+		<div class="gm-blocker-icon-badge">
+			<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+				<line x1="12" y1="9" x2="12" y2="13"/>
+				<line x1="12" y1="17" x2="12.01" y2="17"/>
+			</svg>
+		</div>
+		<div class="gm-modal-body pt-0">
+			<span class="gm-badge-deprecated-pill"><?php esc_html_e( 'Notice: Retired Feature', 'ajax-filter-posts' ); ?></span>
+			<h2 class="gm-blocker-title"><?php esc_html_e( 'Legacy Builder is Being Discontinued', 'ajax-filter-posts' ); ?></h2>
+			<p class="gm-blocker-desc">
+				<?php esc_html_e( 'New post grids should no longer be created using the legacy builder. GridMaster 2.0 provides a modern Gutenberg block editor with live card styling, query loops, and facet filters.', 'ajax-filter-posts' ); ?>
+			</p>
+
+			<div class="gm-blocker-actions">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster-builder' ) ); ?>" class="gm-btn gm-btn-primary gm-btn-large gm-btn-blocker-primary">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="me-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+					<span><?php esc_html_e( 'Create Grid with Modern Block Editor', 'ajax-filter-posts' ); ?></span>
+					<span class="gm-pill-recommended"><?php esc_html_e( 'Recommended', 'ajax-filter-posts' ); ?></span>
+				</a>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster' ) ); ?>" class="gm-btn gm-btn-secondary gm-btn-large gm-btn-blocker-secondary">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+					<span><?php esc_html_e( 'Return to All Grids', 'ajax-filter-posts' ); ?></span>
+				</a>
+			</div>
+
+			<div class="gm-blocker-override">
+				<button type="button" class="gm-blocker-dismiss-btn gm-dismiss-blocker">
+					<?php esc_html_e( 'I understand, continue with legacy builder (Deprecated)', 'ajax-filter-posts' ); ?>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
+
+<!-- Top Deprecation Warning Banner -->
+<div class="gm-legacy-deprecation-banner">
+	<div class="gm-legacy-deprecation-content">
+		<div class="gm-legacy-deprecation-icon">
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+				<line x1="12" y1="9" x2="12" y2="13"/>
+				<line x1="12" y1="17" x2="12.01" y2="17"/>
+			</svg>
+		</div>
+		<div class="gm-legacy-deprecation-text">
+			<h4><?php esc_html_e( 'Legacy Builder is Deprecated & Will Be Discontinued', 'ajax-filter-posts' ); ?></h4>
+			<p>
+				<?php esc_html_e( 'This builder is kept strictly for backward compatibility with existing legacy grids. It will be completely removed in an upcoming release. Please use the modern Visual Block Editor for all new grids.', 'ajax-filter-posts' ); ?>
+			</p>
+		</div>
+	</div>
+	<div class="gm-legacy-deprecation-actions">
+		<?php if ( ! empty( $grid_id ) ) : ?>
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=gridmaster&path=my-grids&gm_action=migrate&id=' . $grid_id ), 'gm_grid_action' ) ); ?>" class="gm-btn gm-btn-primary gm-btn-sm">
+				<span class="dashicons dashicons-update me-1"></span>
+				<?php esc_html_e( 'Migrate to Block Editor', 'ajax-filter-posts' ); ?>
+			</a>
+		<?php else : ?>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=gridmaster-builder' ) ); ?>" class="gm-btn gm-btn-primary gm-btn-sm">
+				<span class="dashicons dashicons-plus-alt2 me-1"></span>
+				<?php esc_html_e( 'Use Modern Block Editor', 'ajax-filter-posts' ); ?>
+			</a>
+		<?php endif; ?>
+	</div>
+</div>
+
+<form class="container-fluid gm-container metabox-holder pt-2 gm-ajax-form" id="gm-shortcode-generator" action="" method="post">
 	<div class="row">
-		<nav class="gm-left-sidebar pt-3 border-1 border-end  col-md-4 col-xl-3 col-xxl-3  d-md-block sidebar">
+		<nav class="gm-left-sidebar pt-2 col-12 col-lg-4 col-xl-4 d-block sidebar">
 			<div id="gm-select-grid" class="postbox gm-slide-toggle ">
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Grid Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
-						<span class="dashicons dashicons-arrow-down">
+						<span class="dashicons dashicons-arrow-down"></span>
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
@@ -399,7 +475,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Filter Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
-						<span class="dashicons dashicons-arrow-down">
+						<span class="dashicons dashicons-arrow-down"></span>
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
@@ -588,7 +664,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Slider Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
-						<span class="dashicons dashicons-arrow-down">
+						<span class="dashicons dashicons-arrow-down"></span>
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
@@ -769,7 +845,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 				<div class="postbox-header">
 					<h2 class="hndle"><?php esc_html_e( 'Pagination Options', 'ajax-filter-posts'  ); ?></h2>
 					<div class="handle-actions pe-2">
-						<span class="dashicons dashicons-arrow-down">
+						<span class="dashicons dashicons-arrow-down"></span>
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
@@ -826,7 +902,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 			<div class="gm-spacer clear" style="height: 100px;"></div>
 		</nav>
 
-		<main class="pt-3 gm-right-sidebar col-md-9 ms-sm-auto col-lg-9 ">
+		<main class="pt-2 gm-right-sidebar col-12 col-lg-8 col-xl-8">
 			<!-- Grid Preview  -->
 			<div class="gm-iframe-postbox postbox gm-slide-toggle-- ">
 				<div class="postbox-header">
@@ -864,7 +940,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 						</div>
 					</div>
 					<div class="handle-actions pe-2">
-						<span class="dashicons dashicons-arrow-down">
+						<span class="dashicons dashicons-arrow-down"></span>
 					</div>
 				</div>
 				<div class="inside" style="display: block;">
@@ -897,16 +973,16 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 				<button type="button" class="button gm-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				<h2 class="m-0"><?php esc_html_e( 'Embed Shortcode', 'ajax-filter-posts'  ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Copy the shortcode below and paste it into your post, page, or text widget content.', 'ajax-filter-posts'  ); ?></p>
-				<!-- <div class="d-flex gm-copy-wrap">
+				<div class="d-flex gm-copy-wrap mb-3">
 					<div class="gm-save-overlay">
-						<button type="submit" class="gm-save-grid gm-btn gm-btn-fill"><?php esc_html_e( 'Save Grid', 'ajax-filter-posts'  ); ?></button>
+						<button type="submit" form="gm-shortcode-generator" class="gm-save-grid gm-btn gm-btn-primary"><?php esc_html_e( 'Save Grid', 'ajax-filter-posts'  ); ?></button>
 					</div>
 					<?php $grid_id_copy = $grid_id ? '[gridmaster id="' . $grid_id . '"]' : '[gridmaster id="#"]'; ?>
 					<input type="text" value="<?php echo esc_attr( $grid_id_copy ); ?>" class="gm-saved-code regular-text gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'ajax-filter-posts'  ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
-				</div> -->
+				</div>
 
-				<h2 class="mb-0"><?php esc_html_e( 'Or below one', 'ajax-filter-posts'  ); ?></h2>
+				<h3 class="mb-2" style="font-size: 14px; font-weight: 600; color: var(--gm-text-muted);"><?php esc_html_e( 'Or Full Attributes Shortcode', 'ajax-filter-posts'  ); ?></h3>
 				<div class="d-flex gm-copy-wrap">
 					<input type="text" value="[gridmaster]" class="regular-text gm-copy-inp gm-copy-val" readonly>
 					<button type="button" class="gm-copy-btn gm-btn gm-tooltip" title="<?php esc_html_e( 'Copy Shortcode', 'ajax-filter-posts'  ); ?>"><span class="m-0 dashicons dashicons-admin-page"></span></button>
@@ -1019,10 +1095,17 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 			// Update form id field.
 			jQuery( 'input[name="id"]' ).val( gridId );
 
-			// Update URL
-			// if( window.location.search ){ // TODO: if has id=
-				history.pushState(null, null, window.location.search + '&id=' + gridId );
-			// }
+			// Update URL without duplicating query params.
+			try {
+				const searchParams = new URLSearchParams(window.location.search);
+				searchParams.set('id', gridId);
+				history.pushState(null, null, window.location.pathname + '?' + searchParams.toString());
+			} catch (err) {
+				// Fallback if URLSearchParams is unavailable.
+				if (!window.location.search.includes('id=')) {
+					history.pushState(null, null, window.location.search + '&id=' + gridId);
+				}
+			}
 
 			// Data need save
 			dataNeedSave(0)
@@ -1035,21 +1118,7 @@ $nonce = wp_create_nonce( 'gm_shortcode_preview_nonce' );
 	.gm-admin-content {
 		max-width: 100% !important;
 	}
-	.gm-admin-into {
-		display: none;
-	}
-	.toplevel_page_gridmaster #wpcontent #wpbody {
-		height: calc(100vh - 72px);
-		overflow: hidden;
-	}
-
 	.toplevel_page_gridmaster #wpcontent #wpbody-content {
 		padding-bottom: 0;
-		height: 100%;
-	}
-
-	#gm-shortcode-generator p {
-		color: #3c434a;
-		font-size: inherit;
 	}
 </style>

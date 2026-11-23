@@ -5,7 +5,7 @@ Tags: post grid, ajax filter, infinite scroll, pagination, filter
 Requires at least: 5.8  
 Tested up to: 7.1  
 Requires PHP: 7.4  
-Stable tag: 3.4.18
+Stable tag: 3.4.25
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ You can visually build and customize your post grid using the **shortcode genera
 
 Post Grid Master gives you everything you need to create modern post grids with AJAX filters — visually, easily, and efficiently.
 
+- **Visual Gutenberg Card Studio Builder (2.0):** Design custom post cards visually with 17+ dynamic card blocks, Starter Blueprints, User-Saved Card Patterns, Card Block Conditional Visibility, and live responsive device preview.  
+- **Modern Layouts & Filter Placements:** Build CSS Grid, List, True Masonry, Metro Mosaic, Accessible Carousel/Slider, and Vertical Reels layouts with Top, Sticky Left/Right Sidebar, or Off-Canvas Drawer filters and deep-linkable URLs.  
+- **Page Builder Integrations:** Native live-preview widgets and elements for Gutenberg, Elementor, Beaver Builder, Bricks, WPBakery, and Classic Widgets.  
+- **Context-Aware Queries & JSON Export/Import:** Multi-post-type queries, offset pagination, Exclude Current Post, Current Archive, Related Posts, and 1-click JSON export/import.  
 - **Shortcode Generator:** Generate post grid shortcodes with live preview. Use anywhere — posts, pages, or template files.  
 - **Pre-Built Grid Layouts:** Choose from multiple ready layouts or style your own using CSS.  
 - **Custom Post Type Support:** Build post grids from any post type — blog posts, portfolios, products, and more.  
@@ -67,6 +71,9 @@ We’ll respond as quickly as possible!
 
 Upgrade to **Post Grid Master Pro** to unlock more advanced tools and layout flexibility.
 
+- **WooCommerce Merchandising Suite:** Native Quick View, Wishlist & Drawer, Product Compare, Request a Quote, Variation Swatches, Countdown Timer, and 3rd-Party Woo Extension Bridge.  
+- **Advanced Pro Facets & Dynamic Recounts:** Multi-Select, Date Range, Custom Meta Filter, Numeric Meta Range Slider, Woo Price Slider, Attribute Swatches, Star Rating, Sale/Stock/Featured Toggles, Sort Dropdown, Active Filter Chips, and cached dynamic term recounts.  
+- **Inline Video & Reels Blocks:** Card Video Block with inline hover/click preview, lightbox player, and single-active audio/video coordination.  
 - **Advanced Filter Styles:** Access more stylish and interactive filter layouts.  
 - **Premium Grid Layouts:** Get exclusive post grid designs and templates.  
 - **Taxonomy Images & Colors:** Add category images and color indicators in filters or post items.  
@@ -154,6 +161,11 @@ Upgrade to **Post Grid Master Pro** to unlock more advanced tools and layout fle
 3. Pagination Preview
 
 ## Changelog
+
+= 3.4.25 =
+- Added: GridMaster 2.0 Gutenberg Card Studio Builder, Starter Blueprints, and User-Saved Card Patterns.
+- Added: Sidebar/drawer filter placement, Masonry & Metro mosaic layouts, context-aware queries, URL deep-linking, ellipsis pagination, JSON Export/Import, Card Conditional Visibility, and SR/LCP accessibility improvements.
+- Security: Enforced `manage_options` capability guard, action allowlist, and input sanitization on `gridmaster_ajax`.
 
 = 3.4.18 =
 - Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
