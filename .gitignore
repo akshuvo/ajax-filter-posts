@@ -29,8 +29,10 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# DS_Store files
+# macOS metadata files
 .DS_Store
+**/.DS_Store
+._*
 
 # Playwright E2E test artifacts & auth
 tests/e2e/.auth/
