@@ -41,6 +41,9 @@ namespace {
 		/** @var array<int, array<string, mixed>> */
 		public static $enqueued_styles = array();
 
+		/** @var array<int, array<string, mixed>> */
+		public static $enqueued_scripts = array();
+
 		/** @var int */
 		public static $password_counter = 0;
 
@@ -51,6 +54,7 @@ namespace {
 			self::$filters          = array();
 			self::$shortcodes       = array();
 			self::$enqueued_styles  = array();
+			self::$enqueued_scripts = array();
 			self::$password_counter = 0;
 			self::$options          = array();
 			\WP_Query::reset();
@@ -536,6 +540,16 @@ namespace {
 			'deps'   => $deps,
 			'ver'    => $ver,
 			'media'  => (string) $media,
+		);
+	}
+
+	function wp_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
+		GM2_Test_WP_Env::$enqueued_scripts[] = array(
+			'handle'    => (string) $handle,
+			'src'       => (string) $src,
+			'deps'      => $deps,
+			'ver'       => $ver,
+			'in_footer' => (bool) $in_footer,
 		);
 	}
 

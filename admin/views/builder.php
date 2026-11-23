@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin screen routing parameter.
 $grid_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 $grid    = $grid_id ? Grid_Repository::get( $grid_id ) : null;
 

@@ -123,8 +123,10 @@ class Grid_Repository {
 			return null;
 		}
 
-		$row = $wpdb->get_row(
-			$wpdb->prepare( 'SELECT * FROM ' . self::table() . ' WHERE id = %d', $id )
+		$table = self::table();
+		$row   = $wpdb->get_row(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is strictly internal.
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id )
 		);
 
 		if ( ! $row ) {
@@ -416,17 +418,22 @@ class Grid_Repository {
 		$orderby         = in_array( $params['orderby'], $allowed_orderby, true ) ? $params['orderby'] : 'id';
 		$order           = 'ASC' === strtoupper( $params['order'] ) ? 'ASC' : 'DESC';
 
+		$table = self::table();
+
 		// Count total matching.
-		$count_sql = "SELECT COUNT(*) FROM " . self::table() . " WHERE {$where_sql}";
+		$count_sql = "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}";
 		if ( ! empty( $query_params ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamic placeholder clauses assembled above.
 			$count_sql = $wpdb->prepare( $count_sql, $query_params );
 		}
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared above when dynamic parameters are present.
 		$total = (int) $wpdb->get_var( $count_sql );
 
 		// Fetch items.
-		$fetch_sql = "SELECT * FROM " . self::table() . " WHERE {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
+		$fetch_sql      = "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
 		$query_params[] = $per_page;
 		$query_params[] = $offset;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamic placeholder clauses and whitelisted ORDER BY assembled above.
 		$items = $wpdb->get_results( $wpdb->prepare( $fetch_sql, $query_params ) );
 
 		$formatted = array();

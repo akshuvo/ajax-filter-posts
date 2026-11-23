@@ -658,7 +658,7 @@ class Grid_Renderer {
 
 		// Contextual evaluation for core/shortcode block
 		if ( 'core/shortcode' === $parsed_block['blockName'] ) {
-			$raw = ! empty( $parsed_block['attrs']['text'] ) ? $parsed_block['attrs']['text'] : ( ! empty( $parsed_block['innerHTML'] ) ? strip_tags( $parsed_block['innerHTML'] ) : '' );
+			$raw = ! empty( $parsed_block['attrs']['text'] ) ? $parsed_block['attrs']['text'] : ( ! empty( $parsed_block['innerHTML'] ) ? wp_strip_all_tags( $parsed_block['innerHTML'] ) : '' );
 			if ( empty( $raw ) ) {
 				return '';
 			}

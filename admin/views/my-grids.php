@@ -62,7 +62,9 @@ $pages = $grids_data['pages'];
 // Metric counts.
 global $wpdb;
 $table_name            = Grid_Repository::table();
+// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is strictly internal.
 $counts_raw            = $wpdb->get_results( "SELECT migration_status, COUNT(*) as cnt FROM {$table_name} GROUP BY migration_status", OBJECT_K );
+// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is strictly internal.
 $total_grids_count     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
 $v2_grids_count        = isset( $counts_raw['new_builder'] ) ? (int) $counts_raw['new_builder']->cnt : 0;
 $converted_grids_count = isset( $counts_raw['converted'] ) ? (int) $counts_raw['converted']->cnt : 0;

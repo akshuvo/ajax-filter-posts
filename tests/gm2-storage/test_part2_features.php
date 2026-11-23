@@ -230,21 +230,23 @@ try {
 	// =========================================================================
 	// 3. Dynamic Facet Term Counts (Pro Facet_Recounter) & REST Render Response
 	// =========================================================================
-	$recount_res = Facet_Recounter::compute_counts(
-		$sidebar_cfg,
-		array( 'search' => 'needle_beta' )
-	);
-	$cat_counts = $recount_res['counts']['category'] ?? array();
-	$expect( 2 === (int) ( $cat_counts[ (string) $cat_a ] ?? -1 ), 'Facet_Recounter reports 2 matching posts in Category Alpha under search filter.' );
-	$expect( 0 === (int) ( $cat_counts[ (string) $cat_b ] ?? -1 ), 'Facet_Recounter reports 0 matching posts in Category Beta under search filter.' );
-	$expect( ! empty( $recount_res['hide_empty']['category'] ), 'Facet_Recounter propagates hide_empty_dynamic flag.' );
+	if ( class_exists( 'GridMasterPro\Facets\Facet_Recounter' ) ) {
+		$recount_res = Facet_Recounter::compute_counts(
+			$sidebar_cfg,
+			array( 'search' => 'needle_beta' )
+		);
+		$cat_counts = $recount_res['counts']['category'] ?? array();
+		$expect( 2 === (int) ( $cat_counts[ (string) $cat_a ] ?? -1 ), 'Facet_Recounter reports 2 matching posts in Category Alpha under search filter.' );
+		$expect( 0 === (int) ( $cat_counts[ (string) $cat_b ] ?? -1 ), 'Facet_Recounter reports 0 matching posts in Category Beta under search filter.' );
+		$expect( ! empty( $recount_res['hide_empty']['category'] ), 'Facet_Recounter propagates hide_empty_dynamic flag.' );
 
-	$ajax_render_req = new WP_REST_Request( 'POST', "/gridmaster/v2/grids/{$grid_id}/render" );
-	$ajax_render_req->set_body_params( array( 'search' => 'needle_beta' ) );
-	$ajax_render_res  = rest_do_request( $ajax_render_req );
-	$ajax_render_data = $ajax_render_res->get_data();
-	$expect( 200 === $ajax_render_res->get_status() && isset( $ajax_render_data['facet_counts']['category'][ (string) $cat_a ] ), 'REST /grids/<id>/render appends Pro facet_counts payload.' );
-	$expect( 2 === (int) $ajax_render_data['facet_counts']['category'][ (string) $cat_a ], 'REST /grids/<id>/render facet_counts reflects active search query.' );
+		$ajax_render_req = new WP_REST_Request( 'POST', "/gridmaster/v2/grids/{$grid_id}/render" );
+		$ajax_render_req->set_body_params( array( 'search' => 'needle_beta' ) );
+		$ajax_render_res  = rest_do_request( $ajax_render_req );
+		$ajax_render_data = $ajax_render_res->get_data();
+		$expect( 200 === $ajax_render_res->get_status() && isset( $ajax_render_data['facet_counts']['category'][ (string) $cat_a ] ), 'REST /grids/<id>/render appends Pro facet_counts payload.' );
+		$expect( 2 === (int) $ajax_render_data['facet_counts']['category'][ (string) $cat_a ], 'REST /grids/<id>/render facet_counts reflects active search query.' );
+	}
 
 	// =========================================================================
 	// 4. Export / Import JSON REST API & Permissions / Capability Security
@@ -316,14 +318,16 @@ try {
 	// =========================================================================
 	// 5. Wishlist Drawer Block & Shortcode + Safe Resolution
 	// =========================================================================
-	$wl_shortcode_html = do_shortcode( '[gridmaster_wishlist_drawer label="Saved Reads" button_style="floating"]' );
-	$expect( false !== strpos( $wl_shortcode_html, 'gm-wishlist-drawer-root' ) && false !== strpos( $wl_shortcode_html, 'gm-wishlist-style-floating' ), '[gridmaster_wishlist_drawer] shortcode renders drawer root and floating style class.' );
-	$expect( false !== strpos( $wl_shortcode_html, 'Saved Reads' ) && false !== strpos( $wl_shortcode_html, 'gm-wishlist-count-badge' ), 'Wishlist drawer renders label and count badge.' );
+	if ( class_exists( 'GridMasterPro\Blocks\Pro_Blocks' ) ) {
+		$wl_shortcode_html = do_shortcode( '[gridmaster_wishlist_drawer label="Saved Reads" button_style="floating"]' );
+		$expect( false !== strpos( $wl_shortcode_html, 'gm-wishlist-drawer-root' ) && false !== strpos( $wl_shortcode_html, 'gm-wishlist-style-floating' ), '[gridmaster_wishlist_drawer] shortcode renders drawer root and floating style class.' );
+		$expect( false !== strpos( $wl_shortcode_html, 'Saved Reads' ) && false !== strpos( $wl_shortcode_html, 'gm-wishlist-count-badge' ), 'Wishlist drawer renders label and count badge.' );
 
-	$pro_blocks = new Pro_Blocks();
-	$wl_items = $pro_blocks->resolve_wishlist_items( array( $p0, $draft_id ) );
-	$wl_ids   = wp_list_pluck( $wl_items, 'id' );
-	$expect( array( $p0 ) === $wl_ids, 'resolve_wishlist_items returns published post and omits draft posts.' );
+		$pro_blocks = new Pro_Blocks();
+		$wl_items = $pro_blocks->resolve_wishlist_items( array( $p0, $draft_id ) );
+		$wl_ids   = wp_list_pluck( $wl_items, 'id' );
+		$expect( array( $p0 ) === $wl_ids, 'resolve_wishlist_items returns published post and omits draft posts.' );
+	}
 
 	// =========================================================================
 	// 6. Card Block Conditional Visibility (InnerBlocks Pruning & InnerContent Sync)

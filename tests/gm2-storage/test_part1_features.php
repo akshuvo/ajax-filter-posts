@@ -35,30 +35,34 @@ try {
 	$expect( ! empty( $admins ), 'An administrator account is available.' );
 	wp_set_current_user( $admins[0]->ID );
 
+	$has_pro = class_exists( 'GridMasterPro\Assets\Pro_Assets' );
+
 	// 1. Pro_Assets modular facet & video detection from $config.
-	Pro_Assets::register_assets();
-	$expect( wp_style_is( 'gridmaster-pro-facets', 'registered' ), 'Pro facets stylesheet handle is registered.' );
+	if ( $has_pro ) {
+		Pro_Assets::register_assets();
+		$expect( wp_style_is( 'gridmaster-pro-facets', 'registered' ), 'Pro facets stylesheet handle is registered.' );
 
-	wp_dequeue_style( 'gridmaster-pro-facets' );
-	wp_dequeue_style( 'gridmaster-pro-video' );
+		wp_dequeue_style( 'gridmaster-pro-facets' );
+		wp_dequeue_style( 'gridmaster-pro-video' );
 
-	Pro_Assets::detect_and_enqueue_from_content( '', array(
-		'facets' => array(
-			array( 'type' => 'woo-status-toggles' ),
-		),
-	) );
-	$expect( wp_style_is( 'gridmaster-pro-facets', 'enqueued' ), 'Pro facets stylesheet enqueues from config facets.' );
+		Pro_Assets::detect_and_enqueue_from_content( '', array(
+			'facets' => array(
+				array( 'type' => 'woo-status-toggles' ),
+			),
+		) );
+		$expect( wp_style_is( 'gridmaster-pro-facets', 'enqueued' ), 'Pro facets stylesheet enqueues from config facets.' );
 
-	Pro_Assets::detect_and_enqueue_from_content( '', array(
-		'layout' => array( 'type' => 'reels' ),
-	) );
-	$expect( wp_style_is( 'gridmaster-pro-video', 'enqueued' ), 'Pro video stylesheet enqueues from config layout reels.' );
+		Pro_Assets::detect_and_enqueue_from_content( '', array(
+			'layout' => array( 'type' => 'reels' ),
+		) );
+		$expect( wp_style_is( 'gridmaster-pro-video', 'enqueued' ), 'Pro video stylesheet enqueues from config layout reels.' );
 
-	// 2. Woo_Status_Toggles_Facet HTML contract.
-	$status_html = Woo_Status_Toggles_Facet::render( array( 'heading' => 'Status' ), 99, array( 'on_sale' => true ) );
-	$expect( false !== strpos( $status_html, 'data-status="on_sale"' ), 'Woo status toggle renders data-status="on_sale".' );
-	$expect( false !== strpos( $status_html, 'data-status-key="on_sale"' ), 'Woo status toggle preserves data-status-key="on_sale".' );
-	$expect( false !== strpos( $status_html, 'aria-pressed="true"' ), 'Woo status toggle marks active state via aria-pressed.' );
+		// 2. Woo_Status_Toggles_Facet HTML contract.
+		$status_html = Woo_Status_Toggles_Facet::render( array( 'heading' => 'Status' ), 99, array( 'on_sale' => true ) );
+		$expect( false !== strpos( $status_html, 'data-status="on_sale"' ), 'Woo status toggle renders data-status="on_sale".' );
+		$expect( false !== strpos( $status_html, 'data-status-key="on_sale"' ), 'Woo status toggle preserves data-status-key="on_sale".' );
+		$expect( false !== strpos( $status_html, 'aria-pressed="true"' ), 'Woo status toggle marks active state via aria-pressed.' );
+	}
 
 	// 3. Multi_Select_Facet HTML contract.
 	$slug    = 'gm-part1-' . wp_generate_password( 6, false );
@@ -77,28 +81,30 @@ try {
 	wp_set_post_terms( $post_id, array( $term_id ), 'category' );
 	update_post_meta( $post_id, 'gm_city', 'Toronto' );
 
-	$multi_html = Multi_Select_Facet::render(
-		array( 'taxonomy' => 'category', 'heading' => 'Cats' ),
-		99,
-		array( 'facets' => array( 'category' => array( $term_id ) ) )
-	);
-	$expect( false !== strpos( $multi_html, '<button type="button"' ), 'Multi-select renders button pills.' );
-	$expect( false !== strpos( $multi_html, 'data-label=' ), 'Multi-select pills include data-label attribute.' );
-	$expect( false !== strpos( $multi_html, 'aria-pressed="true"' ), 'Multi-select pills reflect active aria-pressed state.' );
+	if ( $has_pro ) {
+		$multi_html = Multi_Select_Facet::render(
+			array( 'taxonomy' => 'category', 'heading' => 'Cats' ),
+			99,
+			array( 'facets' => array( 'category' => array( $term_id ) ) )
+		);
+		$expect( false !== strpos( $multi_html, '<button type="button"' ), 'Multi-select renders button pills.' );
+		$expect( false !== strpos( $multi_html, 'data-label=' ), 'Multi-select pills include data-label attribute.' );
+		$expect( false !== strpos( $multi_html, 'aria-pressed="true"' ), 'Multi-select pills reflect active aria-pressed state.' );
 
-	// 4. Meta_Filter_Facet HTML contract & SSR hydration.
-	$meta_html = Meta_Filter_Facet::render(
-		array( 'meta_key' => 'gm_city', 'heading' => 'City' ),
-		99,
-		array( 'meta' => array( 'gm_city' => 'Toronto' ) )
-	);
-	$expect( false !== strpos( $meta_html, '<input type="text"' ) && false !== strpos( $meta_html, 'class="gm-meta-input"' ), 'Meta filter renders .gm-meta-input.' );
-	$expect( 2 === substr_count( $meta_html, 'data-meta-key="gm_city"' ), 'Meta filter puts data-meta-key on wrapper and input.' );
-	$expect( false !== strpos( $meta_html, 'value="Toronto"' ), 'Meta filter prefills input value from runtime params.' );
+		// 4. Meta_Filter_Facet HTML contract & SSR hydration.
+		$meta_html = Meta_Filter_Facet::render(
+			array( 'meta_key' => 'gm_city', 'heading' => 'City' ),
+			99,
+			array( 'meta' => array( 'gm_city' => 'Toronto' ) )
+		);
+		$expect( false !== strpos( $meta_html, '<input type="text"' ) && false !== strpos( $meta_html, 'class="gm-meta-input"' ), 'Meta filter renders .gm-meta-input.' );
+		$expect( 2 === substr_count( $meta_html, 'data-meta-key="gm_city"' ), 'Meta filter puts data-meta-key on wrapper and input.' );
+		$expect( false !== strpos( $meta_html, 'value="Toronto"' ), 'Meta filter prefills input value from runtime params.' );
 
-	// 5. Date_Range_Facet SSR hydration.
-	$date_html = Date_Range_Facet::render( array( 'heading' => 'Dates' ), 99, array( 'date_from' => '2026-01-01', 'date_to' => '2026-02-01' ) );
-	$expect( false !== strpos( $date_html, 'value="2026-01-01"' ) && false !== strpos( $date_html, 'value="2026-02-01"' ), 'Date range prefills date inputs from runtime params.' );
+		// 5. Date_Range_Facet SSR hydration.
+		$date_html = Date_Range_Facet::render( array( 'heading' => 'Dates' ), 99, array( 'date_from' => '2026-01-01', 'date_to' => '2026-02-01' ) );
+		$expect( false !== strpos( $date_html, 'value="2026-01-01"' ) && false !== strpos( $date_html, 'value="2026-02-01"' ), 'Date range prefills date inputs from runtime params.' );
+	}
 
 	// 6. Ellipsis Pagination sequences.
 	$expect( array( 1, 2, 3, 4, 5, 6, 7 ) === Pagination_Registry::build_page_sequence( 4, 7 ), 'Pagination renders full sequence when max <= 7.' );
@@ -162,7 +168,9 @@ try {
 	$expect( false !== strpos( $rendered, 'data-post-id="' . $post_id . '"' ), 'Saved grid query (author + meta_query) returns matching post.' );
 	$expect( false !== strpos( $rendered, 'gm-facet-chips' ) && false !== strpos( $rendered, 'data-multi-select="1"' ), 'Taxonomy tabs renders chips + multi-select attributes.' );
 	$expect( false !== strpos( $rendered, 'gm-filter-radio' ), 'Radio filter facet renders inside grid.' );
-	$expect( false !== strpos( $rendered, 'gm-meta-input' ), 'Meta filter facet renders inside grid.' );
+	if ( $has_pro ) {
+		$expect( false !== strpos( $rendered, 'gm-meta-input' ), 'Meta filter facet renders inside grid.' );
+	}
 
 	echo "PASS: All {$assertions} Part 1 assertions passed.\n";
 } finally {

@@ -21,6 +21,15 @@ Post Grid Master includes a shortcode generator that lets you easily create shor
 ### Features of Post Grid Master
 Post Grid Master offers you a lot of features that will help you create a post grid with AJAX filter easily. You can develop your custom theme templates easily by using the Post Grid Master shortcode. Here are some of the features that you will get with Post Grid Master.
 
+**Visual Gutenberg Card Studio Builder (GridMaster 2.0)**  
+Design custom post cards visually with an embedded Gutenberg block canvas, 17+ dynamic card blocks (Title, Featured Image, Excerpt, Read More, Post Date, Author, Terms, Reading Time, Author Avatar, Badge, Social Share, Shortcode, HTML), Starter Blueprints, User-Saved Card Pattern Library, Card Block Conditional Visibility, and a live responsive device preview modal (Desktop, Tablet, Mobile).
+
+**Modern Grid Layouts & Filter Placements**  
+Choose from CSS Grid, Horizontal List, True Masonry, Editorial Metro Mosaic, Accessible Carousel/Slider, or 9:16 Vertical Reels layouts. Place filters at the Top, in a Sticky Left or Right Sidebar, or inside an Off-Canvas Mobile Filter Drawer with shareable `gm_*` deep-link URLs.
+
+**Context-Aware Query Builder & Portable JSON Export/Import**  
+Query single or multiple post types, filter by author, include/exclude post IDs, exclude the current singular post, or automatically adapt to Current Archive and Related Posts contexts. Export and import full grid configurations as portable `.gridmaster.json` files.
+
 **Page Builder Addons & Live Previews**  
 Embed any saved grid directly inside your favorite page builder without touching shortcodes! Includes native dropdown widgets, modules, and elements for Gutenberg (Block Editor with live canvas preview), Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic WordPress Widgets. Click "Edit this grid" to hop directly into GridMaster, and see changes refresh automatically when you return.
 
@@ -87,6 +96,9 @@ If you have any questions or queries regarding Post Grid Master, please ask them
 ### Pro Features
 There are some pro features that you will get with the pro version of Post Grid Master. Here are some of the pro features.
 
+**WooCommerce Product Grid & Merchandising Suite** — Native Quick View Modal, Wishlist/Bookmark Engine & `[gridmaster_wishlist_drawer]`, Product Compare Drawer & Table, B2B Request a Quote Modal, Variation Swatches, Sale Countdown Timer, and 3rd-Party WooCommerce Extension Bridge  
+**Advanced Pro Filter Facets** — Multi-Select Pills, Date Range Picker, Custom Field / Meta Filter, Numeric Meta Range Slider, WooCommerce Price Slider, Attribute Swatches, Star Rating Filter, Sale/Stock/Featured Toggles, Sort Dropdown, Active Filter Chips Bar, and Dynamic Facet Term Recounts with Transient Caching  
+**Inline Video & 9:16 Reels Feeds** — Card Video Block with click/hover inline playback, Lightbox Player, and single-active playback coordination  
 **Pro Filter Styles** — Additional advanced styles  
 **Pro Grid Layouts** — More pre-built templates  
 **Taxonomy Image and Color** — Show taxonomy images and colors in filters or grids  

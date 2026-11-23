@@ -96,10 +96,13 @@ if ( ! function_exists( 'add_action' ) ) {
     function add_action() {}
 }
 
-require_once 'ajax-filter-posts/inc/Blocks.php';
-require_once 'gridmaster-pro/inc/Blocks/Pro_Blocks.php';
-require_once 'ajax-filter-posts/inc/Facets/Facet_Handler_Interface.php';
-require_once 'ajax-filter-posts/inc/Facets/Handlers/Taxonomy_Tabs.php';
+$free_dir = dirname( __DIR__ );
+$pro_dir  = dirname( $free_dir ) . '/gridmaster-pro';
+
+require_once $free_dir . '/inc/Blocks.php';
+require_once $pro_dir . '/inc/Blocks/Pro_Blocks.php';
+require_once $free_dir . '/inc/Facets/Facet_Handler_Interface.php';
+require_once $free_dir . '/inc/Facets/Handlers/Taxonomy_Tabs.php';
 
 $blocks = new \GridMaster\Blocks();
 $pro_blocks = new \GridMasterPro\Blocks\Pro_Blocks();
