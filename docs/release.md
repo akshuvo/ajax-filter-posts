@@ -20,7 +20,7 @@ Default removal policy is empty. An intentional removal requires an exact path a
 
 Stage captures SVN revision, before-trunk/baseline manifests and listing-asset hashes. It copies individual approved files, schedules only explicitly allowed file deletions, then copies trunk to a new tag. No blind recursive SVN deletion or trunk replacement is used. Full staged trunk/tag hashes, untouched listing assets, allowed SVN statuses/property changes and path scope must pass. The full `svn-status.xml` and `svn-diff.txt` are saved. Publish revalidates their digest and the plugin repository's scoped last-changed revision immediately before one commit. A changed remote state requires a fresh build/stage/review. Existing tags are refused.
 
-Runtime `assets/` belongs in `trunk/assets/` and each tag. Listing assets belong in SVN root `assets/`. This pipeline preserves the live listing assets unchanged; `.wordpress/` holds source listing images for separately reviewed updates. It never deletes remote listing images to match a partial local directory.
+Runtime `assets/` belongs in `trunk/assets/` and each tag. Listing assets belong in SVN root `assets/`. Tracked, filename-validated WordPress.org listing images in `.wordpress/` (`banner-772x250.*`, `banner-1544x500.*`, `icon-128x128.*`, `icon-256x256.*`, `icon.svg`, `screenshot-N.*`) are excluded from the plugin ZIP, hash-manifested in `listing-assets-manifest.json`, staged into SVN `assets/` with `svn:mime-type`, validated against unexpected changes, and verified on post-publish SVN export. Existing remote listing images not present locally are preserved; the pipeline never deletes remote listing assets.
 
 ## Prepare and validate
 

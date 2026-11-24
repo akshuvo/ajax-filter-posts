@@ -133,7 +133,7 @@ class Admin {
 				'home_url'          => home_url(),
 				'breakpoints'       => gm_get_breakpoints(),
 				'has_pro'           => gridmaster_is_pro(),
-				'demo_link'         => esc_url( 'https://plugins.addonmaster.com/gridmaster/' ),
+				'demo_link'         => esc_url( 'https://addonmaster.com/demo/gridmaster/' ),
 				'filter_demo_links' => array(
 					'pro-filter-1' => 'gridmaster-pro-filter-style-1',
 					'pro-filter-2' => 'gridmaster-pro-filter-style-2',

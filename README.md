@@ -19,7 +19,7 @@ Build responsive WordPress post grids, masonry, carousels & custom cards with a 
 
 Built for bloggers, agencies, publishers, and WooCommerce store owners, Post Grid Master works with every WordPress theme, any Custom Post Type (CPT), any custom taxonomy, and all major page builders — without writing PHP templates.
 
-- **[Live Demos](https://plugins.addonmaster.com/gridmaster/)**
+- **[Live Demos](https://addonmaster.com/demo/gridmaster/)**
 - **[WordPress.org Support Forum](https://wordpress.org/support/plugin/ajax-filter-posts/)**
 - **[Submit a Support Ticket](https://addonmaster.com/submit-a-ticket/)**
 - **[Post Grid Master Pro](https://addonmaster.com/gridmaster/)**
@@ -181,14 +181,17 @@ Yes. `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` remain fully supported f
 
 ## Screenshots
 
-1. Backend Grid Builder and Shortcode Generator (Free & Pro)
-2. Backend Live Preview and Welcome Overview
-3. Key Features Overview
-4. Free Features Summary
-5. Pro Features Overview
-6. Post Grid Master Grid & Filter Style 1 (Free)
-7. Post Grid Master Grid & Filter Style 2 (Free)
-8. Post Grid Master Grid & Filter Style 3 (Free)
+1. Visual Gutenberg Card Studio Builder with drag-and-drop block tree, live card canvas, and surface styling controls
+2. One-click Starter Grid Blueprints for SaaS Blogs, Editorial Metro Magazines, Masonry Showcases, and WooCommerce Storefronts
+3. Frontend responsive post grid with AJAX category tabs, live keyword search, reading time, and instant reset
+4. Editorial Metro Mosaic layout featuring an asymmetric lead story and AJAX taxonomy filter chips
+5. Accessible Editorial Carousel and Slider layout with previous/next arrows and dot navigation
+6. Layout Engine & Grid Presets (Standard Grid, Masonry Bricks, Metro Mosaic, Accessible Carousel, and Vertical Reels)
+7. AJAX Filter Facets Builder with Free taxonomy/search facets and Pro WooCommerce, Date Range, Meta Filter, and Dynamic Recount options
+8. Context-Aware Query Builder with multi-post-type queries, offset pagination, Exclude Current Post, Current Archive, and Related Posts modes
+9. Native Gutenberg Block Editor integration with live canvas preview and one-click "Edit this grid in GridMaster"
+10. WooCommerce Storefront grid with sticky left sidebar facets (Price Slider, Color Swatches, Star Rating), Sale Badges, Countdown Timers, and AJAX Add to Cart (Pro)
+11. 9:16 Vertical Video Reels feed with swipe/keyboard navigation, audio toggle, and category filter tabs (Pro)
 
 ---
 
