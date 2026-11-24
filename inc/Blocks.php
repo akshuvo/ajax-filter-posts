@@ -909,9 +909,13 @@ class Blocks {
 		$prefix = ! empty( $attributes['prefix'] ) ? esc_html( $attributes['prefix'] ) : '';
 		$suffix = ! empty( $attributes['suffix'] ) ? esc_html( $attributes['suffix'] ) : '';
 
+		$key_html = '' === $prefix
+			? sprintf( '<span class="gm-meta-key">%s</span> ', esc_html( $meta_key ) )
+			: '';
+
 		return sprintf(
-			'<div class="gm-field gm-field-meta"><span class="gm-meta-key">%s</span> <span class="gm-meta-val">%s%s%s</span></div>',
-			esc_html( $meta_key ),
+			'<div class="gm-field gm-field-meta">%s<span class="gm-meta-val">%s%s%s</span></div>',
+			$key_html,
 			$prefix,
 			esc_html( is_array( $meta_value ) ? implode( ', ', $meta_value ) : $meta_value ),
 			$suffix

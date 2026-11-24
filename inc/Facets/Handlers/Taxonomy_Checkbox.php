@@ -20,10 +20,18 @@ class Taxonomy_Checkbox implements Facet_Handler_Interface {
 		$taxonomy = ! empty( $facet['taxonomy'] ) ? sanitize_key( $facet['taxonomy'] ) : 'category';
 		$heading  = ! empty( $facet['heading'] ) ? sanitize_text_field( $facet['heading'] ) : '';
 
-		$terms = get_terms( array(
+		$term_args = array(
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => true,
-		) );
+		);
+		if ( ! empty( $facet['exclude_terms'] ) && is_array( $facet['exclude_terms'] ) ) {
+			$term_args['exclude'] = array_values( array_filter( array_map( 'absint', $facet['exclude_terms'] ) ) );
+		}
+		if ( ! empty( $facet['include_terms'] ) && is_array( $facet['include_terms'] ) ) {
+			$term_args['include'] = array_values( array_filter( array_map( 'absint', $facet['include_terms'] ) ) );
+		}
+
+		$terms = get_terms( $term_args );
 
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
 			return '';
