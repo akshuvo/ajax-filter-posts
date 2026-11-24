@@ -6,178 +6,155 @@ Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 3.4.25
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create post grids with AJAX filters, pagination, load more, infinite scroll, and custom post type support.
+Build custom WordPress post grids with a visual Gutenberg card builder, AJAX taxonomy filters, pagination, load more, and infinite scroll.
 
 == Description ==
-Post Grid Master helps you create post grids with AJAX filters. You can create post grid layouts with taxonomy filters, AJAX pagination, load more buttons, infinite scroll, and more.
 
-Post Grid Master includes a shortcode generator that lets you easily create shortcodes and display grids anywhere — even inside theme templates.
+**Post Grid Master** (GridMaster) is a modern WordPress post grid and AJAX filtering plugin that lets you visually design custom post cards, organize content in responsive layouts, and filter posts by taxonomy or keyword — all without reloading the page.
 
-[See the Live Demo](https://plugins.addonmaster.com/gridmaster/)  
-[Watch the Video Demo on YouTube](https://www.youtube.com/watch?v=8Th_jp8YEk4)
+Whether you are building a blog magazine, portfolio showcase, news directory, or custom post type catalog, Post Grid Master works seamlessly with any WordPress theme and your favorite page builder.
 
-### Features of Post Grid Master
-Post Grid Master offers you a lot of features that will help you create a post grid with AJAX filter easily. You can develop your custom theme templates easily by using the Post Grid Master shortcode. Here are some of the features that you will get with Post Grid Master.
+* [View Live Demo](https://plugins.addonmaster.com/gridmaster/)
+* [Watch Video Walkthrough](https://www.youtube.com/watch?v=8Th_jp8YEk4)
+* [Get Support](https://wordpress.org/support/plugin/ajax-filter-posts/)
+* [Explore GridMaster Pro](https://addonmaster.com/gridmaster/)
 
-**Visual Gutenberg Card Studio Builder (GridMaster 2.0)**  
-Design custom post cards visually with an embedded Gutenberg block canvas, 17+ dynamic card blocks (Title, Featured Image, Excerpt, Read More, Post Date, Author, Terms, Reading Time, Author Avatar, Badge, Social Share, Shortcode, HTML), Starter Blueprints, User-Saved Card Pattern Library, Card Block Conditional Visibility, and a live responsive device preview modal (Desktop, Tablet, Mobile).
+= Visual Gutenberg Card Studio Builder (GridMaster 2.0) =
 
-**Modern Grid Layouts & Filter Placements**  
-Choose from CSS Grid, Horizontal List, True Masonry, Editorial Metro Mosaic, Accessible Carousel/Slider, or 9:16 Vertical Reels layouts. Place filters at the Top, in a Sticky Left or Right Sidebar, or inside an Off-Canvas Mobile Filter Drawer with shareable `gm_*` deep-link URLs.
+Design reusable post cards visually without writing template code:
 
-**Context-Aware Query Builder & Portable JSON Export/Import**  
-Query single or multiple post types, filter by author, include/exclude post IDs, exclude the current singular post, or automatically adapt to Current Archive and Related Posts contexts. Export and import full grid configurations as portable `.gridmaster.json` files.
+* **Embedded Gutenberg Card Canvas:** Build custom card layouts visually inside the GridMaster builder with full drag-and-drop block control.
+* **17+ Dynamic Card Blocks:** Post Title, Featured Image (with hover zoom & fallback image options), Excerpt, Read More Button, Post Date, Modified Date, Post Author, Author Avatar, Taxonomy Terms, Custom Post Meta, Comments Count, Reading Time, Post Format Icon, Social Share, Custom Badge, Shortcode, and Custom HTML.
+* **Starter Blueprints & Card Pattern Library:** Start from pre-designed blueprints or save and reuse your own custom card patterns across grids.
+* **Conditional Visibility:** Show or hide individual card blocks dynamically based on post data and context.
+* **Live Responsive Preview Modal:** Inspect how your grid and cards adapt across Desktop, Tablet, and Mobile viewports before publishing.
 
-**Page Builder Addons & Live Previews**  
-Embed any saved grid directly inside your favorite page builder without touching shortcodes! Includes native dropdown widgets, modules, and elements for Gutenberg (Block Editor with live canvas preview), Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic WordPress Widgets. Click "Edit this grid" to hop directly into GridMaster, and see changes refresh automatically when you return.
+= Modern Grid Layouts & Filter Placements =
 
-**Shortcode Generator**  
-Post Grid Master has a shortcode generator that helps you generate the shortcode easily and use it anywhere to show the post grid. It includes a preview feature so you can preview the post grid before using it.
+* **Flexible Layout Modes:** Choose from CSS Grid, Horizontal List, True Masonry, Editorial Metro Mosaic, Accessible Carousel/Slider, 9:16 Vertical Reels, or classic pre-built grid styles.
+* **AJAX Filter Facets:** Filter posts smoothly with Taxonomy Tabs, Taxonomy Dropdowns, Checkboxes, Radio Buttons, Live AJAX Search Input, and a Reset Button.
+* **Adaptive Filter Placements:** Position filters at the Top, in a Sticky Left or Right Sidebar, or inside an Off-Canvas Mobile Filter Drawer.
+* **Shareable Deep-Link URLs:** Filter and pagination states sync cleanly to shareable `gm_*` query parameters so visitors can bookmark or share filtered views.
+* **Filter Customization:** Choose from 3 built-in filter styles, toggle the "All" button, add custom filter headings, make filter groups collapsible, or hide filters completely.
 
-**Pre-Built Grid Layouts**  
-Post Grid Master has a few pre-built post grid layouts (more are coming) that you can use to create your post grid. It includes unique classes for easy custom layout creation via CSS.
+= AJAX Pagination & Loading Modes =
 
-**Custom Post Type Support**  
-You can create grids for default or custom post types.
+* **Numbered AJAX Pagination:** Navigate between pages instantly with smart ellipsis pagination and zero full-page reloads.
+* **Load More Button:** Append the next batch of posts on click with customizable button behavior.
+* **Infinite Scroll:** Automatically load additional posts as visitors scroll down the page.
+* **Post Load Animations:** Add smooth entry animations when filtered or paginated posts appear.
 
-**Posts Per Page**  
-Control how many posts appear per page — show all or a specific number.
+= Context-Aware Query Builder =
 
-**Order By / Order**  
-Order posts by date, title, random, comment count, author, etc., in ascending or descending order.
+* **Any Post Type & Taxonomy:** Query standard posts, pages, or single and multiple Custom Post Types with any registered taxonomy.
+* **Precision Filtering:** Control posts per page, offset pagination, author filtering, include/exclude specific post IDs, and exclude the current singular post.
+* **Dynamic Context Modes:** Automatically adapt queries to Current Archive pages or Related Posts contexts.
+* **Flexible Sorting & Excerpts:** Order by date, title, author, ID, menu order, comment count, or random (ASC/DESC). Trim excerpts by word or character count from either the excerpt or main content field, and choose any registered thumbnail size.
 
-**Excerpt Length**  
-Control the excerpt length by word or character count. Choose to pull content from the excerpt or main content field.
+= Native Page Builder Integrations & Shortcodes =
 
-**Read More Button**  
-Show or hide the “Read More” button, and customize its text.
+Embed any saved grid anywhere on your site with live previews and one-click "Edit this grid" links:
 
-**Filter Styles**  
-Includes 3 filter styles, or hide the filter entirely. Optionally remove the “All” button.
+* **Gutenberg (Block Editor)** — Native Post Grid Master block with live canvas preview
+* **Elementor** — Native widget with grid selector
+* **Beaver Builder** — Native module
+* **Bricks Builder** — Native element
+* **WPBakery Page Builder** — Native element
+* **Classic WordPress Widgets** — Sidebar & widget-area support
+* **Shortcode Generator & Legacy Shortcodes** — Place `[gridmaster]` (plus backward-compatible `[am_post_grid]` and `[asr_ajax]`) inside posts, pages, or theme template files
 
-**Custom Taxonomy Support**  
-Create custom taxonomy filters and display grids by selected terms.
+= Performance, Accessibility & Portability =
 
-**AJAX Pagination**  
-Load the next page without reloading. Supports default or “Load More” pagination styles.
+* **Conditional Asset Loading:** Frontend scripts and styles are loaded only on pages where a grid is rendered.
+* **Core Web Vitals & Accessibility:** Includes first-card LCP image prioritization and live screen-reader status announcements during AJAX updates.
+* **Portable JSON Export & Import:** Export and import complete grid configurations as `.gridmaster.json` files to migrate designs between sites.
+* **Theme Friendly & Translation Ready:** Clean, standards-compliant code compatible with any WordPress theme and multilingual plugins.
 
-**Load More Button**  
-Load next posts via button click.
+= Upgrade to Post Grid Master Pro =
 
-**Infinite Scroll**  
-Automatically load more posts as users scroll down.
+Need advanced eCommerce grids, multi-facet filtering, or video feeds? [Post Grid Master Pro](https://addonmaster.com/gridmaster/) adds:
 
-**Animate on Post Load**  
-Add animation effects when posts load.
+* **WooCommerce Product Grid & Merchandising Suite:** 16 Pro card blocks including Product Price, Add to Cart, Star Rating, Sale/Stock Badges, Stock Status, Sale Countdown Timer, Variation Swatches, Quick View Modal, Wishlist Bookmark & `[gridmaster_wishlist_drawer]`, Product Compare Drawer & Table, B2B Request a Quote Modal, Product Meta, and Action Bar — plus a 3rd-Party WooCommerce Extension Bridge (YITH, WPClever, TI Wishlist, and swatches plugins).
+* **Advanced Pro Filter Facets & Dynamic Recounts:** Multi-Select Pills, Date Range Picker, Custom Field / Meta Filter, Numeric Meta Range Slider, WooCommerce Price Range Slider, Attribute Swatches, Star Rating Filter, Sale/Stock/Featured Toggles, Sort Dropdown, Active Filter Chips Bar, and cached Dynamic Facet Term Recounts.
+* **Inline Video & 9:16 Reels Feeds:** Card Video block with click/hover inline playback, Video Lightbox player, and single-active audio/video coordination.
+* **Pro Layouts, Taxonomy Media & Slider Controls:** Exclusive grid templates and filter styles, taxonomy images and colors, auto-select taxonomy/post type/initial term on archives, custom heading tags and responsive typography, per-device columns and gaps, and full slider configuration (slides to show/scroll, arrows, dots, autoplay, pause on hover, infinite loop, center mode).
 
-**Grid Image Thumbnail Size**  
-Choose from available image sizes for grid thumbnails.
+= Privacy Policy & External Services =
 
-**Filter Heading Option**  
-Display or hide filter headings with custom text.
+Post Grid Master includes the [Appsero](https://appsero.com) SDK to collect optional, non-sensitive telemetry data only when a site administrator explicitly opts in via the admin notice.
 
-**Toggle Filter Items Option**  
-Show/hide filter items by clicking on the filter heading.
+Appsero SDK **does not collect any data by default**. Telemetry is gathered **only after user confirmation** to help troubleshoot issues and improve the plugin. Learn more in the [Appsero Privacy Policy](https://appsero.com/privacy-policy/).
 
-### Other Features
-* Works with Any Theme  
-* Clean & Optimized Code for Performance  
-* Fully Responsive  
-* Cross Browser Compatible  
-* Translation Ready  
-* Well Documented  
-* Essential Features Free of Cost  
+= Need Help? =
 
-**Still have questions?**  
-If you have any questions or queries regarding Post Grid Master, please ask them in the [support forum](https://wordpress.org/support/plugin/ajax-filter-posts/) or [contact us](https://addonmaster.com/submit-a-ticket/).
-
-### Pro Features
-There are some pro features that you will get with the pro version of Post Grid Master. Here are some of the pro features.
-
-**WooCommerce Product Grid & Merchandising Suite** — Native Quick View Modal, Wishlist/Bookmark Engine & `[gridmaster_wishlist_drawer]`, Product Compare Drawer & Table, B2B Request a Quote Modal, Variation Swatches, Sale Countdown Timer, and 3rd-Party WooCommerce Extension Bridge  
-**Advanced Pro Filter Facets** — Multi-Select Pills, Date Range Picker, Custom Field / Meta Filter, Numeric Meta Range Slider, WooCommerce Price Slider, Attribute Swatches, Star Rating Filter, Sale/Stock/Featured Toggles, Sort Dropdown, Active Filter Chips Bar, and Dynamic Facet Term Recounts with Transient Caching  
-**Inline Video & 9:16 Reels Feeds** — Card Video Block with click/hover inline playback, Lightbox Player, and single-active playback coordination  
-**Pro Filter Styles** — Additional advanced styles  
-**Pro Grid Layouts** — More pre-built templates  
-**Taxonomy Image and Color** — Show taxonomy images and colors in filters or grids  
-**Auto Select Taxonomy** — Automatically select taxonomy on taxonomy pages  
-**Custom Taxonomy Terms** — Choose which terms to display  
-**Initial Term on Page Load** — Preload posts based on a term  
-**Auto-Select Initial Term** — Auto-selects term on term page  
-**Allow Multiple Selection** — Filter by multiple terms at once  
-**Auto Post Type Selection** — Auto-select post type on post type pages  
-**Heading Tag** — Change title heading tag (h1–h6, div, span, p)  
-**Heading Font Size** — Control title font size per device  
-**Column & Row Gap Control** — Adjust spacing  
-**Post Items Per Row** — Customize post columns per device  
-**Slider Option** — Display post grids in a slider with customizable options:  
-- Slides to Show  
-- Slides to Scroll  
-- Show Prev/Next Arrows  
-- Show Dots  
-- Enable Autoplay  
-- Autoplay Speed  
-- Pause Autoplay on Hover  
-- Infinite Loop Sliding  
-- Center Mode  
-
-= More features coming soon... =
-
-== Privacy Policy ==
-Post Grid Master uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user confirmation. This helps us troubleshoot problems faster and make product improvements.
-
-Appsero SDK **does not gather any data by default**. It starts collecting basic telemetry data **only when a user allows it via admin notice**.  
-
-Learn more about [how Appsero collects and uses data](https://appsero.com/privacy-policy/).
+Have questions or feature ideas? Post in the [WordPress.org support forum](https://wordpress.org/support/plugin/ajax-filter-posts/) or [submit a support ticket](https://addonmaster.com/submit-a-ticket/).
 
 == Installation ==
-1. Download and unzip the plugin. Upload the unzipped folder to the `wp-content/plugins` folder of your WordPress installation.  
-2. Activate the plugin from the WordPress Plugins page.  
-3. OR, go to **Plugins → Add New**, and search for “Post Grid Master.”  
-4. Install and activate it.  
-5. From the dashboard, go to **Post Grid Master → Grid Builder** and create your first post grid.
+
+= Install from WordPress Dashboard =
+
+1. Navigate to **Plugins → Add New** in your WordPress admin dashboard.
+2. Search for **Post Grid Master**.
+3. Click **Install Now**, then click **Activate**.
+4. Open **Post Grid Master** from the dashboard menu to create your first grid with the visual Grid Builder or Shortcode Generator.
+
+= Manual Installation =
+
+1. Download the plugin ZIP file and unzip it.
+2. Upload the `ajax-filter-posts` folder to your `/wp-content/plugins/` directory.
+3. Activate **Post Grid Master** from the **Plugins** screen in WordPress.
+4. Go to **Post Grid Master** to design your grid, then embed it using the Gutenberg block, your page builder widget (Elementor, Beaver Builder, Bricks, WPBakery), or the generated shortcode.
 
 == Frequently Asked Questions ==
-= How to create a post grid? =
-Go to Post Grid Master → Grid Builder. Configure filter type, grid style, post type, etc., then copy and paste the shortcode where you want the grid.
 
-= Will it work with my theme? =
-Yes, it works with any standard WordPress theme.
+= How do I create and display a post grid? =
 
-= Will it work with any page builder? =
-Yes. Just paste the shortcode anywhere.
+Go to **Post Grid Master** in your WordPress dashboard, create a new grid using a Starter Blueprint or custom Gutenberg card layout, configure your query, filters, and pagination, and save. You can then insert the grid using the native Gutenberg block, Elementor/Beaver/Bricks/WPBakery widget, Classic Widget, or shortcode.
 
-= Can I use multiple post grids on the same page? =
-Yes.
+= Will Post Grid Master work with my theme? =
 
-= Will it slow down my website? =
-No. It’s optimized for speed and performance.
+Yes. Post Grid Master uses scoped CSS and standard WordPress APIs so it works cleanly with both classic and block themes.
 
-= Can I create a post grid with custom taxonomy? =
-Yes, Post Grid Master supports any taxonomy.
+= Which page builders are supported? =
 
-= Can I hide the filter? =
-Yes, filters can be disabled.
+Post Grid Master provides native widgets, modules, and elements with live previews for Gutenberg (Block Editor), Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic WordPress Widgets. You can also paste shortcodes into any other page builder or PHP template.
 
-= Can I paginate with Load More Button or Infinite Scroll? =
-Yes, both methods are supported.
+= Can I create grids for Custom Post Types and Custom Taxonomies? =
 
-= Can I change the Read More text? =
-Yes, it’s fully customizable.
+Yes. You can query single or multiple Custom Post Types and filter posts by any registered custom taxonomy or specific term selection.
 
-= I need a custom feature. =
-Email [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for custom requests.
+= Can I place multiple post grids on the same page? =
 
-== Upgrade Notice ==
+Yes. Multiple independent grids can coexist on the same page, each with its own AJAX filters, search, and pagination state.
 
+= Will this plugin slow down my website? =
+
+No. Scripts and styles are enqueued conditionally only on pages that render a grid, and first-card images are prioritized for strong Largest Contentful Paint (LCP) performance.
+
+= Can I hide filters or the "All" button? =
+
+Yes. You can disable filters completely to display a clean grid, or keep filters enabled while hiding the "All" option.
+
+= Does it support Load More and Infinite Scroll pagination? =
+
+Yes. Numbered AJAX pagination with smart ellipsis, Load More buttons, and Infinite Scroll are all built into the free version.
+
+= Are my older shortcodes still supported? =
+
+Yes. Existing `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` shortcodes remain fully supported for seamless backward compatibility.
+
+= How can I request a feature or get support? =
+
+Open a topic in the [WordPress.org support forum](https://wordpress.org/support/plugin/ajax-filter-posts/) or reach out via [addonmaster.com/submit-a-ticket](https://addonmaster.com/submit-a-ticket/).
 
 == Screenshots ==
-1. Backend Grid Builder/Shortcode Generator (Free/Pro)
-2. Backend Preview (Welcome Page)
-3. Key Features
-4. Free Features Overview 
+
+1. Backend Grid Builder and Shortcode Generator (Free & Pro)
+2. Backend Live Preview and Welcome Overview
+3. Key Features Overview
+4. Free Features Summary
 5. Pro Features Overview
 6. Post Grid Master Grid & Filter Style 1 (Free)
 7. Post Grid Master Grid & Filter Style 2 (Free)
@@ -186,168 +163,114 @@ Email [addonmasterwp@gmail.com](mailto:addonmasterwp@gmail.com) for custom reque
 == Changelog ==
 
 = 3.4.25 =
-* Added: GridMaster 2.0 visual Gutenberg Card Studio Builder, responsive card layouts, and live preview modal.
+* Added: GridMaster 2.0 visual Gutenberg Card Studio Builder, responsive card layouts, and live device preview modal.
 * Added: Sidebar split & off-canvas mobile filter drawer (`left_sidebar`, `right_sidebar`, `drawer`), Masonry & Metro mosaic layouts, Starter Blueprints, and User-Saved Card Pattern Library.
 * Added: Context-aware `Query_Builder` (`offset` pagination, multi-`post_type`, `post__in`, `post__not_in`, `exclude_current`, `current_archive`, `related_posts`), deep-link `gm_*` URL hydration, smart ellipsis pagination, and Card Block Conditional Visibility (`gmVisibility`).
-* Added: Portable Grid JSON Export & Import (`GET /grids/<id>/export`, `POST /grids/import`) and improved Accessibility (live SR status announcements) + first-card LCP image prioritization.
-* Security: Enforced `manage_options` capability guard, strict action allowlist, and recursive request sanitization on `gridmaster_ajax` (`FREE-01`), plus full v2 runtime packaging inventory.
+* Added: Native page builder integrations for Gutenberg, Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic Widgets.
+* Added: Portable Grid JSON Export & Import (`GET /grids/<id>/export`, `POST /grids/import`), live screen-reader status announcements, and first-card LCP image prioritization.
+* Security: Enforced `manage_options` capability guard, strict action allowlist, and recursive request sanitization on `gridmaster_ajax`, plus full v2 runtime packaging inventory.
 
 = 3.4.18 =
-- Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
-- Updated: WordPress compatibility metadata to 7.1.
-
-
+* Improved: Release packaging with recursive file-integrity checks and verified WordPress.org deployment.
+* Updated: WordPress compatibility metadata to 7.1.
 
 = 3.4.14 =
-- Fixed: Security issues
-- Compatible with WordPress 6.8.2
-- Fixed: Plugin Check (PCP) issues.
+* Fixed: Security issues.
+* Fixed: Plugin Check (PCP) issues.
+* Updated: Compatibility with WordPress 6.8.2.
 
 = 3.4.13 =
-- Fixed: Security issues
-- Compatible with WordPress 6.7.1
-- Text Domain: 'ajax-filter-posts' from 'gridmaster'.
-- Fixed: Plugin Check (PCP) issues.
-
+* Fixed: Security issues.
+* Fixed: Plugin Check (PCP) issues.
+* Changed: Standardized text domain to `ajax-filter-posts`.
+* Updated: Compatibility with WordPress 6.7.1.
 
 = 3.4.9 =
-* July 02, 2024
-- Fixed: Security issues
-- Compatible with WordPress 6.5.x
+* Fixed: Security issues.
+* Updated: Compatibility with WordPress 6.5.x.
 
 = 3.4.8 =
-* Mar 16, 2024
-- Fixed: Security issues
-- Added: Nonce checking on post grid 
-- Compatible with WordPress 6.4.3
+* Added: Nonce verification on post grid AJAX requests.
+* Fixed: Security issues.
+* Updated: Compatibility with WordPress 6.4.3.
 
 = 3.4.7 =
-* Mar 04, 2024
-- Added: Filter Heading Option
-- Added: Toggle Filter Items Option
-- Added: No Post Found Filter Hook (gridmaster-no-posts-found)
-- Fixed: Translatable "All" text
-- Fixed: Minor code changes.
-- Detailed Documentation: https://addonmaster.com/post-grid-master-wordpress-post-grid-plugin-updates-mar-04-2024/
+* Added: Filter Heading option.
+* Added: Toggle Filter Items option.
+* Added: No Posts Found filter hook (`gridmaster-no-posts-found`).
+* Fixed: Translatable "All" filter label and minor code improvements.
 
 = 3.4.6 =
-* Feb 14, 2024
-- Fixed: Minor code changes.
-- Tested up to WordPress 6.4.3
-- Minified CSS and JS
-
+* Improved: Minified frontend CSS and JS assets.
+* Fixed: Minor code improvements.
+* Updated: Tested up to WordPress 6.4.3.
 
 = 3.4.3 =
-* Oct 26, 2023
-- Added: Excerpt Type: Characters or Words
-- Fixed: Minor code changes.
-- Tested up to WordPress 6.3.2
+* Added: Excerpt length type option (Characters or Words).
+* Fixed: Minor code improvements.
+* Updated: Tested up to WordPress 6.3.2.
 
 = 3.4.2 =
-* Sep 22, 2023
-- Added: Thumbnail Function
-- Added: Submenu navigation
-- Added: View Demo Button for pro links
-- Fixed: Minor code changes.
-- Fixed: Minor CSS changes.
-- Fixed: Minor changes in admin panel.
+* Added: Thumbnail size function, submenu navigation, and Pro demo preview links.
+* Fixed: Minor CSS, admin panel, and code adjustments.
 
 = 3.4.1 =
-* Sep 09, 2023
-- Fixed: Cannot modify header information issue fixed.
-- Fixed: Minor code changes.
-
+* Fixed: "Cannot modify header information" warning and minor code issues.
 
 = 3.4.0 =
-* Aug 19, 2023
-- Rebrand: Post Grid with Ajax Filter to Post Grid Master
-- Rebuid the plugin from scratch
-- Added: Shortcode Generator
-- Old shortcode support
-- Clean & Optimized Code
-- Huge Code Refactor
-- Added: 2 Grid Layouts
-- Added: 3 Filter Layouts
-- Added: Backend Preview
-- Added: Filter Preview
-- Added: Pagination Preview
-- Added: Post Grid Preview
-- Added: Excerpt Control
-- Added: Excerpt Length Control
-- Added: Read More Button Text Control
-- and many more...
-
+* Changed: Rebranded from Post Grid with Ajax Filter to Post Grid Master and rebuilt from the ground up.
+* Added: Visual Shortcode Generator with backend grid, filter, and pagination previews.
+* Added: 2 grid layouts, 3 filter layouts, excerpt controls, and customizable Read More button text.
+* Maintained: Full backward compatibility with legacy shortcodes.
 
 = 3.3.0 =
-* March 1, 2023
-- WordPress 6.1.1 Compatible
+* Updated: WordPress 6.1.1 compatibility.
 
 = 3.2.1 =
-* Sep 10, 2022
-Added: Static Load on Page Load
+* Added: Static initial load on page load.
 
 = 3.1.5 =
-* Sep 06, 2022
-Fixed: Loading Issue on page load
-Tested up to WordPress 6.0.2
+* Fixed: Initial loading issue on page load.
+* Updated: Tested up to WordPress 6.0.2.
 
 = 3.0.4 =
-* JUN 11, 2022
-Fixed: Nonce fix
-Tested up to WordPress 6.0 
+* Fixed: Nonce verification issue.
+* Updated: Tested up to WordPress 6.0.
 
 = 3.0.0 =
-* Nov 21, 2021
-Added: Load More Button [See latest Shortcodes]
-Added: Infinite Scroll
-Added: Animation Effect on post load
-Added: Posts restrictions by Terms
-Fixed: Code issues
-
+* Added: Load More button pagination and Infinite Scroll.
+* Added: Post load animation effects and term-based post restrictions.
+* Fixed: General code improvements.
 
 = 2.2.1 =
-* March 8, 2021
-Added: Order Parameter
-Added: Orderby Parameter
+* Added: `order` and `orderby` shortcode parameters.
 
 = 2.2.0 =
-* Feb 23, 2021
-WordPress 5.6.2 Compatible
-Added: Show/Hide Specific category terms
-Added: Hide/Show Empty Category Terms
-
+* Added: Show/hide specific category terms and toggle empty category terms.
+* Updated: WordPress 5.6.2 compatibility.
 
 = 2.1.0 =
-* Feb 3, 2021
-WordPress 5.6 Compatible
+* Updated: WordPress 5.6 compatibility.
 
 = 2.0.4 =
-* March 19, 2020
-Issue Fixed: Draft posts are displayed
+* Fixed: Prevented draft posts from appearing in grids.
 
 = 2.0.2 =
-* March 9, 2020
-Ajax pagination
-CSS Improvement
-Ajax Improvement
-Speed Improvement
+* Improved: AJAX pagination, CSS styling, and loading performance.
 
 = 2.0.0 =
-* Jan 22, 2020
-Multiple grid support
-Ajax Improvement
-Speed Improvement
-Shortcode Extended :
-	posts_per_page - for controlling number of posts
-	btn_all - Show/Hide "All" Button on filter
-	show_filter - Show/Hide the filter
+* Added: Multiple grids per page support.
+* Added: Extended shortcode parameters (`posts_per_page`, `btn_all`, `show_filter`).
+* Improved: AJAX and speed optimizations.
 
 = 1.0.4 =
-* Jan 21, 2020
-Multiple grid support
-Ajax Improvement
-Speed Improvement
-New Design Layout Added
+* Added: New grid design layout and multiple grid support.
+* Improved: AJAX and performance enhancements.
 
-= 1.0.4 =
+= 1.0.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 3.4.25 =
+Major GridMaster 2.0 release featuring the visual Gutenberg Card Studio Builder, modern Masonry/Metro/Carousel/Reels layouts, sidebar & drawer filters, native page builder widgets, JSON import/export, and hardened AJAX security. Legacy shortcodes remain fully compatible.
