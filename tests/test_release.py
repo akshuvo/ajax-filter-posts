@@ -137,6 +137,53 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Listing assets'):
             release.validate_stage(self.source, self.output)
 
+    def test_listing_assets_staged_validated_and_excluded_from_zip(self):
+        wp_dir = self.source / '.wordpress'
+        wp_dir.mkdir()
+        (wp_dir / 'screenshot-1.png').write_bytes(b'\x89PNG\r\n\x1a\nnew-shot-1')
+        (wp_dir / 'screenshot-9.png').write_bytes(b'\x89PNG\r\n\x1a\nnew-shot-9')
+        release.run('git', 'add', '.wordpress', cwd=self.source)
+        release.run('git', 'commit', '-qm', 'add listing assets', cwd=self.source)
+        self.build()
+        # Listing assets must never leak into the plugin ZIP.
+        zip_files = release.zip_manifest(self.output / 'ajax-filter-posts.zip')
+        self.assertFalse(any(p.startswith('.wordpress') or p.startswith('screenshot-') for p in zip_files))
+        listing_manifest = release.read_json(self.output / 'listing-assets-manifest.json')
+        self.assertEqual(sorted(listing_manifest), ['screenshot-1.png', 'screenshot-9.png'])
+
+        # Stage against a disposable SVN repo containing an existing banner and screenshot-1.
+        repository = self.base / 'assets-repo'
+        release.run('svnadmin', 'create', str(repository))
+        url = repository.as_uri()
+        release.run('svn', 'mkdir', url + '/trunk', url + '/tags', url + '/assets', '-m', 'initial')
+        seed = self.base / 'seed-wc'
+        release.run('svn', 'checkout', '-q', url, str(seed))
+        shutil.copytree(self.output / release.SLUG, seed / 'trunk', dirs_exist_ok=True)
+        (seed / 'assets/banner-772x250.png').write_bytes(b'\x89PNG\r\n\x1a\nexisting-banner')
+        (seed / 'assets/screenshot-1.png').write_bytes(b'\x89PNG\r\n\x1a\nold-shot-1')
+        release.run('svn', 'add', '--force', 'trunk', 'assets', cwd=seed)
+        release.run('svn', 'propset', 'svn:mime-type', 'image/png', 'assets/banner-772x250.png', 'assets/screenshot-1.png', cwd=seed)
+        release.run('svn', 'commit', '-qm', 'seed baseline', cwd=seed)
+        baseline_ver = '3.4.18'
+        release.run('svn', 'copy', url + '/trunk', url + '/tags/' + baseline_ver, '-m', 'seed baseline tag')
+        baseline_manifest = release.manifest(seed / 'trunk')
+        release.write_json(self.source / '.github/release-baseline.json',
+                           {'version': baseline_ver, 'files': baseline_manifest})
+        with patch.object(release, 'SVN_URL', url):
+            release.stage(self.source, self.output)
+        staged_assets = release.manifest(self.output / 'svn/assets')
+        self.assertEqual(sorted(staged_assets), ['banner-772x250.png', 'screenshot-1.png', 'screenshot-9.png'])
+        self.assertEqual(staged_assets['screenshot-1.png'], listing_manifest['screenshot-1.png'])
+        self.assertEqual(staged_assets['screenshot-9.png'], listing_manifest['screenshot-9.png'])
+        mime = release.run('svn', 'propget', 'svn:mime-type', 'assets/screenshot-9.png', cwd=self.output / 'svn').strip()
+        self.assertEqual(mime, 'image/png')
+
+        # Invalid filenames in .wordpress/ must abort build.
+        (wp_dir / 'random-note.txt').write_text('not allowed')
+        release.run('git', 'add', '.wordpress/random-note.txt', cwd=self.source)
+        with self.assertRaisesRegex(RuntimeError, 'Invalid WordPress.org listing asset filename'):
+            release.build(self.source, self.base / 'invalid-asset-build')
+
     def test_changed_baseline_hash_rejected(self):
         with self.assertRaisesRegex(RuntimeError, 'changed='):
             release.compare({'inc/deep/file.php': 'a'}, {'inc/deep/file.php': 'b'}, 'baseline')

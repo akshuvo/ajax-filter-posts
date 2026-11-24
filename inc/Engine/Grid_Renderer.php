@@ -966,14 +966,17 @@ class Grid_Renderer {
 	 * Registers frontend scripts and stylesheets early so builders/widgets can declare dependency.
 	 */
 	public static function register_assets() {
-		$asset_ver = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : GRIDMASTER_VERSION;
+		$js_path  = GRIDMASTER_PATH . '/assets/js/frontend-v2.js';
+		$css_path = GRIDMASTER_PATH . '/assets/css/frontend-v2.css';
+		$js_ver   = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : ( file_exists( $js_path ) ? GRIDMASTER_VERSION . '.' . filemtime( $js_path ) : GRIDMASTER_VERSION );
+		$css_ver  = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : ( file_exists( $css_path ) ? GRIDMASTER_VERSION . '.' . filemtime( $css_path ) : GRIDMASTER_VERSION );
 
 		if ( ! wp_script_is( 'gridmaster-frontend-v2', 'registered' ) ) {
 			wp_register_script(
 				'gridmaster-frontend-v2',
 				GRIDMASTER_ASSETS . 'js/frontend-v2.js',
 				array(),
-				$asset_ver,
+				$js_ver,
 				true
 			);
 
@@ -994,7 +997,7 @@ class Grid_Renderer {
 				'gridmaster-frontend-v2',
 				GRIDMASTER_ASSETS . 'css/frontend-v2.css',
 				array( 'dashicons' ),
-				$asset_ver
+				$css_ver
 			);
 		}
 	}

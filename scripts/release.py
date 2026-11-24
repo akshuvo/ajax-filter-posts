@@ -20,6 +20,16 @@ SLUG = 'ajax-filter-posts'
 SVN_URL = 'https://plugins.svn.wordpress.org/' + SLUG
 RUNTIME_DIRS = {'admin', 'inc', 'assets', 'templates', 'languages', 'appsero'}
 ROOT_FILES = {SLUG + '.php', 'readme.txt', 'README.md', 'package.json'}
+LISTING_ASSET_DIR = '.wordpress'
+LISTING_ASSET_RE = re.compile(
+    r'^(banner-(772x250|1544x500)\.(png|jpg)|icon-(128x128|256x256)\.(png|jpg)|icon\.svg|screenshot-[1-9]\d*\.(png|jpg|gif))$'
+)
+LISTING_ASSET_MIME = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+}
 
 
 def require(condition, message):
@@ -113,6 +123,25 @@ def zip_manifest(path):
         return files
 
 
+def listing_assets(source):
+    asset_dir = source / LISTING_ASSET_DIR
+    if not asset_dir.exists():
+        return []
+    require(asset_dir.is_dir() and not asset_dir.is_symlink(), 'Unsafe listing asset directory')
+    entries = run('git', 'ls-files', '--stage', '-z', '--', LISTING_ASSET_DIR, cwd=source).split('\0')
+    names = []
+    for entry in filter(None, entries):
+        metadata, path = entry.split('\t', 1)
+        require(metadata.split()[0] in ('100644', '100755'), 'Gitlink/symlink rejected: ' + path)
+        parts = PurePosixPath(path).parts
+        require(len(parts) == 2 and parts[0] == LISTING_ASSET_DIR,
+                'Nested listing asset path rejected: ' + path)
+        filename = parts[1]
+        require(LISTING_ASSET_RE.fullmatch(filename), 'Invalid WordPress.org listing asset filename: ' + filename)
+        names.append(filename)
+    return sorted(names)
+
+
 def build(source, output, tag=None):
     require(not output.exists(), 'Output must be a fresh directory')
     require(not output.is_relative_to(source), 'Build outside the source checkout')
@@ -125,6 +154,7 @@ def build(source, output, tag=None):
             require(metadata.split()[0] in ('100644', '100755'), 'Gitlink/symlink rejected: ' + name)
             tracked.append(name)
     require(sorted(tracked) == paths, 'Tracked runtime paths differ from release inventory')
+    asset_names = listing_assets(source)
     release_version = version(source)
     if tag:
         require(tag == 'v' + release_version, 'Tag must match every version declaration')
@@ -144,6 +174,18 @@ def build(source, output, tag=None):
         shutil.copyfile(original, destination)
         destination.chmod(0o644)
     expected = manifest(package)
+    listing_manifest = {}
+    if asset_names:
+        listing_dir = output / 'listing-assets'
+        listing_dir.mkdir(parents=True)
+        for name in asset_names:
+            original = source / LISTING_ASSET_DIR / name
+            require(original.is_file() and not original.is_symlink() and original.stat().st_size > 0,
+                    'Missing/empty listing asset: ' + name)
+            destination = listing_dir / name
+            shutil.copyfile(original, destination)
+            destination.chmod(0o644)
+        listing_manifest = manifest(listing_dir)
     archive_path = output / (SLUG + '.zip')
     with zipfile.ZipFile(archive_path, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
         for name in paths:
@@ -153,8 +195,10 @@ def build(source, output, tag=None):
             archive.writestr(item, (package / name).read_bytes(), compress_type=zipfile.ZIP_DEFLATED)
     compare(expected, zip_manifest(archive_path), 'Built ZIP')
     write_json(output / 'manifest.json', expected)
+    write_json(output / 'listing-assets-manifest.json', listing_manifest)
     write_json(output / 'build.json', {'version': release_version, 'tag': tag,
-               'commit': run('git', 'rev-parse', 'HEAD', cwd=source).strip(), 'files': len(expected)})
+               'commit': run('git', 'rev-parse', 'HEAD', cwd=source).strip(),
+               'files': len(expected), 'listing_assets': len(listing_manifest)})
     print(f'Built {release_version}: {len(expected)} files; ZIP hashes match')
 
 
@@ -201,16 +245,23 @@ def validate_stage(source, output):
     compare(expected, zip_manifest(output / (SLUG + '.zip')), 'Approved ZIP')
     compare(expected, manifest(wc / 'trunk'), 'Staged trunk')
     compare(expected, manifest(wc / 'tags' / state['version']), 'Staged tag')
-    compare(state['assets'], manifest(wc / 'assets'), 'Listing assets (preserved)')
+    compare(state['assets'], manifest(wc / 'assets'), 'Listing assets')
+    staged_assets = set(state.get('staged_assets', []))
     allowed = allowed_removals(source, state['version'])
     removed = check_deletions(state['baseline'], expected, allowed, 'Known-good release')
     removed |= check_deletions(state['before_trunk'], expected, allowed, 'SVN trunk')
     require(allowed <= removed, 'Stale/unneeded removal exceptions must be removed')
     status, entries = status_entries(wc)
     for path, item, props in entries:
+        is_allowed_asset = (
+            path.startswith('assets/') and
+            path.removeprefix('assets/') in staged_assets and
+            item in ('added', 'modified', 'normal')
+        )
         require(path == 'trunk' or path.startswith('trunk/') or
-                path == 'tags/' + state['version'] or path.startswith('tags/' + state['version'] + '/'),
-                'SVN change outside trunk/new tag: ' + path)
+                path == 'tags/' + state['version'] or path.startswith('tags/' + state['version'] + '/') or
+                is_allowed_asset,
+                'SVN change outside trunk/new tag/approved assets: ' + path)
         require(item in ('added', 'modified', 'deleted', 'normal') and
                 (props in ('none', 'normal') or (item == 'added' and props == 'modified')),
                 'Unexpected SVN status/property change: ' + repr((path, item, props)))
@@ -269,12 +320,25 @@ def stage(source, output, check_existing=False):
         shutil.copyfile(output / SLUG / name, destination)
     run('svn', 'add', '--force', '--no-ignore', '--no-auto-props', 'trunk', cwd=wc)
     run('svn', 'copy', 'trunk', 'tags/' + release_version, cwd=wc)
+    before_assets = manifest(wc / 'assets')
+    listing_manifest_path = output / 'listing-assets-manifest.json'
+    desired_assets = read_json(listing_manifest_path) if listing_manifest_path.is_file() else {}
+    if desired_assets:
+        for name in sorted(desired_assets):
+            shutil.copyfile(output / 'listing-assets' / name, wc / 'assets' / name)
+        run('svn', 'add', '--force', '--no-ignore', '--no-auto-props', 'assets', cwd=wc)
+        for name in sorted(desired_assets):
+            if name not in before_assets:
+                mime = LISTING_ASSET_MIME[Path(name).suffix.lower()]
+                run('svn', 'propset', 'svn:mime-type', mime, 'assets/' + name, cwd=wc)
+    expected_assets = {**before_assets, **desired_assets}
     state = {'version': release_version, 'revision': revision, 'root_changed': root_changed,
-             'baseline': baseline, 'before_trunk': before_trunk, 'assets': manifest(wc / 'assets')}
+             'baseline': baseline, 'before_trunk': before_trunk, 'assets': expected_assets,
+             'staged_assets': sorted(desired_assets)}
     write_json(output / 'stage.json', state)
     state['change_digest'] = validate_stage(source, output)
     write_json(output / 'stage.json', state)
-    print(f'Staged {len(expected)} files at SVN r{revision}; no unexplained deletions. No commit made.')
+    print(f'Staged {len(expected)} files and {len(desired_assets)} listing assets at SVN r{revision}; no unexplained deletions. No commit made.')
 
 
 def publish(source, output, tag):
@@ -310,6 +374,12 @@ def verify(output, attempts=1):
     revision, changed = svn_info(SVN_URL)
     for name, url in [('published-trunk', '/trunk'), ('published-tag', '/tags/' + release_version)]:
         compare(expected, export(SVN_URL + url, output / name, revision), name)
+    listing_manifest_path = output / 'listing-assets-manifest.json'
+    desired_assets = read_json(listing_manifest_path) if listing_manifest_path.is_file() else {}
+    if desired_assets:
+        published_assets = export(SVN_URL + '/assets', output / 'published-assets', revision)
+        for name, digest in sorted(desired_assets.items()):
+            require(published_assets.get(name) == digest, 'Published listing asset mismatch: ' + name)
     error = None
     for attempt in range(attempts):
         try:

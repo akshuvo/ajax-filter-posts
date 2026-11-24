@@ -9,17 +9,17 @@ Stable tag: 3.4.25
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Build custom WordPress post grids with a visual Gutenberg card builder, AJAX taxonomy filters, pagination, load more, and infinite scroll.
+Build responsive WordPress post grids, masonry, carousels & custom cards with a visual Gutenberg builder, AJAX filters, load more & infinite scroll.
 
 ---
 
-## Description
+## Overview
 
-**Post Grid Master** (GridMaster) is a modern WordPress post grid and AJAX filtering plugin that lets you visually design custom post cards, organize content in responsive layouts, and filter posts by taxonomy or keyword — all without reloading the page.
+**Post Grid Master** (GridMaster) is an all-in-one WordPress **post grid, card builder, and AJAX filter plugin**. Design custom post cards visually with Gutenberg blocks, display posts in responsive CSS Grid, List, True Masonry, Metro Mosaic, Carousel, or Vertical Reels layouts, and let visitors filter and search content instantly with zero page reloads.
 
-Whether you are building a blog magazine, portfolio showcase, news directory, or custom post type catalog, Post Grid Master works seamlessly with any WordPress theme and your favorite page builder.
+Built for bloggers, agencies, publishers, and WooCommerce store owners, Post Grid Master works with every WordPress theme, any Custom Post Type (CPT), any custom taxonomy, and all major page builders — without writing PHP templates.
 
-- **[Live Demo](https://plugins.addonmaster.com/gridmaster/)**
+- **[Live Demos](https://addonmaster.com/demo/gridmaster/)**
 - **[WordPress.org Support Forum](https://wordpress.org/support/plugin/ajax-filter-posts/)**
 - **[Submit a Support Ticket](https://addonmaster.com/submit-a-ticket/)**
 - **[Post Grid Master Pro](https://addonmaster.com/gridmaster/)**
@@ -28,125 +28,170 @@ Whether you are building a blog magazine, portfolio showcase, news directory, or
 
 ---
 
-## Core Free Features
+## What Can You Build with Post Grid Master?
+
+- **Blog & Resource Hubs:** Filterable article libraries with category pill tabs, live AJAX keyword search, reading time badges, and numbered pagination.
+- **Online Magazines & News Portals:** Asymmetric Editorial Metro Mosaic grids with featured lead stories, author avatars, and Load More buttons.
+- **Creative Portfolios & Case Studies:** True Masonry project showcases paired with off-canvas category and tag filter drawers.
+- **Custom Post Type Directories:** Searchable listings for real estate, jobs, recipes, podcasts, courses, team members, events, or documentation using custom post types and custom fields.
+- **Related Posts & Archive Grids:** Context-aware grids that automatically display related articles or adapt to the current category, tag, or CPT archive page.
+- **WooCommerce Product Grids & Video Feeds (with Pro):** Storefront catalogs with price sliders, attribute swatches, quick view, wishlist, compare, and 9:16 vertical video reels.
+
+---
+
+## Complete Free Feature Breakdown
 
 ### Visual Gutenberg Card Studio Builder (GridMaster 2.0)
-- **Embedded Gutenberg Card Canvas:** Design reusable post cards visually inside the GridMaster builder with full drag-and-drop block control.
-- **17+ Dynamic Card Blocks:** Post Title, Featured Image (with hover zoom and fallback options), Excerpt, Read More Button, Post Date, Modified Date, Post Author, Author Avatar, Taxonomy Terms, Custom Post Meta, Comments Count, Reading Time, Post Format Icon, Social Share, Custom Badge, Shortcode, and Custom HTML.
-- **Starter Blueprints & Card Pattern Library:** Launch quickly with ready-made blueprints or save and reuse your own card patterns across grids.
-- **Conditional Visibility:** Show or hide individual card blocks dynamically based on post data and context.
+- **Visual Drag-and-Drop Card Canvas:** Build and style custom cards visually inside `gridmaster/card` with live block controls.
+- **4 Card Layout Modes:** Switch any card between **Vertical**, **Horizontal (Media Left)**, **Horizontal Reverse (Media Right)**, and **Hero Overlay (Cover Image)** with background color, dark mode aesthetics, padding, border, shadow, radius, minimum height, media width, and hover lift controls.
+- **18 Free Card Templates:** Standard Vertical, Horizontal List (Media Left & Right), Hero Overlay, Editorial & Magazine, Modern Tech / SaaS, Compact List Row, Ultra Compact Feed Row, Split 50/50 Feature, Minimalist Text-Only, Dark Slate Aesthetic, Masonry Story, Creative Portfolio & Project, Floating Overlapping Box, Centered Aesthetic, Bottom Meta Bar, Inset Border, and Date-First Magazine.
+- **One-Click Starter Grid Blueprints:** Apply complete starting setups (Query + Filters + Layout + Card design) including *SaaS Blog & Resource Hub*, *Editorial Metro Magazine*, *Masonry Showcase + Filter Drawer*, and *WooCommerce Storefront + Sticky Sidebar (Pro)*.
+- **User-Saved Card Pattern Library:** Save custom card designs as reusable patterns and apply them across grids.
+- **Card Block Conditional Visibility:** Show or hide individual card blocks dynamically based on post data or context.
+- **Scoped Custom CSS & JS Editors:** Fine-tune any grid with built-in CSS/JS editors, Out-of-the-Box Style Presets, and Starter Script Snippets.
 - **Live Responsive Preview Modal:** Inspect Desktop, Tablet, and Mobile layouts before publishing.
 
-### Modern Grid Layouts & Filter Placements
-- **Flexible Layout Modes:** CSS Grid, Horizontal List, True Masonry, Editorial Metro Mosaic, Accessible Carousel/Slider, 9:16 Vertical Reels, and classic pre-built grid styles.
-- **AJAX Filter Facets:** Taxonomy Tabs, Taxonomy Dropdowns, Checkboxes, Radio Buttons, Live AJAX Search Input, and a Reset Button.
-- **Adaptive Filter Placements:** Place filters at the Top, in a Sticky Left or Right Sidebar, or inside an Off-Canvas Mobile Filter Drawer.
-- **Shareable Deep-Link URLs:** Sync filter and pagination states to `gm_*` query parameters so visitors can bookmark or share filtered views.
-- **Filter Styling & Controls:** 3 ready filter styles, collapsible filter headings, optional "All" button toggle, or completely filterless grids.
+### 17+ Dynamic Gutenberg Card Blocks
+- **Post Title:** Configurable heading tag, permalink toggle, color, and Desktop/Tablet/Mobile font sizes.
+- **Featured Image:** Aspect ratio, `object-fit`, border radius, hover zoom, custom meta key or static image source, and fallback image URL support.
+- **Post Excerpt:** Trim excerpt or post content by word or character count with responsive typography.
+- **Read More Button:** Custom label, colors, padding, border radius, and responsive font size.
+- **Post Date & Modified Date:** Display published dates or "Updated on" timestamps in any date format.
+- **Post Author & Author Avatar:** Author display name and avatar support for multi-author publications.
+- **Taxonomy Terms:** Clickable category, tag, or custom taxonomy badges.
+- **Custom Post Meta:** Display custom fields (ACF, Meta Box, Pods, or native post meta) with custom prefix/suffix labels.
+- **Comments Count & Reading Time:** Engagement counters and automatic reading time estimates.
+- **Post Format Icon & Custom Badge:** Format indicators and customizable highlight badges.
+- **Social Share:** Built-in share buttons for X/Twitter, Facebook, LinkedIn, and Copy Link.
+- **Shortcode & Custom HTML Blocks:** Embed third-party shortcodes or custom HTML inside individual cards.
 
-### AJAX Pagination & Loading Modes
-- **Numbered AJAX Pagination:** Fast page switching with smart ellipsis pagination and zero page reloads.
-- **Load More Button:** Load additional posts dynamically on click.
-- **Infinite Scroll:** Automatically fetch more posts as visitors scroll down.
-- **Post Load Animations:** Smooth entry transitions when new posts appear.
+### 6 Modern Grid & Showcase Layouts
+- **CSS Grid:** Responsive multi-column equal-height post grids.
+- **Horizontal List:** Clean editorial and directory rows with left or right media.
+- **True Masonry:** Dynamic Pinterest-style masonry for varied media heights and portfolios.
+- **Editorial Metro Mosaic:** Asymmetric magazine grids with prominent lead cards.
+- **Accessible Carousel / Slider:** Interactive post carousels with arrows, dots, keyboard navigation, and play/pause autoplay controls.
+- **9:16 Vertical Reels Feed:** Full-height vertical feed navigation with swipe, arrow, and keyboard controls.
+- **Classic Pre-Built Templates:** 3 classic grid templates (`Default`, `Style 2`, `Style 3`) for shortcode workflows.
 
-### Context-Aware Query Builder
-- **Any Post Type & Taxonomy:** Query standard posts, pages, or single/multiple Custom Post Types with any registered taxonomy.
-- **Precision Query Controls:** Posts per page, offset pagination, author filtering, include/exclude post IDs, and Exclude Current Post.
-- **Dynamic Context Modes:** Automatically adapt queries for Current Archive and Related Posts contexts.
-- **Flexible Sorting & Content Controls:** Order by date, title, author, ID, menu order, comment count, or random (ASC/DESC); trim excerpts by words or characters; choose any thumbnail size.
+### AJAX Taxonomy Filters, Live Search & Filter Placements
+- **6 Free Filter Facets:** Taxonomy Tabs (pills/tabs), Taxonomy Dropdown, Taxonomy Checkboxes, Taxonomy Radio Buttons, Live AJAX Search Input, and Reset Button.
+- **4 Adaptive Filter Placements:** Top Bar, Sticky Left Sidebar, Sticky Right Sidebar, and Off-Canvas Mobile Filter Drawer with customizable button label.
+- **4 Classic Filter Styles & Controls:** Post count badges, optional "All" button toggle, custom filter headings, collapsible filter groups, or filterless display.
+- **Shareable Deep-Link URLs:** Active filter, search, and page states sync to `gm_*` URL parameters for bookmarking and sharing.
+
+### AJAX Pagination, Load More & Infinite Scroll
+- **Numbered AJAX Pagination** with smart ellipsis (`1 2 ... 8 9`)
+- **Load More Button** for on-demand appending
+- **Infinite Scroll** for automatic loading on scroll
+- **Post Load Animations** for smooth entrance effects
+
+### Context-Aware WordPress Query Builder
+- **Single & Multi-Post-Type Queries:** Query Posts, Pages, or combine multiple Custom Post Types.
+- **Taxonomies & Terms:** Filter by any taxonomy, include specific terms, or toggle empty terms.
+- **Precision Query Controls:** Posts per page, offset-aware pagination, author filtering, include/exclude post IDs (`post__in`, `post__not_in`), and **Exclude Current Post**.
+- **Dynamic Context Modes:** **Current Archive** auto-detection and **Related Posts** mode.
+- **Sorting & Media:** Order by date, title, author, ID, menu order, comment count, or random (ASC/DESC) with selectable thumbnail sizes.
 
 ### Native Page Builder Integrations & Shortcodes
-Embed saved grids anywhere with live previews and one-click **Edit this grid** links:
+Embed saved grids with live previews and one-click **Edit this grid** links:
 - **Gutenberg (Block Editor)** — Native block with live canvas preview
 - **Elementor** — Native widget
 - **Beaver Builder** — Native module
 - **Bricks Builder** — Native element
 - **WPBakery Page Builder** — Native element
 - **Classic WordPress Widgets** — Sidebar & widget areas
-- **Shortcode Generator & Legacy Shortcodes** — `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` for posts, pages, and PHP templates
+- **Shortcodes** — `[gridmaster]` plus legacy `[am_post_grid]` and `[asr_ajax]` for any builder or PHP template
 
-### Performance, Accessibility & Portability
-- **Conditional Asset Loading:** Enqueues frontend assets only on pages where a grid is rendered.
-- **Core Web Vitals & Accessibility:** First-card LCP image prioritization and live screen-reader status announcements on AJAX updates.
-- **Portable JSON Export & Import:** Export and import full grid configurations as `.gridmaster.json` files.
-- **Theme Friendly & Translation Ready:** Clean, standards-compliant code compatible with any WordPress theme.
+### Speed, Core Web Vitals, Accessibility & Portability
+- **Conditional Asset Loading:** Frontend scripts and styles enqueue only on pages displaying a grid.
+- **Core Web Vitals & LCP:** Prioritizes the first card's featured image for faster Largest Contentful Paint.
+- **WCAG-Friendly Accessibility:** Screen-reader live status announcements (`aria-live`) and keyboard-accessible controls.
+- **Portable `.gridmaster.json` Export & Import:** Move complete grid configurations between staging and production in one click.
+- **Theme Friendly & Translation Ready:** Scoped CSS and `ajax-filter-posts` localization support.
 
 ---
 
-## Post Grid Master Pro Features
+## Upgrade to Post Grid Master Pro
 
-Upgrade to **[Post Grid Master Pro](https://addonmaster.com/gridmaster/)** for advanced eCommerce merchandising, multi-facet filtering, and video layouts:
+**[Post Grid Master Pro](https://addonmaster.com/gridmaster/)** extends GridMaster 2.0 with full eCommerce merchandising, multi-facet filtering, and video capabilities:
 
-- **WooCommerce Product Grid & Merchandising Suite:** 16 Pro card blocks including Product Price, Add to Cart, Star Rating, Sale/Stock Badges, Stock Status, Sale Countdown Timer, Variation Swatches, Quick View Modal, Wishlist Bookmark & `[gridmaster_wishlist_drawer]`, Product Compare Drawer & Table, B2B Request a Quote Modal, Product Meta, and Action Bar — plus a 3rd-Party WooCommerce Extension Bridge (YITH, WPClever, TI Wishlist, and swatches plugins).
-- **Advanced Pro Filter Facets & Dynamic Recounts:** Multi-Select Pills, Date Range Picker, Custom Field / Meta Filter, Numeric Meta Range Slider, WooCommerce Price Range Slider, Attribute Swatches, Star Rating Filter, Sale/Stock/Featured Toggles, Sort Dropdown, Active Filter Chips Bar, and cached Dynamic Facet Term Recounts.
-- **Inline Video & 9:16 Reels Feeds:** Card Video block with click/hover inline playback, Video Lightbox player, and single-active audio/video coordination.
-- **Pro Layouts, Taxonomy Media & Slider Controls:** Exclusive grid templates and filter styles, taxonomy images and colors, auto-select taxonomy/post type/initial term on archives, custom heading tags and responsive typography, per-device columns and gaps, and full slider configuration (slides to show/scroll, arrows, dots, autoplay, pause on hover, infinite loop, center mode).
+- **16 Pro Gutenberg Card Blocks:** WooCommerce Product Price, AJAX Add to Cart, Product Star Rating, Sale/Custom Badge, Stock Status, Sale Countdown Timer, Variation Swatches, Quick View Modal, Wishlist Bookmark Button, Wishlist Drawer (`[gridmaster_wishlist_drawer]`), Product Compare Drawer & Table, B2B Request a Quote Modal, Product Meta, Action Bar, **Card Video** (inline hover/click player with single-active coordination), and **Video Lightbox**.
+- **15+ Pro Card Templates:** E-Commerce Product Starter, Quick View & Badge, Product Horizontal Row, Flash Sale & Countdown, Fashion & Apparel Hover, Electronics & Tech Spec, Wholesale / B2B Quick-Order Row, Grocery Instant-Stepper, B2B Quote Catalog, Wishlist Showcase, Video Spotlight, Podcast Episode, Video Course, and TikTok / Reels / Shorts 9:16.
+- **10 Advanced Pro Filter Facets & Dynamic Recounts:** Multi-Select Taxonomy Pills, Date Range Picker, Custom Field / Meta Filter, Numeric Meta Range Slider, WooCommerce Price Range Slider, Attribute Swatches, Star Rating Filter, Sale/In-Stock/Featured Toggles, Sort Dropdown, and Active Filter Chips Bar — powered by cached Dynamic Facet Term Recounts (`Facet_Recounter`).
+- **WooCommerce 3rd-Party Extension Bridge:** Bridges WPClever, YITH, TI WooCommerce Wishlist, Variation Swatches plugins, and Astra / OceanWP / Flatsome / Blocksy Quick Views with automatic fallback to GridMaster Pro's native engines.
+- **Pro Layouts, Taxonomy Visuals & Full Slider Controls:** 10 Pro classic grid templates, 2 Pro filter styles, Taxonomy Images & Colors, archive auto-selection (post type, taxonomy, initial term), custom heading tags & per-device font sizes, responsive columns & gaps, thumbnail link targets, and full carousel/slider controls.
 
 ---
 
 ## Privacy Policy & External Services
 
-Post Grid Master uses the [Appsero](https://appsero.com) SDK to collect optional, non-sensitive telemetry data only when a site administrator explicitly opts in via the admin notice.
+Post Grid Master includes the [Appsero](https://appsero.com) SDK to collect optional, non-sensitive telemetry data only when a site administrator explicitly opts in via the admin notice.
 
-Appsero SDK **does not collect any data by default**. Telemetry is gathered **only after user confirmation** to help troubleshoot issues and improve the plugin. See the [Appsero Privacy Policy](https://appsero.com/privacy-policy/) for details.
+Appsero SDK **does not collect any data by default**. Telemetry is collected **only after user confirmation** to troubleshoot issues and improve the plugin. See the [Appsero Privacy Policy](https://appsero.com/privacy-policy/) for details.
 
 ---
 
 ## Installation
 
-### From the WordPress Dashboard
-1. Go to **Plugins → Add New**.
+### Automatic Installation (Recommended)
+1. Go to **Plugins → Add New** in your WordPress dashboard.
 2. Search for **Post Grid Master**.
 3. Click **Install Now**, then **Activate**.
-4. Open **Post Grid Master** in your dashboard menu to build your first grid.
+4. Open **Post Grid Master** to create your first grid from a Starter Blueprint or custom card layout.
 
 ### Manual Installation
 1. Download and unzip the plugin package.
-2. Upload the `ajax-filter-posts` directory to `/wp-content/plugins/`.
+2. Upload the `ajax-filter-posts` folder to `/wp-content/plugins/`.
 3. Activate **Post Grid Master** from the **Plugins** menu.
-4. Create a grid under **Post Grid Master** and insert it via Gutenberg, Elementor, Beaver Builder, Bricks, WPBakery, Classic Widgets, or shortcode.
+4. Create a grid under **Post Grid Master** and embed it via Gutenberg, Elementor, Beaver Builder, Bricks, WPBakery, Classic Widgets, or `[gridmaster]`.
 
 ---
 
 ## Frequently Asked Questions
 
-**How do I create and display a post grid?**  
-Open **Post Grid Master** in the WordPress admin, pick a Starter Blueprint or design your card visually in the Gutenberg Card Studio, configure your query/filters/pagination, and embed the saved grid via your page builder widget or shortcode.
+**How do I create and display my first post grid?**  
+Open **Post Grid Master**, select a Starter Grid Blueprint or design your card in the Gutenberg Card Studio, configure your query, filters, and pagination, save, and embed via your page builder widget or shortcode.
 
-**Will Post Grid Master work with my theme?**  
-Yes. It uses scoped styles and standard WordPress APIs so it works smoothly with both classic and block themes.
+**Which page builders are supported natively?**  
+Native widgets, modules, and elements with live previews are included for Gutenberg, Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic WordPress Widgets. Shortcodes work in any builder or PHP template.
 
-**Which page builders are supported?**  
-Native widgets/modules/elements with live previews are included for Gutenberg, Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic Widgets. Shortcodes work in any builder or template file.
+**Can I filter Custom Post Types and Custom Taxonomies with AJAX?**  
+Yes. Single and multi-post-type queries and all registered custom taxonomies (ACF, CPT UI, Pods, Meta Box, WooCommerce, etc.) are fully supported.
 
-**Can I create grids for Custom Post Types and Custom Taxonomies?**  
-Yes. Single and multiple Custom Post Types and all registered custom taxonomies are fully supported.
+**Can I display custom fields inside cards?**  
+Yes. Use the **Post Meta** block to render any custom field with prefix/suffix labels, or load a custom meta key URL in the **Featured Image** block. Pro adds Meta Filter and Numeric Meta Range Slider facets.
 
-**Can I place multiple post grids on the same page?**  
-Yes. Each grid maintains its own independent AJAX filter, search, and pagination state.
+**Can visitors bookmark or share a filtered grid URL?**  
+Yes. Filter, search, and pagination states sync to shareable `gm_*` URL parameters.
+
+**Can I place filters in a sidebar or mobile drawer?**  
+Yes. Choose Top, Sticky Left Sidebar, Sticky Right Sidebar, or an Off-Canvas Mobile Filter Drawer.
+
+**Can I export a grid from staging and import it on production?**  
+Yes. Use one-click `.gridmaster.json` Export & Import to move complete grid designs and settings between sites.
 
 **Will this plugin slow down my website?**  
-No. Frontend CSS and JS load conditionally only when a grid is present on the page, with LCP image prioritization for the first card.
-
-**Does it support Load More and Infinite Scroll pagination?**  
-Yes. Numbered AJAX pagination with smart ellipsis, Load More buttons, and Infinite Scroll are all included in the free plugin.
+No. Frontend scripts and styles enqueue conditionally only when a grid is present, and the first card's featured image is prioritized for LCP performance.
 
 **Are legacy shortcodes still supported?**  
-Yes. Existing `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` shortcodes remain fully compatible.
+Yes. `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` remain fully supported for backward compatibility.
 
 ---
 
 ## Screenshots
 
-1. Backend Grid Builder and Shortcode Generator (Free & Pro)
-2. Backend Live Preview and Welcome Overview
-3. Key Features Overview
-4. Free Features Summary
-5. Pro Features Overview
-6. Post Grid Master Grid & Filter Style 1 (Free)
-7. Post Grid Master Grid & Filter Style 2 (Free)
-8. Post Grid Master Grid & Filter Style 3 (Free)
+1. Visual Gutenberg Card Studio Builder with drag-and-drop block tree, live card canvas, and surface styling controls
+2. One-click Starter Grid Blueprints for SaaS Blogs, Editorial Metro Magazines, Masonry Showcases, and WooCommerce Storefronts
+3. Frontend responsive post grid with AJAX category tabs, live keyword search, reading time, and instant reset
+4. Editorial Metro Mosaic layout featuring an asymmetric lead story and AJAX taxonomy filter chips
+5. Accessible Editorial Carousel and Slider layout with previous/next arrows and dot navigation
+6. Layout Engine & Grid Presets (Standard Grid, Masonry Bricks, Metro Mosaic, Accessible Carousel, and Vertical Reels)
+7. AJAX Filter Facets Builder with Free taxonomy/search facets and Pro WooCommerce, Date Range, Meta Filter, and Dynamic Recount options
+8. Context-Aware Query Builder with multi-post-type queries, offset pagination, Exclude Current Post, Current Archive, and Related Posts modes
+9. Native Gutenberg Block Editor integration with live canvas preview and one-click "Edit this grid in GridMaster"
+10. WooCommerce Storefront grid with sticky left sidebar facets (Price Slider, Color Swatches, Star Rating), Sale Badges, Countdown Timers, and AJAX Add to Cart (Pro)
+11. 9:16 Vertical Video Reels feed with swipe/keyboard navigation, audio toggle, and category filter tabs (Pro)
 
 ---
 
@@ -154,7 +199,8 @@ Yes. Existing `[gridmaster]`, `[am_post_grid]`, and `[asr_ajax]` shortcodes rema
 
 ### 3.4.25
 - Added: GridMaster 2.0 visual Gutenberg Card Studio Builder, responsive card layouts, and live device preview modal.
-- Added: Sidebar split & off-canvas mobile filter drawer (`left_sidebar`, `right_sidebar`, `drawer`), Masonry & Metro mosaic layouts, Starter Blueprints, and User-Saved Card Pattern Library.
+- Added: 18 Free Card Templates, Starter Grid Blueprints, User-Saved Card Pattern Library, and scoped Custom CSS/JS editors with presets.
+- Added: Sidebar split & off-canvas mobile filter drawer (`left_sidebar`, `right_sidebar`, `drawer`), Masonry & Metro mosaic layouts, Accessible Carousel, and 9:16 Vertical Reels layout.
 - Added: Context-aware `Query_Builder` (`offset` pagination, multi-`post_type`, `post__in`, `post__not_in`, `exclude_current`, `current_archive`, `related_posts`), deep-link `gm_*` URL hydration, smart ellipsis pagination, and Card Block Conditional Visibility (`gmVisibility`).
 - Added: Native page builder integrations for Gutenberg, Elementor, Beaver Builder, Bricks Builder, WPBakery Page Builder, and Classic Widgets.
 - Added: Portable Grid JSON Export & Import (`GET /grids/<id>/export`, `POST /grids/import`), live screen-reader status announcements, and first-card LCP image prioritization.
