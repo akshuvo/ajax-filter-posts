@@ -4,7 +4,7 @@ Tags: post grid, ajax filter, infinite scroll, pagination, taxonomy filter
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.4.25
+Stable tag: 3.4.26
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -236,6 +236,9 @@ Ask anytime in the [WordPress.org support forum](https://wordpress.org/support/p
 11. 9:16 Vertical Video Reels feed with swipe/keyboard navigation, audio toggle, and category filter tabs (Pro)
 
 == Changelog ==
+
+= 3.4.26 =
+* Improved: Updated WordPress.org plugin icon (`icon.svg`) with a pure-CSS animated Spark Grid 2×2 sliding grid design (`prefers-reduced-motion` compliant).
 
 = 3.4.25 =
 * Added: GridMaster 2.0 visual Gutenberg Card Studio Builder, responsive card layouts, and live device preview modal.
