@@ -1946,6 +1946,23 @@
 	width: 100%;
 }
 
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-facet-search,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-facet-search,
+.gm-v2-grid.gm-filter-pos-drawer .gm-facet-search,
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-search-box,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-search-box,
+.gm-v2-grid.gm-filter-pos-drawer .gm-search-box,
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filter-search,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filter-search,
+.gm-v2-grid.gm-filter-pos-drawer .gm-filter-search,
+.gm-v2-grid.gm-filter-pos-left-sidebar .gm-filter-select,
+.gm-v2-grid.gm-filter-pos-right-sidebar .gm-filter-select,
+.gm-v2-grid.gm-filter-pos-drawer .gm-filter-select {
+	width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
+}
+
 /* Always Off-Canvas Drawer Mode */
 .gm-v2-grid.gm-filter-pos-drawer .gm-filter-drawer-bar {
 	display: flex;
